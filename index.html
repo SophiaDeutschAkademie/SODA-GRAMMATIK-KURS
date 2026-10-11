@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SODA GRAMMATIK KURS · Sophia Deutsch Akademie</title>
+<meta name="description" content="Sophia Deutsch Akademie의 독일어 문법 학습 코스. 16개 Lektion과 나의 과제 진행률을 한곳에서 확인해요.">
+<meta name="theme-color" content="#FAFAF8">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+<link rel="stylesheet" href="assets/pretendard.css">
+<style>
+:root{
+  --accent:#384568;--accent-d:#2C3754;--accent-bg:#ECEDF3;--accent-l:#F5F5F9;
+  --text:#1E1E1E;--text-s:#444;--text-m:#666;
+  --bg:#FAFAF8;--bg-c:#FFFFFF;--bg-s:#F2F0EB;--bd:#E0E0DB;--bd-l:#ECEAE4;
+  --ok:#2D7A56;--ok-bg:#E8F5EE;
+  --y:#F1C80F;--r:#ED1C24;--g:#58595B;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Pretendard Variable','Noto Sans KR',system-ui,-apple-system,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100svh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+[hidden]{display:none!important}
+#toc:focus,#toc:focus-visible{outline:none}
+.view{animation:viewIn .5s var(--ease) both}
+.view.leave{animation:viewOut .26s ease both}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes viewOut{to{opacity:0;transform:translateY(-12px)}}
+
+/* ───────── 표지 ───────── */
+.cover{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;padding:clamp(24px,4vw,48px) clamp(24px,7vw,112px);padding-bottom:max(clamp(24px,3vw,36px),env(safe-area-inset-bottom));background:var(--bg)}
+.brand{display:flex;align-items:center;gap:14px;animation:fade .9s .05s ease both}
+.brand img{height:40px;width:auto;display:block}
+.brand-t{display:flex;flex-direction:column;line-height:1.25}
+.brand-t b{font-size:15px;font-weight:700;letter-spacing:.2px}
+.brand-t span{font-size:12.5px;color:var(--text-m);font-weight:500}
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(48px,10vh,120px) 0}
+h1.title{font-size:clamp(30px,8.6vw,128px);line-height:1.02;letter-spacing:-.045em;color:var(--accent);animation:rise 1s .15s var(--ease) both}
+h1.title span{display:block}
+h1.title .t1{font-weight:800}
+h1.title .t2{font-weight:300;color:var(--text);letter-spacing:-.04em}
+.lead{margin-top:clamp(24px,4vh,40px);font-size:clamp(15px,1.5vw,17px);color:var(--text-m);max-width:38em;word-break:keep-all;animation:rise 1s .3s var(--ease) both}
+.cta{margin-top:clamp(32px,6vh,56px);align-self:flex-start;display:inline-flex;align-items:center;gap:14px;height:56px;padding:0 26px 0 30px;border-radius:10px;background:var(--accent);color:#fff;font-size:16px;font-weight:700;letter-spacing:.2px;transition:background .2s,gap .25s var(--ease);animation:rise 1s .45s var(--ease) both}
+.cta svg{width:18px;height:18px}
+.cta:hover{background:var(--accent-d);gap:20px}
+.cta:focus-visible{outline-offset:4px;border-radius:10px}
+.cover-foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:20px;border-top:1px solid var(--bd);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-m);font-weight:600;animation:fade 1s .6s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* ───────── 목차 ───────── */
+.toc{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,32px) 72px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 0}
+.top-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.top-brand img{height:34px;width:auto}
+.top-brand b{font-size:15px;font-weight:800;letter-spacing:.14em;white-space:nowrap}
+.top-brand span{font-size:12.5px;color:var(--text-m);font-weight:500;display:block;letter-spacing:.2px;line-height:1.2}
+.back{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid var(--bd);border-radius:999px;background:var(--bg-c);font-size:13px;font-weight:600;color:var(--text-s);transition:border-color .15s,color .15s}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+.back svg{width:14px;height:14px}
+
+/* 진행률 패널 */
+.prog{position:relative;overflow:hidden;border-radius:24px;padding:clamp(22px,4vw,36px);color:#fff;background:linear-gradient(135deg,#3F4D75 0%,var(--accent) 45%,var(--accent-d) 100%);box-shadow:0 24px 48px -28px rgba(44,55,84,.7);display:grid;grid-template-columns:auto 1fr;gap:clamp(22px,4vw,44px);align-items:center}
+.ring{position:relative;width:clamp(150px,22vw,188px);aspect-ratio:1;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:11}
+.ring .trk{stroke:rgba(255,255,255,.16)}
+.ring .bar{stroke:var(--y);stroke-linecap:round}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-n{font-size:clamp(42px,6.4vw,54px);font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.ring-n small{font-size:.42em;font-weight:700;margin-left:2px;letter-spacing:0}
+.ring-l{font-size:13px;font-weight:600;color:rgba(255,255,255,.72);margin-top:6px}
+.prog-body{position:relative;min-width:0}
+.prog-k{font-size:13px;font-weight:700;letter-spacing:.16em;color:var(--y);margin-bottom:6px}
+.prog-h{font-size:clamp(22px,3.4vw,30px);font-weight:800;line-height:1.3;word-break:keep-all;letter-spacing:-.01em}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 18px}
+.stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px}
+.stat dt{font-size:12.5px;color:rgba(255,255,255,.72);font-weight:600}
+.stat dd{font-size:clamp(18px,2.6vw,23px);font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat dd small{font-size:.62em;font-weight:600;color:rgba(255,255,255,.7);margin-left:3px}
+.strip{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;list-style:none}
+.strip a{display:block;height:12px;border-radius:4px;background:rgba(255,255,255,.16);overflow:hidden;position:relative;transition:transform .15s,background .15s}
+.strip a:hover{transform:scaleY(1.5);background:rgba(255,255,255,.28)}
+.strip a:focus-visible{outline-color:var(--y)}
+.strip i{display:block;height:100%;background:var(--y);border-radius:4px;width:0;transition:width .9s var(--ease)}
+.strip-l{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.62);font-weight:600;margin-top:7px;font-variant-numeric:tabular-nums}
+.resume{margin-top:20px;display:inline-flex;align-items:center;gap:12px;min-height:50px;padding:8px 22px 8px 24px;border-radius:999px;background:var(--y);color:#2A2A20;font-weight:800;font-size:16px;transition:transform .2s var(--ease),box-shadow .2s;box-shadow:0 10px 24px -12px rgba(0,0,0,.55);max-width:100%}
+.resume span{min-width:0}
+.resume em{font-style:normal;font-weight:600;font-size:13.5px;opacity:.78;display:block;line-height:1.3}
+.resume b{display:block;line-height:1.3}
+.resume svg{width:18px;height:18px;flex:none;transition:transform .2s var(--ease)}
+.resume:hover{transform:translateY(-2px)}
+.resume:hover svg{transform:translateX(3px)}
+.resume:focus-visible{outline-color:#fff}
+
+/* 필터 + 카드 */
+.bar-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:44px 0 18px}
+.bar-h h2{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.bar-h h2 span{display:block;font-size:12.5px;font-weight:700;letter-spacing:.2em;color:var(--text-m);margin-bottom:2px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.chipbtn{height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--bd);background:var(--bg-c);font-size:14px;font-weight:600;color:var(--text-s);display:inline-flex;align-items:center;gap:7px;transition:all .15s}
+.chipbtn b{font-weight:700;color:var(--text-m);font-variant-numeric:tabular-nums;font-size:13px}
+.chipbtn:hover{border-color:var(--accent);color:var(--accent)}
+.chipbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.chipbtn[aria-pressed="true"] b{color:rgba(255,255,255,.8)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px;list-style:none}
+.card{position:relative;display:flex;flex-direction:column;height:100%;padding:20px 22px 20px;background:var(--bg-c);border:1px solid var(--bd);border-radius:18px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .2s}
+.card.in{animation:rise .6s var(--ease) both;animation-delay:calc(var(--i)*35ms)}
+.card:hover{transform:translateY(-4px);border-color:#C9CDDB;box-shadow:0 18px 34px -22px rgba(56,69,104,.55)}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.num{font-size:44px;font-weight:800;line-height:1;letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums}
+.ico{width:44px;height:44px;border-radius:12px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.ico svg{width:24px;height:24px}
+.ko{font-size:19px;font-weight:800;line-height:1.35;word-break:keep-all;letter-spacing:-.01em}
+.de{font-size:13.5px;color:var(--text-m);font-weight:500;margin-top:2px;font-style:italic}
+.desc{font-size:14px;color:var(--text-s);line-height:1.6;margin:12px 0 18px;word-break:keep-all;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.foot{margin-top:auto}
+.meter{height:6px;border-radius:3px;background:var(--bd-l);overflow:hidden}
+.meter i{display:block;height:100%;width:0;border-radius:3px;background:var(--accent);transition:width .8s var(--ease)}
+.foot-r{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.count{font-size:13px;font-weight:600;color:var(--text-m);font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 11px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--bg-s);color:var(--text-m)}
+.chip svg{width:13px;height:13px}
+.card.doing .chip{background:var(--accent-bg);color:var(--accent)}
+.card.done{border-color:#BFE0CE}
+.card.done .num{color:var(--ok)}
+.card.done .ico{background:var(--ok-bg);color:var(--ok)}
+.card.done .meter i{background:var(--ok)}
+.card.done .chip{background:var(--ok-bg);color:var(--ok)}
+.card.done:hover{border-color:var(--ok)}
+.empty{grid-column:1/-1;text-align:center;color:var(--text-m);padding:48px 0;font-size:15px}
+.note{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:44px;padding-top:22px;border-top:1px solid var(--bd);font-size:13px;color:var(--text-m)}
+.reset{font-size:13px;font-weight:600;color:var(--text-m);text-decoration:underline;text-underline-offset:3px;padding:6px 2px}
+.reset:hover{color:#B0341F}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media(max-width:720px){
+  .prog{grid-template-columns:1fr;justify-items:stretch;text-align:left}
+  .ring{margin:0 auto}
+  .prog-body{text-align:left}
+  .stats{gap:8px}
+  .stat{padding:10px 11px}
+  .resume{display:flex;justify-content:space-between;width:100%}
+  .top-brand span{display:none}
+}
+@media(max-width:380px){.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ───────── 표지 ───────── -->
+<main id="cover" class="cover view" aria-labelledby="cover-title">
+  <header class="brand">
+    <img src="assets/logo.png" alt="Sophia Deutsch Akademie 로고">
+    <div class="brand-t"><b>Sophia Deutsch Akademie</b><span>소피아 독일어학원</span></div>
+  </header>
+  <div class="hero">
+    <h1 class="title" id="cover-title"><span class="t1">SODA</span><span class="t2">GRAMMATIK KURS</span></h1>
+    <p class="lead">명사·관사·격에서 접속법까지, 16개 Lektion으로 이어지는 독일어 문법 학습 코스예요.</p>
+    <button type="button" class="cta" id="start">학습 시작하기
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
+    </button>
+  </div>
+  <footer class="cover-foot"><span>Innovative Learning Beyond the Traditional</span><span>Lektion 01 – 16</span></footer>
+</main>
+
+<!-- ───────── 목차 ───────── -->
+<main id="toc" class="toc view" hidden aria-labelledby="prog-title" tabindex="-1">
+  <div class="top">
+    <div class="top-brand">
+      <img src="assets/logo.png" alt="">
+      <div><b>SODA GRAMMATIK KURS</b><span>Sophia Deutsch Akademie</span></div>
+    </div>
+    <a class="back" href="#" id="to-cover">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>표지
+    </a>
+  </div>
+
+  <section class="prog" aria-labelledby="prog-title">
+    <div class="ring" role="img" id="ring-img">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="trk" cx="100" cy="100" r="86"/>
+        <circle class="bar" id="ring-bar" cx="100" cy="100" r="86" stroke-dasharray="540.35" stroke-dashoffset="540.35"/>
+      </svg>
+      <div class="ring-c"><div class="ring-n"><span id="ring-num">0</span><small>%</small></div><div class="ring-l">전체 진행률</div></div>
+    </div>
+    <div class="prog-body">
+      <p class="prog-k" id="prog-title">나의 과제 진행률</p>
+      <p class="prog-h" id="prog-h"></p>
+      <dl class="stats">
+        <div class="stat"><dt>완료한 Lektion</dt><dd id="st-lek">0<small>/ 16</small></dd></div>
+        <div class="stat"><dt>푼 문제</dt><dd id="st-q">0<small>/ 0</small></dd></div>
+        <div class="stat"><dt>정답률</dt><dd id="st-acc">–</dd></div>
+      </dl>
+      <ol class="strip" id="strip" aria-label="Lektion별 진행 상황"></ol>
+      <div class="strip-l" aria-hidden="true"><span>01</span><span>16</span></div>
+      <a class="resume" id="resume" href="#"><span><em id="resume-k"></em><b id="resume-t"></b></span>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <div class="bar-h">
+    <h2><span>INHALT</span>목차</h2>
+    <div class="filters" id="filters" role="group" aria-label="진행 상태 필터"></div>
+  </div>
+  <ul class="grid" id="grid"></ul>
+
+  <div class="note">
+    <span>진행 기록은 이 기기의 브라우저에만 저장돼요. 각 Lektion의 문제를 풀면 자동으로 반영돼요.</span>
+    <button type="button" class="reset" id="reset">진행 기록 초기화</button>
+  </div>
+</main>
+
+<noscript><p style="padding:24px;text-align:center">이 학습 앱은 JavaScript가 필요해요.</p></noscript>
+
+<script>
+(function(){
+'use strict';
+var LESSONS = [{"n":"01","ko":"명사 · 관사 · 격","de":"Nomen, Artikel und der Kasus","desc":"명사의 성(남성·여성·중성)과 격(1~4격)을 배워요.","q":21,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 6C10 4.8 7.5 4.4 5 4.8v13c2.5-.4 5 0 7 1.2 2-1.2 4.5-1.6 7-1.2v-13c-2.5-.4-5 0-7 1.2zM12 6v12\"><\/path><\/svg>"},{"n":"02","ko":"인칭대명사","de":"Personalpronomen","desc":"나·너·그처럼 사람을 가리키는 인칭대명사를 배워요.","q":28,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"8\" cy=\"8\" r=\"2.6\"><\/circle><circle cx=\"16\" cy=\"8\" r=\"2.6\"><\/circle><path d=\"M3.5 19a4.5 4.5 0 0 1 9 0M11.5 19a4.5 4.5 0 0 1 9 0\"><\/path><\/svg>"},{"n":"03","ko":"현재형 동사변화","de":"Verben im Präsens","desc":"주어에 맞춰 바뀌는 현재형 동사의 어미를 배워요.","q":26,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13 3L5 13h6l-1 8 8-11h-6z\"><\/path><\/svg>"},{"n":"04","ko":"어순 · 의문문 · 수사","de":"Wortstellung, Fragesatz und Zahlwörter","desc":"동사를 문장의 어느 자리에 놓는지 배워요.","q":29,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"6\" cy=\"6\" r=\"4\"><\/circle><text x=\"6\" y=\"8.6\" font-size=\"6\" font-weight=\"700\" fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" text-anchor=\"middle\">1<\/text><circle cx=\"6\" cy=\"18\" r=\"4\"><\/circle><text x=\"6\" y=\"20.6\" font-size=\"6\" font-weight=\"700\" fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" text-anchor=\"middle\">2<\/text><circle cx=\"18\" cy=\"6\" r=\"4\"><\/circle><text x=\"18\" y=\"8.6\" font-size=\"6\" font-weight=\"700\" fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" text-anchor=\"middle\">3<\/text><\/svg>"},{"n":"05","ko":"소유관사","de":"Possessivartikel","desc":"'나의·너의·그의'를 나타내는 소유관사(mein·dein·sein…)를 배워요.","q":53,"icon":"\n<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n<path d=\"M4 7.8V4.2A1.2 1.2 0 0 1 5.2 3h3.6a2 2 0 0 1 1.4.6l9 9a1.8 1.8 0 0 1 0 2.5l-4.1 4.1a1.8 1.8 0 0 1-2.5 0l-9-9A2 2 0 0 1 3 8.8\">\n<\/path>\n<circle cx=\"7.5\" cy=\"7.5\" r=\"1.4\" fill=\"currentColor\" stroke=\"none\">\n<\/circle>\n<\/svg>\n"},{"n":"06","ko":"전치사와 격","de":"Präpositionen und der Kasus","desc":"'~와 함께, ~을 위해'처럼 명사 앞에 놓는 말, 전치사를 배워요.","q":52,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 21s6-5.3 6-10a6 6 0 1 0-12 0c0 4.7 6 10 6 10z\"><\/path><circle cx=\"12\" cy=\"11\" r=\"2.2\"><\/circle><\/svg>"},{"n":"07","ko":"형용사 · Teil 1","de":"Adjektive","desc":"명사 앞에 오는 형용사의 끝(어미)이 어떻게 바뀌는지 배워요.","q":42,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l2.2 5.6L20 9.2l-4 4.2 1 6L12 16.8 7 19.4l1-6-4-4.2 5.8-.6z\"><\/path><\/svg>"},{"n":"08","ko":"비교급 · 최상급","de":"Komparativ und Superlativ","desc":"'더 ~하다'를 나타내는 비교급과 '가장 ~하다'를 나타내는 최상급을 배워요.","q":30,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"14\" width=\"4\" height=\"6\" rx=\"1\"><\/rect><rect x=\"10\" y=\"9\" width=\"4\" height=\"11\" rx=\"1\"><\/rect><rect x=\"16\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\"><\/rect><\/svg>"},{"n":"09","ko":"화법조동사 · 분리동사","de":"Modalverben und trennbare Verben","desc":"'~할 수 있다, ~해야 한다'처럼 동사에 뜻을 더하는 화법조동사 여섯 개를 배워요.","q":27,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 4H6a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2\"><\/path><\/svg>"},{"n":"10","ko":"현재완료","de":"Das Perfekt","desc":"'배웠다, 갔다'처럼 말할 때 쓰는 과거, 현재완료를 배워요.","q":25,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"><\/circle><path d=\"M8.5 12.2l2.5 2.3 4.5-5\"><\/path><\/svg>"},{"n":"11","ko":"과거 · 과거완료","de":"Präteritum und Plusquamperfekt","desc":"글에서 쓰는 과거형과, 과거보다 더 먼저 끝난 일을 말하는 과거완료를 배워요.","q":26,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 9.2A8.3 8.3 0 1 1 3.2 13\"><\/path><path d=\"M3.2 4.2v5h5\"><\/path><path d=\"M12 8.3V12l3 1.8\"><\/path><\/svg>"},{"n":"12","ko":"재귀동사 · 비인칭","de":"Reflexive Verben und unpersönliches es","desc":"'나 자신을, 너 자신을'을 가리키는 재귀대명사(mich·dich·sich…)와 재귀동사를 배워요.","q":30,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 12a8 8 0 0 1 13.5-5.8L20 8M20 4v4h-4M20 12a8 8 0 0 1-13.5 5.8L4 16M4 20v-4h4\"><\/path><\/svg>"},{"n":"13","ko":"접속사 · 종속절","de":"Konjunktionen und Nebensätze","desc":"두 문장을 이어 주는 말 세 종류(등위접속사·종속접속사·접속부사)를 배워요.","q":45,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9.5 14.5l5-5M8 10l-2.5 2.5a3.5 3.5 0 0 0 5 5L13 15M16 14l2.5-2.5a3.5 3.5 0 0 0-5-5L11 9\"><\/path><\/svg>"},{"n":"14","ko":"관계문 · 분사","de":"Relativsätze und Partizipien","desc":"'내가 아는 남자'처럼 명사를 뒤에서 꾸며 주는 관계절을 배워요.","q":27,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9.6 14.4l4.8-4.8\"><\/path><path d=\"M13.4 6.6l1.9-1.9a3.75 3.75 0 0 1 5.3 5.3l-1.9 1.9\"><\/path><path d=\"M10.6 17.4l-1.9 1.9a3.75 3.75 0 0 1-5.3-5.3l1.9-1.9\"><\/path><\/svg>"},{"n":"15","ko":"수동태","de":"Das Passiv","desc":"'집이 지어진다'처럼 '~되다, ~받다'를 나타내는 수동태를 배워요.","q":32,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 8h13l-3-3M20 16H7l3 3\"><\/path><\/svg>"},{"n":"16","ko":"접속법","de":"Konjunktiv I und II","desc":"'~라면 ~할 텐데'처럼 사실이 아닌 일을 가정하거나 정중하게 부탁할 때 쓰는 접속법 II(würde·wäre·hätte·könnte)를 배워요.","q":26,"icon":"<svg class=\"ic\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9.5\" y=\"9.5\" width=\"11\" height=\"11\" rx=\"2.5\"><\/rect><path d=\"M6 15.5V6.5A1.5 1.5 0 0 1 7.5 5h9\" stroke-dasharray=\"2.4 2.4\" opacity=\".75\"><\/path><\/svg>"}];
+var KEY='soda-grammatik-progress-v1';
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $=function(id){return document.getElementById(id);};
+var CIRC=2*Math.PI*86;
+var filter='all',animateNext=true;
+
+/* ── 저장소 ── */
+function read(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&typeof d==='object'&&d.L)return d;}catch(e){}return{v:1,L:{}};}
+function stats(d){
+  var rows=LESSONS.map(function(l){
+    var e=d.L[l.n],a=e&&e.a?Object.keys(e.a):[],done=Math.min(a.length,l.q),ok=0;
+    a.forEach(function(k){if(e.a[k]&&e.a[k][1]===1)ok++;});
+    return{l:l,done:done,ok:ok,total:l.q,pct:l.q?done/l.q:0,status:done>=l.q&&l.q>0?'done':done>0?'doing':'todo'};
+  });
+  var sum=function(f){return rows.reduce(function(s,r){return s+f(r);},0);};
+  var answered=sum(function(r){return r.done;}),total=sum(function(r){return r.total;});
+  return{rows:rows,answered:answered,total:total,ok:sum(function(r){return r.ok;}),
+    lekDone:rows.filter(function(r){return r.status==='done';}).length,
+    pct:total?answered/total:0};
+}
+function target(s,d){
+  if(!s.answered&&!d.last)return{kind:'start',row:s.rows[0]};
+  var last=s.rows.filter(function(r){return r.l.n===d.last&&r.status!=='done';})[0];
+  var row=last||s.rows.filter(function(r){return r.status==='doing';})[0]||s.rows.filter(function(r){return r.status==='todo';})[0];
+  if(!row)return{kind:'review',row:s.rows[0]};
+  return{kind:s.answered?'resume':'start',row:row};
+}
+var href=function(l){return'lektionen/lektion-'+l.n+'.html';};
+
+/* ── 렌더 ── */
+function tween(from,to,ms,fn){
+  if(reduce||from===to){fn(to);return;}
+  var t0=performance.now();
+  (function step(t){var p=Math.min((t-t0)/ms,1),e=1-Math.pow(1-p,3);fn(from+(to-from)*e);if(p<1)requestAnimationFrame(step);})(t0);
+}
+var shown=0;
+function renderProgress(s,d){
+  var pct=Math.round(s.pct*100);
+  var prevPct=shown;shown=pct;
+  tween(prevPct,pct,800,function(v){$('ring-num').textContent=Math.round(v);$('ring-bar').style.strokeDashoffset=(CIRC*(1-v/100)).toFixed(2);});
+  $('ring-img').setAttribute('aria-label','전체 진행률 '+pct+'퍼센트');
+  $('prog-h').textContent=s.lekDone===LESSONS.length?'모든 Lektion을 마쳤어요'
+    :s.answered===0?'아직 시작 전이에요. 첫 Lektion부터 풀어 봐요'
+    :LESSONS.length+'개 중 '+s.lekDone+'개 Lektion을 마쳤어요';
+  $('st-lek').innerHTML=s.lekDone+'<small>/ '+LESSONS.length+'</small>';
+  $('st-q').innerHTML=s.answered+'<small>/ '+s.total+'</small>';
+  $('st-acc').innerHTML=s.answered?Math.round(s.ok/s.answered*100)+'<small>%</small>':'–';
+  var strip=$('strip');
+  if(!strip.children.length){
+    strip.innerHTML=s.rows.map(function(r){return'<li><a href="'+href(r.l)+'" data-n="'+r.l.n+'"><i></i></a></li>';}).join('');
+  }
+  s.rows.forEach(function(r,i){
+    var a=strip.children[i].firstChild;
+    a.title='Lektion '+r.l.n+' · '+r.l.ko+' — '+r.done+'/'+r.total;
+    a.setAttribute('aria-label',a.title);
+    a.firstChild.style.width=(r.pct*100).toFixed(1)+'%';
+  });
+  var t=target(s,d),l=t.row.l;
+  $('resume').href=href(l);
+  $('resume-k').textContent=t.kind==='start'?'첫 Lektion 시작하기':t.kind==='resume'?'이어서 학습하기':'처음부터 복습하기';
+  $('resume-t').textContent='Lektion '+l.n+' · '+l.ko;
+}
+function chipHTML(r){
+  if(r.status==='done')return'<span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 4.8"/></svg>완료</span>';
+  return'<span class="chip">'+(r.status==='doing'?'학습 중':'시작 전')+'</span>';
+}
+function renderCards(s){
+  var grid=$('grid');
+  var vis=s.rows.filter(function(r){return filter==='all'||r.status===filter;});
+  var html=vis.map(function(r,i){
+    var l=r.l;
+    return'<li><a class="card '+r.status+(animateNext?' in':'')+'" style="--i:'+i+'" href="'+href(l)+'">'
+      +'<div class="card-top"><span class="num">'+l.n+'</span><span class="ico">'+l.icon+'</span></div>'
+      +'<h3 class="ko">'+l.ko+'</h3><p class="de" lang="de">'+l.de+'</p><p class="desc">'+l.desc+'</p>'
+      +'<div class="foot"><div class="meter" role="progressbar" aria-label="Lektion '+l.n+' 진행률" aria-valuemin="0" aria-valuemax="'+r.total+'" aria-valuenow="'+r.done+'"><i style="width:'+(r.pct*100).toFixed(1)+'%"></i></div>'
+      +'<div class="foot-r"><span class="count">'+r.done+' / '+r.total+' 문제</span>'+chipHTML(r)+'</div></div></a></li>';
+  }).join('');
+  grid.innerHTML=html||'<li class="empty">해당하는 Lektion이 없어요.</li>';
+  animateNext=false;
+}
+function renderFilters(s){
+  var c={all:s.rows.length,doing:0,done:0,todo:0};
+  s.rows.forEach(function(r){c[r.status]++;});
+  var defs=[['all','전체'],['doing','학습 중'],['done','완료'],['todo','시작 전']];
+  $('filters').innerHTML=defs.map(function(x){return'<button type="button" class="chipbtn" data-f="'+x[0]+'" aria-pressed="'+(filter===x[0])+'">'+x[1]+' <b>'+c[x[0]]+'</b></button>';}).join('');
+}
+function render(){
+  var d=read(),s=stats(d);
+  renderProgress(s,d);renderFilters(s);renderCards(s);
+}
+
+/* ── 이벤트 ── */
+$('filters').addEventListener('click',function(e){
+  var b=e.target.closest('.chipbtn');if(!b)return;
+  filter=b.dataset.f;render();
+});
+$('reset').addEventListener('click',function(){
+  if(!confirm('모든 Lektion의 진행 기록을 지울까요? 되돌릴 수 없어요.'))return;
+  try{localStorage.removeItem(KEY);}catch(e){}
+  shown=100;render();
+});
+
+/* ── 화면 전환 ── */
+var cover=$('cover'),toc=$('toc'),first=true;
+function show(isToc,animate){
+  if(isToc){
+    cover.hidden=true;toc.hidden=false;
+    toc.classList.remove('leave');
+    toc.style.animation='none';void toc.offsetWidth;toc.style.animation='';
+    animateNext=true;window.scrollTo(0,0);render();
+    if(!first)toc.focus({preventScroll:true});
+  }else{
+    toc.hidden=true;cover.hidden=false;cover.classList.remove('leave');
+    window.scrollTo(0,0);
+  }
+  first=false;
+}
+function route(){show(location.hash==='#toc');}
+$('start').addEventListener('click',function(){
+  if(reduce){location.hash='#toc';return;}
+  cover.classList.add('leave');
+  setTimeout(function(){location.hash='#toc';},230);
+});
+$('to-cover').addEventListener('click',function(e){
+  e.preventDefault();
+  history.pushState('',document.title,location.pathname+location.search);
+  route();
+});
+window.addEventListener('hashchange',route);
+window.addEventListener('popstate',route);
+window.addEventListener('pageshow',function(e){if(!toc.hidden)render();});
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&!toc.hidden)render();});
+window.addEventListener('storage',function(e){if(e.key===KEY&&!toc.hidden)render();});
+route();
+})();
+</script>
+</body>
+</html>
