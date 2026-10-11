@@ -1,6 +1,6 @@
 # SODA GRAMMATIK KURS
 
-Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목차(나의 과제 진행률), Lektion 01–16으로 구성돼요.
+Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목차, Lektion 01–16으로 구성돼요.
 
 ## GitHub Pages로 배포하기
 
@@ -17,13 +17,6 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 - `lektionen/lektion-01.html … lektion-16.html` : 각 Lektion
 - `assets/` : 로고, Pretendard 폰트 (인터넷 연결 없이도 동작)
 
-## 진행률 기록
-
-- 각 Lektion의 문제를 풀면 학생 기기의 브라우저(localStorage)에 자동으로 저장돼요.
-- 같은 주소(도메인)에서 열어야 목차와 Lektion이 기록을 공유합니다.
-- 다른 기기나 다른 브라우저로 옮겨 가면 기록은 따로 시작돼요.
-- 목차 맨 아래 `진행 기록 초기화`로 지울 수 있어요.
-
 ## Lektion 추가·수정
 
-새 Lektion을 추가하려면 `lektionen` 폴더에 파일을 넣고 `index.html`의 `LESSONS` 목록에 항목(번호, 제목, 독일어 부제, 설명, 문제 수, 아이콘)을 추가하세요.
+새 Lektion을 추가하려면 `lektionen` 폴더에 파일을 넣고 `index.html`의 `LESSONS` 목록에 항목(번호, 제목, 독일어 부제, 설명, 아이콘)을 추가하세요.
