@@ -57,6 +57,10 @@ a{color:inherit;text-decoration:none}
 .opt:hover .go{gap:16px}
 .opt.hw .ico{background:var(--accent);color:#fff}
 
+.quote{margin:36px 0 0;padding:4px 0 4px 22px;border-left:3px solid var(--accent);animation:rise .6s var(--ease) both;animation-delay:.5s}
+.quote .de-q{font-size:clamp(19px,2.6vw,24px);font-weight:600;line-height:1.5;letter-spacing:-.01em;color:var(--accent);text-wrap:balance}
+.quote .ko-q{font-size:15px;color:var(--text-s);margin-top:8px;word-break:keep-all}
+.quote .by{font-size:12.5px;font-weight:700;letter-spacing:.14em;color:var(--text-m);margin-top:10px}
 .pager{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--bd)}
 .pager a{display:flex;flex-direction:column;gap:2px;max-width:48%;padding:10px 4px;font-size:13px;color:var(--text-m);transition:color .15s}
 .pager a:hover{color:var(--accent)}
@@ -131,6 +135,12 @@ a{color:inherit;text-decoration:none}
     </li>
   </ul>
 
+  <figure class="quote" id="quote" aria-label="오늘의 독일어 한마디">
+    <blockquote class="de-q" id="q-de" lang="de"></blockquote>
+    <p class="ko-q" id="q-ko"></p>
+    <figcaption class="by" id="q-by"></figcaption>
+  </figure>
+
   <nav class="pager" id="pager" aria-label="다른 Lektion"></nav>
 </div>
 
@@ -159,6 +169,30 @@ var p=L[i-1],q=L[i+1],h='';
 if(p)h+='<a class="prev" href="lektion.html?n='+p.n+'"><span>← 이전 Lektion</span><b>'+p.n+' · '+p.ko+'</b></a>';
 if(q)h+='<a class="next" href="lektion.html?n='+q.n+'"><span>다음 Lektion →</span><b>'+q.n+' · '+q.ko+'</b></a>';
 $('pager').innerHTML=h;
+
+/* 독일어 명언: Lektion 번호마다 하나씩 */
+var QUOTES=[
+['Wer fremde Sprachen nicht kennt, weiß nichts von seiner eigenen.','외국어를 모르는 사람은 자신의 모국어에 대해서도 아무것도 모른다.','Johann Wolfgang von Goethe'],
+['Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt.','내 언어의 한계는 내 세계의 한계를 뜻한다.','Ludwig Wittgenstein'],
+['Es ist nicht genug zu wissen, man muss auch anwenden; es ist nicht genug zu wollen, man muss auch tun.','아는 것만으로는 부족하다. 써 보아야 한다. 원하는 것만으로는 부족하다. 행동해야 한다.','Johann Wolfgang von Goethe'],
+['Aller Anfang ist schwer.','모든 시작은 어렵다.','Sprichwort · 속담'],
+['Die Sprache ist das bildende Organ des Gedankens.','언어는 사고를 만들어 가는 기관이다.','Wilhelm von Humboldt'],
+['Übung macht den Meister.','연습이 달인을 만든다.','Sprichwort · 속담'],
+['Was man nicht versteht, besitzt man nicht.','이해하지 못한 것은 내 것이 아니다.','Johann Wolfgang von Goethe'],
+['Steter Tropfen höhlt den Stein.','끊임없이 떨어지는 물방울이 돌을 뚫는다.','Sprichwort · 속담'],
+['Ohne Fleiß kein Preis.','노력 없이는 보상도 없다.','Sprichwort · 속담'],
+['Wer immer strebend sich bemüht, den können wir erlösen.','끊임없이 애쓰며 노력하는 사람을, 우리는 구원할 수 있다.','Johann Wolfgang von Goethe'],
+['Aus Fehlern wird man klug.','실수에서 지혜가 생긴다.','Sprichwort · 속담'],
+['Man lernt nie aus.','배움에는 끝이 없다.','Sprichwort · 속담'],
+['Rom wurde auch nicht an einem Tag erbaut.','로마도 하루아침에 세워지지 않았다.','Sprichwort · 속담'],
+['Wer rastet, der rostet.','쉬는 사람은 녹슨다.','Sprichwort · 속담'],
+['Wer wagt, gewinnt.','도전하는 사람이 얻는다.','Sprichwort · 속담'],
+['Wer A sagt, muss auch B sagen.','A라고 말했으면 B도 말해야 한다. 시작했으면 끝까지 해야 한다는 뜻이에요.','Sprichwort · 속담']
+];
+var qt=QUOTES[i%QUOTES.length];
+$('q-de').textContent='\u201E'+qt[0]+'\u201C';
+$('q-ko').textContent=qt[1];
+$('q-by').textContent=qt[2];
 
 $('page').hidden=false;
 })();
