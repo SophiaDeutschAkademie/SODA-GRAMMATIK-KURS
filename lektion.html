@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lektion · SODA GRAMMATIK KURS</title>
-<meta name="description" content="Sophia Deutsch Akademie의 독일어 문법 학습 코스. 교재와 과제 중 하나를 골라요.">
+<meta name="description" content="Sophia Deutsch Akademie의 독일어 문법 학습 코스. 교재, 과제, 연습문제 중 하나를 골라요.">
 <meta name="theme-color" content="#FAFAF8">
 <meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" href="assets/logo.png">
@@ -24,7 +24,7 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
 [hidden]{display:none!important}
 
-.page{max-width:920px;margin:0 auto;padding:0 clamp(16px,4vw,32px) 72px;animation:viewIn .5s var(--ease) both}
+.page{max-width:1040px;margin:0 auto;padding:0 clamp(16px,4vw,32px) 72px;animation:viewIn .5s var(--ease) both}
 @keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
@@ -44,7 +44,7 @@ a{color:inherit;text-decoration:none}
 .head h1{font-size:clamp(24px,4.4vw,38px);font-weight:800;line-height:1.25;letter-spacing:-.02em;word-break:keep-all}
 .head .de{font-size:15px;color:var(--text-m);font-weight:500;font-style:italic;margin-top:4px}
 
-.choose{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;list-style:none}
+.choose{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:16px;list-style:none}
 .opt{position:relative;display:flex;flex-direction:column;height:100%;padding:26px 26px 24px;background:var(--bg-c);border:1px solid var(--bd);border-radius:20px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s;animation:rise .6s var(--ease) both;animation-delay:calc(var(--i)*70ms + 120ms)}
 .opt:hover{transform:translateY(-4px);border-color:#C9CDDB;box-shadow:0 18px 34px -22px rgba(56,69,104,.55)}
 .opt .ico{width:52px;height:52px;border-radius:14px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:22px}
@@ -111,6 +111,15 @@ a{color:inherit;text-decoration:none}
         <span class="go">과제 풀기<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span>
       </a>
     </li>
+    <li>
+      <a class="opt" id="opt-ub" style="--i:2">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6.5l1.6 1.6L8.5 5M4 12.5l1.6 1.6L8.5 11M4 18.5l1.6 1.6L8.5 17M12 7h8M12 13h8M12 19h8"/></svg></span>
+        <span class="kind">ÜBUNG</span>
+        <h2>연습문제</h2>
+        <p>심화 문제를 더 풀어 보며 이 과의 내용을 굳혀요.</p>
+        <span class="go">연습문제 풀기<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span>
+      </a>
+    </li>
   </ul>
 
   <nav class="pager" id="pager" aria-label="다른 Lektion"></nav>
@@ -134,6 +143,7 @@ $('ko').textContent=l.ko;
 $('de').textContent=l.de;
 $('opt-book').href='lektionen/lektion-'+l.n+'.html';
 $('opt-hw').href='hausaufgaben/lektionen/lektion-'+l.n+'.html';
+$('opt-ub').href='uebungen/lektionen/lektion-'+l.n+'.html';
 
 var p=L[i-1],q=L[i+1],h='';
 if(p)h+='<a class="prev" href="lektion.html?n='+p.n+'"><span>← 이전 Lektion</span><b>'+p.n+' · '+p.ko+'</b></a>';
