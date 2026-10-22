@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<script>window.__resources={"https://unpkg.com/react@18.3.1/umd/react.production.min.js": "../assets/vendor/react.production.min.js", "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "../assets/vendor/react-dom.production.min.js"};</script>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/sd-nav.css">
+<link rel="icon" type="image/png" href="../assets/logo.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hausaufgabe Lektion 03 현재형 동사변화</title>
+<script src="../assets/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<style>
+  :root{
+    --bg:#fbfbfa; --paper:#ffffff; --ink:#191b1f; --muted:#6b7280;
+    --line:#e6e7ec; --line2:#d3d6de; --accent:#384568; --err:#c4392e;
+    --sans:'Inter','Noto Sans KR','Helvetica Neue',Arial,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --c1:#3559b3; --t1:#eef1fa; --l1:#ccd6ef;
+    --c2:#6a45ab; --t2:#f3eefb; --l2:#dbcef0;
+    --c3:#0e7a5f; --t3:#e9f5f1; --l3:#c3e2d8;
+    --c4:#a05c12; --t4:#fbf2e6; --l4:#eddcc0;
+    --c5:#b03a6b; --t5:#fbeef4; --l5:#eecfdf;
+    --c6:#1f7fa3; --t6:#eaf4f9; --l6:#c9e2ee;
+    --c7:#4b4f58; --t7:#f2f3f5; --l7:#dcdee3;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 32px;}
+  p{margin:0 0 12px;text-wrap:pretty;}
+  strong{font-weight:700;color:var(--c,var(--accent));}
+  em{color:var(--muted);font-style:italic;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{color:var(--ink);text-decoration:underline;}
+
+  .toolbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid var(--line);}
+  .toolbar .row{max-width:900px;margin:0 auto;padding:10px 32px;display:flex;align-items:center;gap:10px;}
+  .tb-title{font-size:13px;font-weight:700;color:var(--muted);}
+  .tb-title span{color:var(--accent);}
+  .tb-spacer{flex:1;}
+  .prog{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+  .prog .bar{width:104px;height:7px;background:var(--line);border-radius:999px;overflow:hidden;}
+  .prog .bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s ease;}
+  .prog b{color:var(--ink);font-weight:700;font-size:13px;}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s;}
+  .btn:hover{border-color:var(--ink);background:#f4f5f7;}
+  .btn.go{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .btn.go:hover{background:#28324e;border-color:#28324e;}
+  .btn.ghost{background:#eef0f4;border-color:transparent;color:var(--accent);}
+  .btn.ghost:hover{background:#e3e7ee;border-color:transparent;}
+
+  .head{padding:44px 0 0;}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+  .brand img{height:44px;width:auto;display:block;}
+  .brand .bt b{display:block;font-size:14px;font-weight:700;color:var(--ink);line-height:1.2;}
+  .head h1{font-size:44px;line-height:1.08;margin:0 0 10px;font-weight:700;letter-spacing:-.025em;}
+  .head .lead{font-size:19px;color:var(--muted);margin:0;font-weight:500;}
+  .meta{display:flex;gap:24px;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line2);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  .meta .f{display:flex;align-items:center;gap:10px;}
+  .meta .f.grow{flex:1;}
+  .meta .f i{font-style:normal;font-weight:600;}
+  .meta input.name{flex:1;font-family:var(--sans);font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);border:1.5px solid var(--line2);border-radius:999px;background:#fff;padding:7px 15px;min-width:150px;}
+  .meta input.name:focus{outline:none;border-color:var(--accent);}
+
+  .toc{margin:36px 0 4px;display:grid;gap:4px;}
+  .toc .toc-row{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:11px 16px;border-radius:12px;background:var(--ct,#f3f4f7);align-items:center;}
+  .toc .tn{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--c,var(--accent));}
+  .toc .tn::before{content:'';width:9px;height:9px;border-radius:999px;background:var(--c,var(--accent));flex:none;}
+  .toc .td{font-size:14.5px;color:var(--muted);}
+  .toc .toc-row.c1{--c:var(--c1);--ct:var(--t1);}
+  .toc .toc-row.c2{--c:var(--c2);--ct:var(--t2);}
+  .toc .toc-row.c3{--c:var(--c3);--ct:var(--t3);}
+  .toc .toc-row.c4{--c:var(--c4);--ct:var(--t4);}
+  .toc .toc-row.c5{--c:var(--c5);--ct:var(--t5);}
+  .toc .toc-row.c6{--c:var(--c6);--ct:var(--t6);}
+  .toc .toc-row.c7{--c:var(--c7);--ct:var(--t7);}
+
+  .step{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;margin-top:64px;}
+  .step.s1{--c:var(--c1);--ct:var(--t1);--cl:var(--l1);}
+  .step.s2{--c:var(--c2);--ct:var(--t2);--cl:var(--l2);}
+  .step.s3{--c:var(--c3);--ct:var(--t3);--cl:var(--l3);}
+  .step.s4{--c:var(--c4);--ct:var(--t4);--cl:var(--l4);}
+  .step.s5{--c:var(--c5);--ct:var(--t5);--cl:var(--l5);}
+  .step.s6{--c:var(--c6);--ct:var(--t6);--cl:var(--l6);}
+  .step.s7{--c:var(--c7);--ct:var(--t7);--cl:var(--l7);}
+  .sheet.mono .step,.sheet.mono .toc .toc-row{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;}
+  .step-head{display:flex;gap:18px;align-items:center;background:var(--ct);border-radius:22px;padding:22px 24px;margin-bottom:26px;}
+  .step-n{flex:none;width:58px;height:58px;border-radius:18px;background:var(--c);color:#fff;font-size:23px;font-weight:700;display:grid;place-items:center;letter-spacing:-.02em;}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c);margin:0 0 3px;}
+  .step-title{font-size:29px;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.02em;}
+  .lede{color:#4b5058;font-size:16px;margin:0 0 20px;}
+  .sub{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin:52px 0 14px;padding-bottom:12px;border-bottom:2px solid var(--cl);}
+  .sub .de{flex:none;font-size:13px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:5px 12px;}
+  .sub em{font-size:14px;font-weight:500;color:var(--muted);font-style:normal;}
+  .sub2{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--c);margin:42px 0 8px;}
+  .sub2::before{content:'';width:14px;height:3px;border-radius:2px;background:var(--c);flex:none;}
+
+  table.g{width:100%;border-collapse:collapse;margin:16px 0 10px;font-size:15.5px;}
+  table.g caption{text-align:left;font-size:13px;font-weight:700;color:var(--c);padding-bottom:8px;}
+  table.g th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 12px;border-bottom:2px solid var(--cl);white-space:nowrap;}
+  table.g td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.g tr:hover td{background:var(--ct);}
+  table.g td.k{font-weight:600;color:var(--ink);white-space:nowrap;}
+  table.g.center td,table.g.center th{text-align:center;}
+  table.g.center td:first-child,table.g.center th:first-child{text-align:left;}
+  .ghost td{color:#9aa0aa;background:#fafafb;}
+
+  .tip{font-size:14.5px;color:#4b5058;margin:16px 0;padding:14px 18px;background:var(--ct);border-radius:14px;line-height:1.6;}
+  .tip b.t{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--c);border-radius:999px;padding:3px 10px;margin-right:10px;}
+  .bsp{margin:18px 0;padding:18px 20px;background:var(--paper);border:1.5px solid var(--cl);border-radius:18px;}
+  .bsp .lab{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c);background:var(--ct);border-radius:999px;padding:4px 12px;margin-bottom:10px;}
+  .bsp .de{font-size:16.5px;}
+  .bsp .ko{color:var(--muted);font-size:14.5px;}
+
+  .audio{position:sticky;top:54px;z-index:24;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 12px;padding:14px 16px;background:var(--paper);border:1.5px solid var(--cl);border-radius:20px;box-shadow:0 10px 26px rgba(24,26,32,.10);}
+  .audio-tag{font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;flex:none;}
+  .audio audio{flex:1 1 260px;min-width:200px;height:40px;}
+  .ap-extras{flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ap-speed{flex:none;display:flex;align-items:center;gap:4px;}
+  .ap-speed .lbl{font-size:11px;font-weight:700;color:var(--muted);margin-right:4px;}
+  .ap-speed button{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--muted);background:#f2f3f6;border:none;border-radius:999px;padding:7px 11px;cursor:pointer;line-height:1;}
+  .ap-speed button:hover{background:#e6e8ed;}
+  .ap-speed button[aria-pressed="true"]{background:var(--c);color:#fff;}
+  .ap-dl{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;flex:none;text-decoration:none;}
+  .ap-dl:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  ol.ex{list-style:none;counter-reset:ex;padding:0;margin:18px 0;}
+  ol.ex>li{counter-increment:ex;display:grid;grid-template-columns:30px 1fr;gap:4px 14px;padding:16px 0 17px;border-bottom:1px solid var(--line);}
+  ol.ex>li::before{content:counter(ex);font-size:12px;font-weight:700;color:var(--c);background:var(--ct);border-radius:999px;width:26px;height:26px;display:grid;place-items:center;margin-top:3px;}
+  ol.ex .de{font-size:16.5px;margin:0;}
+  ol.ex .sol{margin:10px 0 0;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14.5px;}
+  ol.ex .sol .bl.lg{flex:1 1 auto;display:inline-block;width:auto;min-width:180px;margin-top:0;}
+  ol.ex .sol .ar{color:var(--c);font-weight:700;font-size:15px;}
+  ol.ex strong[style*="underline"]{text-decoration-color:var(--c) !important;text-decoration-thickness:2px;text-underline-offset:3px;}
+  ol.ex p.de[style*="--err"]{padding:10px 14px !important;background:#fdf1f0 !important;border-left:4px solid var(--err) !important;border-radius:12px;}
+  .note{grid-column:2;font-family:var(--mono);font-size:12px;color:#8b909a;margin-top:6px;}
+  .vb{display:inline-block;font-weight:600;color:#3d434c;background:#e8eaef;padding:3px 11px;border-radius:999px;font-size:15px;white-space:nowrap;}
+  ol.ex .sol .giv{font-weight:600;color:var(--ink);}
+  ol.gram>li{padding:12px 0;}
+  ol.gram>li .de{line-height:2.2;font-size:16px;}
+  ol.gram input.bl{min-width:50px;}
+
+  input.bl{font-family:var(--sans);font-size:15.5px;font-weight:600;color:var(--c);background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px 9px;min-width:74px;text-align:center;transition:background .15s,border-color .15s;}
+  input.bl:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.bl::placeholder{color:#a5aab4;font-weight:400;}
+  input.bl.ko{text-align:left;min-width:230px;color:var(--ink);font-weight:500;}
+  input.bl.lg{display:block;width:100%;text-align:left;min-width:0;margin-top:8px;color:var(--ink);font-weight:500;}
+  input.bl.sm{width:58px;min-width:0;}
+  input.bl.rsn{text-align:left;min-width:160px;width:210px;color:var(--ink);font-weight:500;font-size:14px;}
+  input.bl.rsn::placeholder{font-style:italic;}
+
+  table.sp{width:100%;border-collapse:collapse;margin:14px 0;font-size:16px;}
+  table.sp th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 14px;border-bottom:2px solid var(--cl);}
+  table.sp th.c{text-align:center;}
+  table.sp td{padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.sp td.ko{color:#4b5058;width:40%;}
+  table.sp td.de{font-weight:600;width:42%;}
+  table.sp td.de.tog{cursor:pointer;color:transparent;background:var(--ct);border-radius:12px;user-select:none;position:relative;}
+  table.sp td.de.tog::after{content:'눌러서 확인';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--c);opacity:.6;}
+  table.sp td.de.tog.show{color:inherit;background:transparent;}
+  table.sp td.de.tog.show::after{display:none;}
+  table.sp td.cnt{width:18%;text-align:center;white-space:nowrap;}
+  input.cnt{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--c);width:56px;text-align:center;background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px;}
+  input.cnt:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.cnt::-webkit-inner-spin-button{opacity:.4;}
+  .cnt-u{font-size:12px;color:var(--muted);margin-left:6px;}
+
+  .assess{background:#eceef0;border:1.5px solid #d3d8db;border-radius:24px;margin:48px 0 0;padding:28px 28px 32px;}
+  .assess .ahead{font-size:15px;font-weight:700;color:#2f3a3a;margin:0 0 6px;display:flex;align-items:center;gap:10px;}
+  .assess .ahead .tagpill{flex:none;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.08em;background:#2f3a3a;color:#fff;border-radius:999px;padding:4px 12px;}
+  .assess .ainst{color:#4a5252;font-size:14.5px;margin:0 0 8px;}
+  .assess .sub2{color:#33403f;}
+  .assess .sub2::before{background:#33403f;}
+  .check{display:flex;align-items:center;gap:14px;padding:11px 2px;border-bottom:1px solid #dadfe0;}
+  .check p{margin:0;font-size:15px;flex:1;color:#23292a;}
+  .rate{display:inline-flex;gap:6px;flex:none;}
+  .rate button{font-family:var(--sans);width:36px;height:36px;border:1.5px solid #c3c9ca;background:#fff;color:#5a6363;font-weight:700;font-size:14px;cursor:pointer;border-radius:999px;line-height:1;transition:background .15s,border-color .15s;}
+  .rate button:hover{border-color:#2f3a3a;}
+  .rate button[aria-pressed="true"]{background:#2f3a3a;color:#fff;border-color:#2f3a3a;}
+  .scorebox{margin:22px 0 0;padding:18px 20px;background:#fff;border-radius:16px;font-size:14.5px;color:#414a4a;line-height:1.75;}
+  .scorebox b{color:#23292a;font-weight:700;}
+
+  .footer{margin:52px 0 80px;padding-top:28px;border-top:1px solid var(--line2);text-align:center;}
+  .footer h3{font-size:26px;margin:0 0 10px;font-weight:700;letter-spacing:-.02em;}
+  .footer p{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto 20px;}
+  .footer .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+  .fontctl{position:fixed;right:18px;bottom:18px;z-index:40;display:flex;align-items:center;gap:3px;background:rgba(25,27,31,.55);backdrop-filter:saturate(140%) blur(7px);-webkit-backdrop-filter:saturate(140%) blur(7px);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px;box-shadow:0 6px 20px rgba(0,0,0,.22);}
+  .fontctl button{font-family:var(--sans);color:#fff;background:transparent;border:none;cursor:pointer;font-weight:700;border-radius:999px;line-height:1;}
+  .fontctl button[data-fs="dec"],.fontctl button[data-fs="inc"]{width:34px;height:34px;font-size:14px;}
+  .fontctl button[data-fs="dec"]:hover,.fontctl button[data-fs="inc"]:hover{background:rgba(255,255,255,.2);}
+  .fontctl .fs-val{min-width:48px;height:34px;font-size:11px;opacity:.9;}
+  .fontctl .fs-val:hover{background:rgba(255,255,255,.15);}
+
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{size:A4;margin:16mm 14mm 20mm 14mm;}
+    body{background:#fff !important;font-size:10.5pt;line-height:1.5;}
+    .toolbar,.fontctl,.audio,.footer .acts{display:none !important;}
+    .wrap{max-width:none;padding:0;}
+    .head{padding-top:0;}
+    .head h1{font-size:22pt;}
+    .head .lead{font-size:11pt;}
+    .brand{margin-bottom:18px;}
+    .brand img{height:30px;}
+    .meta{margin-top:10px;padding-top:8px;}
+    .meta input.name{min-width:180px;font-size:11pt;}
+    .toc{margin:12px 0 4px;gap:2px;}
+    .toc .toc-row{padding:5px 10px;}
+    .toc .tn{font-size:10pt;}
+    .toc .td{font-size:9.5pt;}
+    .step{margin-top:18px;}
+    section.step{break-before:page;}
+    section.step:first-of-type{break-before:auto;}
+    .step-head{padding:12px 14px;margin-bottom:14px;border-radius:12px;}
+    .step-n{width:40px;height:40px;border-radius:12px;font-size:15pt;}
+    .eyebrow{font-size:8pt;}
+    .step-title{font-size:16pt;}
+    .lede{font-size:10pt;margin-bottom:10px;}
+    .sub{margin-top:22px;padding-bottom:6px;font-size:12pt;}
+    .sub .de{font-size:9pt;padding:3px 9px;}
+    .sub2{margin-top:16px;font-size:10.5pt;}
+    table.g,table.sp,ol.ex>li,.tip,.bsp,.check,.scorebox,.step-head,.sub{break-inside:avoid;}
+    input.bl,input.cnt,input.name{background:transparent !important;border:none !important;border-bottom:1.2px solid #333 !important;border-radius:0 !important;color:#000 !important;font-size:10.5pt;}
+    input::placeholder{color:transparent !important;}
+    input.bl.sm{width:64px;min-width:0;}
+    input.bl.ko{min-width:70%;max-width:100%;}
+    input.bl.lg{width:100%;min-width:0;}
+    input.bl.rsn{min-width:45%;width:auto;}
+    input.cnt{width:44px;}
+    ol.ex>li{padding:8px 0;}
+    ol.ex .de{font-size:10.5pt;}
+    ol.ex .sol{font-size:10pt;}
+    ol.ex p.de[style*="--err"]{background:#f5f5f5 !important;border-left-color:#999 !important;}
+    ol.gram>li .de{line-height:1.95;font-size:10.5pt;}
+    .note{font-size:8.5pt;}
+    .tip{padding:8px 12px;font-size:9.5pt;}
+    .bsp{padding:10px 14px;}
+    .bsp .de{font-size:10.5pt;}
+    .bsp .ko{font-size:9.5pt;}
+    table.g{font-size:10pt;}
+    table.g th{font-size:9pt;padding:5px 8px;}
+    table.g td{padding:6px 8px;}
+    table.g tr:hover td{background:transparent;}
+    table.sp{font-size:10.5pt;}
+    table.sp th{font-size:9pt;padding:5px 10px;}
+    table.sp td{padding:7px 10px;}
+    table.sp td.de.tog{color:#000 !important;background:transparent !important;}
+    table.sp td.de.tog::after{display:none !important;}
+    .vb{background:#eee;font-size:10pt;padding:1px 8px;}
+    .assess{break-before:page;background:#f4f5f6 !important;margin:16px 0 0;padding:18px 18px 22px;border-radius:14px;}
+    .assess .ahead{font-size:11pt;}
+    .assess .ainst{font-size:9.5pt;}
+    .check{padding:6px 0;}
+    .check p{font-size:10pt;}
+    .rate button{width:26px;height:26px;font-size:9pt;background:#fff;}
+    .scorebox{font-size:9.5pt;padding:12px 14px;}
+    .footer{margin:20px 0 0;padding-top:14px;}
+    .footer h3{font-size:14pt;}
+    .footer p{font-size:9.5pt;}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 18px;}
+    .head h1{font-size:32px;}
+    .head .lead{font-size:17px;}
+    .step-head{padding:16px;gap:14px;}
+    .step-n{width:48px;height:48px;font-size:19px;border-radius:14px;}
+    .step-title{font-size:24px;}
+    .sub{font-size:17px;}
+    .toolbar .row{flex-wrap:wrap;padding:8px 18px;}
+    .toc .toc-row{grid-template-columns:1fr;gap:4px;}
+    table.sp td{display:block;width:100%;}
+    table.sp td.ko{border-bottom:none;padding-bottom:0;}
+    table.sp td.cnt{text-align:left;}
+    .assess{padding:22px 18px 26px;border-radius:18px;}
+  }
+  .toc .toc-day{display:flex;align-items:baseline;gap:10px;margin:20px 0 6px;padding:0 4px;}
+  .toc .toc-day:first-child{margin-top:0;}
+  .toc .toc-day b{font-size:14.5px;font-weight:700;color:var(--ink);}
+  .toc .toc-day em{font-size:13px;color:var(--muted);font-style:normal;}
+  .toc a.toc-row{grid-template-columns:120px 1fr auto;text-decoration:none;color:inherit;transition:box-shadow .14s;}
+  .toc a.toc-row:hover{box-shadow:0 4px 14px rgba(24,26,32,.10);text-decoration:none;}
+  .toc a.toc-row .go{color:var(--c,var(--accent));font-weight:700;font-size:15px;opacity:.5;}
+  .toc a.toc-row:hover .go{opacity:1;}
+  .planbox{margin:22px 0 0;padding:16px 20px;background:#fff;border:1.5px dashed var(--line2);border-radius:16px;font-size:14.5px;color:#4b5058;line-height:1.6;}
+  .planbox b{color:var(--ink);font-weight:700;}
+  .daybar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:76px 0 0;padding:14px 22px;background:var(--ink);color:#fff;border-radius:999px;}
+  .daybar b{font-size:15px;font-weight:700;}
+  .daybar span{font-size:13.5px;color:rgba(255,255,255,.72);}
+  .daybar + section.step{margin-top:22px;}
+  section.step{scroll-margin-top:78px;}
+  .mc{display:inline-flex;flex-wrap:wrap;gap:5px;vertical-align:middle;}
+  .mc button{font-family:var(--sans);font-size:14px;font-weight:600;color:#4b5058;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.35;white-space:nowrap;transition:background .14s,color .14s,border-color .14s;}
+  .mc button:hover{background:#e4e7ec;}
+  .mc button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;}
+  .mcq{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px;font-size:16px;}
+  ol.gram>li .de .mc{margin:0 2px;}
+  ol.ex .sol .lbl{font-weight:700;color:var(--ink);}
+  @media print{
+    .toc a.toc-row .go{display:none;}
+    .toc .toc-day{margin:8px 0 3px;}
+    .toc .toc-day b{font-size:10pt;}
+    .toc .toc-day em{font-size:9pt;}
+    .planbox{margin:10px 0 0;padding:8px 12px;font-size:9.5pt;border-radius:10px;}
+    .daybar{margin:0 0 10px;padding:7px 14px;background:#e9e9e9 !important;color:#000;border-radius:8px;break-before:page;}
+    .daybar span{color:#444;}
+    .daybar + section.step{break-before:auto !important;margin-top:0;}
+    .mc button{background:#fff !important;border:1px solid #999 !important;color:#333 !important;padding:2px 9px;font-size:9.5pt;}
+    .mc button[aria-pressed="true"]{background:#333 !important;color:#fff !important;border-color:#333 !important;}
+    .mcq{font-size:10.5pt;}
+  }
+
+
+  .step[data-sec="s1"]{--c:var(--c1);--ct:var(--t1);--cl:var(--l1);}
+  .step[data-sec="s2"]{--c:var(--c2);--ct:var(--t2);--cl:var(--l2);}
+  .step[data-sec="s3"]{--c:var(--c3);--ct:var(--t3);--cl:var(--l3);}
+  .step[data-sec="s4"]{--c:var(--c4);--ct:var(--t4);--cl:var(--l4);}
+  .step[data-sec="s5"]{--c:var(--c5);--ct:var(--t5);--cl:var(--l5);}
+  .step[data-sec="s6"]{--c:var(--c6);--ct:var(--t6);--cl:var(--l6);}
+  .step[data-sec="s7"]{--c:var(--c7);--ct:var(--t7);--cl:var(--l7);}
+  .step[data-sec="mw1"],.step[data-sec="mw2"]{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;}
+  .step[data-sec="mw1"],.step[data-sec="mw2"]{background:#f7f8fa;border:1.5px solid var(--line);border-radius:22px;padding:24px 26px 28px;}
+  ol.ex.chq>li>div>p.de{margin-bottom:10px;}
+  .chx{display:flex;flex-direction:column;gap:6px;margin:0 0 6px;}
+  .chx.row{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;}
+  .chx.row .chl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--muted);min-width:40px;}
+  .chx button{font-family:var(--sans);font-size:14.5px;font-weight:500;line-height:1.5;text-align:left;padding:9px 15px;border:1.5px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);cursor:pointer;transition:background .14s,border-color .14s,color .14s;}
+  .chx.row button{padding:6px 13px;font-size:14px;white-space:nowrap;border-radius:999px;}
+  .chx button>b:first-child{font-weight:700;color:var(--muted);margin-right:5px;}
+  .chx button:hover{border-color:var(--c);background:var(--ct);}
+  .chx button[aria-pressed="true"]{border-color:var(--c);background:var(--c);color:#fff;font-weight:600;}
+  .chx button[aria-pressed="true"]>b:first-child{color:rgba(255,255,255,.68);}
+  .chx.ck-ok button[aria-pressed="true"]{border-color:#0e7a5f;background:#0e7a5f;}
+  .chx.ck-no button[aria-pressed="true"]{border-color:#c4392e;background:#c4392e;}
+  .chkbar{display:flex;align-items:center;gap:10px;margin:14px 0 2px;}
+  .chkbar button{font-family:var(--sans);font-size:13px;font-weight:600;white-space:nowrap;padding:7px 15px;border:1.5px solid var(--c);border-radius:999px;background:#fff;color:var(--c);cursor:pointer;}
+  .chkbar button:hover{background:var(--ct);}
+  .chkbar button[disabled]{opacity:.4;cursor:default;}
+  .chkbar .chkres{font-size:13px;color:var(--muted);}
+  input.ck-ok{border-bottom-color:#0e7a5f !important;background:rgba(14,122,95,.10) !important;}
+  input.ck-near{border-bottom-color:#a05c12 !important;background:rgba(160,92,18,.12) !important;}
+  input.ck-no{border-bottom-color:#c4392e !important;background:rgba(196,57,46,.09) !important;}
+  .ckans{font-family:var(--sans);font-size:12.5px;color:#0e7a5f;font-weight:700;margin-left:6px;white-space:nowrap;}
+  .chx + .ckans{display:block;margin:4px 0 0;white-space:normal;line-height:1.5;}
+  input.bl.md{width:104px;min-width:0;}
+  @media print{
+    .chkbar,.ckans{display:none !important;}
+    .chx button{border:0.8pt solid #999 !important;background:#fff !important;color:#000 !important;padding:3px 9px;font-size:9.5pt;border-radius:8px;}
+    .chx button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;}
+    .chx button[aria-pressed="true"]>b:first-child{color:#000;}
+    .step[data-sec="mw1"],.step[data-sec="mw2"]{background:#fff !important;border:1pt solid #999;border-radius:8px;padding:12px 14px;}
+    input.bl.md{width:100px;}
+  }
+
+  /* ===== 클릭 드롭다운 객관식 ===== */
+  .chx{position:relative;display:inline-flex;flex-direction:column;align-items:stretch;gap:0;max-width:100%;}
+  .chx.row{flex-direction:row;align-items:center;gap:10px;}
+  ol.ex>li>div>.chx,ol.chq>li>div>.chx{margin:6px 0;}
+  .mct{display:inline-flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--sans);font-size:14.5px;font-weight:600;color:#6b7280;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:7px 15px;min-width:150px;max-width:min(440px,90%);cursor:pointer;line-height:1.35;text-align:left;transition:background .14s,border-color .14s,color .14s;}
+  .mct:hover{background:#e6e8ee;}
+  .mct i{font-style:normal;font-size:11px;opacity:.6;transition:transform .16s;flex:none;}
+  .mct .mctv{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .chx.open>.mct{background:var(--ct);border-color:var(--c);color:var(--c);}
+  .chx.open>.mct i{transform:rotate(180deg);}
+  .chx.picked>.mct{background:var(--c);border-color:var(--c);color:#fff;}
+  .chx.ck-ok.picked>.mct{background:#0e7a5f;border-color:#0e7a5f;color:#fff;}
+  .chx.ck-no.picked>.mct{background:#c4392e;border-color:#c4392e;color:#fff;}
+  .mco{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:60;flex-direction:column;gap:4px;min-width:max(100%,200px);width:max-content;max-width:min(560px,78vw);background:#fff;border:1.5px solid var(--line2);border-radius:16px;padding:7px;box-shadow:0 14px 34px rgba(20,24,40,.15);}
+  .chx.open>.mco{display:flex;}
+  .mco button{text-align:left;white-space:normal;border-radius:11px;padding:8px 13px;font-size:15px;font-weight:500;background:#fff;border:1.5px solid transparent;color:var(--ink);cursor:pointer;line-height:1.45;font-family:var(--serif);width:100%;display:flex;gap:9px;align-items:baseline;}
+  .mco button:hover{background:var(--ct);}
+  .mco button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;}
+  .mco button>b{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--muted);flex:none;}
+  .mco button[aria-pressed="true"]>b{color:rgba(255,255,255,.72);}
+
+  @media print{
+    .chx{display:block;position:static;}
+    .mct{display:none !important;}
+    .mco{display:block !important;position:static;border:none !important;box-shadow:none !important;padding:0;max-width:100%;width:auto;background:transparent;}
+    .mco button{display:block;margin:2px 0;padding:3px 9px;font-size:9.5pt;border-radius:8px;white-space:normal;background:#fff !important;border:1px solid #999 !important;color:#333 !important;}
+    .mco button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;font-weight:700;}
+    .mco button>b{color:#000 !important;}
+  }
+
+  .mc,.chx{align-items:flex-start;}
+  .mct{width:max-content;max-width:min(460px,100%);}
+
+  /* ===== Schritt 4C · 4D ===== */
+  .ser-only{display:none !important;}
+  .hblock{position:relative;}
+  .clipbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 0;}
+  .cliptag{flex:none;font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;}
+  ol.ex .lrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  button.play{flex:none;width:40px;height:40px;border-radius:999px;border:none;background:var(--c);color:#fff;cursor:pointer;display:inline-grid;place-items:center;font-family:var(--sans);font-size:13px;line-height:1;padding:0;box-shadow:0 4px 12px rgba(24,26,32,.14);transition:background .15s,transform .1s;}
+  button.play::before{content:'\25B6\FE0E';margin-left:2px;}
+  button.play.on{background:var(--ink);}
+  button.play.on::before{content:'\25A0';margin-left:0;}
+  button.play:active{transform:scale(.94);}
+  input.bl.w4d{min-width:0;width:118px;}
+  .reveal{display:none;margin:10px 0 0;padding:10px 14px;background:var(--ct);border-radius:12px;}
+  .reveal.show{display:block;}
+  .reveal .rv-de{display:block;font-size:16.5px;font-weight:600;color:var(--ink);}
+  .reveal .rv-clue{display:block;font-size:13.5px;color:#4b5058;margin-top:4px;}
+  .k1,.k1s{color:var(--c);border-bottom:2.5px solid var(--c);}
+  .k1s{font-weight:700;}
+  details.script{margin:28px 0 0;border:1.5px solid var(--cl);border-radius:18px;background:var(--paper);overflow:hidden;}
+  details.script>summary{cursor:pointer;list-style:none;padding:14px 18px;font-size:15px;font-weight:700;color:var(--c);background:var(--ct);}
+  details.script>summary::-webkit-details-marker{display:none;}
+  details.script>summary::before{content:'\25B8\FE0E';display:inline-block;margin-right:8px;transition:transform .15s;}
+  details.script[open]>summary::before{transform:rotate(90deg);}
+  .sinst{font-size:13.5px;color:var(--muted);margin:12px 18px 8px;}
+  .slegend{display:flex;flex-wrap:wrap;gap:8px;margin:0 18px 12px;font-size:12.5px;}
+  .slegend span{padding:2px 10px;}
+  button.sline{display:grid;grid-template-columns:28px 1fr;gap:2px 10px;width:100%;text-align:left;background:#fff;border:none;border-top:1px solid var(--line);padding:10px 18px;cursor:pointer;font-family:var(--sans);color:var(--ink);line-height:1.5;}
+  button.sline:hover{background:var(--ct);}
+  button.sline.on{background:var(--ct);box-shadow:inset 4px 0 0 var(--c);}
+  button.sline .sn{grid-row:span 2;font-size:12px;font-weight:700;color:var(--c);padding-top:3px;}
+  button.sline .sde{font-size:16px;font-weight:500;}
+  button.sline .sko{font-size:13.5px;color:var(--muted);}
+  .t-a,.t-b,.t-c{border-radius:6px;padding:0 3px;}
+  .t-a{background:#e3ecfb;box-shadow:inset 0 -2px 0 #3559b3;}
+  .t-b{background:#fff1d6;box-shadow:inset 0 -2px 0 #e0a43a;}
+  .t-c{background:#e3f4ee;box-shadow:inset 0 -2px 0 #0e7a5f;}
+  ol.ex .lrow > .chx{flex:1 1 240px;min-width:0;margin:0;}
+  @media print{ button.play,.clipbar,.reveal,details.script{display:none !important;} }
+  /* ===== Schritt 4A · 4B 문장별 재생 ===== */
+  ol.ex .lrow > input.bl.lg{flex:1 1 220px;width:auto;min-width:0;margin-top:0;}
+  ol.ex .lrow > p.de{flex:1 1 220px;}
+</style>
+</helmet>
+
+<div class="toolbar"><div class="row">
+  <button class="btn go" sc-camel-on-click="{{ submitNet }}">과제 제출하기</button>
+  <div class="tb-title">Übung · <span>L03</span></div>
+  <div class="tb-spacer"></div>
+  <div class="prog"><span><b>{{ filled }}</b> / {{ total }}</span><span class="bar"><i style="{{ barStyle }}"></i></span></div>
+  <button class="btn" sc-camel-on-click="{{ print }}">인쇄</button>
+  <button class="btn" sc-camel-on-click="{{ reset }}">초기화</button>
+</div></div>
+
+<div class="sheet" ref="{{ setRoot }}" sc-camel-on-input="{{ onInput }}" sc-camel-on-click="{{ onClick }}">
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand" style="justify-content:flex-start"><img src="../assets/logo.png" alt="Sophia Deutsch Akademie"><div class="bt"><b>Sophia Deutsch Akademie</b></div></div>
+    <h1 style="color:var(--accent)">Verben im Präsens</h1>
+    <p class="lead">현재형 동사변화</p>
+    <div class="meta">
+      <div class="f"><i style="font-size:13px;color:var(--accent)">Lektion</i><span style="color:var(--accent);font-weight:700;font-size:28px;letter-spacing:0;line-height:1">03</span></div>
+      <div class="f grow"><i>Name</i><input class="name" data-key="meta-name" data-noprogress="" placeholder="이름을 입력하세요"></div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-day"><b>1일차</b><em>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기</em></div>
+    <a class="toc-row c1" href="#s1"><span class="tn">이해</span><span class="td">어간·어미 분리 + 인칭어미표 + 불규칙(sein·haben·werden) 정리</span><span class="go">→</span></a>
+    <a class="toc-row c2" href="#s2"><span class="tn">분석</span><span class="td">동사 변화(새 문장) · 선택형 · 오류 찾기 · -e- 삽입</span><span class="go">→</span></a>
+    <a class="toc-row c3" href="#s3"><span class="tn">읽기</span><span class="td">새 문장 해석 + 동사 분류(규칙/모음변화/불규칙)</span><span class="go">→</span></a>
+    <div class="toc-day"><b>2일차</b><em>Mini-Wiederholung 1 먼저 · Schritt 4–5</em></div>
+    <a class="toc-row c4" href="#s4"><span class="tn">듣기</span><span class="td">받아쓰기 · 동사 채우기 · 뜻 판단 · 이야기 듣기</span><span class="go">→</span></a>
+    <a class="toc-row c5" href="#s5"><span class="tn">쓰기</span><span class="td">동사만 → 동사+관사 → 문장 완성</span><span class="go">→</span></a>
+    <div class="toc-day"><b>3일차</b><em>Mini-Wiederholung 2 먼저 · Schritt 6–7 · 마지막에 자기 평가</em></div>
+    <a class="toc-row c6" href="#s6"><span class="tn">말하기</span><span class="td">한국어 보고 독일어로 말하기</span><span class="go">→</span></a>
+    <a class="toc-row c7" href="#s7"><span class="tn">테스트</span><span class="td">새 동사로 규칙 적용 + 자기 평가</span><span class="go">→</span></a>
+  </nav>
+
+  <div class="planbox"><b>3일 학습 계획</b> — 이 과제는 3일에 나누어 풀도록 설계되어 있습니다. 한 번에 몰아서 풀지 마세요. 위 목차를 누르면 해당 단계로 바로 이동합니다.<br>1일차: Schritt 1–3 · 2일차: Mini-Wiederholung 1 → Schritt 4–5 · 3일차: Mini-Wiederholung 2 → Schritt 6–7 + 자기 평가.<br>'정답 확인' 버튼은 정답이 하나로 정해진 칸(빈칸 · 선택형)만 채점합니다. 해석과 작문은 선생님이 첨삭합니다.<br>제출 파일에는 각 단계를 학습한 날짜와, <strong>정답 확인을 누르기 전에 입력했던 답</strong>이 기록됩니다. 정답을 본 뒤 고친 내용은 따로 표시되므로, 먼저 스스로 풀고 확인하세요.</div>
+
+
+  
+  <div class="daybar"><b>1일차</b><span>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기</span></div>
+<!-- ===== SCHRITT 1 · VERSTEHEN ===== -->
+  <section class="step" id="s1" data-sec="s1" data-day="1">
+    <div class="step-head"><div class="step-n">01</div><div><p class="eyebrow">Schritt 1</p><h2 class="step-title">Verstehen · 이해</h2></div></div>
+    <p class="lede">교재를 보지 않고 <strong>직접 규칙을 세우는</strong> 단계입니다.</p>
+    <p class="tip"><b class="t">1·2과 복습</b>1과: <strong>관사</strong>가 격에 따라 변함 (der→den). 2과: <strong>대명사</strong>가 격에 따라 변신 (ich→mich). 이제 3과: <strong>동사</strong>가 주어에 따라 어미를 바꿔요!</p>
+
+    <div class="sub"><span class="de">1A.</span> 어간 분리 — 원형에서 -en 떼기</div>
+    <p>동사 원형에서 <strong>-en</strong>을 떼고 <strong>어간(Stamm)</strong>을 쓰세요.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>원형</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>어간</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">lernen</sc-raw-td><sc-raw-td>배우다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-1" data-answer="lern|lern-"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">kommen</sc-raw-td><sc-raw-td>오다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-2" data-answer="komm|komm-"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">wohnen</sc-raw-td><sc-raw-td>살다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-3" data-answer="wohn|wohn-"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sprechen</sc-raw-td><sc-raw-td>말하다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-4" data-answer="sprech|sprech-"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">fahren</sc-raw-td><sc-raw-td>타고 가다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-5" data-answer="fahr|fahr-"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">essen</sc-raw-td><sc-raw-td>먹다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-6" data-answer="ess|ess-"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sehen</sc-raw-td><sc-raw-td>보다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-7" data-answer="seh|seh-"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">geben</sc-raw-td><sc-raw-td>주다</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1a-8" data-answer="geb|geb-"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1B.</span> 규칙 인칭어미표 완성</div>
+    <p>어미와 적용 예(lernen)를 직접 채우세요. 6칸이지만 어미의 실제 모양은 <strong>4가지</strong>뿐입니다.</p>
+    <sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>인칭</sc-raw-th><sc-raw-th>어미</sc-raw-th><sc-raw-th>lernen</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">ich</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1b-e1" data-answer="-e|e"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-l1" data-answer="lerne"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">du</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1b-e2" data-answer="-st|st"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-l2" data-answer="lernst"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">er/sie/es</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1b-e3" data-answer="-t|t"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-l3" data-answer="lernt"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">wir</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1b-e4" data-answer="-en|en"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-l4" data-answer="lernen"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">ihr</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1b-e5" data-answer="-t|t"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-l5" data-answer="lernt"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie/Sie</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1b-e6" data-answer="-en|en"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-l6" data-answer="lernen"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1C.</span> sein · haben · werden 변화표 완성</div>
+    <p>이 세 동사는 규칙을 안 따릅니다. <strong>통째로</strong> 기억에서 채우세요. (werden은 나중에 미래형·수동태에서 꼭 필요 — 지금 눈에 익혀 두세요)</p>
+    <sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>인칭</sc-raw-th><sc-raw-th>sein (이다)</sc-raw-th><sc-raw-th>haben (가지다)</sc-raw-th><sc-raw-th>werden (되다)</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">ich</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-s1" data-answer="bin"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-h1" data-answer="habe"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-w1" data-answer="werde"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">du</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-s2" data-answer="bist"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-h2" data-answer="hast"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-w2" data-answer="wirst"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">er/sie/es</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-s3" data-answer="ist"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-h3" data-answer="hat"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-w3" data-answer="wird"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">wir</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-s4" data-answer="sind"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-h4" data-answer="haben"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-w4" data-answer="werden"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">ihr</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-s5" data-answer="seid"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-h5" data-answer="habt"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-w5" data-answer="werdet"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie/Sie</sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-s6" data-answer="sind"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-h6" data-answer="haben"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1c-w6" data-answer="werden"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1D.</span> 모음변화 불규칙 — du · er 형태</div>
+    <p>이 동사들은 <strong>du · er에서만</strong> 어간 모음이 바뀝니다. 변화 패턴(e→i, e→ie, a→ä)도 쓰세요.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>원형</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>du</sc-raw-th><sc-raw-th>er/sie/es</sc-raw-th><sc-raw-th>변화</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">sprechen</sc-raw-td><sc-raw-td>말하다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-1a" data-answer="sprichst"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-1b" data-answer="spricht"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1d-1c" data-answer="e→i|e-i|e-&gt;i"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">essen</sc-raw-td><sc-raw-td>먹다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-2a" data-answer="isst"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-2b" data-answer="isst"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1d-2c" data-answer="e→i|e-i|e-&gt;i"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">geben</sc-raw-td><sc-raw-td>주다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-3a" data-answer="gibst"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-3b" data-answer="gibt"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1d-3c" data-answer="e→i|e-i|e-&gt;i"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sehen</sc-raw-td><sc-raw-td>보다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-4a" data-answer="siehst"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-4b" data-answer="sieht"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1d-4c" data-answer="e→ie|e-ie|e-&gt;ie"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">lesen</sc-raw-td><sc-raw-td>읽다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-5a" data-answer="liest"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-5b" data-answer="liest"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1d-5c" data-answer="e→ie|e-ie|e-&gt;ie"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">fahren</sc-raw-td><sc-raw-td>타고 가다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-6a" data-answer="fährst"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-6b" data-answer="fährt"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1d-6c" data-answer="a→ä|a-ä|a-&gt;ä"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">schlafen</sc-raw-td><sc-raw-td>자다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-7a" data-answer="schläfst"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-7b" data-answer="schläft"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="v1d-7c" data-answer="a→ä|a-ä|a-&gt;ä"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1E.</span> 핵심 규칙 자기 정리 <em style="font-style:normal;color:var(--muted);font-size:11px;letter-spacing:.04em">— 맞는 것을 고르세요</em></div>
+    <ol class="ex chq">
+      <li><div><p class="de">동사는 무엇으로 이루어져 있나요?</p><div class="chx" data-key="v1e-q1" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 관사 + 명사</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 어간(Stamm) + 인칭어미</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 어간 + 관사</button></span></div></div></li>
+      <li><div><p class="de">어간(Stamm)은 어떻게 얻나요?</p><div class="chx" data-key="v1e-q2" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 원형에서 -en을 뗀다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 원형에 -en을 붙인다</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 원형의 모음을 바꾼다</button></span></div></div></li>
+      <li><div><p class="de">규칙동사 ich · du · er/sie/es의 어미는?</p><div class="chx" data-key="v1e-q3" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> -e / -st / -t</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> -e / -t / -st</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> -en / -st / -t</button></span></div></div></li>
+      <li><div><p class="de">규칙동사 wir · ihr · sie/Sie의 어미는?</p><div class="chx" data-key="v1e-q4" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> -en / -en / -t</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> -en / -t / -en</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> -t / -en / -en</button></span></div></div></li>
+      <li><div><p class="de">어미 모양이 서로 같은 짝은?</p><div class="chx" data-key="v1e-q5" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> er와 ihr (-t) · wir와 sie (-en)</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> ich와 er (-e) · du와 ihr (-st)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> du와 er (-t) · wir와 ihr (-en)</button></span></div></div></li>
+      <li><div><p class="de">sein · haben은 어떤 동사인가요?</p><div class="chx" data-key="v1e-q6" data-answer="c"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙동사</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du · er에서만 모음이 바뀌는 동사</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙동사 — 변화형을 통째로 외운다</button></span></div></div></li>
+      <li><div><p class="de">모음변화 불규칙은 어느 인칭에서 일어나나요?</p><div class="chx" data-key="v1e-q7" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich · wir</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du · er/sie/es</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> ihr · sie/Sie</button></span></div></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SCHRITT 2 · ERKENNEN ===== -->
+  <section class="step" id="s2" data-sec="s2" data-day="1">
+    <div class="step-head"><div class="step-n">02</div><div><p class="eyebrow">Schritt 2</p><h2 class="step-title">Erkennen · 분석</h2></div></div>
+    <p class="lede">"왜 이 형태인가?"를 설명할 수 있어야 진짜 아는 것!</p>
+
+    <div class="sub"><span class="de">2A.</span> 동사 분석 — 원형 · 인칭 판별</div>
+    <p>밑줄 친 동사의 <strong>원형</strong>을 쓰고, <strong>인칭</strong>을 고르세요.</p>
+    <ol class="ex chq">
+      <li><div><p class="de">Ich <strong style="text-decoration:underline;text-decoration-color:var(--accent)">lerne</strong> Deutsch.</p><p class="sol"><span class="ar">→</span> 원형: <input class="bl md" data-key="e2a-1a" data-answer="lernen"></p><div class="chx row" data-key="e2a-1b" data-answer="a"><span class="chl">인칭</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> er · sie · es</button><button type="button" data-ch="d" aria-pressed="false"><b>d)</b> wir</button><button type="button" data-ch="e" aria-pressed="false"><b>e)</b> ihr</button><button type="button" data-ch="f" aria-pressed="false"><b>f)</b> sie · Sie</button></span></div></div></li>
+      <li><div><p class="de">Du <strong style="text-decoration:underline;text-decoration-color:var(--accent)">wohnst</strong> in Berlin.</p><p class="sol"><span class="ar">→</span> 원형: <input class="bl md" data-key="e2a-2a" data-answer="wohnen"></p><div class="chx row" data-key="e2a-2b" data-answer="b"><span class="chl">인칭</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> er · sie · es</button><button type="button" data-ch="d" aria-pressed="false"><b>d)</b> wir</button><button type="button" data-ch="e" aria-pressed="false"><b>e)</b> ihr</button><button type="button" data-ch="f" aria-pressed="false"><b>f)</b> sie · Sie</button></span></div></div></li>
+      <li><div><p class="de">Er <strong style="text-decoration:underline;text-decoration-color:var(--accent)">kommt</strong> aus Korea.</p><p class="sol"><span class="ar">→</span> 원형: <input class="bl md" data-key="e2a-3a" data-answer="kommen"></p><div class="chx row" data-key="e2a-3b" data-answer="c"><span class="chl">인칭</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> er · sie · es</button><button type="button" data-ch="d" aria-pressed="false"><b>d)</b> wir</button><button type="button" data-ch="e" aria-pressed="false"><b>e)</b> ihr</button><button type="button" data-ch="f" aria-pressed="false"><b>f)</b> sie · Sie</button></span></div></div></li>
+      <li><div><p class="de">Wir <strong style="text-decoration:underline;text-decoration-color:var(--accent)">lernen</strong> zusammen.</p><p class="sol"><span class="ar">→</span> 원형: <input class="bl md" data-key="e2a-4a" data-answer="lernen"></p><div class="chx row" data-key="e2a-4b" data-answer="d"><span class="chl">인칭</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> er · sie · es</button><button type="button" data-ch="d" aria-pressed="false"><b>d)</b> wir</button><button type="button" data-ch="e" aria-pressed="false"><b>e)</b> ihr</button><button type="button" data-ch="f" aria-pressed="false"><b>f)</b> sie · Sie</button></span></div></div></li>
+      <li><div><p class="de">Sie <strong style="text-decoration:underline;text-decoration-color:var(--accent)">spricht</strong> Deutsch.</p><p class="sol"><span class="ar">→</span> 원형: <input class="bl md" data-key="e2a-5a" data-answer="sprechen"></p><div class="chx row" data-key="e2a-5b" data-answer="c"><span class="chl">인칭</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> er · sie · es</button><button type="button" data-ch="d" aria-pressed="false"><b>d)</b> wir</button><button type="button" data-ch="e" aria-pressed="false"><b>e)</b> ihr</button><button type="button" data-ch="f" aria-pressed="false"><b>f)</b> sie · Sie</button></span></div><div class="chx row" data-key="e2a-5c" data-answer="b"><span class="chl">분류</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화 (du · er)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙 (sein · haben)</button></span></div></div></li>
+      <li><div><p class="de">Du <strong style="text-decoration:underline;text-decoration-color:var(--accent)">fährst</strong> nach Berlin.</p><p class="sol"><span class="ar">→</span> 원형: <input class="bl md" data-key="e2a-6a" data-answer="fahren"></p><div class="chx row" data-key="e2a-6b" data-answer="b"><span class="chl">인칭</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> er · sie · es</button><button type="button" data-ch="d" aria-pressed="false"><b>d)</b> wir</button><button type="button" data-ch="e" aria-pressed="false"><b>e)</b> ihr</button><button type="button" data-ch="f" aria-pressed="false"><b>f)</b> sie · Sie</button></span></div><div class="chx row" data-key="e2a-6c" data-answer="c"><span class="chl">변화</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> e → i</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> e → ie</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> a → ä</button></span></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2B.</span> 동사 변화 — 다양한 인칭</div>
+    <p>괄호 안 동사를 알맞게 변화시키고, 왜 그 형태인지 <strong>이유</strong>를 고르세요. <em>2A와 다른 문장입니다!</em></p>
+    <ol class="ex chq">
+      <li><div><p class="de">Wir <input class="bl md" data-key="e2b-1" data-answer="wohnen"> in München. <em>(wohnen)</em></p><div class="chx row" data-key="e2b-q1" data-answer="a"><span class="chl">이유</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙 어미</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화 (du · er)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙 (sein · haben)</button></span></div></div></li>
+      <li><div><p class="de">Ihr <input class="bl md" data-key="e2b-2" data-answer="lernt"> schnell. <em>(lernen)</em></p><div class="chx row" data-key="e2b-q2" data-answer="a"><span class="chl">이유</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙 어미</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화 (du · er)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙 (sein · haben)</button></span></div></div></li>
+      <li><div><p class="de">Er <input class="bl md" data-key="e2b-3" data-answer="schläft"> lange. <em>(schlafen)</em></p><div class="chx row" data-key="e2b-q3" data-answer="b"><span class="chl">이유</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙 어미</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화 (du · er)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙 (sein · haben)</button></span></div></div></li>
+      <li><div><p class="de">Du <input class="bl md" data-key="e2b-4" data-answer="gibst"> mir das Buch. <em>(geben)</em></p><div class="chx row" data-key="e2b-q4" data-answer="b"><span class="chl">이유</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙 어미</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화 (du · er)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙 (sein · haben)</button></span></div></div></li>
+      <li><div><p class="de">Sie(그들) <input class="bl md" data-key="e2b-5" data-answer="sind"> nett. <em>(sein)</em></p><div class="chx row" data-key="e2b-q5" data-answer="c"><span class="chl">이유</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙 어미</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화 (du · er)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙 (sein · haben)</button></span></div></div></li>
+      <li><div><p class="de">Du <input class="bl md" data-key="e2b-6" data-answer="hast"> einen Hund. <em>(haben)</em></p><div class="chx row" data-key="e2b-q6" data-answer="c"><span class="chl">이유</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙 어미</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화 (du · er)</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙 (sein · haben)</button></span></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2B+.</span> 둘 중 하나 고르기</div>
+    <p>알맞은 형태를 고르고, <strong>나머지가 틀린 이유</strong>도 고르세요.</p>
+    <ol class="ex chq">
+      <li><div><p class="de">Er _____ schnell. <em>(fahren)</em></p><div class="chx row" data-key="e2bp-1" data-answer="a"><span class="chl">형태</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> fährt</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> fahrt</button></span></div><div class="chx" data-key="e2bp-r1" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> er의 어미는 -en이기 때문</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> fahren은 er에서 a → ä로 바뀌기 때문</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> fahren은 sein처럼 통째로 외우는 동사이기 때문</button></span></div></div></li>
+      <li><div><p class="de">Ihr _____ morgen. <em>(kommen)</em></p><div class="chx row" data-key="e2bp-2" data-answer="a"><span class="chl">형태</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> kommt</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> kommen</button></span></div><div class="chx" data-key="e2bp-r2" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ihr의 어미는 -t이고, -en은 wir · sie용이기 때문</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> kommen이 모음변화 동사이기 때문</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> ihr은 언제나 원형을 그대로 쓰기 때문</button></span></div></div></li>
+      <li><div><p class="de">Du _____ das Buch. <em>(lesen)</em></p><div class="chx row" data-key="e2bp-3" data-answer="b"><span class="chl">형태</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> lest</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> liest</button></span></div><div class="chx" data-key="e2bp-r3" data-answer="c"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> lesen이 규칙동사이기 때문</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du의 어미가 -t이기 때문</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> lesen은 du에서 e → ie로 바뀌고 -st가 붙기 때문</button></span></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2C.</span> 오류 찾기 — Fehlersuche</div>
+    <p>틀린 문장을 보고 <strong>바르게 고친 문장</strong>과 <strong>오류 유형</strong>을 고르세요.</p>
+    <p class="tip"><b class="t">유형</b>어미 오류 = 인칭어미가 틀림 / 불규칙 오류 = sein · haben을 규칙처럼 만듦 / 모음 오류 = du · er의 모음변화를 안 함</p>
+    <ol class="ex chq">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Du <strong>lernen</strong> Deutsch.</p><div class="chx" data-key="e2c-c1" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Du lernst Deutsch.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Du lernt Deutsch.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Du lernest Deutsch.</button></span></div><div class="chx row" data-key="e2c-t1" data-answer="a"><span class="chl">유형</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 어미 오류</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 불규칙 오류</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 모음 오류</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Er <strong>wohnst</strong> in Berlin.</p><div class="chx" data-key="e2c-c2" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Er wohnen in Berlin.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Er wohnt in Berlin.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Er wöhnt in Berlin.</button></span></div><div class="chx row" data-key="e2c-t2" data-answer="a"><span class="chl">유형</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 어미 오류</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 불규칙 오류</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 모음 오류</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Du <strong>seinst</strong> müde.</p><div class="chx" data-key="e2c-c3" data-answer="c"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Du sein müde.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Du seist müde.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Du bist müde.</button></span></div><div class="chx row" data-key="e2c-t3" data-answer="b"><span class="chl">유형</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 어미 오류</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 불규칙 오류</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 모음 오류</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Er <strong>habt</strong> ein Auto.</p><div class="chx" data-key="e2c-c4" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Er hat ein Auto.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Er habe ein Auto.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Er haben ein Auto.</button></span></div><div class="chx row" data-key="e2c-t4" data-answer="b"><span class="chl">유형</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 어미 오류</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 불규칙 오류</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 모음 오류</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Du <strong>sprechst</strong> Deutsch.</p><div class="chx" data-key="e2c-c5" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Du spricht Deutsch.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Du sprichst Deutsch.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Du sprechest Deutsch.</button></span></div><div class="chx row" data-key="e2c-t5" data-answer="c"><span class="chl">유형</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 어미 오류</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 불규칙 오류</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 모음 오류</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Er <strong>fahrt</strong> nach Berlin.</p><div class="chx" data-key="e2c-c6" data-answer="c"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Er fahret nach Berlin.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Er fährst nach Berlin.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Er fährt nach Berlin.</button></span></div><div class="chx row" data-key="e2c-t6" data-answer="c"><span class="chl">유형</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 어미 오류</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 불규칙 오류</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 모음 오류</button></span></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2D.</span> -e- 삽입 동사 + werden</div>
+    <p>어간이 <strong>-t·-d로 끝나는 동사</strong>(arbeiten·finden…)는 du·er·ihr에서 어미 앞에 <strong>-e-</strong>를 끼워요 — 안 그러면 발음이 안 됩니다 (du arbeit<strong>e</strong>st). 괄호의 동사를 알맞게 변화시키세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Du <input class="bl md" data-key="e2d-1" data-answer="arbeitest"> viel. (arbeiten) <span class="note">어간 arbeit- + -e- + -st</span></p></div></li>
+      <li><div><p class="de">Er <input class="bl md" data-key="e2d-2" data-answer="arbeitet"> in Berlin. (arbeiten)</p></div></li>
+      <li><div><p class="de">Du <input class="bl md" data-key="e2d-3" data-answer="findest"> das Buch. (finden)</p></div></li>
+      <li><div><p class="de">Ihr <input class="bl md" data-key="e2d-4" data-answer="arbeitet"> heute. (arbeiten)</p></div></li>
+      <li><div><p class="de">Er <input class="bl md" data-key="e2d-5" data-answer="wartet"> auf den Bus. (warten 기다리다)</p></div></li>
+      <li><div><p class="de">Sie(그녀) <input class="bl md" data-key="e2d-6" data-answer="antwortet"> mir. (antworten — 2과 동사!)</p></div></li>
+      <li><div><p class="de">Er <input class="bl md" data-key="e2d-7" data-answer="wird"> Arzt. (werden) <span class="note">불규칙!</span></p></div></li>
+      <li><div><p class="de">Du <input class="bl md" data-key="e2d-8" data-answer="wirst"> müde. (werden)</p></div></li>
+    </ol>
+
+    </section>
+
+  <!-- ===== SCHRITT 3 · LESEN ===== -->
+  <section class="step" id="s3" data-sec="s3" data-day="1">
+    <div class="step-head"><div class="step-n">03</div><div><p class="eyebrow">Schritt 3</p><h2 class="step-title">Lesen · 읽기</h2></div></div>
+    <p class="lede">문장을 읽고 해석한 뒤, 동사를 분석합니다.</p>
+    <div class="bsp"><span class="lab">Beispiel</span><p class="de">Ich <strong>lerne</strong> Deutsch.</p><p class="ko" style="margin:0">나는 독일어를 배운다. (lerne = lernen의 ich 형태)</p></div>
+
+    <div class="sub"><span class="de">3A.</span> 읽기 + 해석</div>
+    <p>앞 단계에 없는 <strong>새 문장</strong>입니다. 동사에 주의하며 해석하세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Anna <strong>wohnt</strong> in Hamburg.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-1" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Der Lehrer <strong>spricht</strong> langsam.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-2" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Wir <strong>essen</strong> zusammen Pizza.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-3" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Du <strong>liest</strong> jeden Tag die Zeitung.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-4" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Er <strong>schläft</strong> noch — es <strong>ist</strong> Sonntag.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-5" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Ihr <strong>seid</strong> sehr nett.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-6" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Ich <strong>gebe</strong> dir mein Buch.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-7" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Sie <strong>hat</strong> drei Katzen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-8" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Du <strong>fährst</strong> morgen nach München.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-9" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Er <strong>sieht</strong> den Film gern.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-10" placeholder="해석"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">3B.</span> 동사 분류 — Verben sortieren</div>
+    <p>각 형태가 어느 그룹인지 고르세요. <strong>규칙</strong> = 어간 그대로 + 어미 · <strong>모음변화</strong> = du·er에서 어간 모음이 바뀜 · <strong>불규칙</strong> = sein·haben·werden.</p>
+    <ol class="ex chq">
+      <li><div><div class="chx row" data-key="r3b-c1" data-answer="a"><span class="chl">wohnt</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c2" data-answer="b"><span class="chl">spricht</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c3" data-answer="b"><span class="chl">schläft</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c4" data-answer="b"><span class="chl">liest</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c5" data-answer="c"><span class="chl">sind</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c6" data-answer="c"><span class="chl">hat</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c7" data-answer="a"><span class="chl">lernt</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c8" data-answer="b"><span class="chl">gibt</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c9" data-answer="b"><span class="chl">fährt</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c10" data-answer="c"><span class="chl">wird</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c11" data-answer="a"><span class="chl">kommt</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+      <li><div><div class="chx row" data-key="r3b-c12" data-answer="b"><span class="chl">isst</span><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 모음변화</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙</button></span></div></div></li>
+    </ol>
+  </section>
+
+  
+  <div class="daybar"><b>2일차</b><span>Mini-Wiederholung 1 → Schritt 4–5 · 어제 내용을 먼저 인출하고 듣기·쓰기로</span></div>
+
+  <section class="step" data-sec="mw1" data-day="2" data-label="Mini-Wiederholung 1 (2일차 시작)">
+    <div class="sub2">Mini-Wiederholung 1 — 인칭어미, 아직 기억하나요?</div>
+    <p>어미만 빠르게 써 보세요.</p>
+    <sc-raw-table class="g center" style="max-width:400px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>인칭</sc-raw-th><sc-raw-th>어미</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">ich</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw1-1" data-answer="-e|e"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">du</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw1-2" data-answer="-st|st"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">er/sie/es</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw1-3" data-answer="-t|t"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">wir</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw1-4" data-answer="-en|en"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">ihr</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw1-5" data-answer="-t|t"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie/Sie</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw1-6" data-answer="-en|en"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 4 · HÖREN ===== -->
+  <section class="step" id="s4" data-sec="s4" data-day="2">
+    <div class="step-head"><div class="step-n">04</div><div><p class="eyebrow">Schritt 4</p><h2 class="step-title">Hören · 듣기</h2></div></div>
+    <p class="lede">오디오를 듣고 네 가지 과제를 수행하세요. 4A·4B·4C는 문장마다 ▶ 버튼으로, 4D는 이야기 음원으로 풉니다.</p>
+    <div class="hblock">
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+
+    <div class="sub"><span class="de">4A.</span> 받아쓰기 — Diktat</div>
+    <p class="tip"><b class="t">Tip</b>문장마다 세 번 들으세요. 처음에는 끝까지 듣고, 두 번째에는 들으면서 쓰고, 세 번째에는 쓴 것을 확인하세요.</p>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="a4-1" preload="auto" src="../assets/audio/d1b47aaa6c0f.mp3"></audio><input class="bl lg" data-key="h4a-1" data-answer="Ich lerne Deutsch." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="a4-2" preload="auto" src="../assets/audio/31373d64e23b.mp3"></audio><input class="bl lg" data-key="h4a-2" data-answer="Du wohnst in Berlin." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="a4-3" preload="auto" src="../assets/audio/a4fa4c92526c.mp3"></audio><input class="bl lg" data-key="h4a-3" data-answer="Er kommt aus Korea." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="a4-4" preload="auto" src="../assets/audio/8586e1c6aac3.mp3"></audio><input class="bl lg" data-key="h4a-4" data-answer="Sie spricht Deutsch." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="a4-5" preload="auto" src="../assets/audio/bcbedbef75af.mp3"></audio><input class="bl lg" data-key="h4a-5" data-answer="Du bist müde." placeholder="받아쓰기"></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">4B.</span> 듣고 빈칸 채우기 — Hören und ergänzen</div>
+    <p>오디오를 다시 듣고 빠진 <strong>동사</strong>를 쓰세요. 원형이 주어지지 않습니다 — 잘 들어야 합니다!</p>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="b4-1" preload="auto" src="../assets/audio/d1b47aaa6c0f.mp3"></audio><p class="de">Ich <input class="bl md" data-key="h4b-1" data-answer="lerne"> Deutsch.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="b4-2" preload="auto" src="../assets/audio/31373d64e23b.mp3"></audio><p class="de">Du <input class="bl md" data-key="h4b-2" data-answer="wohnst"> in Berlin.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="b4-3" preload="auto" src="../assets/audio/a4fa4c92526c.mp3"></audio><p class="de">Er <input class="bl md" data-key="h4b-3" data-answer="kommt"> aus Korea.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="b4-4" preload="auto" src="../assets/audio/8586e1c6aac3.mp3"></audio><p class="de">Sie <input class="bl md" data-key="h4b-4" data-answer="spricht"> Deutsch.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="b4-5" preload="auto" src="../assets/audio/bcbedbef75af.mp3"></audio><p class="de">Du <input class="bl md" data-key="h4b-5" data-answer="bist"> müde.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-6" data-noser="" aria-label="6번 문장 듣기"></button><audio data-clip="b4-6" preload="auto" src="../assets/audio/63463a46f441.mp3"></audio><p class="de">Er <input class="bl md" data-key="h4b-6" data-answer="hat"> ein Auto.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-7" data-noser="" aria-label="7번 문장 듣기"></button><audio data-clip="b4-7" preload="auto" src="../assets/audio/ee82a3d80a16.mp3"></audio><p class="de">Wir <input class="bl md" data-key="h4b-7" data-answer="lernen"> zusammen.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-8" data-noser="" aria-label="8번 문장 듣기"></button><audio data-clip="b4-8" preload="auto" src="../assets/audio/0f1986446ed4.mp3"></audio><p class="de">Du <input class="bl md" data-key="h4b-8" data-answer="fährst"> nach Berlin.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-9" data-noser="" aria-label="9번 문장 듣기"></button><audio data-clip="b4-9" preload="auto" src="../assets/audio/6941f5b4d44e.mp3"></audio><p class="de">Er <input class="bl md" data-key="h4b-9" data-answer="isst"> einen Apfel.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-10" data-noser="" aria-label="10번 문장 듣기"></button><audio data-clip="b4-10" preload="auto" src="../assets/audio/972dbb8c1edf.mp3"></audio><p class="de">Sie <input class="bl md" data-key="h4b-10" data-answer="liest"> ein Buch.</p></div></div></li>
+    </ol>
+    </div>
+
+    <div class="sub"><span class="de">4C.</span> 한 명? 여러 명? — 동사 어미로 뜻 판단하기</div>
+    <p>▶를 눌러 문장을 듣고, <strong>뜻</strong>에 맞는 것을 고르세요. 문장은 <strong>정답 보기</strong>를 누른 뒤에 나타납니다. 필요한 만큼 다시 들어도 됩니다.</p>
+    <p class="tip"><b class="t">Tip</b><strong>sie</strong> 는 '그녀'도 되고 '그들'도 됩니다. 동사 어미를 들으세요. <strong>-t</strong> 면 한 사람(그녀), <strong>-en</strong> 이면 여러 사람(그들)입니다. 명사가 주어일 때도 동사가 -t 면 하나, -en 이면 여럿입니다. 정답 보기를 누르면 뜻을 알려 주는 말에 <span class="k1s">색 밑줄</span>이 표시됩니다.</p>
+    <div class="bsp"><span class="lab">Beispiel · 예시</span><p class="de">Sie <span class="k1s">wohnt</span> in Seoul. → 그녀는 서울에 산다.</p><p class="ko">-t → 한 사람입니다.</p><p class="de">Sie <span class="k1s">wohnen</span> in Seoul. → 그들은 서울에 산다.</p><p class="ko">-en → 여러 사람입니다.</p></div>
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+    <div class="sub2">4C-1 · 그녀? 그들?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-1" preload="auto" src="../assets/audio/3e0db2970d55.mp3"></audio><div class="chx" data-key="h4c-1" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 그녀는 베를린에 산다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 그들은 베를린에 산다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de">Sie <span class="k1">wohnt</span> in Berlin.</span><span class="rv-clue" data-noser="">단서: wohnt (-t) → 한 사람, 그녀</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-2" preload="auto" src="../assets/audio/8a5bb7be6f51.mp3"></audio><div class="chx" data-key="h4c-2" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 그녀는 독일어를 배운다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 그들은 독일어를 배운다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de">Sie <span class="k1">lernen</span> Deutsch.</span><span class="rv-clue" data-noser="">단서: lernen (-en) → 여러 사람, 그들</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-3" preload="auto" src="../assets/audio/0583b13f270a.mp3"></audio><div class="chx" data-key="h4c-3" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 그녀는 베를린에 산다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 그들은 베를린에 산다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de">Sie <span class="k1">wohnen</span> in Berlin.</span><span class="rv-clue" data-noser="">단서: wohnen (-en) → 여러 사람, 그들</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-4" preload="auto" src="../assets/audio/3cdc224c19f2.mp3"></audio><div class="chx" data-key="h4c-4" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 그녀는 독일어를 배운다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 그들은 독일어를 배운다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de">Sie <span class="k1">lernt</span> Deutsch.</span><span class="rv-clue" data-noser="">단서: lernt (-t) → 한 사람, 그녀</span></p></div></li>
+    </ol>
+    <div class="sub2">4C-2 · 한 명? 여러 명?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-5" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-5" preload="auto" src="../assets/audio/a836b7f895d1.mp3"></audio><div class="chx" data-key="h4c-5" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 선생님 한 명이 한국에서 왔다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 선생님들이 한국에서 왔다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Der</span> Lehrer <span class="k1">kommt</span> aus Korea.</span><span class="rv-clue" data-noser="">단서: der … kommt (-t) → 한 명</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-6" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-6" preload="auto" src="../assets/audio/5c01dc5b7110.mp3"></audio><div class="chx" data-key="h4c-6" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 소녀 한 명이 베를린에 산다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 소녀들이 베를린에 산다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Die</span> Mädchen <span class="k1">wohnen</span> in Berlin.</span><span class="rv-clue" data-noser="">단서: die … wohnen (-en) → 여러 명</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-7" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-7" preload="auto" src="../assets/audio/00b6197b6efa.mp3"></audio><div class="chx" data-key="h4c-7" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 선생님 한 명이 한국에서 왔다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 선생님들이 한국에서 왔다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Die</span> Lehrer <span class="k1">kommen</span> aus Korea.</span><span class="rv-clue" data-noser="">단서: die … kommen (-en) → 여러 명</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-8" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-8" preload="auto" src="../assets/audio/2b14e2f7ac9a.mp3"></audio><div class="chx" data-key="h4c-8" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 소녀 한 명이 베를린에 산다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 소녀들이 베를린에 산다</button></span></div></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Das</span> Mädchen <span class="k1">wohnt</span> in Berlin.</span><span class="rv-clue" data-noser="">단서: das … wohnt (-t) → 한 명</span></p></div></li>
+    </ol>
+
+    <div class="hblock">
+    <div class="sub"><span class="de">4D.</span> 이야기 듣기 — Eine neue Freundin</div>
+    <p>이야기를 <strong>두 번</strong> 듣습니다. 첫 번째에는 <strong>내용</strong>을, 두 번째에는 <strong>동사 형태</strong>을 듣습니다. 대본은 모두 푼 뒤에 여세요.</p>
+    <div class="audio">
+      <span class="audio-tag">♪ Eine neue Freundin</span>
+      <audio controls="{{ true }}" preload="auto" data-aud="story" data-filename="Lektion_03_Eine_neue_Freundin.mp3" src="../assets/audio/a28a34f286e6.mp3"></audio>
+      <div class="ap-extras">
+        <div class="ap-speed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button data-aprate="0.75" aria-pressed="false">0.75×</button><button data-aprate="1" aria-pressed="true">1×</button><button data-aprate="1.25" aria-pressed="false">1.25×</button></div>
+        <button class="ap-dl" data-ap="dl" type="button" aria-label="오디오 다운로드">⤓ MP3</button>
+      </div>
+    </div>
+    <div class="sub2">4D-1 · 1차 듣기 — 내용</div>
+    <p>이야기를 끝까지 한 번 듣고 질문에 답하세요.</p>
+    <ol class="ex chq">
+      <li><div><p class="de">미나는 어디에서 왔나요?</p><div class="chx" data-key="h4d-q1" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 한국</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 스페인</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 독일</button></span></div></div></li>
+      <li><div><p class="de">라우라는 어디에서 왔나요?</p><div class="chx" data-key="h4d-q2" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 스페인</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 한국</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 이탈리아</button></span></div></div></li>
+      <li><div><p class="de">토요일에 라우라는 어디에 가나요?</p><div class="chx" data-key="h4d-q3" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 포츠담</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 베를린</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 서울</button></span></div></div></li>
+      <li><div><p class="de">라우라가 즐겨 먹는 것은?</p><div class="chx" data-key="h4d-q4" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 피자</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 밥</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 케이크</button></span></div></div></li>
+      <li><div><p class="de">미나의 기분은 어떤가요?</p><div class="chx" data-key="h4d-q5" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 무척 행복하다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 피곤하다</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 슬프다</button></span></div></div></li>
+    </ol>
+    <div class="sub2">4D-2 · 2차 듣기 — 들린 동사 형태 쓰기</div>
+    <p>다시 들으면서 빈칸에 들린 <strong>동사 형태</strong>를 쓰세요. 왼쪽은 원형과 주어입니다.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>원형 (주어)</sc-raw-th><sc-raw-th>들린 문장</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>wohnen (ich)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Ich <input class="bl w4d" data-key="h4d-t1-1" data-answer="wohne"> jetzt in Berlin.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>lernen (ich)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Hier <input class="bl w4d" data-key="h4d-t2-2" data-answer="lerne"> ich Deutsch.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>sprechen (sie)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Sie kommt aus Spanien und <input class="bl w4d" data-key="h4d-t3-3" data-answer="spricht"> sehr gut Deutsch.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>haben (Laura)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Laura <input class="bl w4d" data-key="h4d-t4-4" data-answer="hat"> ein Auto.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>fahren (sie)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Am Samstag <input class="bl w4d" data-key="h4d-t5-5" data-answer="fährt"> sie nach Potsdam.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>fahren (wir)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Wir <input class="bl w4d" data-key="h4d-t6-6" data-answer="fahren"> zusammen.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>essen (Laura)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Laura <input class="bl w4d" data-key="h4d-t7-7" data-answer="isst"> gern Pizza, …</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>sein (ich)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Ich <input class="bl w4d" data-key="h4d-t8-8" data-answer="bin"> sehr glücklich.</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p style="margin-top:18px">위 표에서 규칙을 찾아 완성해 보세요.</p>
+    <ol class="ex chq">
+      <li><div><p class="de">ich 뒤 동사 어미는 ＿＿ 이다.</p><div class="chx" data-key="h4d-r1" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> -e</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> -st</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> -t</button></span></div></div></li>
+      <li><div><p class="de">sprechen · essen 은 er/sie 에서 모음이 ＿＿ </p><div class="chx" data-key="h4d-r2" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> e → i 로 바뀐다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 그대로다</button></span></div></div></li>
+      <li><div><p class="de">fahren 은 du · er/sie 에서 ＿＿ </p><div class="chx" data-key="h4d-r3" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> a → ä 로 바뀐다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 그대로다</button></span></div></div></li>
+    </ol>
+    <div class="sub2">4D-3 · 같은 동사, 다른 주어</div>
+    <p>빈칸에 들린 동사를 쓰고, 알맞은 것을 고르세요.</p>
+    <ol class="ex chq">
+      <li><div><p class="de">Laura <input class="bl w4d" data-key="h4d-p1-9" data-answer="isst"> gern Pizza, und ich <input class="bl w4d" data-key="h4d-p1-10" data-answer="esse"> gern Reis.</p><p class="sol" data-sp=""><span class="lbl">isst 의 주어는?</span></p><div class="chx" data-key="h4d-p1r" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Laura</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> ich</button></span></div></div></li>
+      <li><div><p class="de">„<input class="bl w4d" data-key="h4d-p2-11" data-answer="Hast|hast"> du Zeit?“, fragt sie.</p><p class="sol" data-sp=""><span class="lbl">Hast 의 주어는?</span></p><div class="chx" data-key="h4d-p2r" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> du</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> sie</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> ich</button></span></div></div></li>
+      <li><div><p class="de">Wir <input class="bl w4d" data-key="h4d-p3-12" data-answer="fahren"> zusammen.</p><p class="sol" data-sp=""><span class="lbl">fahren 은 몇 명?</span></p><div class="chx" data-key="h4d-p3r" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 여러 명 (wir)</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 한 명</button></span></div></div></li>
+    </ol>
+    <p style="margin-top:18px">위 문장에서 규칙을 찾아 완성해 보세요.</p>
+    <ol class="ex chq">
+      <li><div><p class="de">du 뒤 동사 어미는 ＿＿ 이다.</p><div class="chx" data-key="h4d-s1" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> -st</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> -t</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> -en</button></span></div></div></li>
+      <li><div><p class="de">wir · sie(그들) 뒤 동사 어미는 ＿＿ 이다.</p><div class="chx" data-key="h4d-s2" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> -en</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> -t</button></span></div></div></li>
+    </ol>
+    <details class="script">
+      <summary>대본 보기 — 다 푼 뒤에 여세요</summary>
+      <p class="sinst">줄을 누르면 그 줄만 다시 들을 수 있습니다.</p>
+      <div class="slegend"><span class="t-a">규칙 어미 (-e · -st · -t · -en)</span><span class="t-b">모음이 바뀐 동사</span><span class="t-c">sein · haben</span></div>
+      <button type="button" class="sline" data-seg="0.56,3.11"><span class="sn">1</span><span class="sde">Ich <span class="t-a">heiße</span> Mina und <span class="t-a">komme</span> aus Korea.</span><span class="sko">나는 미나이고 한국에서 왔다.</span></button>
+      <button type="button" class="sline" data-seg="4.29,6.12"><span class="sn">2</span><span class="sde">Ich <span class="t-a">wohne</span> jetzt in Berlin.</span><span class="sko">나는 지금 베를린에 산다.</span></button>
+      <button type="button" class="sline" data-seg="7.30,8.84"><span class="sn">3</span><span class="sde">Hier <span class="t-a">lerne</span> ich Deutsch.</span><span class="sko">여기서 나는 독일어를 배운다.</span></button>
+      <button type="button" class="sline" data-seg="10.02,11.79"><span class="sn">4</span><span class="sde">Laura <span class="t-c">ist</span> auch im Kurs.</span><span class="sko">라우라도 같은 수업을 듣는다.</span></button>
+      <button type="button" class="sline" data-seg="12.97,16.19"><span class="sn">5</span><span class="sde">Sie <span class="t-a">kommt</span> aus Spanien und <span class="t-b">spricht</span> sehr gut Deutsch.</span><span class="sko">그녀는 스페인에서 왔고 독일어를 아주 잘한다.</span></button>
+      <button type="button" class="sline" data-seg="17.37,18.96"><span class="sn">6</span><span class="sde">Laura <span class="t-c">hat</span> ein Auto.</span><span class="sko">라우라는 차가 있다.</span></button>
+      <button type="button" class="sline" data-seg="20.14,22.28"><span class="sn">7</span><span class="sde">Am Samstag <span class="t-b">fährt</span> sie nach Potsdam.</span><span class="sko">토요일에 그녀는 포츠담에 간다.</span></button>
+      <button type="button" class="sline" data-seg="23.46,25.08"><span class="sn">8</span><span class="sde">„<span class="t-c">Hast</span> du Zeit?“, fragt sie.</span><span class="sko">&quot;너 시간 있어?&quot; 그녀가 묻는다.</span></button>
+      <button type="button" class="sline" data-seg="26.26,28.54"><span class="sn">9</span><span class="sde">„Ja, ich <span class="t-c">habe</span> Zeit“, sage ich.</span><span class="sko">&quot;응, 시간 있어.&quot; 내가 말한다.</span></button>
+      <button type="button" class="sline" data-seg="29.72,31.19"><span class="sn">10</span><span class="sde">Wir <span class="t-a">fahren</span> zusammen.</span><span class="sko">우리는 함께 간다.</span></button>
+      <button type="button" class="sline" data-seg="32.37,35.74"><span class="sn">11</span><span class="sde">Laura <span class="t-b">isst</span> gern Pizza, und ich <span class="t-a">esse</span> gern Reis.</span><span class="sko">라우라는 피자를 즐겨 먹고, 나는 밥을 즐겨 먹는다.</span></button>
+      <button type="button" class="sline" data-seg="36.92,38.51"><span class="sn">12</span><span class="sde">Ich <span class="t-c">bin</span> sehr glücklich.</span><span class="sko">나는 무척 행복하다.</span></button>
+    </details>
+    </div>
+  </section>
+
+  <!-- ===== SCHRITT 5 · SCHREIBEN ===== -->
+  <section class="step" id="s5" data-sec="s5" data-day="2">
+    <div class="step-head"><div class="step-n">05</div><div><p class="eyebrow">Schritt 5</p><h2 class="step-title">Schreiben · 쓰기</h2></div></div>
+    <p class="lede">한국어를 보고 알맞은 동사 형태를 쓰세요. 힌트가 점점 줄어듭니다!</p>
+
+    <div class="sub"><span class="de">5A.</span> 동사만 채우기 <em>— 힌트가 점점 줄어듭니다!</em></div>
+    <p class="tip"><b class="t">Level 1</b>동사 원형 + 주어 + 나머지 제공</p>
+    <ol class="ex">
+      <li><div><p class="de">그는 오래 잔다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Er</span> <input class="bl md" data-key="s5a-1" data-answer="schläft"> <span class="giv">lange.</span></p><p class="note">schlafen + er</p></div></li>
+      <li><div><p class="de">너는 나에게 책을 준다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Du</span> <input class="bl md" data-key="s5a-2" data-answer="gibst"> <span class="giv">mir das Buch.</span></p><p class="note">geben + du</p></div></li>
+      <li><div><p class="de">너희는 베를린에 산다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Ihr</span> <input class="bl md" data-key="s5a-3" data-answer="wohnt"> <span class="giv">in Berlin.</span></p><p class="note">wohnen + ihr</p></div></li>
+    </ol>
+    <p class="tip"><b class="t">Level 2</b>동사 원형만 — 나머지는 스스로</p>
+    <ol class="ex" start="4">
+      <li><div><p class="de">그녀는 세 언어를 한다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Sie</span> <input class="bl md" data-key="s5a-4" data-answer="spricht"> <input class="bl" data-key="s5a-4b" data-answer="drei Sprachen" style="width:130px;min-width:0" placeholder="나머지"></p><p class="note">sprechen · Sprache f</p></div></li>
+      <li><div><p class="de">너희는 많이 배운다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Ihr</span> <input class="bl md" data-key="s5a-5" data-answer="lernt"> <input class="bl" data-key="s5a-5b" data-answer="viel" style="width:60px;min-width:0" placeholder="~"></p></div></li>
+      <li><div><p class="de">그는 빵을 먹는다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Er</span> <input class="bl md" data-key="s5a-6" data-answer="isst"> <input class="bl" data-key="s5a-6b" data-answer="Brot" style="width:60px;min-width:0" placeholder="~"></p></div></li>
+    </ol>
+    <p class="tip"><b class="t">Level 3</b>힌트 없음 — 문장 전체를 쓰세요</p>
+    <ol class="ex" start="7">
+      <li><div><p class="de">너는 그 영화를 본다.</p><p class="sol"><span class="ar">→</span> <input class="bl lg" data-key="s5a-7" data-answer="Du siehst den Film." placeholder="Deutsch"></p></div></li>
+      <li><div><p class="de">그녀는 매일 책을 읽는다.</p><p class="sol"><span class="ar">→</span> <input class="bl lg" data-key="s5a-8" data-answer="Sie liest jeden Tag ein Buch.|Sie liest jeden Tag Bücher." placeholder="Deutsch"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5B.</span> 동사 + 관사 채우기 <em>— 1·2·3과 통합</em></div>
+    <p>동사 변화(3과)와 관사(1과) · 대명사(2과)를 함께 적용하세요. <em>5A와 다른 새 문장입니다.</em></p>
+    <ol class="ex">
+      <li><div><p class="de">그는 신문을 읽는다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Er</span> <input class="bl md" data-key="s5b-1a" data-answer="liest"> <input class="bl sm" data-key="s5b-1b" data-answer="die"> <span class="giv">Zeitung.</span></p><p class="note">lesen + er · Zeitung (f) 4격</p></div></li>
+      <li><div><p class="de">너는 고양이 한 마리를 본다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Du</span> <input class="bl md" data-key="s5b-2a" data-answer="siehst"> <input class="bl sm" data-key="s5b-2b" data-answer="eine"> <span class="giv">Katze.</span></p><p class="note">sehen + du · Katze (f) 4격 부정관사</p></div></li>
+      <li><div><p class="de">그는 나에게 책을 준다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Er</span> <input class="bl md" data-key="s5b-3a" data-answer="gibt"> <input class="bl sm" data-key="s5b-3b" data-answer="mir"> <input class="bl sm" data-key="s5b-3c" data-answer="ein"> <span class="giv">Buch.</span></p><p class="note">geben + er · 2과 mir · Buch (n) 4격 부정관사</p></div></li>
+      <li><div><p class="de">우리는 선생님이다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Wir</span> <input class="bl md" data-key="s5b-4" data-answer="sind"> <span class="giv">Lehrer.</span></p><p class="note">sein + wir</p></div></li>
+      <li><div><p class="de">그는 개 한 마리가 있다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Er</span> <input class="bl md" data-key="s5b-5a" data-answer="hat"> <input class="bl sm" data-key="s5b-5b" data-answer="einen"> <span class="giv">Hund.</span></p><p class="note">haben + er · Hund (m) 4격 부정관사</p></div></li>
+      <li><div><p class="de">너는 그 아이를 본다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Du</span> <input class="bl md" data-key="s5b-6a" data-answer="siehst"> <input class="bl sm" data-key="s5b-6b" data-answer="das"> <span class="giv">Kind.</span></p><p class="note">sehen + du · Kind (n) 4격</p></div></li>
+    </ol>
+
+    </section>
+
+  
+  <div class="daybar"><b>3일차</b><span>Mini-Wiederholung 2 → Schritt 6–7 + 자기 평가</span></div>
+
+  <section class="step" data-sec="mw2" data-day="3" data-label="Mini-Wiederholung 2 (3일차 시작)">
+    <div class="sub2">Mini-Wiederholung 2 — sein · haben, 보지 않고 다시!</div>
+    <sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>인칭</sc-raw-th><sc-raw-th>sein</sc-raw-th><sc-raw-th>haben</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">ich</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-s1" data-answer="bin"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-h1" data-answer="habe"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">du</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-s2" data-answer="bist"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-h2" data-answer="hast"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">er/sie/es</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-s3" data-answer="ist"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-h3" data-answer="hat"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">wir</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-s4" data-answer="sind"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-h4" data-answer="haben"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">ihr</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-s5" data-answer="seid"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-h5" data-answer="habt"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie/Sie</sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-s6" data-answer="sind"></sc-raw-td><sc-raw-td><input class="bl sm" data-key="mw2-h6" data-answer="haben"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 6 · SPRECHEN ===== -->
+  <section class="step" id="s6" data-sec="s6" data-day="3">
+    <div class="step-head"><div class="step-n">06</div><div><p class="eyebrow">Schritt 6</p><h2 class="step-title">Sprechen · 말하기</h2></div></div>
+    <p class="lede">Deutsch 칸은 가려져 있습니다. 한국어만 보고 독일어로 말한 뒤, 칸을 눌러 확인하세요.</p>
+
+    <div class="sub2">Round 1 — 규칙동사</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">나 독일어 배워.</sc-raw-td><sc-raw-td class="de tog">Ich lerne Deutsch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-1" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">너 베를린에 살아.</sc-raw-td><sc-raw-td class="de tog">Du wohnst in Berlin.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-2" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 한국에서 왔어.</sc-raw-td><sc-raw-td class="de tog">Er kommt aus Korea.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-3" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">우리 같이 배워.</sc-raw-td><sc-raw-td class="de tog">Wir lernen zusammen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-4" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">너희 내일 와.</sc-raw-td><sc-raw-td class="de tog">Ihr kommt morgen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-5" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나 베를린에 살아.</sc-raw-td><sc-raw-td class="de tog">Ich wohne in Berlin.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-6" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 독일어 배워.</sc-raw-td><sc-raw-td class="de tog">Er lernt Deutsch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-7" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그들은 독일어를 배워.</sc-raw-td><sc-raw-td class="de tog">Sie lernen Deutsch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-8" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 2 — 불규칙 · sein · haben + 모음변화</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">너 피곤하구나.</sc-raw-td><sc-raw-td class="de tog">Du bist müde.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-9" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 차가 있어.</sc-raw-td><sc-raw-td class="de tog">Er hat ein Auto.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-10" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그녀는 독일어를 해.</sc-raw-td><sc-raw-td class="de tog">Sie spricht Deutsch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-11" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">우리는 학생이야.</sc-raw-td><sc-raw-td class="de tog">Wir sind Studenten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-12" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">너는 베를린으로 가.</sc-raw-td><sc-raw-td class="de tog">Du fährst nach Berlin.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-13" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 사과를 먹어.</sc-raw-td><sc-raw-td class="de tog">Er isst einen Apfel.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-14" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그녀는 책을 읽어.</sc-raw-td><sc-raw-td class="de tog">Sie liest ein Buch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-15" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">너는 그 개를 봐.</sc-raw-td><sc-raw-td class="de tog">Du siehst den Hund.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-16" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 3 — -e- 삽입 · werden</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">너 일 많이 하는구나.</sc-raw-td><sc-raw-td class="de tog">Du arbeitest viel.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-17" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 베를린에서 일해.</sc-raw-td><sc-raw-td class="de tog">Er arbeitet in Berlin.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-18" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">너 그 책 찾는구나.</sc-raw-td><sc-raw-td class="de tog">Du findest das Buch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-19" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 의사가 돼.</sc-raw-td><sc-raw-td class="de tog">Er wird Arzt.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-20" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 7 · TEST ===== -->
+  <section class="step" id="s7" data-sec="s7" data-day="3">
+    <div class="step-head"><div class="step-n">07</div><div><p class="eyebrow">Schritt 7</p><h2 class="step-title">Test · 테스트</h2></div></div>
+    <p class="lede">연습에서 <strong>한 번도 사용하지 않은 새 동사</strong>가 등장합니다. 규칙을 적용할 수 있는지 확인하세요.</p>
+
+    <div class="bsp"><span class="lab">테스트용 새 동사표</span>
+      <sc-raw-table class="g" style="margin:6px 0 0;font-size:14px">
+        <sc-raw-thead><sc-raw-tr><sc-raw-th>동사</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>유형</sc-raw-th><sc-raw-th>du · er 변화</sc-raw-th></sc-raw-tr></sc-raw-thead>
+        <sc-raw-tbody>
+          <sc-raw-tr><sc-raw-td class="k">spielen</sc-raw-td><sc-raw-td>놀다 / 연주하다</sc-raw-td><sc-raw-td>규칙</sc-raw-td><sc-raw-td>spielst · spielt</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">machen</sc-raw-td><sc-raw-td>만들다 / 하다</sc-raw-td><sc-raw-td>규칙</sc-raw-td><sc-raw-td>machst · macht</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">trinken</sc-raw-td><sc-raw-td>마시다</sc-raw-td><sc-raw-td>규칙</sc-raw-td><sc-raw-td>trinkst · trinkt</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">laufen</sc-raw-td><sc-raw-td>달리다</sc-raw-td><sc-raw-td>불규칙 a→ä</sc-raw-td><sc-raw-td>läufst · läuft</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">nehmen</sc-raw-td><sc-raw-td>집다 / 택하다</sc-raw-td><sc-raw-td>불규칙 e→i</sc-raw-td><sc-raw-td>nimmst · nimmt</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">tragen</sc-raw-td><sc-raw-td>입다 / 나르다</sc-raw-td><sc-raw-td>불규칙 a→ä</sc-raw-td><sc-raw-td>trägst · trägt</sc-raw-td></sc-raw-tr>
+        </sc-raw-tbody>
+      </sc-raw-table>
+    </div>
+
+    <div class="sub"><span class="de">7A.</span> 새 동사 독→한 해석</div>
+    <ol class="ex">
+      <li><div><p class="de">Ich <strong>spiele</strong> Klavier.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-1" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Du <strong>machst</strong> die Hausaufgabe.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-2" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Er <strong>trinkt</strong> Wasser.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-3" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Du <strong>läufst</strong> schnell.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-4" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Er <strong>nimmt</strong> das Buch.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-5" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Er <strong>trägt</strong> den Mantel.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-6" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Wir <strong>spielen</strong> zusammen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-7" placeholder="해석"></p></div></li>
+      <li><div><p class="de">Ihr <strong>macht</strong> das gut.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-8" placeholder="해석"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7B.</span> 새 동사 한→독 번역</div>
+    <p>위 동사표에서 동사를 찾아 <strong>알맞게 변화시켜</strong> 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">나는 피아노를 연주한다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Ich</span> <input class="bl md" data-key="t7b-1" data-answer="spiele"> <span class="giv">Klavier.</span></p></div></li>
+      <li><div><p class="de">너는 물을 마신다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Du</span> <input class="bl md" data-key="t7b-2" data-answer="trinkst"> <span class="giv">Wasser.</span></p></div></li>
+      <li><div><p class="de">그는 빨리 달린다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Er</span> <input class="bl md" data-key="t7b-3" data-answer="läuft"> <span class="giv">schnell.</span></p></div></li>
+      <li><div><p class="de">그는 그 코트를 입는다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Er</span> <input class="bl md" data-key="t7b-4" data-answer="trägt"> <span class="giv">den Mantel.</span></p></div></li>
+      <li><div><p class="de">너는 그 책을 집는다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Du</span> <input class="bl md" data-key="t7b-5" data-answer="nimmst"> <span class="giv">das Buch.</span></p></div></li>
+      <li><div><p class="de">우리는 숙제를 한다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Wir</span> <input class="bl md" data-key="t7b-6" data-answer="machen"> <span class="giv">die Hausaufgabe.</span></p></div></li>
+      <li><div><p class="de">우리는 빨리 달린다.</p><p class="sol"><span class="ar">→</span> <span class="giv">Wir</span> <input class="bl md" data-key="t7b-7" data-answer="laufen"> <span class="giv">schnell.</span></p><p class="note">wir에서는 모음이 바뀌지 않습니다</p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7C.</span> 새 동사 오류 수정 <em style="font-style:normal;color:var(--muted);font-size:11px;letter-spacing:.04em">— 바르게 고친 문장을 고르세요</em></div>
+    <ol class="ex chq">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Ihr <strong>spielen</strong> zusammen.</p><div class="chx" data-key="t7c-c1" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Ihr spielt zusammen.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Ihr spielen zusammen.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Ihr spielst zusammen.</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Du <strong>lauft</strong> schnell.</p><div class="chx" data-key="t7c-c2" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Du laufst schnell.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Du läufst schnell.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Du läuft schnell.</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Du <strong>nimmt</strong> einen Apfel.</p><div class="chx" data-key="t7c-c3" data-answer="c"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Du nehmt einen Apfel.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Du nehmst einen Apfel.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Du nimmst einen Apfel.</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Du <strong>tragt</strong> den Mantel.</p><div class="chx" data-key="t7c-c4" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Du trägst den Mantel.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Du tragst den Mantel.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Du trägt den Mantel.</button></span></div></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Wir <strong>trinkt</strong> Wasser.</p><div class="chx" data-key="t7c-c5" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> Wir trinkst Wasser.</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> Wir trinken Wasser.</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> Wir trinket Wasser.</button></span></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7D.</span> 문법 핵심 <em style="font-style:normal;color:var(--muted);font-size:11px;letter-spacing:.04em">— 맞는 것을 고르세요</em></div>
+    <ol class="ex chq">
+      <li><div><p class="de">어간 모음이 바뀌는 인칭은?</p><div class="chx" data-key="t7d-q1" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> ich · wir</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du · er/sie/es</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> ihr · sie/Sie</button></span></div></div></li>
+      <li><div><p class="de">laufen (달리다)의 <strong>du</strong> 형태는?</p><div class="chx row" data-key="t7d-q2" data-answer="b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> laufst</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> läufst</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> läufest</button></span></div></div></li>
+      <li><div><p class="de">nehmen (집다)의 <strong>er/sie/es</strong> 형태는?</p><div class="chx row" data-key="t7d-q3" data-answer="c"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> nehmt</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> nimmst</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> nimmt</button></span></div></div></li>
+      <li><div><p class="de">sein · haben · werden은 어떻게 익혀야 하나요?</p><div class="chx" data-key="t7d-q4" data-answer="c"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 규칙 어미만 붙이면 된다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> du · er의 모음만 바꾸면 된다</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 불규칙동사이므로 변화형을 통째로 외운다</button></span></div></div></li>
+      <li><div><p class="de">어간이 -t · -d로 끝나는 동사(arbeiten · finden)는 du · er · ihr에서?</p><div class="chx" data-key="t7d-q5" data-answer="a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-ch="a" aria-pressed="false"><b>a)</b> 어미 앞에 -e-를 넣는다</button><button type="button" data-ch="b" aria-pressed="false"><b>b)</b> 어간 모음을 바꾼다</button><button type="button" data-ch="c" aria-pressed="false"><b>c)</b> 어미를 붙이지 않는다</button></span></div></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SELF-ASSESSMENT ===== -->
+  <div class="assess" data-sec="assess">
+    <p class="ahead"><span class="tagpill">지시</span> 자기 평가 · Selbstbewertung</p>
+    <p class="ainst">자신 있으면 <b>O</b>, 아직 불안하면 <b>△</b>, 모르겠으면 <b>X</b>를 누르세요.</p>
+    <div class="sub2">문법 이해</div>
+    <div class="check"><p>동사 = 어간 + 어미라는 것을 안다.</p><div class="rate" data-rate="g1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>규칙 인칭어미 6개를 보지 않고 쓸 수 있다.</p><div class="rate" data-rate="g2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>sein · haben의 변화형을 보지 않고 쓸 수 있다.</p><div class="rate" data-rate="g3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>불규칙동사의 모음 변화가 du · er에서만 일어난다는 것을 안다.</p><div class="rate" data-rate="g4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>sprechen→spricht, fahren→fährt 같은 모음 변화를 안다.</p><div class="rate" data-rate="g5"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>-t·-d 어간 동사(arbeiten→du arbeitest)의 -e- 삽입과 werden 변화를 안다.</p><div class="rate" data-rate="g6"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">단어</div>
+    <div class="check"><p>규칙동사(lernen · kommen · wohnen)를 변화시킬 수 있다.</p><div class="rate" data-rate="w1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>불규칙동사(sprechen · sehen · fahren · essen)의 du · er 형태를 외웠다.</p><div class="rate" data-rate="w2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">실전 적용</div>
+    <div class="check"><p>주어에 맞는 동사 어미를 붙일 수 있다.</p><div class="rate" data-rate="p1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>동사 오류를 찾고 왜 틀렸는지 설명할 수 있다.</p><div class="rate" data-rate="p2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>한국어를 보고 독일어로 바로 말할 수 있다.</p><div class="rate" data-rate="p3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>처음 보는 새 동사에도 변화 규칙을 적용할 수 있다.</p><div class="rate" data-rate="p4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="scorebox"><b>해석</b><br>O가 9개 이상 — 동사 변화를 잘 이해했습니다! 다음 챕터로.<br>△가 3개 이상 — 인칭어미표를 한 번 더 복습 후 Test를 다시.<br>X가 있다면 — Schritt 1부터 차근차근 다시 해보세요.</div>
+  </div>
+
+  <div class="footer">
+    <h3>Gut gemacht!</h3>
+    <p>입력한 답안은 자동으로 브라우저에 저장됩니다.<br>다 풀고 <strong>과제 제출하기</strong> 버튼으로 제출해 주세요.</p>
+    <div class="acts">
+      <button class="btn go" sc-camel-on-click="{{ submitNet }}">과제 제출하기</button>
+      <button class="btn" sc-camel-on-click="{{ print }}">인쇄 / PDF</button>
+    </div>
+  </div>
+
+<nav class="sd-nav" data-no-print aria-label="Hausaufgabe 이동"><a class="sd-prev" href="lektion-02.html"><span class="sd-dir">← 이전 · Lektion 02</span><span class="sd-ttl">인칭대명사</span></a><a class="sd-next" href="lektion-04.html"><span class="sd-dir">다음 · Lektion 04 →</span><span class="sd-ttl">어순 · 의문문 · 수사</span></a><a class="sd-toc" href="../../lektion.html?n=03"><span class="sd-dir">SODA GRAMMATIK KURS</span><span class="sd-ttl">Lektion 03 선택으로 돌아가기</span></a></nav>
+</div>
+</div>
+
+<a class="sd-home" href="../../lektion.html?n=03" aria-label="Lektion 03 선택으로 돌아가기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="sd-lab">선택</span></a>
+<div class="fontctl" aria-label="글씨 크기 조절"><button type="button" data-fs="dec" aria-label="작게">A−</button><button type="button" data-fs="reset" class="fs-val" aria-label="기본 크기"><span data-fs="val">100%</span></button><button type="button" data-fs="inc" aria-label="크게">A+</button></div>
+
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:960,&quot;height&quot;:760},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#384568&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#384568&quot;,&quot;#2563a8&quot;,&quot;#1a7a5c&quot;,&quot;#1c1e24&quot;]},&quot;mono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;디자인&quot;}}">
+class Component extends DCLogic {
+  state = { filled: 0, total: 0 };
+  get KEY() { return 'uebung-lektion-03-v4'; }
+  componentDidMount() {
+    try { this.store = JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch (e) { this.store = {}; }
+    if (!this.rootEl) return;
+    this.applyAccent();
+    window.addEventListener('beforeunload', () => { try { this.save(); } catch (e) {} });
+    const __wrap = this.rootEl.querySelector('.wrap');
+    const __ctl = document.querySelector('.fontctl');
+    if (__wrap && __ctl) {
+      let __fs = parseFloat(localStorage.getItem('uebung-fontscale')) || 1;
+      const __apply = () => { __wrap.style.zoom = __fs; const v = __ctl.querySelector('[data-fs="val"]'); if (v) v.textContent = Math.round(__fs*100)+'%'; };
+      __apply();
+      const __set = (d) => { __fs = Math.min(1.6, Math.max(0.7, Math.round((__fs+d)*10)/10)); localStorage.setItem('uebung-fontscale', __fs); __apply(); };
+      __ctl.querySelector('[data-fs="dec"]').addEventListener('click', () => __set(-0.1));
+      __ctl.querySelector('[data-fs="inc"]').addEventListener('click', () => __set(0.1));
+      __ctl.querySelector('[data-fs="reset"]').addEventListener('click', () => { __fs = 1; localStorage.setItem('uebung-fontscale', __fs); __apply(); });
+    }
+    this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { const v = this.store[el.dataset.key]; if (v != null) el.value = v; });
+    this.rootEl.querySelectorAll('.chx[data-key]').forEach((g) => { this.chLabel(g); const v = this.store[g.dataset.key]; let hit = false; g.querySelectorAll('button[data-ch]').forEach((b) => { const on = b.dataset.ch === v; if (on) hit = true; b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); if (!hit && v != null) delete this.store[g.dataset.key]; });
+    this.rootEl.querySelectorAll('[data-rate]').forEach((g) => { const v = this.store['rate:' + g.dataset.rate]; g.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === v ? 'true' : 'false'); }); });
+    this.rootEl.querySelectorAll('audio[data-aud]').forEach((au) => this.initPlayer(au));
+    this.initClips();
+    this.buildCheckBars();
+    this.recount();
+  }
+  componentDidUpdate(prev) { if (prev && (prev.accent !== this.props.accent || prev.mono !== this.props.mono)) this.applyAccent(); }
+  applyAccent() { if (this.rootEl) this.rootEl.classList.toggle('mono', !!this.props.mono);
+    if (this.rootEl && this.props.accent) { this.rootEl.style.setProperty('--accent', this.props.accent); document.documentElement.style.setProperty('--accent', this.props.accent); } }
+  setRoot = (el) => { this.rootEl = el; };
+  initPlayer(au) {
+    const box = au.closest('.audio'); if (!box) return; au.controls = true;
+    const id = au.dataset.aud; const rKey = 'aspeed:' + id; const speedBtns = [...box.querySelectorAll('[data-aprate]')];
+    if (!this.store) this.store = {};
+    const savedR = parseFloat(this.store[rKey]); const initR = !isNaN(savedR) ? savedR : 1;
+    au.playbackRate = initR; speedBtns.forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.aprate) === initR ? 'true' : 'false'));
+    const dlBtn = box.querySelector('[data-ap="dl"]');
+    if (dlBtn) dlBtn.addEventListener('click', () => { const a = document.createElement('a'); a.href = au.currentSrc || au.src; a.download = au.dataset.filename || 'audio.mp3'; document.body.appendChild(a); a.click(); a.remove(); });
+    speedBtns.forEach((b) => b.addEventListener('click', () => { const r = parseFloat(b.dataset.aprate); au.playbackRate = r; speedBtns.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); this.store[rKey] = r; this.save(); }));
+  }
+  initClips() {
+    if (!this.rootEl) return;
+    const all = [...this.rootEl.querySelectorAll('audio')];
+    all.forEach((a) => a.addEventListener('play', () => { all.forEach((b) => { if (b !== a && !b.paused) b.pause(); }); }));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((au) => {
+      const btn = () => this.rootEl && this.rootEl.querySelector('button[data-play="' + au.dataset.clip + '"]');
+      const off = () => { const b = btn(); if (b) b.classList.remove('on'); };
+      au.addEventListener('ended', off);
+      au.addEventListener('pause', off);
+      au.addEventListener('play', () => { const b = btn(); if (b) b.classList.add('on'); });
+    });
+    this.syncClipRate();
+  }
+  syncClipRate() {
+    if (!this.rootEl) return;
+    const r = parseFloat((this.store || {}).cliprate) || 1;
+    this.rootEl.querySelectorAll('button[data-cliprate]').forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.cliprate) === r ? 'true' : 'false'));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((a) => { a.playbackRate = r; });
+  }
+  setClipRate = (b) => { if (!this.store) this.store = {}; this.store.cliprate = parseFloat(b.dataset.cliprate) || 1; this.save(); this.syncClipRate(); };
+  playClip = (btn) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-clip="' + btn.dataset.play + '"]');
+    if (!au) return;
+    if (!au.paused) { au.pause(); return; }
+    au.playbackRate = parseFloat((this.store || {}).cliprate) || 1;
+    try { au.currentTime = 0; } catch (err) {}
+    const p = au.play();
+    if (p && p.catch) p.catch(() => btn.classList.remove('on'));
+  };
+  playSeg = (el) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-aud="story"]');
+    if (!au || !el.dataset.seg) return;
+    const ab = el.dataset.seg.split(',').map(parseFloat);
+    if (this.__segClear) this.__segClear();
+    const stop = () => { if (au.currentTime >= ab[1] + 0.15) au.pause(); };
+    const clear = () => { au.removeEventListener('timeupdate', stop); au.removeEventListener('pause', clear); el.classList.remove('on'); if (this.__segClear === clear) this.__segClear = null; };
+    this.__segClear = clear;
+    el.classList.add('on');
+    try { au.currentTime = Math.max(0, ab[0] - 0.1); } catch (err) {}
+    au.addEventListener('timeupdate', stop);
+    au.addEventListener('pause', clear);
+    const p = au.play();
+    if (p && p.catch) p.catch(() => clear());
+  };
+  save() { try { localStorage.setItem(this.KEY, JSON.stringify(this.store || {})); } catch (e) {} }
+  onInput = (e) => { const el = e.target; if (!el || !el.dataset || el.dataset.key == null) return; if (!this.store) this.store = {}; this.store[el.dataset.key] = el.value; el.classList.remove('ck-ok', 'ck-near', 'ck-no'); this.touch(this.secOf(el)); this.save(); this.recount(); };
+  chkNorm = (v) => (v == null ? '' : String(v)).normalize('NFC').replace(/\s+/g, ' ').trim().replace(/[.!?]+\s*$/, '');
+  chkFold = (s) => s.toLowerCase().replace(/\u00e4/g, 'ae').replace(/\u00f6/g, 'oe').replace(/\u00fc/g, 'ue').replace(/\u00df/g, 'ss');
+  chkMatch = (val, ans) => { const v = this.chkNorm(val); if (!v) return 'no'; const alts = String(ans).split('|').map((a) => this.chkNorm(a)); if (alts.indexOf(v) >= 0) return 'ok'; const fv = this.chkFold(v); if (alts.some((a) => this.chkFold(a) === fv)) return 'near'; return 'no'; };
+  secOf = (el) => { const s = el && el.closest && el.closest('[data-sec]'); return s ? s.dataset.sec : null; };
+  touch = (sec) => { if (!this.store) this.store = {}; const now = Date.now(); let L = this.store.__s; if (!Array.isArray(L)) { L = []; this.store.__s = L; } let cur = L[L.length - 1]; if (!cur || (now - cur.e) > 45 * 60 * 1000) { cur = { s: now, e: now, x: [] }; L.push(cur); } cur.e = now; if (sec && cur.x.indexOf(sec) < 0) cur.x.push(sec); };
+  buildCheckBars = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('.chkbar').forEach((b) => b.remove()); const seen = []; this.rootEl.querySelectorAll('input[data-answer], .chx[data-answer]').forEach((inp) => { let c = inp.closest('ol, table'); if (!c) c = inp.closest('p'); if (!c) c = inp.parentElement; if (!c || seen.indexOf(c) >= 0) return; seen.push(c); const bar = document.createElement('div'); bar.className = 'chkbar'; bar.innerHTML = '<button type="button" data-chk>정답 확인</button><button type="button" data-ansr disabled>정답 보기</button><span class="chkres"></span>'; c.insertAdjacentElement('afterend', bar); }); };
+  cvalOf = (el) => { if (el.classList && el.classList.contains('chx')) { const b = el.querySelector('button[aria-pressed="true"]'); return b ? b.dataset.ch : ''; } return (el.value || '').trim(); };
+  snapshot = (scope) => { if (!scope) return; if (!this.store) this.store = {}; const fa = this.store.__fa || (this.store.__fa = {}); scope.querySelectorAll('[data-key]').forEach((el) => { const k = el.dataset.key; if (!k || k === 'meta-name') return; if (Object.prototype.hasOwnProperty.call(fa, k)) return; fa[k] = this.cvalOf(el); }); this.save(); };
+  runCheck = (btn) => { const bar = btn.closest('.chkbar'); const scope = bar && bar.previousElementSibling; if (!scope) return; this.snapshot(scope); if (!this.store) this.store = {}; if (!this.store.__fa) this.store.__fa = {}; let ok = 0, near = 0, tot = 0; scope.querySelectorAll('input[data-answer]').forEach((i) => { tot++; const fv = (i.value || '').trim(); if (this.store.__fa[i.dataset.key] == null) this.store.__fa[i.dataset.key] = fv; i.classList.remove('ck-ok', 'ck-near', 'ck-no'); const st = this.chkMatch(i.value, i.dataset.answer); i.classList.add('ck-' + st); if (st === 'ok') ok++; else if (st === 'near') near++; }); scope.querySelectorAll('.chx[data-answer]').forEach((g) => { tot++; const sel = g.querySelector('button[aria-pressed="true"]'); const fv = sel ? sel.dataset.ch : ''; if (this.store.__fa[g.dataset.key] == null) this.store.__fa[g.dataset.key] = fv; g.classList.remove('ck-ok', 'ck-no'); const st = (fv && fv === g.dataset.answer) ? 'ok' : 'no'; g.classList.add('ck-' + st); if (st === 'ok') ok++; }); const ab = bar.querySelector('[data-ansr]'); if (ab) ab.disabled = false; const res = bar.querySelector('.chkres'); if (res) res.textContent = '맞음 ' + ok + '/' + tot + (near ? ' · 표기 확인 ' + near : ''); this.touch(this.secOf(btn)); this.save(); };
+  toggleAnswers = (btn) => { const bar = btn.closest('.chkbar'); const scope = bar && bar.previousElementSibling; if (!scope) return; this.snapshot(scope); const on = btn.classList.toggle('on'); btn.textContent = on ? '정답 숨기기' : '정답 보기'; scope.querySelectorAll('input[data-answer]').forEach((i) => { let sp = i.nextElementSibling; if (!(sp && sp.classList && sp.classList.contains('ckans'))) { sp = document.createElement('span'); sp.className = 'ckans'; i.insertAdjacentElement('afterend', sp); } sp.textContent = on ? i.dataset.answer.split('|')[0] : ''; sp.style.display = on ? '' : 'none'; }); scope.querySelectorAll('.chx[data-answer]').forEach((g) => { let sp = g.nextElementSibling; if (!(sp && sp.classList && sp.classList.contains('ckans'))) { sp = document.createElement('span'); sp.className = 'ckans'; g.insertAdjacentElement('afterend', sp); } const cb = g.querySelector('button[data-ch="' + g.dataset.answer + '"]'); sp.textContent = on ? '정답: ' + (cb ? cb.textContent.trim() : g.dataset.answer + ')') : ''; sp.style.display = on ? '' : 'none'; }); };
+  clearCheckUI = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('input.ck-ok, input.ck-near, input.ck-no').forEach((i) => i.classList.remove('ck-ok', 'ck-near', 'ck-no')); this.rootEl.querySelectorAll('.chx.ck-ok, .chx.ck-no').forEach((g) => g.classList.remove('ck-ok', 'ck-no')); this.rootEl.querySelectorAll('.ckans').forEach((s) => s.remove()); this.rootEl.querySelectorAll('.chkbar .chkres').forEach((s) => { s.textContent = ''; }); this.rootEl.querySelectorAll('.chkbar [data-ansr]').forEach((b) => { b.disabled = true; b.classList.remove('on'); b.textContent = '정답 보기'; }); };
+  onClick = (e) => {
+    const __pl = e.target.closest && e.target.closest('button[data-play]'); if (__pl) { this.closeMc && this.closeMc(); this.playClip(__pl); return; }
+    const __cr = e.target.closest && e.target.closest('button[data-cliprate]'); if (__cr) { this.closeMc && this.closeMc(); this.setClipRate(__cr); return; }
+    const __sg = e.target.closest && e.target.closest('[data-seg]'); if (__sg) { this.closeMc && this.closeMc(); this.playSeg(__sg); return; }
+    const __rv = e.target.closest && e.target.closest('.chkbar [data-ansr]'); if (__rv) setTimeout(() => { const b = __rv.closest('.chkbar'); const sc = b && b.previousElementSibling; if (!sc) return; const on = /숨기기/.test(__rv.textContent); sc.querySelectorAll('.reveal').forEach((r) => r.classList.toggle('show', on)); }, 0);
+    const __cb = e.target.closest && e.target.closest('button[data-chk]'); if (__cb) { this.runCheck(__cb); return; }
+    const __ab = e.target.closest && e.target.closest('button[data-ansr]'); if (__ab) { this.toggleAnswers(__ab); return; }
+    const __mt = e.target.closest && e.target.closest('.chx>.mct');
+    if (__mt) { this.openMc(__mt); return; }
+    if (!(e.target.closest && e.target.closest('.chx'))) this.closeMc();
+    const __ch = e.target.closest && e.target.closest('.chx button[data-ch]');
+    if (__ch) { const g = __ch.closest('.chx'); if (!this.store) this.store = {}; const next = this.store[g.dataset.key] === __ch.dataset.ch ? '' : __ch.dataset.ch; this.store[g.dataset.key] = next; g.classList.remove('ck-ok', 'ck-no'); g.querySelectorAll('button[data-ch]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.ch === next ? 'true' : 'false')); this.chLabel(g); this.closeMc(); this.touch(this.secOf(g)); this.save(); this.recount(); return; }
+    const de = e.target.closest && e.target.closest('td.de.tog'); if (de) { de.classList.toggle('show'); return; }
+    const btn = e.target.closest && e.target.closest('button[data-val]'); if (!btn) return;
+    const group = btn.closest('[data-rate]'); if (!group) return;
+    const key = 'rate:' + group.dataset.rate; if (!this.store) this.store = {};
+    const next = this.store[key] === btn.dataset.val ? '' : btn.dataset.val; this.store[key] = next; this.touch(this.secOf(group)); this.save();
+    group.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === next ? 'true' : 'false'); });
+  };
+  recount = () => { if (!this.rootEl) return; const inputs = [...this.rootEl.querySelectorAll('input[data-key]:not([data-noprogress])')]; const chx = [...this.rootEl.querySelectorAll('.chx[data-key]')]; const total = inputs.length + chx.length; const filled = inputs.filter((i) => (i.value || '').trim() !== '').length + chx.filter((g) => !!g.querySelector('button[aria-pressed="true"]')).length; this.setState({ filled, total }); };
+  print = () => { window.print(); };
+  closeMc = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('.chx.open').forEach((g) => { g.classList.remove('open'); const t = g.querySelector('.mct'); if (t) t.setAttribute('aria-expanded', 'false'); }); };
+  openMc = (t) => { const g = t.closest('.chx'); const was = g.classList.contains('open'); this.closeMc(); if (!was) { g.classList.add('open'); t.setAttribute('aria-expanded', 'true'); } };
+  chLabel = (g) => { const t = g.querySelector('.mct .mctv'); if (!t) return; const v = (this.store && this.store[g.dataset.key]) || ''; const b = v ? g.querySelector('button[data-ch="' + v + '"]') : null; t.textContent = b ? (v + ') ' + b.textContent.replace(/^\s*[a-z]\)\s*/, '').trim()) : '선택하기'; g.classList.toggle('picked', !!b); };
+  reset = () => { if (!window.confirm('입력한 모든 답안을 지울까요?')) return; this.clearCheckUI(); this.store = {}; this.save(); if (this.rootEl) { this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { el.value = ''; }); this.rootEl.querySelectorAll('[data-rate] button, .chx button[data-ch]').forEach((b) => b.setAttribute('aria-pressed', 'false')); this.rootEl.querySelectorAll('.chx[data-key]').forEach((g) => this.chLabel(g)); this.closeMc(); } this.syncClipRate(); if (this.rootEl) this.rootEl.querySelectorAll('.reveal.show').forEach((r) => r.classList.remove('show')); this.recount(); };
+  studentName() { const el = this.rootEl && this.rootEl.querySelector('input[data-key="meta-name"]'); return el ? (el.value || '').trim() : ''; }
+  buildText() {
+    const r = this.rootEl; if (!r) return '';
+    const inputs = [...r.querySelectorAll('input[data-key]:not([data-noprogress])')]; const filled = inputs.filter((i) => (i.value || '').trim() !== '').length;
+    const out = []; out.push('Sophia Deutsch Akademie'); out.push('Übung · Lektion 03 — Verben im Präsens · 개선판');
+    out.push('이름: ' + (this.studentName() || '(미입력)')); out.push('제출 시각: ' + new Date().toLocaleString('ko-KR')); out.push('진행: ' + filled + ' / ' + inputs.length); out.push('※ 답안은 정답 확인(정답 보기) 이전에 학생이 입력·선택한 내용을 기준으로 기록됩니다.'); out.push('※ 정답을 본 뒤 고친 칸은 "정답 확인 후 수정"으로 함께 표시됩니다.');
+    const serialize = (node) => { const parts = []; const walk = (n) => { if (n.nodeType === 3) { parts.push(n.nodeValue); return; } if (n.nodeType !== 1) return; if (n.tagName === 'INPUT') { const v = (n.value || '').trim(); const fa = (this.store && this.store.__fa) ? this.store.__fa[n.dataset.key] : null; let t; if (fa == null) { t = v || '____'; } else { t = fa || '무응답'; if (fa !== v) t = t + ' (정답 확인 후 수정: ' + (v || '공란') + ')'; } parts.push(' [' + t + '] '); return; } if (n.classList && n.classList.contains('chx')) { const sel = n.querySelector('button[aria-pressed="true"]'); const v = sel ? sel.dataset.ch : ''; const lb = n.querySelector('.chl'); const lab = (c) => { const b2 = n.querySelector('button[data-ch="' + c + '"]'); return b2 ? (c + ') ' + b2.textContent.replace(/^\s*[a-z]\)\s*/, '').trim()) : c; }; const fa = (this.store && this.store.__fa) ? this.store.__fa[n.dataset.key] : null; let t; if (fa == null) { t = v ? lab(v) : '무응답'; } else { t = fa ? lab(fa) : '무응답'; if (fa !== v) t = t + ' (정답 확인 후 수정: ' + (v ? lab(v) : '공란') + ')'; } parts.push(' ' + (lb ? lb.textContent.trim() + ' ' : '') + '[' + t + '] '); return; } if (n.hasAttribute && n.hasAttribute('data-noser')) return; if (n.hasAttribute && n.hasAttribute('data-sp')) parts.push(' '); if (n.classList && n.classList.contains('note')) return; if (n.classList && n.classList.contains('rate')) { const sel = n.querySelector('button[aria-pressed="true"]'); parts.push(' (' + (sel ? sel.dataset.val : '-') + ') '); return; } n.childNodes.forEach(walk); }; node.childNodes.forEach(walk); return parts.join('').replace(/\s+/g, ' ').trim(); };
+    r.querySelectorAll('section.step').forEach((sec) => { const eb = sec.querySelector('.eyebrow'); const tt = sec.querySelector('.step-title'); out.push(''); out.push('==== ' + (sec.dataset.label || ((eb ? eb.textContent.trim() : '') + ' — ' + (tt ? tt.textContent.trim() : ''))) + ' ====');
+      const items = sec.querySelectorAll('.sub2, ol.ex > li, table.sp tbody tr'); let n = 0;
+      items.forEach((it) => { if (it.matches('.sub2')) { out.push(''); out.push('— ' + it.textContent.trim()); n = 0; return; } if (it.matches('table.sp tbody tr')) { const ko = it.querySelector('.ko'); const cnt = it.querySelector('input[data-key]'); out.push('  • ' + (ko ? ko.textContent.trim() : '') + '  — 연습 ' + ((cnt && cnt.value) ? cnt.value : '0') + '회'); return; } if (!it.querySelector('input[data-key], .chx[data-key]')) return; n++; out.push('  ' + n + '. ' + serialize(it)); });
+      sec.querySelectorAll('table.g tbody tr').forEach((tr) => { if (tr.querySelector('input[data-key], .chx[data-key]')) out.push('  · ' + serialize(tr)); });
+    });
+    const assess = r.querySelector('.assess'); if (assess) { out.push(''); out.push('==== 자기 평가 ===='); assess.querySelectorAll('.check').forEach((ch) => { const stmt = ch.querySelector('p'); const sel = ch.querySelector('button[aria-pressed="true"]'); out.push('  [' + (sel ? sel.dataset.val : ' ') + '] ' + (stmt ? stmt.textContent.trim() : '')); }); }
+        try {
+      const SL = { s1: 'Schritt 1', s2: 'Schritt 2', s3: 'Schritt 3', s4: 'Schritt 4', s5: 'Schritt 5', s6: 'Schritt 6', s7: 'Schritt 7', mw1: 'Mini-Wiederholung 1', mw2: 'Mini-Wiederholung 2', assess: '자기 평가' };
+      const ORD = ['s1', 's2', 's3', 'mw1', 's4', 's5', 'mw2', 's6', 's7', 'assess'];
+      const ses = (this.store && Array.isArray(this.store.__s)) ? this.store.__s : [];
+      if (ses.length) {
+        out.push(''); out.push('==== 학습 기록 ===='); out.push('(각 단계를 학습한 날짜·시간이 자동 기록됩니다)');
+        const fd = (t) => new Date(t).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' });
+        const ft = (t) => new Date(t).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+        ses.forEach((s, i) => {
+          const xs = ORD.filter((k) => (s.x || []).indexOf(k) >= 0);
+          const labs = []; let j = 0;
+          while (j < xs.length) {
+            if (/^s\d$/.test(xs[j])) { let k = j; while (k + 1 < xs.length && /^s\d$/.test(xs[k + 1]) && parseInt(xs[k + 1][1], 10) === parseInt(xs[k][1], 10) + 1) k++; labs.push(k > j ? ('Schritt ' + xs[j][1] + '\u2013' + xs[k][1]) : SL[xs[j]]); j = k + 1; }
+            else { labs.push(SL[xs[j]]); j++; }
+          }
+          out.push('세션 ' + (i + 1) + ' | ' + fd(s.s) + ' ' + ft(s.s) + '\u2013' + ft(s.e) + ' | ' + (labs.join(', ') || '-'));
+        });
+      }
+    } catch (__e) {}
+    return out.join('\n');
+  }
+  submitTxt = () => { const text = this.buildText(); const name = this.studentName() || '학생'; const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Lektion03v4_' + name + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); };
+  SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxgAblMFNpot1-dRxTbyIYyY1CNeiDGeVbky7QGziTLjIXKX_S9d1cAttBVfYwrk2pfkA/exec';
+  SUBMIT_CODE = 'SODA-GRAMMATIK';
+
+  submitNet = async () => {
+    if (this._sending) return;
+    const name = this.studentName();
+    if (!name) { window.alert('이름을 먼저 입력해 주세요.'); return; }
+    const url = this.SUBMIT_URL;
+    if (!url || url.indexOf('http') !== 0) { window.alert('제출 주소가 설정되지 않았습니다. 선생님께 알려 주세요.'); return; }
+    if (this._sent && !window.confirm('이미 제출했습니다. 다시 제출할까요?')) return;
+    const text = this.buildText();
+    const mk = (this.KEY.match(/lektion-(\d+)/) || [])[1] || '';
+    const m2 = text.match(/진행: (\d+) \/ (\d+)/);
+    this._sending = true;
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ code: this.SUBMIT_CODE, name: name, lesson: parseInt(mk, 10) || mk, title: text.split('\n')[1] || '', filled: m2 ? m2[1] : '', total: m2 ? m2[2] : '', report: text }) });
+      this._sent = true;
+      window.alert('제출되었습니다. 선생님께 답안이 전달되었어요.');
+    } catch (e) {
+      window.alert('제출에 실패했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요. 계속 안 되면 선생님께 알려 주세요.');
+    }
+    this._sending = false;
+  };
+
+  submitIos = async () => { const text = this.buildText(); try { await navigator.clipboard.writeText(text); } catch (e) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove(); } window.alert('모든 내용을 복사했습니다. 텍스트 편집 프로그램에 붙여넣기하여 그 파일을 제출해 주세요.'); };
+  renderVals() { const total = this.state.total; const pct = total ? Math.round((this.state.filled / total) * 100) : 0; return { setRoot: this.setRoot, onInput: this.onInput, onClick: this.onClick, submitTxt: this.submitTxt, submitNet: this.submitNet,
+      submitIos: this.submitIos, print: this.print, reset: this.reset, filled: this.state.filled, total: total, barStyle: { width: pct + '%' } }; }
+}
+</script>
+
+
+</body></html>

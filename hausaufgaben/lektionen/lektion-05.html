@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<script>window.__resources={"https://unpkg.com/react@18.3.1/umd/react.production.min.js": "../assets/vendor/react.production.min.js", "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "../assets/vendor/react-dom.production.min.js"};</script>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/sd-nav.css">
+<link rel="icon" type="image/png" href="../assets/logo.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hausaufgabe Lektion 05 소유관사</title>
+<script src="../assets/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<style>
+  :root{
+    --bg:#fbfbfa; --paper:#ffffff; --ink:#191b1f; --muted:#6b7280;
+    --line:#e6e7ec; --line2:#d3d6de; --accent:#384568; --err:#c4392e;
+    --sans:'Inter','Noto Sans KR','Helvetica Neue',Arial,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --c1:#3559b3; --t1:#eef1fa; --l1:#ccd6ef;
+    --c2:#6a45ab; --t2:#f3eefb; --l2:#dbcef0;
+    --c3:#0e7a5f; --t3:#e9f5f1; --l3:#c3e2d8;
+    --c4:#a05c12; --t4:#fbf2e6; --l4:#eddcc0;
+    --c5:#b03a6b; --t5:#fbeef4; --l5:#eecfdf;
+    --c6:#1f7fa3; --t6:#eaf4f9; --l6:#c9e2ee;
+    --c7:#4b4f58; --t7:#f2f3f5; --l7:#dcdee3;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 32px;}
+  p{margin:0 0 12px;text-wrap:pretty;}
+  strong{font-weight:700;color:var(--c,var(--accent));}
+  em{color:var(--muted);font-style:italic;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{color:var(--ink);text-decoration:underline;}
+
+  .toolbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid var(--line);}
+  .toolbar .row{max-width:900px;margin:0 auto;padding:10px 32px;display:flex;align-items:center;gap:10px;}
+  .tb-title{font-size:13px;font-weight:700;color:var(--muted);}
+  .tb-title span{color:var(--accent);}
+  .tb-spacer{flex:1;}
+  .prog{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+  .prog .bar{width:104px;height:7px;background:var(--line);border-radius:999px;overflow:hidden;}
+  .prog .bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s ease;}
+  .prog b{color:var(--ink);font-weight:700;font-size:13px;}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s;}
+  .btn:hover{border-color:var(--ink);background:#f4f5f7;}
+  .btn.go{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .btn.go:hover{background:#28324e;border-color:#28324e;}
+  .btn.ghost{background:#eef0f4;border-color:transparent;color:var(--accent);}
+  .btn.ghost:hover{background:#e3e7ee;border-color:transparent;}
+
+  .head{padding:44px 0 0;}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+  .brand img{height:44px;width:auto;display:block;}
+  .brand .bt b{display:block;font-size:14px;font-weight:700;color:var(--ink);line-height:1.2;}
+  .head h1{font-size:44px;line-height:1.08;margin:0 0 10px;font-weight:700;letter-spacing:-.025em;}
+  .head .lead{font-size:19px;color:var(--muted);margin:0;font-weight:500;}
+  .meta{display:flex;gap:24px;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line2);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  .meta .f{display:flex;align-items:center;gap:10px;}
+  .meta .f.grow{flex:1;}
+  .meta .f i{font-style:normal;font-weight:600;}
+  .meta input.name{flex:1;font-family:var(--sans);font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);border:1.5px solid var(--line2);border-radius:999px;background:#fff;padding:7px 15px;min-width:150px;}
+  .meta input.name:focus{outline:none;border-color:var(--accent);}
+
+  .toc{margin:36px 0 4px;display:grid;gap:4px;}
+  .toc .toc-row{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:11px 16px;border-radius:12px;background:var(--ct,#f3f4f7);align-items:center;}
+  .toc .tn{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--c,var(--accent));}
+  .toc .tn::before{content:'';width:9px;height:9px;border-radius:999px;background:var(--c,var(--accent));flex:none;}
+  .toc .td{font-size:14.5px;color:var(--muted);}
+  .toc .toc-row.c1{--c:var(--c1);--ct:var(--t1);}
+  .toc .toc-row.c2{--c:var(--c2);--ct:var(--t2);}
+  .toc .toc-row.c3{--c:var(--c3);--ct:var(--t3);}
+  .toc .toc-row.c4{--c:var(--c4);--ct:var(--t4);}
+  .toc .toc-row.c5{--c:var(--c5);--ct:var(--t5);}
+  .toc .toc-row.c6{--c:var(--c6);--ct:var(--t6);}
+  .toc .toc-row.c7{--c:var(--c7);--ct:var(--t7);}
+
+  .step{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;margin-top:64px;}
+  .step.s1{--c:var(--c1);--ct:var(--t1);--cl:var(--l1);}
+  .step.s2{--c:var(--c2);--ct:var(--t2);--cl:var(--l2);}
+  .step.s3{--c:var(--c3);--ct:var(--t3);--cl:var(--l3);}
+  .step.s4{--c:var(--c4);--ct:var(--t4);--cl:var(--l4);}
+  .step.s5{--c:var(--c5);--ct:var(--t5);--cl:var(--l5);}
+  .step.s6{--c:var(--c6);--ct:var(--t6);--cl:var(--l6);}
+  .step.s7{--c:var(--c7);--ct:var(--t7);--cl:var(--l7);}
+  .sheet.mono .step,.sheet.mono .toc .toc-row{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;}
+  .step-head{display:flex;gap:18px;align-items:center;background:var(--ct);border-radius:22px;padding:22px 24px;margin-bottom:26px;}
+  .step-n{flex:none;width:58px;height:58px;border-radius:18px;background:var(--c);color:#fff;font-size:23px;font-weight:700;display:grid;place-items:center;letter-spacing:-.02em;}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c);margin:0 0 3px;}
+  .step-title{font-size:29px;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.02em;}
+  .lede{color:#4b5058;font-size:16px;margin:0 0 20px;}
+  .sub{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin:52px 0 14px;padding-bottom:12px;border-bottom:2px solid var(--cl);}
+  .sub .de{flex:none;font-size:13px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:5px 12px;}
+  .sub em{font-size:14px;font-weight:500;color:var(--muted);font-style:normal;}
+  .sub2{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--c);margin:42px 0 8px;}
+  .sub2::before{content:'';width:14px;height:3px;border-radius:2px;background:var(--c);flex:none;}
+
+  table.g{width:100%;border-collapse:collapse;margin:16px 0 10px;font-size:15.5px;}
+  table.g caption{text-align:left;font-size:13px;font-weight:700;color:var(--c);padding-bottom:8px;}
+  table.g th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 12px;border-bottom:2px solid var(--cl);white-space:nowrap;}
+  table.g td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.g tr:hover td{background:var(--ct);}
+  table.g td.k{font-weight:600;color:var(--ink);white-space:nowrap;}
+  table.g.center td,table.g.center th{text-align:center;}
+  table.g.center td:first-child,table.g.center th:first-child{text-align:left;}
+  .ghost td{color:#9aa0aa;background:#fafafb;}
+
+  .tip{font-size:14.5px;color:#4b5058;margin:16px 0;padding:14px 18px;background:var(--ct);border-radius:14px;line-height:1.6;}
+  .tip b.t{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--c);border-radius:999px;padding:3px 10px;margin-right:10px;}
+  .bsp{margin:18px 0;padding:18px 20px;background:var(--paper);border:1.5px solid var(--cl);border-radius:18px;}
+  .bsp .lab{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c);background:var(--ct);border-radius:999px;padding:4px 12px;margin-bottom:10px;}
+  .bsp .de{font-size:16.5px;}
+  .bsp .ko{color:var(--muted);font-size:14.5px;}
+
+  .audio{position:sticky;top:54px;z-index:24;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 12px;padding:14px 16px;background:var(--paper);border:1.5px solid var(--cl);border-radius:20px;box-shadow:0 10px 26px rgba(24,26,32,.10);}
+  .audio-tag{font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;flex:none;}
+  .audio audio{flex:1 1 260px;min-width:200px;height:40px;}
+  .ap-extras{flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ap-speed{flex:none;display:flex;align-items:center;gap:4px;}
+  .ap-speed .lbl{font-size:11px;font-weight:700;color:var(--muted);margin-right:4px;}
+  .ap-speed button{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--muted);background:#f2f3f6;border:none;border-radius:999px;padding:7px 11px;cursor:pointer;line-height:1;}
+  .ap-speed button:hover{background:#e6e8ed;}
+  .ap-speed button[aria-pressed="true"]{background:var(--c);color:#fff;}
+  .ap-dl{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;flex:none;text-decoration:none;}
+  .ap-dl:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  ol.ex{list-style:none;counter-reset:ex;padding:0;margin:18px 0;}
+  ol.ex>li{counter-increment:ex;display:grid;grid-template-columns:30px 1fr;gap:4px 14px;padding:16px 0 17px;border-bottom:1px solid var(--line);}
+  ol.ex>li::before{content:counter(ex);font-size:12px;font-weight:700;color:var(--c);background:var(--ct);border-radius:999px;width:26px;height:26px;display:grid;place-items:center;margin-top:3px;}
+  ol.ex .de{font-size:16.5px;margin:0;}
+  ol.ex .sol{margin:10px 0 0;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14.5px;}
+  ol.ex .sol .bl.lg{flex:1 1 auto;display:inline-block;width:auto;min-width:180px;margin-top:0;}
+  ol.ex .sol .ar{color:var(--c);font-weight:700;font-size:15px;}
+  ol.ex strong[style*="underline"]{text-decoration-color:var(--c) !important;text-decoration-thickness:2px;text-underline-offset:3px;}
+  ol.ex p.de[style*="--err"]{padding:10px 14px !important;background:#fdf1f0 !important;border-left:4px solid var(--err) !important;border-radius:12px;}
+  .note{grid-column:2;font-family:var(--mono);font-size:12px;color:#8b909a;margin-top:6px;}
+  .vb{display:inline-block;font-weight:600;color:#3d434c;background:#e8eaef;padding:3px 11px;border-radius:999px;font-size:15px;white-space:nowrap;}
+  ol.ex .sol .giv{font-weight:600;color:var(--ink);}
+  ol.gram>li{padding:12px 0;}
+  ol.gram>li .de{line-height:2.2;font-size:16px;}
+  ol.gram input.bl{min-width:50px;}
+
+  input.bl{font-family:var(--sans);font-size:15.5px;font-weight:600;color:var(--c);background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px 9px;min-width:74px;text-align:center;transition:background .15s,border-color .15s;}
+  input.bl:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.bl::placeholder{color:#a5aab4;font-weight:400;}
+  input.bl.ko{text-align:left;min-width:230px;color:var(--ink);font-weight:500;}
+  input.bl.lg{display:block;width:100%;text-align:left;min-width:0;margin-top:8px;color:var(--ink);font-weight:500;}
+  input.bl.sm{width:58px;min-width:0;}
+  input.bl.rsn{text-align:left;min-width:160px;width:210px;color:var(--ink);font-weight:500;font-size:14px;}
+  input.bl.rsn::placeholder{font-style:italic;}
+
+  table.sp{width:100%;border-collapse:collapse;margin:14px 0;font-size:16px;}
+  table.sp th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 14px;border-bottom:2px solid var(--cl);}
+  table.sp th.c{text-align:center;}
+  table.sp td{padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.sp td.ko{color:#4b5058;width:40%;}
+  table.sp td.de{font-weight:600;width:42%;}
+  table.sp td.de.tog{cursor:pointer;color:transparent;background:var(--ct);border-radius:12px;user-select:none;position:relative;}
+  table.sp td.de.tog::after{content:'눌러서 확인';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--c);opacity:.6;}
+  table.sp td.de.tog.show{color:inherit;background:transparent;}
+  table.sp td.de.tog.show::after{display:none;}
+  table.sp td.cnt{width:18%;text-align:center;white-space:nowrap;}
+  input.cnt{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--c);width:56px;text-align:center;background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px;}
+  input.cnt:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.cnt::-webkit-inner-spin-button{opacity:.4;}
+  .cnt-u{font-size:12px;color:var(--muted);margin-left:6px;}
+
+  .assess{background:#eceef0;border:1.5px solid #d3d8db;border-radius:24px;margin:48px 0 0;padding:28px 28px 32px;}
+  .assess .ahead{font-size:15px;font-weight:700;color:#2f3a3a;margin:0 0 6px;display:flex;align-items:center;gap:10px;}
+  .assess .ahead .tagpill{flex:none;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.08em;background:#2f3a3a;color:#fff;border-radius:999px;padding:4px 12px;}
+  .assess .ainst{color:#4a5252;font-size:14.5px;margin:0 0 8px;}
+  .assess .sub2{color:#33403f;}
+  .assess .sub2::before{background:#33403f;}
+  .check{display:flex;align-items:center;gap:14px;padding:11px 2px;border-bottom:1px solid #dadfe0;}
+  .check p{margin:0;font-size:15px;flex:1;color:#23292a;}
+  .rate{display:inline-flex;gap:6px;flex:none;}
+  .rate button{font-family:var(--sans);width:36px;height:36px;border:1.5px solid #c3c9ca;background:#fff;color:#5a6363;font-weight:700;font-size:14px;cursor:pointer;border-radius:999px;line-height:1;transition:background .15s,border-color .15s;}
+  .rate button:hover{border-color:#2f3a3a;}
+  .rate button[aria-pressed="true"]{background:#2f3a3a;color:#fff;border-color:#2f3a3a;}
+  .scorebox{margin:22px 0 0;padding:18px 20px;background:#fff;border-radius:16px;font-size:14.5px;color:#414a4a;line-height:1.75;}
+  .scorebox b{color:#23292a;font-weight:700;}
+
+  .footer{margin:52px 0 80px;padding-top:28px;border-top:1px solid var(--line2);text-align:center;}
+  .footer h3{font-size:26px;margin:0 0 10px;font-weight:700;letter-spacing:-.02em;}
+  .footer p{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto 20px;}
+  .footer .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+  .fontctl{position:fixed;right:18px;bottom:18px;z-index:40;display:flex;align-items:center;gap:3px;background:rgba(25,27,31,.55);backdrop-filter:saturate(140%) blur(7px);-webkit-backdrop-filter:saturate(140%) blur(7px);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px;box-shadow:0 6px 20px rgba(0,0,0,.22);}
+  .fontctl button{font-family:var(--sans);color:#fff;background:transparent;border:none;cursor:pointer;font-weight:700;border-radius:999px;line-height:1;}
+  .fontctl button[data-fs="dec"],.fontctl button[data-fs="inc"]{width:34px;height:34px;font-size:14px;}
+  .fontctl button[data-fs="dec"]:hover,.fontctl button[data-fs="inc"]:hover{background:rgba(255,255,255,.2);}
+  .fontctl .fs-val{min-width:48px;height:34px;font-size:11px;opacity:.9;}
+  .fontctl .fs-val:hover{background:rgba(255,255,255,.15);}
+
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{size:A4;margin:16mm 14mm 20mm 14mm;}
+    body{background:#fff !important;font-size:10.5pt;line-height:1.5;}
+    .toolbar,.fontctl,.audio,.footer .acts{display:none !important;}
+    .wrap{max-width:none;padding:0;}
+    .head{padding-top:0;}
+    .head h1{font-size:22pt;}
+    .head .lead{font-size:11pt;}
+    .brand{margin-bottom:18px;}
+    .brand img{height:30px;}
+    .meta{margin-top:10px;padding-top:8px;}
+    .meta input.name{min-width:180px;font-size:11pt;}
+    .toc{margin:12px 0 4px;gap:2px;}
+    .toc .toc-row{padding:5px 10px;}
+    .toc .tn{font-size:10pt;}
+    .toc .td{font-size:9.5pt;}
+    .step{margin-top:18px;}
+    section.step{break-before:page;}
+    section.step:first-of-type{break-before:auto;}
+    .step-head{padding:12px 14px;margin-bottom:14px;border-radius:12px;}
+    .step-n{width:40px;height:40px;border-radius:12px;font-size:15pt;}
+    .eyebrow{font-size:8pt;}
+    .step-title{font-size:16pt;}
+    .lede{font-size:10pt;margin-bottom:10px;}
+    .sub{margin-top:22px;padding-bottom:6px;font-size:12pt;}
+    .sub .de{font-size:9pt;padding:3px 9px;}
+    .sub2{margin-top:16px;font-size:10.5pt;}
+    table.g,table.sp,ol.ex>li,.tip,.bsp,.check,.scorebox,.step-head,.sub{break-inside:avoid;}
+    input.bl,input.cnt,input.name{background:transparent !important;border:none !important;border-bottom:1.2px solid #333 !important;border-radius:0 !important;color:#000 !important;font-size:10.5pt;}
+    input::placeholder{color:transparent !important;}
+    input.bl.sm{width:64px;min-width:0;}
+    input.bl.ko{min-width:70%;max-width:100%;}
+    input.bl.lg{width:100%;min-width:0;}
+    input.bl.rsn{min-width:45%;width:auto;}
+    input.cnt{width:44px;}
+    ol.ex>li{padding:8px 0;}
+    ol.ex .de{font-size:10.5pt;}
+    ol.ex .sol{font-size:10pt;}
+    ol.ex p.de[style*="--err"]{background:#f5f5f5 !important;border-left-color:#999 !important;}
+    ol.gram>li .de{line-height:1.95;font-size:10.5pt;}
+    .note{font-size:8.5pt;}
+    .tip{padding:8px 12px;font-size:9.5pt;}
+    .bsp{padding:10px 14px;}
+    .bsp .de{font-size:10.5pt;}
+    .bsp .ko{font-size:9.5pt;}
+    table.g{font-size:10pt;}
+    table.g th{font-size:9pt;padding:5px 8px;}
+    table.g td{padding:6px 8px;}
+    table.g tr:hover td{background:transparent;}
+    table.sp{font-size:10.5pt;}
+    table.sp th{font-size:9pt;padding:5px 10px;}
+    table.sp td{padding:7px 10px;}
+    table.sp td.de.tog{color:#000 !important;background:transparent !important;}
+    table.sp td.de.tog::after{display:none !important;}
+    .vb{background:#eee;font-size:10pt;padding:1px 8px;}
+    .assess{break-before:page;background:#f4f5f6 !important;margin:16px 0 0;padding:18px 18px 22px;border-radius:14px;}
+    .assess .ahead{font-size:11pt;}
+    .assess .ainst{font-size:9.5pt;}
+    .check{padding:6px 0;}
+    .check p{font-size:10pt;}
+    .rate button{width:26px;height:26px;font-size:9pt;background:#fff;}
+    .scorebox{font-size:9.5pt;padding:12px 14px;}
+    .footer{margin:20px 0 0;padding-top:14px;}
+    .footer h3{font-size:14pt;}
+    .footer p{font-size:9.5pt;}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 18px;}
+    .head h1{font-size:32px;}
+    .head .lead{font-size:17px;}
+    .step-head{padding:16px;gap:14px;}
+    .step-n{width:48px;height:48px;font-size:19px;border-radius:14px;}
+    .step-title{font-size:24px;}
+    .sub{font-size:17px;}
+    .toolbar .row{flex-wrap:wrap;padding:8px 18px;}
+    .toc .toc-row{grid-template-columns:1fr;gap:4px;}
+    table.sp td{display:block;width:100%;}
+    table.sp td.ko{border-bottom:none;padding-bottom:0;}
+    table.sp td.cnt{text-align:left;}
+    .assess{padding:22px 18px 26px;border-radius:18px;}
+  }
+  .toc .toc-day{display:flex;align-items:baseline;gap:10px;margin:20px 0 6px;padding:0 4px;}
+  .toc .toc-day:first-child{margin-top:0;}
+  .toc .toc-day b{font-size:14.5px;font-weight:700;color:var(--ink);}
+  .toc .toc-day em{font-size:13px;color:var(--muted);font-style:normal;}
+  .toc a.toc-row{grid-template-columns:120px 1fr auto;text-decoration:none;color:inherit;transition:box-shadow .14s;}
+  .toc a.toc-row:hover{box-shadow:0 4px 14px rgba(24,26,32,.10);text-decoration:none;}
+  .toc a.toc-row .go{color:var(--c,var(--accent));font-weight:700;font-size:15px;opacity:.5;}
+  .toc a.toc-row:hover .go{opacity:1;}
+  .planbox{margin:22px 0 0;padding:16px 20px;background:#fff;border:1.5px dashed var(--line2);border-radius:16px;font-size:14.5px;color:#4b5058;line-height:1.6;}
+  .planbox b{color:var(--ink);font-weight:700;}
+  .daybar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:76px 0 0;padding:14px 22px;background:var(--ink);color:#fff;border-radius:999px;}
+  .daybar b{font-size:15px;font-weight:700;}
+  .daybar span{font-size:13.5px;color:rgba(255,255,255,.72);}
+  .daybar + section.step{margin-top:22px;}
+  section.step{scroll-margin-top:78px;}
+  .mc{display:inline-flex;flex-wrap:wrap;gap:5px;vertical-align:middle;}
+  .mc button{font-family:var(--sans);font-size:14px;font-weight:600;color:#4b5058;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.35;white-space:nowrap;transition:background .14s,color .14s,border-color .14s;}
+  .mc button:hover{background:#e4e7ec;}
+  .mc button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;}
+  .mcq{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px;font-size:16px;}
+  ol.gram>li .de .mc{margin:0 2px;}
+  ol.ex .sol .lbl{font-weight:700;color:var(--ink);}
+  @media print{
+    .toc a.toc-row .go{display:none;}
+    .toc .toc-day{margin:8px 0 3px;}
+    .toc .toc-day b{font-size:10pt;}
+    .toc .toc-day em{font-size:9pt;}
+    .planbox{margin:10px 0 0;padding:8px 12px;font-size:9.5pt;border-radius:10px;}
+    .daybar{margin:0 0 10px;padding:7px 14px;background:#e9e9e9 !important;color:#000;border-radius:8px;break-before:page;}
+    .daybar span{color:#444;}
+    .daybar + section.step{break-before:auto !important;margin-top:0;}
+    .mc button{background:#fff !important;border:1px solid #999 !important;color:#333 !important;padding:2px 9px;font-size:9.5pt;}
+    .mc button[aria-pressed="true"]{background:#333 !important;color:#fff !important;border-color:#333 !important;}
+    .mcq{font-size:10.5pt;}
+  }
+
+
+  input.bl.md{width:104px;min-width:0;}
+  input.bl.type{width:150px;min-width:0;text-align:left;color:var(--ink);font-weight:500;}
+  .gen{font-size:13.5px;color:var(--muted);}
+  table.g td.gen{font-size:13.5px;color:var(--muted);}
+  @media print{ input.bl.md{width:100px;min-width:0;} .gen,table.g td.gen{font-size:9pt;} }
+
+  /* ===== 클릭 드롭다운 객관식 ===== */
+  .mc,.chx{position:relative;}
+  .mc{display:inline-flex;flex-direction:column;align-items:stretch;gap:0;vertical-align:middle;max-width:100%;}
+  .chx{display:inline-flex;flex-direction:column;align-items:stretch;gap:0;max-width:100%;}
+  .chx.row{flex-direction:row;align-items:center;gap:10px;}
+  .mct{display:inline-flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--sans);font-size:14.5px;font-weight:600;color:#6b7280;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:7px 15px;min-width:132px;max-width:100%;cursor:pointer;line-height:1.35;text-align:left;transition:background .14s,border-color .14s,color .14s;}
+  .mct:hover{background:#e6e8ee;}
+  .mct i{font-style:normal;font-size:11px;opacity:.6;transition:transform .16s;flex:none;}
+  .mct .mctv{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .open>.mct{background:var(--ct);border-color:var(--c);color:var(--c);}
+  .open>.mct i{transform:rotate(180deg);}
+  .picked>.mct{background:var(--c);border-color:var(--c);color:#fff;}
+  .ck-ok.picked>.mct{background:#0e7a5f;border-color:#0e7a5f;color:#fff;}
+  .ck-near.picked>.mct{background:#a05c12;border-color:#a05c12;color:#fff;}
+  .ck-no.picked>.mct{background:#c4392e;border-color:#c4392e;color:#fff;}
+  .mco{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:60;flex-direction:column;gap:4px;min-width:max(100%,168px);width:max-content;max-width:min(520px,78vw);background:#fff;border:1.5px solid var(--line2);border-radius:16px;padding:7px;box-shadow:0 14px 34px rgba(20,24,40,.15);}
+  .open>.mco{display:flex;}
+  .mco button{text-align:left;white-space:normal;border-radius:11px;padding:8px 13px;font-size:15px;font-weight:500;background:#fff;border:1.5px solid transparent;color:var(--ink);cursor:pointer;line-height:1.45;font-family:var(--serif);width:100%;}
+  .mco button:hover{background:var(--ct);}
+  .mco button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;}
+
+
+  .mc,.chx{align-items:flex-start;}
+  .mct{width:max-content;max-width:min(460px,100%);}
+  @media print{
+    .mc,.chx{display:block;position:static;}
+    .mct{display:none !important;}
+    .mco{display:block !important;position:static;border:none !important;box-shadow:none !important;padding:0;max-width:100%;width:auto;background:transparent;}
+    .mco button{display:block;margin:2px 0;padding:3px 9px;font-size:9.5pt;border-radius:8px;white-space:normal;background:#fff !important;border:1px solid #999 !important;color:#333 !important;}
+    .mco button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;font-weight:700;}
+  }
+
+  .chkbar{display:flex;align-items:center;gap:10px;margin:14px 0 2px;flex-wrap:wrap;}
+  .chkbar button{font-family:var(--sans);font-size:13px;font-weight:600;white-space:nowrap;padding:7px 15px;border:1.5px solid var(--c);border-radius:999px;background:#fff;color:var(--c);cursor:pointer;}
+  .chkbar button:hover{background:var(--ct);}
+  .chkbar button[disabled]{opacity:.4;cursor:default;}
+  .chkbar .chkres{font-size:13px;color:var(--muted);}
+  input.ck-ok{border-bottom-color:#0e7a5f !important;background:rgba(14,122,95,.10) !important;}
+  input.ck-near{border-bottom-color:#a05c12 !important;background:rgba(160,92,18,.12) !important;}
+  input.ck-no{border-bottom-color:#c4392e !important;background:rgba(196,57,46,.09) !important;}
+  .ckans{font-family:var(--sans);font-size:12.5px;color:#0e7a5f;font-weight:700;margin-left:6px;white-space:nowrap;}
+  .mc + .ckans{display:inline-block;}
+  @media print{ .chkbar,.ckans{display:none !important;} }
+
+  /* ===== Schritt 4C · 4D ===== */
+  .ser-only{display:none !important;}
+  .hblock{position:relative;}
+  .clipbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 0;}
+  .cliptag{flex:none;font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;}
+  ol.ex .lrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  button.play{flex:none;width:40px;height:40px;border-radius:999px;border:none;background:var(--c);color:#fff;cursor:pointer;display:inline-grid;place-items:center;font-family:var(--sans);font-size:13px;line-height:1;padding:0;box-shadow:0 4px 12px rgba(24,26,32,.14);transition:background .15s,transform .1s;}
+  button.play::before{content:'\25B6\FE0E';margin-left:2px;}
+  button.play.on{background:var(--ink);}
+  button.play.on::before{content:'\25A0';margin-left:0;}
+  button.play:active{transform:scale(.94);}
+  input.bl.w4d{min-width:0;width:118px;}
+  .reveal{display:none;margin:10px 0 0;padding:10px 14px;background:var(--ct);border-radius:12px;}
+  .reveal.show{display:block;}
+  .reveal .rv-de{display:block;font-size:16.5px;font-weight:600;color:var(--ink);}
+  .reveal .rv-clue{display:block;font-size:13.5px;color:#4b5058;margin-top:4px;}
+  .k1,.k1s{color:var(--c);border-bottom:2.5px solid var(--c);}
+  .k1s{font-weight:700;}
+  details.script{margin:28px 0 0;border:1.5px solid var(--cl);border-radius:18px;background:var(--paper);overflow:hidden;}
+  details.script>summary{cursor:pointer;list-style:none;padding:14px 18px;font-size:15px;font-weight:700;color:var(--c);background:var(--ct);}
+  details.script>summary::-webkit-details-marker{display:none;}
+  details.script>summary::before{content:'\25B8\FE0E';display:inline-block;margin-right:8px;transition:transform .15s;}
+  details.script[open]>summary::before{transform:rotate(90deg);}
+  .sinst{font-size:13.5px;color:var(--muted);margin:12px 18px 8px;}
+  .slegend{display:flex;flex-wrap:wrap;gap:8px;margin:0 18px 12px;font-size:12.5px;}
+  .slegend span{padding:2px 10px;}
+  button.sline{display:grid;grid-template-columns:28px 1fr;gap:2px 10px;width:100%;text-align:left;background:#fff;border:none;border-top:1px solid var(--line);padding:10px 18px;cursor:pointer;font-family:var(--sans);color:var(--ink);line-height:1.5;}
+  button.sline:hover{background:var(--ct);}
+  button.sline.on{background:var(--ct);box-shadow:inset 4px 0 0 var(--c);}
+  button.sline .sn{grid-row:span 2;font-size:12px;font-weight:700;color:var(--c);padding-top:3px;}
+  button.sline .sde{font-size:16px;font-weight:500;}
+  button.sline .sko{font-size:13.5px;color:var(--muted);}
+  .t-a,.t-b,.t-c{border-radius:6px;padding:0 3px;}
+  .t-a{background:#e3ecfb;box-shadow:inset 0 -2px 0 #3559b3;}
+  .t-b{background:#fff1d6;box-shadow:inset 0 -2px 0 #e0a43a;}
+  .t-c{background:#e3f4ee;box-shadow:inset 0 -2px 0 #0e7a5f;}
+  ol.ex .lrow > .chx{flex:1 1 240px;min-width:0;margin:0;}
+  @media print{ button.play,.clipbar,.reveal,details.script{display:none !important;} }
+  /* ===== Schritt 4A · 4B 문장별 재생 ===== */
+  ol.ex .lrow > input.bl.lg{flex:1 1 220px;width:auto;min-width:0;margin-top:0;}
+  ol.ex .lrow > p.de{flex:1 1 220px;}
+</style>
+</helmet>
+
+<div class="toolbar"><div class="row">
+  <button class="btn go" sc-camel-on-click="{{ submitNet }}">과제 제출하기</button>
+  <div class="tb-title">Übung · <span>L05</span></div>
+  <div class="tb-spacer"></div>
+  <div class="prog"><span><b>{{ filled }}</b> / {{ total }}</span><span class="bar"><i style="{{ barStyle }}"></i></span></div>
+  <button class="btn" sc-camel-on-click="{{ print }}">인쇄</button>
+  <button class="btn" sc-camel-on-click="{{ reset }}">초기화</button>
+</div></div>
+
+<div class="sheet" ref="{{ setRoot }}" sc-camel-on-input="{{ onInput }}" sc-camel-on-click="{{ onClick }}">
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand"><img src="../assets/logo.png" alt="Sophia Deutsch Akademie"><div class="bt"><b>Sophia Deutsch Akademie</b></div></div>
+    <h1 style="color:var(--accent)">Possessivartikel</h1>
+    <p class="lead">소유관사 — mein·dein·sein</p>
+    <div class="meta">
+      <div class="f"><i style="font-size:13px;color:var(--accent)">Lektion</i><span style="color:var(--accent);font-weight:700;font-size:28px;letter-spacing:0;line-height:1">05</span></div>
+      <div class="f grow"><i>Name</i><input class="name" data-key="meta-name" data-noprogress="" placeholder="이름을 입력하세요"></div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-day"><b>1일차</b><em>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기 (Mini-Wiederholung 1 포함)</em></div>
+    <a class="toc-row c1" href="#s1"><span class="tn">이해</span><span class="td">인칭→소유관사 + ein 패턴 + 변화표 완성</span><span class="go">→</span></a>
+    <a class="toc-row c2" href="#s2"><span class="tn">분석</span><span class="td">성·격 형태 · 오류 찾기 · sein/ihr · nicht vs kein 확장</span><span class="go">→</span></a>
+    <a class="toc-row c3" href="#s3"><span class="tn">읽기</span><span class="td">해석 + 소유관사 성·격 분석</span><span class="go">→</span></a>
+    <div class="toc-day"><b>2일차</b><em>Schritt 4–5 · 듣기 → 쓰기</em></div>
+    <a class="toc-row c4" href="#s4"><span class="tn">듣기</span><span class="td">받아쓰기 · 소유관사 채우기 · 뜻 판단 · 이야기 듣기</span><span class="go">→</span></a>
+    <a class="toc-row c5" href="#s5"><span class="tn">쓰기</span><span class="td">소유관사 채우기 → 한독 번역 → 통합</span><span class="go">→</span></a>
+    <div class="toc-day"><b>3일차</b><em>Schritt 6–7 · 말하기 → 테스트 · 마지막에 자기 평가</em></div>
+    <a class="toc-row c6" href="#s6"><span class="tn">말하기</span><span class="td">한국어 보고 독일어로 말하기</span><span class="go">→</span></a>
+    <a class="toc-row c7" href="#s7"><span class="tn">테스트</span><span class="td">새 명사로 규칙 적용 + 자기 평가</span><span class="go">→</span></a>
+  </nav>
+
+  <div class="planbox"><b>3일 학습 계획</b> — 이 과제는 3일에 나누어 풀도록 설계되어 있습니다. 한 번에 몰아서 풀지 마세요. 위 목차를 누르면 해당 단계로 바로 이동합니다.</div>
+
+  <!-- ===== SCHRITT 1 ===== -->
+  <div class="daybar"><b>1일차</b><span>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기</span></div>
+
+  <section class="step s1" id="s1">
+    <div class="step-head"><div class="step-n">01</div><div><p class="eyebrow">Schritt 1</p><h2 class="step-title">Verstehen · 이해</h2></div></div>
+    <p class="lede">교재를 보지 않고 <strong>직접 규칙을 발견하는</strong> 단계입니다.</p>
+    <p class="tip"><b class="t">복습</b>1과: 부정관사 <strong>ein</strong>이 남성 4격에서 <strong>einen</strong>으로 변신. 2과: 인칭(ich·du·er). 5과: 2과 인칭의 "~의 것"이 <strong>소유관사</strong>! 끝이 ein이라 ein처럼 변해요.</p>
+
+    <div class="sub"><span class="de">1A.</span> 인칭(2과) → 소유관사</div>
+    <p>각 인칭의 소유관사와 <strong>우리말 뜻</strong>을 쓰세요.</p>
+    <sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">인칭 (2과)</sc-raw-th><sc-raw-th>소유관사</sc-raw-th><sc-raw-th>우리말 뜻</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">ich (나)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-1" data-answer="mein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-1k" data-answer="나의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">du (너)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-2" data-answer="dein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-2k" data-answer="너의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">er (그)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-3" data-answer="sein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-3k" data-answer="그의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">es (그것)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-8" data-answer="sein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-8k" data-answer="그것의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie (그녀)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-4" data-answer="ihr"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-4k" data-answer="그녀의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">wir (우리)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-5" data-answer="unser"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-5k" data-answer="우리의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">ihr (너희)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-6" data-answer="euer"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-6k" data-answer="너희의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">Sie (당신)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-7" data-answer="Ihr"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1a-7k" data-answer="당신의"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1B.</span> ein 패턴 발견 — 남성만 변신</div>
+    <p>1과의 ein 변화를 떠올리며 빈칸을 채우고 규칙을 완성하세요.</p>
+    <sc-raw-table class="g center" style="max-width:560px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">명사 (성)</sc-raw-th><sc-raw-th>1격 (~이/가)</sc-raw-th><sc-raw-th>4격 (~을/를)</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">Hund (남성) — 부정관사</sc-raw-td><sc-raw-td>ein Hund</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-1" data-answer="einen"> Hund</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">Hund (남성) — 나의</sc-raw-td><sc-raw-td>mein Hund</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-2" data-answer="meinen"> Hund</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">Mutter (여성) — 나의</sc-raw-td><sc-raw-td>meine Mutter</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-3" data-answer="meine"> Mutter</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">Buch (중성) — 나의</sc-raw-td><sc-raw-td>mein Buch</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-4" data-answer="mein"> Buch</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p class="mcq">→ 소유관사는 1과의 <span class="mc" data-mc="v1b-r1" data-key="v1b-r1" data-answer="ein"><input type="hidden" data-key="v1b-r1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ein">ein</button><button type="button" data-val="der">der</button><button type="button" data-val="kein">kein</button></span></span> 처럼 변한다. <strong>남성 <span class="mc" data-mc="v1b-r2" data-key="v1b-r2" data-answer="4격"><input type="hidden" data-key="v1b-r2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="3격">3격</button><button type="button" data-val="4격">4격</button></span></span></strong> 만 -en이 붙고, 여성·중성은 1격과 4격이 <span class="mc" data-mc="v1b-r3" data-key="v1b-r3" data-answer="같다"><input type="hidden" data-key="v1b-r3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="같다">같다</button><button type="button" data-val="다르다">다르다</button></span></span></p>
+
+    <div class="sub"><span class="de">1C.</span> mein 변화표 완성 (1격 · 4격)</div>
+    <p>1B의 패턴을 적용해 채우세요. 어미는 ein과 같습니다.</p>
+    <sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">격 ╲ 성</sc-raw-th><sc-raw-th>남성 m</sc-raw-th><sc-raw-th>여성 f</sc-raw-th><sc-raw-th>중성 n</sc-raw-th><sc-raw-th>복수 pl</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">1격</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-1" data-answer="mein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-2" data-answer="meine"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-3" data-answer="mein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-4" data-answer="meine"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">4격</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-5" data-answer="meinen"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-6" data-answer="meine"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-7" data-answer="mein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1c-8" data-answer="meine"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1D.</span> sein vs ihr + euer</div>
+    <p>"자기 어머니"라도 <strong>주인의 성별</strong>에 따라 달라집니다.</p>
+    <sc-raw-table class="g center" style="max-width:480px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">주인</sc-raw-th><sc-raw-th>소유관사</sc-raw-th><sc-raw-th>우리말 뜻</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">남자 주인 (Tom)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-1" data-answer="sein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-1k" data-answer="그의"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">여자 주인 (Anna)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-2" data-answer="ihr"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-2k" data-answer="그녀의"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p class="mcq">→ euer에 어미 -e가 붙으면 가운데 e가 빠져 <span class="mc" data-mc="v1d-3" data-key="v1d-3" data-answer="eure"><input type="hidden" data-key="v1d-3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="eurer">eurer</button><button type="button" data-val="eure">eure</button><button type="button" data-val="euere">euere</button></span></span> 가 된다. 반면 unser는 그대로 <span class="mc" data-mc="v1d-4" data-key="v1d-4" data-answer="unsere"><input type="hidden" data-key="v1d-4"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="unsere">unsere</button><button type="button" data-val="unsre">unsre</button><button type="button" data-val="unser">unser</button></span></span></p>
+
+    <div class="sub"><span class="de">1E.</span> kein — "없다 · 아니다"</div>
+    <p>kein도 k+ein 구조라 똑같이 변합니다. 빈칸을 채우세요.</p>
+    <sc-raw-table class="g" style="max-width:780px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="width:30%">뜻</sc-raw-th><sc-raw-th style="width:42%">변화</sc-raw-th><sc-raw-th>설명</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">책이 없다 (중성)</sc-raw-td><sc-raw-td style="white-space:nowrap">ein Buch → <input class="bl md" data-key="v1e-1" data-answer="kein"> Buch</sc-raw-td><sc-raw-td class="gen">중성 — 그대로</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">개가 없다 (남성 4격)</sc-raw-td><sc-raw-td style="white-space:nowrap">einen Hund → <input class="bl md" data-key="v1e-2" data-answer="keinen"> Hund</sc-raw-td><sc-raw-td class="gen">남성 4격 -en</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">책이 한 권도 없다 (복수)</sc-raw-td><sc-raw-td style="white-space:nowrap">Bücher → <input class="bl md" data-key="v1e-3" data-answer="keine"> Bücher</sc-raw-td><sc-raw-td class="gen">ein과 달리 복수도!</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1F.</span> 핵심 규칙 자기 정리</div>
+    <ol class="ex gram">
+      <li><div><p class="de">소유관사는 1과의 어떤 관사처럼 변하며, 각 인칭의 형태는?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">기준 형태</span> <span class="mc" data-mc="v1f-1" data-key="v1f-1" data-answer="ein"><input type="hidden" data-key="v1f-1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ein">ein</button><button type="button" data-val="der">der</button><button type="button" data-val="kein">kein</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">ich — 나의</span> <span class="mc" data-mc="v1f-2" data-key="v1f-2" data-answer="mein"><input type="hidden" data-key="v1f-2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="mein">mein</button><button type="button" data-val="dein">dein</button><button type="button" data-val="sein">sein</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">du — 너의</span> <span class="mc" data-mc="v1f-3" data-key="v1f-3" data-answer="dein"><input type="hidden" data-key="v1f-3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="mein">mein</button><button type="button" data-val="ihr">ihr</button><button type="button" data-val="dein">dein</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">er — 그의</span> <span class="mc" data-mc="v1f-4" data-key="v1f-4" data-answer="sein"><input type="hidden" data-key="v1f-4"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="sein">sein</button><button type="button" data-val="ihr">ihr</button><button type="button" data-val="euer">euer</button></span></span></p></div></li>
+      <li><div><p class="de">나머지 인칭의 소유관사는?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">sie — 그녀의</span> <span class="mc" data-mc="v1f-5" data-key="v1f-5" data-answer="ihr"><input type="hidden" data-key="v1f-5"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ihr">ihr</button><button type="button" data-val="sein">sein</button><button type="button" data-val="euer">euer</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">wir — 우리의</span> <span class="mc" data-mc="v1f-6" data-key="v1f-6" data-answer="unser"><input type="hidden" data-key="v1f-6"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="euer">euer</button><button type="button" data-val="ihr">ihr</button><button type="button" data-val="unser">unser</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">ihr — 너희의</span> <span class="mc" data-mc="v1f-7" data-key="v1f-7" data-answer="euer"><input type="hidden" data-key="v1f-7"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ihr">ihr</button><button type="button" data-val="euer">euer</button><button type="button" data-val="unser">unser</button></span></span></p></div></li>
+      <li><div><p class="de">어미 -en이 붙는 격은? 여성·중성에서 1격과 같은 격은?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">-en이 붙는 격</span> <span class="mc" data-mc="v1f-8" data-key="v1f-8" data-answer="4격"><input type="hidden" data-key="v1f-8"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="3격">3격</button><button type="button" data-val="4격">4격</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">1격과 같은 격</span> <span class="mc" data-mc="v1f-9" data-key="v1f-9" data-answer="4격"><input type="hidden" data-key="v1f-9"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="4격">4격</button><button type="button" data-val="2격">2격</button><button type="button" data-val="3격">3격</button></span></span></p></div></li>
+      <li><div><p class="de">"자기 ~"를 말할 때 주인의 성별에 따라 무엇을 쓰는가?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">주인이 남자</span> <span class="mc" data-mc="v1f-10" data-key="v1f-10" data-answer="sein"><input type="hidden" data-key="v1f-10"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="sein">sein</button><button type="button" data-val="ihr">ihr</button><button type="button" data-val="euer">euer</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">주인이 여자</span> <span class="mc" data-mc="v1f-11" data-key="v1f-11" data-answer="ihr"><input type="hidden" data-key="v1f-11"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ihr">ihr</button><button type="button" data-val="sein">sein</button><button type="button" data-val="unser">unser</button></span></span></p></div></li>
+      <li><div><p class="de">"개가 없다 / 돈이 없다"처럼 <strong>명사를 부정</strong>할 때 쓰는 말은? 또 ein은 단수에만 쓰지만, 이 말은 어떤 형태에도 쓸 수 있는가?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">명사 부정</span> <span class="mc" data-mc="v1f-12" data-key="v1f-12" data-answer="kein"><input type="hidden" data-key="v1f-12"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="nicht">nicht</button><button type="button" data-val="nein">nein</button><button type="button" data-val="kein">kein</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">ein엔 없는 형태</span> <span class="mc" data-mc="v1f-13" data-key="v1f-13" data-answer="복수"><input type="hidden" data-key="v1f-13"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="무관사">무관사</button><button type="button" data-val="복수">복수</button><button type="button" data-val="2격">2격</button></span></span></p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SCHRITT 2 ===== -->
+  <section class="step s2" id="s2">
+    <div class="step-head"><div class="step-n">02</div><div><p class="eyebrow">Schritt 2</p><h2 class="step-title">Erkennen · 분석</h2></div></div>
+    <p class="lede">명사의 <strong>성</strong>(1과)과 <strong>격</strong>(동사·역할)을 스스로 판단해 형태를 결정하세요.</p>
+
+    <div class="sub"><span class="de">2A.</span> 문장 속 소유관사 형태</div>
+    <p>우리말 뜻만 주어집니다. 명사의 성과 문장에서의 격을 판단해 알맞은 형태를 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Ich sehe <input class="bl md" data-key="e2a-1" data-answer="seinen"> Hund. <span class="gen">— 그의</span></p></div></li>
+      <li><div><p class="de">Das ist <input class="bl md" data-key="e2a-2" data-answer="meine"> Mutter. <span class="gen">— 나의</span></p></div></li>
+      <li><div><p class="de">Wo ist <input class="bl md" data-key="e2a-3" data-answer="dein"> Auto? <span class="gen">— 너의</span></p></div></li>
+      <li><div><p class="de">Sie sucht <input class="bl md" data-key="e2a-4" data-answer="ihren"> Vater. <span class="gen">— 그녀의</span></p></div></li>
+      <li><div><p class="de">Das sind <input class="bl md" data-key="e2a-5" data-answer="unsere"> Eltern. <span class="gen">— 우리의</span></p></div></li>
+      <li><div><p class="de">Ich liebe <input class="bl md" data-key="e2a-6" data-answer="mein"> Kind. <span class="gen">— 나의</span></p></div></li>
+      <li><div><p class="de">Das ist <input class="bl md" data-key="e2a-7" data-answer="euer"> Haus. <span class="gen">— 너희의</span></p></div></li>
+      <li><div><p class="de">Er sieht <input class="bl md" data-key="e2a-8" data-answer="meinen"> Hund. <span class="gen">— 나의</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2B.</span> 오류 찾기 — Fehlersuche</div>
+    <p>틀린 곳을 고치고 오류 유형을 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Ich sehe <strong>mein</strong> Vater.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:200px" data-key="e2b-1" data-answer="Ich sehe meinen Vater"></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2b-1t" data-key="e2b-1t" data-answer="남성 4격 오류"><input type="hidden" data-key="e2b-1t"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성 4격 오류">남성 4격 오류</button><button type="button" data-val="sein · ihr 혼동">sein · ihr 혼동</button><button type="button" data-val="euer 형태 오류">euer 형태 오류</button><button type="button" data-val="1격 · 4격 혼동">1격 · 4격 혼동</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Anna liebt <strong>seine</strong> Mutter.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:200px" data-key="e2b-2" data-answer="Anna liebt ihre Mutter"></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2b-2t" data-key="e2b-2t" data-answer="sein · ihr 혼동"><input type="hidden" data-key="e2b-2t"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성 4격 오류">남성 4격 오류</button><button type="button" data-val="sein · ihr 혼동">sein · ihr 혼동</button><button type="button" data-val="euer 형태 오류">euer 형태 오류</button><button type="button" data-val="1격 · 4격 혼동">1격 · 4격 혼동</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ <strong>Euer</strong> Mutter ist nett.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:200px" data-key="e2b-3" data-answer="Eure Mutter ist nett"></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2b-3t" data-key="e2b-3t" data-answer="euer 형태 오류"><input type="hidden" data-key="e2b-3t"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성 4격 오류">남성 4격 오류</button><button type="button" data-val="sein · ihr 혼동">sein · ihr 혼동</button><button type="button" data-val="euer 형태 오류">euer 형태 오류</button><button type="button" data-val="1격 · 4격 혼동">1격 · 4격 혼동</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Ich habe <strong>keine</strong> Hund.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:200px" data-key="e2b-4" data-answer="Ich habe keinen Hund"></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2b-4t" data-key="e2b-4t" data-answer="남성 4격 오류"><input type="hidden" data-key="e2b-4t"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성 4격 오류">남성 4격 오류</button><button type="button" data-val="sein · ihr 혼동">sein · ihr 혼동</button><button type="button" data-val="euer 형태 오류">euer 형태 오류</button><button type="button" data-val="1격 · 4격 혼동">1격 · 4격 혼동</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Tom liebt <strong>ihre</strong> Mutter.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:200px" data-key="e2b-5" data-answer="Tom liebt seine Mutter"></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2b-5t" data-key="e2b-5t" data-answer="sein · ihr 혼동"><input type="hidden" data-key="e2b-5t"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성 4격 오류">남성 4격 오류</button><button type="button" data-val="sein · ihr 혼동">sein · ihr 혼동</button><button type="button" data-val="euer 형태 오류">euer 형태 오류</button><button type="button" data-val="1격 · 4격 혼동">1격 · 4격 혼동</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Das ist <strong>meinen</strong> Buch.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:200px" data-key="e2b-6" data-answer="Das ist mein Buch"></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2b-6t" data-key="e2b-6t" data-answer="1격 · 4격 혼동"><input type="hidden" data-key="e2b-6t"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성 4격 오류">남성 4격 오류</button><button type="button" data-val="sein · ihr 혼동">sein · ihr 혼동</button><button type="button" data-val="euer 형태 오류">euer 형태 오류</button><button type="button" data-val="1격 · 4격 혼동">1격 · 4격 혼동</button></span></span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2C.</span> sein / ihr / kein 선택</div>
+    <p>주인의 성별과 '없다'를 구분해 알맞은 형태를 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Anna liebt <input class="bl md" data-key="e2c-1" data-answer="ihre"> Mutter. <span class="gen">— 안나가 자기 어머니를</span></p></div></li>
+      <li><div><p class="de">Tom sucht <input class="bl md" data-key="e2c-2" data-answer="seinen"> Hund. <span class="gen">— 톰이 자기 개를</span></p></div></li>
+      <li><div><p class="de">Ich habe <input class="bl md" data-key="e2c-3" data-answer="kein"> Geld. <span class="gen">— 나는 돈이 없다</span></p></div></li>
+      <li><div><p class="de">Lisa liebt <input class="bl md" data-key="e2c-4" data-answer="ihren"> Vater. <span class="gen">— 리자가 자기 아버지를</span></p></div></li>
+      <li><div><p class="de">Max liebt <input class="bl md" data-key="e2c-5" data-answer="seine"> Frau. <span class="gen">— 막스가 자기 아내를</span></p></div></li>
+      <li><div><p class="de">Ich habe <input class="bl md" data-key="e2c-6" data-answer="keinen"> Hund. <span class="gen">— 나는 개가 없다</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2D.</span> nicht vs kein 판별</div>
+    <p>명사를 지우면 <strong>kein</strong>(성·격에 맞춰), 동사·형용사를 부정하면 <strong>nicht</strong>. 관사 없는 명사·직업도 <strong>kein</strong>(keinen Kaffee · kein Arzt), 정관사 명사는 <strong>nicht</strong>를 뒤에. 알맞은 것을 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Ich habe <span class="mc" data-mc="e2d-1" data-key="e2d-1" data-answer="keinen"><input type="hidden" data-key="e2d-1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="keinen">keinen</button><button type="button" data-val="kein">kein</button><button type="button" data-val="nicht">nicht</button></span></span> Hund. <span class="gen">— 개가 없다</span></p></div></li>
+      <li><div><p class="de">Ich komme <span class="mc" data-mc="e2d-2" data-key="e2d-2" data-answer="nicht"><input type="hidden" data-key="e2d-2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="nicht">nicht</button><button type="button" data-val="kein">kein</button><button type="button" data-val="keine">keine</button></span></span>. <span class="gen">— 안 온다</span></p></div></li>
+      <li><div><p class="de">Das ist <span class="mc" data-mc="e2d-3" data-key="e2d-3" data-answer="nicht"><input type="hidden" data-key="e2d-3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="nicht">nicht</button><button type="button" data-val="kein">kein</button><button type="button" data-val="keine">keine</button></span></span> gut. <span class="gen">— 좋지 않다</span></p></div></li>
+      <li><div><p class="de">Ich habe <span class="mc" data-mc="e2d-4" data-key="e2d-4" data-answer="kein"><input type="hidden" data-key="e2d-4"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="kein">kein</button><button type="button" data-val="keinen">keinen</button><button type="button" data-val="nicht">nicht</button></span></span> Auto. <span class="gen">— 차가 없다</span></p></div></li>
+      <li><div><p class="de">Eure Mutter ist <span class="mc" data-mc="e2d-5" data-key="e2d-5" data-answer="nicht"><input type="hidden" data-key="e2d-5"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="nicht">nicht</button><button type="button" data-val="kein">kein</button><button type="button" data-val="keine">keine</button></span></span> nett. <span class="gen">— 친절하지 않다</span></p></div></li>
+      <li><div><p class="de">Ich habe <span class="mc" data-mc="e2d-6" data-key="e2d-6" data-answer="kein"><input type="hidden" data-key="e2d-6"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="kein">kein</button><button type="button" data-val="keinen">keinen</button><button type="button" data-val="nicht">nicht</button></span></span> Geld. <span class="gen">— 돈이 없다</span></p></div></li>
+      <li><div><p class="de">Ich trinke <span class="mc" data-mc="e2d-7" data-key="e2d-7" data-answer="keinen"><input type="hidden" data-key="e2d-7"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="keinen">keinen</button><button type="button" data-val="kein">kein</button><button type="button" data-val="nicht">nicht</button></span></span> Kaffee. <span class="gen">— 커피를 안 마신다 (무관사 · Kaffee m)</span></p></div></li>
+      <li><div><p class="de">Er ist <span class="mc" data-mc="e2d-8" data-key="e2d-8" data-answer="kein"><input type="hidden" data-key="e2d-8"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="kein">kein</button><button type="button" data-val="keinen">keinen</button><button type="button" data-val="nicht">nicht</button></span></span> Arzt. <span class="gen">— 의사가 아니다 (직업)</span></p></div></li>
+      <li><div><p class="de">Ich mag den Kaffee <span class="mc" data-mc="e2d-9" data-key="e2d-9" data-answer="nicht"><input type="hidden" data-key="e2d-9"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="keinen">keinen</button><button type="button" data-val="nicht">nicht</button><button type="button" data-val="kein">kein</button></span></span>. <span class="gen">— 그 커피가 싫다 (정관사!)</span></p></div></li>
+      <li><div><p class="de">Ich habe <span class="mc" data-mc="e2d-10" data-key="e2d-10" data-answer="keine"><input type="hidden" data-key="e2d-10"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="keine">keine</button><button type="button" data-val="kein">kein</button><button type="button" data-val="nicht">nicht</button></span></span> Bücher. <span class="gen">— 책이 한 권도 없다 (복수)</span></p></div></li>
+    </ol>
+
+    <div class="sub2">Mini-Wiederholung 1 — 인칭 → 소유관사</div>
+    <sc-raw-table class="g center" style="max-width:420px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">인칭</sc-raw-th><sc-raw-th>소유관사</sc-raw-th><sc-raw-th>뜻</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">ich</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-1" data-answer="mein"></sc-raw-td><sc-raw-td class="gen">나의</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">du</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-2" data-answer="dein"></sc-raw-td><sc-raw-td class="gen">너의</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">er</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-3" data-answer="sein"></sc-raw-td><sc-raw-td class="gen">그의</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-4" data-answer="ihr"></sc-raw-td><sc-raw-td class="gen">그녀의</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">wir</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-5" data-answer="unser"></sc-raw-td><sc-raw-td class="gen">우리의</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">ihr</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-6" data-answer="euer"></sc-raw-td><sc-raw-td class="gen">너희의</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 3 ===== -->
+  <section class="step s3" id="s3">
+    <div class="step-head"><div class="step-n">03</div><div><p class="eyebrow">Schritt 3</p><h2 class="step-title">Lesen · 읽기</h2></div></div>
+    <p class="lede">문장을 읽고 해석한 뒤, 소유관사의 성·격을 분석합니다.</p>
+    <div class="bsp"><span class="lab">Beispiel</span><p class="de">Das ist <strong>mein</strong> Buch.</p><p class="ko" style="margin:0">이것은 내 책이다. (mein = ich의 소유관사 '나의', 중성 1격)</p></div>
+
+    <div class="sub"><span class="de">3A.</span> 읽기 + 해석</div>
+    <ol class="ex">
+      <li><div><p class="de">Das ist <strong>mein</strong> Buch.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-1"></p></div></li>
+      <li><div><p class="de">Ich sehe <strong>meinen</strong> Vater.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-2"></p></div></li>
+      <li><div><p class="de">Das ist <strong>meine</strong> Mutter.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-3"></p></div></li>
+      <li><div><p class="de">Ich suche <strong>meine</strong> Tasche.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-4"></p></div></li>
+      <li><div><p class="de">Ich habe <strong>keinen</strong> Hund.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-5"></p></div></li>
+      <li><div><p class="de">Er ist <strong>kein</strong> Arzt.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-6"></p></div></li>
+      <li><div><p class="de"><strong>Ihre</strong> Eltern sind nett.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-7"></p></div></li>
+      <li><div><p class="de">Tom liebt <strong>seine</strong> Mutter.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-8"></p></div></li>
+      <li><div><p class="de">Unser Kind liest <strong>ein</strong> Buch.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-9"></p></div></li>
+      <li><div><p class="de">Ich habe <strong>kein</strong> Geld.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-10"></p></div></li>
+      <li><div><p class="de">Sind das <strong>deine</strong> Eltern?</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-11"></p></div></li>
+      <li><div><p class="de">Ich trinke <strong>keinen</strong> Kaffee.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-12"></p></div></li>
+      <li><div><p class="de"><strong>Eure</strong> Mutter ist nett.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-13"></p></div></li>
+      <li><div><p class="de">Das ist <strong>ihr</strong> Kind.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-14"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">3B.</span> 소유관사 분석 — 성·격</div>
+    <p>굵은 소유관사의 <strong>성</strong>과 <strong>격</strong>을 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Ich sehe <strong>meinen</strong> Vater.</p><p class="sol"><span class="ar">·</span> <span class="lbl">성</span> <span class="mc" data-mc="r3b-1a" data-key="r3b-1a" data-answer="남성"><input type="hidden" data-key="r3b-1a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성">남성</button><button type="button" data-val="여성">여성</button><button type="button" data-val="중성">중성</button><button type="button" data-val="복수">복수</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl">격</span> <span class="mc" data-mc="r3b-1b" data-key="r3b-1b" data-answer="4격"><input type="hidden" data-key="r3b-1b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="4격">4격</button></span></span></p></div></li>
+      <li><div><p class="de">Das ist <strong>meine</strong> Mutter.</p><p class="sol"><span class="ar">·</span> <span class="lbl">성</span> <span class="mc" data-mc="r3b-2a" data-key="r3b-2a" data-answer="여성"><input type="hidden" data-key="r3b-2a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성">남성</button><button type="button" data-val="여성">여성</button><button type="button" data-val="중성">중성</button><button type="button" data-val="복수">복수</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl">격</span> <span class="mc" data-mc="r3b-2b" data-key="r3b-2b" data-answer="1격"><input type="hidden" data-key="r3b-2b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="4격">4격</button></span></span></p></div></li>
+      <li><div><p class="de">Das ist <strong>unser</strong> Haus.</p><p class="sol"><span class="ar">·</span> <span class="lbl">성</span> <span class="mc" data-mc="r3b-3a" data-key="r3b-3a" data-answer="중성"><input type="hidden" data-key="r3b-3a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성">남성</button><button type="button" data-val="여성">여성</button><button type="button" data-val="중성">중성</button><button type="button" data-val="복수">복수</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl">격</span> <span class="mc" data-mc="r3b-3b" data-key="r3b-3b" data-answer="1격"><input type="hidden" data-key="r3b-3b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="4격">4격</button></span></span></p></div></li>
+      <li><div><p class="de">Sind das <strong>deine</strong> Eltern?</p><p class="sol"><span class="ar">·</span> <span class="lbl">성</span> <span class="mc" data-mc="r3b-4a" data-key="r3b-4a" data-answer="복수"><input type="hidden" data-key="r3b-4a"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남성">남성</button><button type="button" data-val="여성">여성</button><button type="button" data-val="중성">중성</button><button type="button" data-val="복수">복수</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl">격</span> <span class="mc" data-mc="r3b-4b" data-key="r3b-4b" data-answer="1격"><input type="hidden" data-key="r3b-4b"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="4격">4격</button></span></span></p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SCHRITT 4 ===== -->
+  <div class="daybar"><b>2일차</b><span>Schritt 4–5 · 듣기 → 쓰기</span></div>
+
+  <section class="step s4" id="s4">
+    <div class="step-head"><div class="step-n">04</div><div><p class="eyebrow">Schritt 4</p><h2 class="step-title">Hören · 듣기</h2></div></div>
+    <p class="lede">오디오를 듣고 네 가지 과제를 수행하세요. 4A·4B·4C는 문장마다 ▶ 버튼으로, 4D는 이야기 음원으로 풉니다.</p>
+    <div class="hblock">
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+
+    <div class="sub"><span class="de">4A.</span> 받아쓰기 — Diktat</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="a4-1" preload="auto" src="../assets/audio/b89bff25c0f5.mp3"></audio><input class="bl lg" data-key="h4a-1" data-answer="Das ist mein Buch." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="a4-2" preload="auto" src="../assets/audio/f01d866b1e24.mp3"></audio><input class="bl lg" data-key="h4a-2" data-answer="Ich sehe meinen Vater." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="a4-3" preload="auto" src="../assets/audio/a92afb21416b.mp3"></audio><input class="bl lg" data-key="h4a-3" data-answer="Das ist meine Mutter." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="a4-4" preload="auto" src="../assets/audio/2410749d9940.mp3"></audio><input class="bl lg" data-key="h4a-4" data-answer="Ich habe keinen Hund." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="a4-5" preload="auto" src="../assets/audio/ff37b85e0948.mp3"></audio><input class="bl lg" data-key="h4a-5" data-answer="Ist das dein Auto?" placeholder="받아쓰기"></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">4B.</span> 소유관사 채우기 — Possessivartikel einsetzen</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="b4-1" preload="auto" src="../assets/audio/b89bff25c0f5.mp3"></audio><p class="de">Das ist <input class="bl md" data-key="h4b-1" data-answer="mein"> Buch.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="b4-2" preload="auto" src="../assets/audio/f01d866b1e24.mp3"></audio><p class="de">Ich sehe <input class="bl md" data-key="h4b-2" data-answer="meinen"> Vater.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="b4-3" preload="auto" src="../assets/audio/a92afb21416b.mp3"></audio><p class="de">Das ist <input class="bl md" data-key="h4b-3" data-answer="meine"> Mutter.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="b4-4" preload="auto" src="../assets/audio/c2916ae466cb.mp3"></audio><p class="de">Wo ist <input class="bl md" data-key="h4b-4" data-answer="deine"> Tasche?</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="b4-5" preload="auto" src="../assets/audio/2410749d9940.mp3"></audio><p class="de">Ich habe <input class="bl md" data-key="h4b-5" data-answer="keinen"> Hund.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-6" data-noser="" aria-label="6번 문장 듣기"></button><audio data-clip="b4-6" preload="auto" src="../assets/audio/ff37b85e0948.mp3"></audio><p class="de">Ist das <input class="bl md" data-key="h4b-6" data-answer="dein"> Auto?</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-7" data-noser="" aria-label="7번 문장 듣기"></button><audio data-clip="b4-7" preload="auto" src="../assets/audio/fb1c963b9ef0.mp3"></audio><p class="de">Anna liebt <input class="bl md" data-key="h4b-7" data-answer="ihre"> Mutter.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-8" data-noser="" aria-label="8번 문장 듣기"></button><audio data-clip="b4-8" preload="auto" src="../assets/audio/f827129d1648.mp3"></audio><p class="de">Das ist <input class="bl md" data-key="h4b-8" data-answer="unser"> Haus.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-9" data-noser="" aria-label="9번 문장 듣기"></button><audio data-clip="b4-9" preload="auto" src="../assets/audio/3fa50c51bf40.mp3"></audio><p class="de">Er sucht <input class="bl md" data-key="h4b-9" data-answer="seinen"> Hund.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-10" data-noser="" aria-label="10번 문장 듣기"></button><audio data-clip="b4-10" preload="auto" src="../assets/audio/008beba24b39.mp3"></audio><p class="de">Das ist <input class="bl md" data-key="h4b-10" data-answer="ihr"> Kind.</p></div></div></li>
+    </ol>
+    </div>
+
+    <div class="sub"><span class="de">4C.</span> 누구의? 누가 누구를? — 소유관사로 뜻 판단하기</div>
+    <p>▶를 눌러 문장을 듣고, <strong>뜻</strong>에 맞는 것을 고르세요. 문장은 <strong>정답 보기</strong>를 누른 뒤에 나타납니다. 필요한 만큼 다시 들어도 됩니다.</p>
+    <p class="tip"><b class="t">Tip</b><strong>sein</strong> 은 '그(남자)의', <strong>ihr</strong> 는 '그녀의'입니다. 주어가 여자인데 sein 이 들리면 다른 남자의 것입니다. 남성 명사 앞 소유관사는 4격(목적어)에서 <strong>-en</strong> 이 붙습니다. mein → meinen 이 들리면 그 명사는 받는 쪽입니다. 정답 보기를 누르면 뜻을 알려 주는 말에 <span class="k1s">색 밑줄</span>이 표시됩니다.</p>
+    <div class="bsp"><span class="lab">Beispiel · 예시</span><p class="de">Anna liebt <span class="k1s">ihren</span> Hund. → 안나는 자기 개를 사랑한다.</p><p class="ko">ihr = 그녀의 (안나 자신의)입니다.</p><p class="de"><span class="k1s">Meinen</span> Hund sieht der Mann. → 그 남자가 내 개를 본다.</p><p class="ko">meinen = 4격 → 개는 보이는 쪽입니다.</p></div>
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+    <div class="sub2">4C-1 · 누구의 개?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-1" preload="auto" src="../assets/audio/98ca4b37ea74.mp3"></audio><span class="mc" data-mc="h4c-1" data-key="h4c-1" data-answer="안나가 자기 개를 찾는다"><input type="hidden" data-key="h4c-1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="안나가 자기 개를 찾는다">안나가 자기 개를 찾는다</button><button type="button" data-val="안나가 그(남자)의 개를 찾는다">안나가 그(남자)의 개를 찾는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Anna sucht <span class="k1">ihren</span> Hund.</span><span class="rv-clue" data-noser="">단서: ihren = 그녀의 → 안나 자신의 개</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-2" preload="auto" src="../assets/audio/4b2facfcd4c2.mp3"></audio><span class="mc" data-mc="h4c-2" data-key="h4c-2" data-answer="안나가 그(남자)의 개를 찾는다"><input type="hidden" data-key="h4c-2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="안나가 자기 개를 찾는다">안나가 자기 개를 찾는다</button><button type="button" data-val="안나가 그(남자)의 개를 찾는다">안나가 그(남자)의 개를 찾는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Anna sucht <span class="k1">seinen</span> Hund.</span><span class="rv-clue" data-noser="">단서: seinen = 그(남자)의 → 다른 남자의 개</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-3" preload="auto" src="../assets/audio/c5d2aad93722.mp3"></audio><span class="mc" data-mc="h4c-3" data-key="h4c-3" data-answer="톰이 그녀의 개를 찾는다"><input type="hidden" data-key="h4c-3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="톰이 자기 개를 찾는다">톰이 자기 개를 찾는다</button><button type="button" data-val="톰이 그녀의 개를 찾는다">톰이 그녀의 개를 찾는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Tom sucht <span class="k1">ihren</span> Hund.</span><span class="rv-clue" data-noser="">단서: ihren = 그녀의 → 어떤 여자의 개</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-4" preload="auto" src="../assets/audio/00f26a901506.mp3"></audio><span class="mc" data-mc="h4c-4" data-key="h4c-4" data-answer="톰이 자기 개를 찾는다"><input type="hidden" data-key="h4c-4"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="톰이 자기 개를 찾는다">톰이 자기 개를 찾는다</button><button type="button" data-val="톰이 그녀의 개를 찾는다">톰이 그녀의 개를 찾는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Tom sucht <span class="k1">seinen</span> Hund.</span><span class="rv-clue" data-noser="">단서: seinen = 그(남자)의 → 톰 자신의 개</span></p></div></li>
+    </ol>
+    <div class="sub2">4C-2 · 누가 누구를?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-5" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-5" preload="auto" src="../assets/audio/394de67696de.mp3"></audio><span class="mc" data-mc="h4c-5" data-key="h4c-5" data-answer="내 형제가 네 개를 본다"><input type="hidden" data-key="h4c-5"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="내 형제가 네 개를 본다">내 형제가 네 개를 본다</button><button type="button" data-val="네 개가 내 형제를 본다">네 개가 내 형제를 본다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Mein</span> Bruder sieht <span class="k1">deinen</span> Hund.</span><span class="rv-clue" data-noser="">단서: mein = 1격(보는 쪽), deinen = 4격(보이는 쪽)</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-6" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-6" preload="auto" src="../assets/audio/522fbe5767dd.mp3"></audio><span class="mc" data-mc="h4c-6" data-key="h4c-6" data-answer="네 개가 내 형제를 본다"><input type="hidden" data-key="h4c-6"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="내 형제가 네 개를 본다">내 형제가 네 개를 본다</button><button type="button" data-val="네 개가 내 형제를 본다">네 개가 내 형제를 본다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Meinen</span> Bruder sieht <span class="k1">dein</span> Hund.</span><span class="rv-clue" data-noser="">단서: meinen = 4격 → 형제는 보이는 쪽, dein Hund 가 본다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-7" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-7" preload="auto" src="../assets/audio/afc0c86a15a9.mp3"></audio><span class="mc" data-mc="h4c-7" data-key="h4c-7" data-answer="네 아들이 내 선생님에게 묻는다"><input type="hidden" data-key="h4c-7"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="내 선생님이 네 아들에게 묻는다">내 선생님이 네 아들에게 묻는다</button><button type="button" data-val="네 아들이 내 선생님에게 묻는다">네 아들이 내 선생님에게 묻는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Meinen</span> Lehrer fragt <span class="k1">dein</span> Sohn.</span><span class="rv-clue" data-noser="">단서: meinen = 4격 → 선생님은 질문 받는 쪽, dein Sohn 이 묻는다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-8" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-8" preload="auto" src="../assets/audio/deb33448d98c.mp3"></audio><span class="mc" data-mc="h4c-8" data-key="h4c-8" data-answer="내 선생님이 네 아들에게 묻는다"><input type="hidden" data-key="h4c-8"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="내 선생님이 네 아들에게 묻는다">내 선생님이 네 아들에게 묻는다</button><button type="button" data-val="네 아들이 내 선생님에게 묻는다">네 아들이 내 선생님에게 묻는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de"><span class="k1">Mein</span> Lehrer fragt <span class="k1">deinen</span> Sohn.</span><span class="rv-clue" data-noser="">단서: mein = 1격(묻는 쪽), deinen = 4격</span></p></div></li>
+    </ol>
+
+    <div class="hblock">
+    <div class="sub"><span class="de">4D.</span> 이야기 듣기 — Familienfotos</div>
+    <p>이야기를 <strong>두 번</strong> 듣습니다. 첫 번째에는 <strong>내용</strong>을, 두 번째에는 <strong>소유관사</strong>을 듣습니다. 대본은 모두 푼 뒤에 여세요.</p>
+    <div class="audio">
+      <span class="audio-tag">♪ Familienfotos</span>
+      <audio controls="{{ true }}" preload="auto" data-aud="story" data-filename="Lektion_05_Familienfotos.mp3" src="../assets/audio/b674274c0896.mp3"></audio>
+      <div class="ap-extras">
+        <div class="ap-speed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button data-aprate="0.75" aria-pressed="false">0.75×</button><button data-aprate="1" aria-pressed="true">1×</button><button data-aprate="1.25" aria-pressed="false">1.25×</button></div>
+        <button class="ap-dl" data-ap="dl" type="button" aria-label="오디오 다운로드">⤓ MP3</button>
+      </div>
+    </div>
+    <div class="sub2">4D-1 · 1차 듣기 — 내용</div>
+    <p>이야기를 끝까지 한 번 듣고 질문에 답하세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">레나의 아버지는 무슨 일을 하나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q1" data-key="h4d-q1" data-answer="선생님"><input type="hidden" data-key="h4d-q1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="선생님">선생님</button><button type="button" data-val="의사">의사</button><button type="button" data-val="요리사">요리사</button></span></span></p></div></li>
+      <li><div><p class="de">얀의 개 이름은?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q2" data-key="h4d-q2" data-answer="렉스"><input type="hidden" data-key="h4d-q2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="렉스">렉스</button><button type="button" data-val="얀">얀</button><button type="button" data-val="레나">레나</button></span></span></p></div></li>
+      <li><div><p class="de">레나 가족의 집은 어디에 있나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q3" data-key="h4d-q3" data-answer="함부르크"><input type="hidden" data-key="h4d-q3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="함부르크">함부르크</button><button type="button" data-val="베를린">베를린</button><button type="button" data-val="빈">빈</button></span></span></p></div></li>
+      <li><div><p class="de">레나 가족에게 정원이 있나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q4" data-key="h4d-q4" data-answer="없다"><input type="hidden" data-key="h4d-q4"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="없다">없다</button><button type="button" data-val="있다">있다</button><button type="button" data-val="나오지 않는다">나오지 않는다</button></span></span></p></div></li>
+      <li><div><p class="de">레나는 &#x27;나&#x27;의 무엇이 귀엽다고 하나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q5" data-key="h4d-q5" data-answer="개"><input type="hidden" data-key="h4d-q5"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="개">개</button><button type="button" data-val="사진">사진</button><button type="button" data-val="집">집</button></span></span></p></div></li>
+    </ol>
+    <div class="sub2">4D-2 · 2차 듣기 — 들린 소유관사 쓰기</div>
+    <p>다시 들으면서 빈칸에 들린 <strong>소유관사</strong>나 <strong>kein</strong>을 쓰세요. 왼쪽은 누구의 것인지와 명사의 성입니다.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>누구의 · 명사</sc-raw-th><sc-raw-th>들린 문장</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>나의 · Vater (m)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„Das ist <input class="bl w4d" data-key="h4d-t1-1" data-answer="mein"> Vater, …“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>나의 · Mutter (f)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„… und das ist <input class="bl w4d" data-key="h4d-t2-2" data-answer="meine"> Mutter.“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>그(얀)의 · Hund (m)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„<input class="bl w4d" data-key="h4d-t3-3" data-answer="Sein|sein"> Hund heißt Rex.“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>그녀의 · Katze (f)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„<input class="bl w4d" data-key="h4d-t4-4" data-answer="Ihre|ihre"> Katze ist sehr klein.“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>너희의 · Haus (n)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„Ist das <input class="bl w4d" data-key="h4d-t5-5" data-answer="euer"> Haus?“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>우리의 · Haus (n)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„Ja, das ist <input class="bl w4d" data-key="h4d-t6-6" data-answer="unser"> Haus in Hamburg.“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>없다 · Garten (m) 4격</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„Nein, wir haben <input class="bl w4d" data-key="h4d-t7-7" data-answer="keinen"> Garten.“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>너의 · Hund (m)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">„<input class="bl w4d" data-key="h4d-t8-8" data-answer="Dein|dein"> Hund ist süß!“</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p style="margin-top:18px">위 표에서 규칙을 찾아 완성해 보세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">남성 명사가 4격(목적어)이면 소유관사·kein 끝에 <span class="mc" data-mc="h4d-r1" data-key="h4d-r1" data-answer="-en 이 붙는다"><input type="hidden" data-key="h4d-r1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="-en 이 붙는다">-en 이 붙는다</button><button type="button" data-val="아무것도 붙지 않는다">아무것도 붙지 않는다</button></span></span> (keinen Garten)</p></div></li>
+      <li><div><p class="de">여성 명사 앞 소유관사는 <span class="mc" data-mc="h4d-r2" data-key="h4d-r2" data-answer="-e 가 붙는다"><input type="hidden" data-key="h4d-r2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="-e 가 붙는다">-e 가 붙는다</button><button type="button" data-val="-en 이 붙는다">-en 이 붙는다</button></span></span> (meine Mutter)</p></div></li>
+      <li><div><p class="de">&#x27;그녀의&#x27;는 <span class="mc" data-mc="h4d-r3" data-key="h4d-r3" data-answer="ihr"><input type="hidden" data-key="h4d-r3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ihr">ihr</button><button type="button" data-val="sein">sein</button><button type="button" data-val="euer">euer</button></span></span> 이다.</p></div></li>
+    </ol>
+    <div class="sub2">4D-3 · 누구의 것인가</div>
+    <p>빈칸에 들린 소유관사를 쓰고, 누구를 가리키는지 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">„Das ist mein Bruder Jan. <input class="bl w4d" data-key="h4d-p1-9" data-answer="Sein|sein"> Hund heißt Rex.“</p><p class="sol" data-sp=""><span class="lbl">Sein 은 누구?</span> <span class="mc" data-mc="h4d-p1r" data-key="h4d-p1r" data-answer="얀"><input type="hidden" data-key="h4d-p1r"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="얀">얀</button><button type="button" data-val="레나">레나</button><button type="button" data-val="나">나</button></span></span></p></div></li>
+      <li><div><p class="de">„Und das ist meine Schwester. <input class="bl w4d" data-key="h4d-p2-10" data-answer="Ihre|ihre"> Katze ist sehr klein.“</p><p class="sol" data-sp=""><span class="lbl">Ihre 는 누구?</span> <span class="mc" data-mc="h4d-p2r" data-key="h4d-p2r" data-answer="레나의 여자 형제"><input type="hidden" data-key="h4d-p2r"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="레나의 여자 형제">레나의 여자 형제</button><button type="button" data-val="레나">레나</button><button type="button" data-val="나">나</button></span></span></p></div></li>
+      <li><div><p class="de">„<input class="bl w4d" data-key="h4d-p3-11" data-answer="Dein|dein"> Hund ist süß!“, sagt Lena.</p><p class="sol" data-sp=""><span class="lbl">Dein 은 누구?</span> <span class="mc" data-mc="h4d-p3r" data-key="h4d-p3r" data-answer="나 (&#x27;나&#x27;의 개)"><input type="hidden" data-key="h4d-p3r"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="나 (&#x27;나&#x27;의 개)">나 (&#x27;나&#x27;의 개)</button><button type="button" data-val="레나">레나</button><button type="button" data-val="얀">얀</button></span></span></p></div></li>
+    </ol>
+    <p style="margin-top:18px">위 문장에서 규칙을 찾아 완성해 보세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">sein 은 <span class="mc" data-mc="h4d-s1" data-key="h4d-s1" data-answer="남자 · 중성 명사의 것"><input type="hidden" data-key="h4d-s1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="남자 · 중성 명사의 것">남자 · 중성 명사의 것</button><button type="button" data-val="여자의 것">여자의 것</button></span></span> 이다.</p></div></li>
+      <li><div><p class="de">kein 은 ein 처럼 <span class="mc" data-mc="h4d-s2" data-key="h4d-s2" data-answer="변한다"><input type="hidden" data-key="h4d-s2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="변한다">변한다</button><button type="button" data-val="변하지 않는다">변하지 않는다</button></span></span> </p></div></li>
+    </ol>
+    <details class="script">
+      <summary>대본 보기 — 다 푼 뒤에 여세요</summary>
+      <p class="sinst">줄을 누르면 그 줄만 다시 들을 수 있습니다.</p>
+      <div class="slegend"><span class="t-a">소유관사</span><span class="t-b">kein</span></div>
+      <button type="button" class="sline" data-seg="0.56,2.71"><span class="sn">1</span><span class="sde">Lena zeigt mir <span class="t-a">ihre</span> Fotos.</span><span class="sko">레나가 나에게 자기 사진들을 보여 준다.</span></button>
+      <button type="button" class="sline" data-seg="3.89,6.79"><span class="sn">2</span><span class="sde">„Das ist <span class="t-a">mein</span> Vater, und das ist <span class="t-a">meine</span> Mutter.“</span><span class="sko">&quot;이분은 우리 아빠고, 이분은 우리 엄마야.&quot;</span></button>
+      <button type="button" class="sline" data-seg="7.97,9.54"><span class="sn">3</span><span class="sde">„<span class="t-a">Mein</span> Vater ist Lehrer.“</span><span class="sko">&quot;우리 아빠는 선생님이야.&quot;</span></button>
+      <button type="button" class="sline" data-seg="10.72,12.71"><span class="sn">4</span><span class="sde">„Und wer ist das?“, frage ich.</span><span class="sko">&quot;그럼 이 사람은 누구야?&quot; 내가 묻는다.</span></button>
+      <button type="button" class="sline" data-seg="13.89,17.07"><span class="sn">5</span><span class="sde">„Das ist <span class="t-a">mein</span> Bruder Jan. <span class="t-a">Sein</span> Hund heißt Rex.“</span><span class="sko">&quot;내 남자 형제 얀이야. 얀의 개 이름은 렉스야.&quot;</span></button>
+      <button type="button" class="sline" data-seg="18.25,22.06"><span class="sn">6</span><span class="sde">„Und das ist <span class="t-a">meine</span> Schwester. <span class="t-a">Ihre</span> Katze ist sehr klein.“</span><span class="sko">&quot;그리고 이건 내 여자 형제야. 그 애 고양이는 아주 작아.&quot;</span></button>
+      <button type="button" class="sline" data-seg="23.24,24.61"><span class="sn">7</span><span class="sde">„Ist das <span class="t-a">euer</span> Haus?“</span><span class="sko">&quot;이게 너희 집이야?&quot;</span></button>
+      <button type="button" class="sline" data-seg="25.79,28.19"><span class="sn">8</span><span class="sde">„Ja, das ist <span class="t-a">unser</span> Haus in Hamburg.“</span><span class="sko">&quot;응, 함부르크에 있는 우리 집이야.&quot;</span></button>
+      <button type="button" class="sline" data-seg="29.37,30.61"><span class="sn">9</span><span class="sde">„Habt ihr einen Garten?“</span><span class="sko">&quot;너희 정원 있어?&quot;</span></button>
+      <button type="button" class="sline" data-seg="31.79,33.80"><span class="sn">10</span><span class="sde">„Nein, wir haben <span class="t-b">keinen</span> Garten.“</span><span class="sko">&quot;아니, 정원은 없어.&quot;</span></button>
+      <button type="button" class="sline" data-seg="34.98,37.06"><span class="sn">11</span><span class="sde">Dann zeige ich ihr <span class="t-a">meine</span> Fotos.</span><span class="sko">그다음 나는 그녀에게 내 사진들을 보여 준다.</span></button>
+      <button type="button" class="sline" data-seg="38.24,40.57"><span class="sn">12</span><span class="sde">„<span class="t-a">Dein</span> Hund ist süß!“, sagt Lena.</span><span class="sko">&quot;네 개 귀엽다!&quot; 레나가 말한다.</span></button>
+    </details>
+    </div>
+  </section>
+
+  <!-- ===== SCHRITT 5 ===== -->
+  <section class="step s5" id="s5">
+    <div class="step-head"><div class="step-n">05</div><div><p class="eyebrow">Schritt 5</p><h2 class="step-title">Schreiben · 쓰기</h2></div></div>
+    <p class="lede">단계적으로 난이도가 올라갑니다. 5C에서는 아무 도움 없이 스스로!</p>
+
+    <div class="sub"><span class="de">5A.</span> 소유관사만 채우기</div>
+    <p>우리말 문장을 보고 빈칸에 알맞은 소유관사를 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Das ist <input class="bl md" data-key="s5a-1" data-answer="mein"> Buch. <span class="gen">— 이것은 내 책이다</span></p></div></li>
+      <li><div><p class="de">Ich sehe <input class="bl md" data-key="s5a-2" data-answer="meinen"> Vater. <span class="gen">— 나는 내 아버지를 본다</span></p></div></li>
+      <li><div><p class="de">Wo ist <input class="bl md" data-key="s5a-3" data-answer="deine"> Tasche? <span class="gen">— 너의 가방은 어디 있니?</span></p></div></li>
+      <li><div><p class="de">Er sucht <input class="bl md" data-key="s5a-4" data-answer="seinen"> Hund. <span class="gen">— 그는 자기 개를 찾는다</span></p></div></li>
+      <li><div><p class="de">Das sind <input class="bl md" data-key="s5a-5" data-answer="meine"> Eltern. <span class="gen">— 이것은 내 부모님이다</span></p></div></li>
+      <li><div><p class="de">Anna liebt <input class="bl md" data-key="s5a-6" data-answer="ihre"> Mutter. <span class="gen">— 안나는 자기 어머니를 사랑한다</span></p></div></li>
+      <li><div><p class="de">Das ist <input class="bl md" data-key="s5a-7" data-answer="unser"> Haus. <span class="gen">— 이것은 우리 집이다</span></p></div></li>
+      <li><div><p class="de">Ich habe <input class="bl md" data-key="s5a-8" data-answer="keinen"> Hund. <span class="gen">— 나는 개가 없다</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5B.</span> 한→독 번역 <em>— 동사 형태만 제공</em></div>
+    <p>한국어를 독일어로 쓰세요. 동사 형태만 제공됩니다. <strong>주어를 빠뜨리지 마세요.</strong></p>
+    <ol class="ex">
+      <li><div><p class="de">나는 내 책을 읽는다. <span class="vb">lese</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-1" data-answer="Ich lese mein Buch"></p></div></li>
+      <li><div><p class="de">그는 자기 아버지를 본다. <span class="vb">sieht</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-2" data-answer="Er sieht seinen Vater"></p></div></li>
+      <li><div><p class="de">나는 개가 없다. <span class="vb">habe</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-3" data-answer="Ich habe keinen Hund"></p></div></li>
+      <li><div><p class="de">그녀는 자기 어머니를 사랑한다. <span class="vb">liebt</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-4" data-answer="Sie liebt ihre Mutter"></p></div></li>
+      <li><div><p class="de">나는 너의 가방을 본다. <span class="vb">sehe</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-5" data-answer="Ich sehe deine Tasche"></p></div></li>
+      <li><div><p class="de">우리는 우리 집을 본다. <span class="vb">sehen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-6" data-answer="Wir sehen unser Haus"></p></div></li>
+      <li><div><p class="de">톰은 자기 어머니를 사랑한다. <span class="vb">liebt</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-7" data-answer="Tom liebt seine Mutter"></p></div></li>
+      <li><div><p class="de">나는 돈이 없다. <span class="vb">habe</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-8" data-answer="Ich habe kein Geld"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5C.</span> 한→독 통합 <em>— 도움 없음</em></div>
+    <p>소유관사 + 격 + 어순을 모두 스스로 적용하세요. 주어를 빠뜨리지 마세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">이것은 내 어머니이다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-1" data-answer="Das ist meine Mutter"></p></div></li>
+      <li><div><p class="de">나는 내 아버지를 본다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-2" data-answer="Ich sehe meinen Vater"></p></div></li>
+      <li><div><p class="de">그녀는 자기 개를 찾는다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-3" data-answer="Sie sucht ihren Hund"></p></div></li>
+      <li><div><p class="de">나는 책이 한 권도 없다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-4" data-answer="Ich habe keine Bücher"></p></div></li>
+      <li><div><p class="de">이것은 너희 집이니?</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-5" data-answer="Ist das euer Haus"></p></div></li>
+      <li><div><p class="de">그는 자기 아내를 사랑한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-6" data-answer="Er liebt seine Frau"></p></div></li>
+      <li><div><p class="de">너의 부모님은 친절하다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-7" data-answer="Deine Eltern sind nett"></p></div></li>
+    </ol>
+
+    <div class="sub2">Mini-Wiederholung 2 — mein 변화표 + sein/ihr/kein</div>
+    <sc-raw-table class="g center" style="max-width:520px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">격</sc-raw-th><sc-raw-th>남성 m</sc-raw-th><sc-raw-th>여성 f</sc-raw-th><sc-raw-th>중성 n</sc-raw-th><sc-raw-th>복수 pl</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">1격</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-1" data-answer="mein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-2" data-answer="meine"></sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-3" data-answer="mein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-4" data-answer="meine"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">4격</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-5" data-answer="meinen"></sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-6" data-answer="meine"></sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-7" data-answer="mein"></sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-8" data-answer="meine"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <ol class="ex" style="margin-top:8px">
+      <li><div><p class="de">Anna liebt <input class="bl md" data-key="mw2-9" data-answer="ihre"> Mutter. <span class="gen">— 여자 주인</span></p></div></li>
+      <li><div><p class="de">Tom liebt <input class="bl md" data-key="mw2-10" data-answer="seine"> Mutter. <span class="gen">— 남자 주인</span></p></div></li>
+      <li><div><p class="de">Ich habe <input class="bl md" data-key="mw2-11" data-answer="keinen"> Hund. <span class="gen">— 개가 없다</span></p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SCHRITT 6 ===== -->
+  <div class="daybar"><b>3일차</b><span>Schritt 6–7 · 말하기 → 테스트 + 자기 평가</span></div>
+
+  <section class="step s6" id="s6">
+    <div class="step-head"><div class="step-n">06</div><div><p class="eyebrow">Schritt 6</p><h2 class="step-title">Sprechen · 말하기</h2></div></div>
+    <p class="lede">Deutsch 칸은 가려져 있습니다. 한국어만 보고 독일어로 말한 뒤, 칸을 눌러 확인하세요.</p>
+
+    <div class="sub2">Round 1 — 소유관사 1격 · 4격</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">이건 내 책이야.</sc-raw-td><sc-raw-td class="de tog">Das ist mein Buch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-1" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">너의 가방 어디 있어?</sc-raw-td><sc-raw-td class="de tog">Wo ist deine Tasche?</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-2" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">이건 내 어머니야.</sc-raw-td><sc-raw-td class="de tog">Das ist meine Mutter.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-3" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그의 차는 빨라.</sc-raw-td><sc-raw-td class="de tog">Sein Auto ist schnell.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-4" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">이건 우리 집이야.</sc-raw-td><sc-raw-td class="de tog">Das ist unser Haus.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-5" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">이거 네 차야?</sc-raw-td><sc-raw-td class="de tog">Ist das dein Auto?</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-6" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">이건 그녀의 아이야.</sc-raw-td><sc-raw-td class="de tog">Das ist ihr Kind.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-7" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">이건 내 부모님이야.</sc-raw-td><sc-raw-td class="de tog">Das sind meine Eltern.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-8" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 2 — kein · sein/ihr · 어간 교체</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">나는 우리 아빠가 보여.</sc-raw-td><sc-raw-td class="de tog">Ich sehe meinen Vater.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-9" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그가 자기 개를 찾아.</sc-raw-td><sc-raw-td class="de tog">Er sucht seinen Hund.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-10" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나 개 없어.</sc-raw-td><sc-raw-td class="de tog">Ich habe keinen Hund.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-11" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나 돈 없어.</sc-raw-td><sc-raw-td class="de tog">Ich habe kein Geld.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-12" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">안나는 자기 엄마를 사랑해.</sc-raw-td><sc-raw-td class="de tog">Anna liebt ihre Mutter.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-13" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">톰은 자기 엄마를 사랑해.</sc-raw-td><sc-raw-td class="de tog">Tom liebt seine Mutter.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-14" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">너희 어머니는 친절해.</sc-raw-td><sc-raw-td class="de tog">Eure Mutter ist nett.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-15" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그가 자기 아내를 사랑해.</sc-raw-td><sc-raw-td class="de tog">Er liebt seine Frau.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-16" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 3 — kein 확장 · 무관사·직업·정관사</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횏수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">나 커피 안 마셔.</sc-raw-td><sc-raw-td class="de tog">Ich trinke keinen Kaffee.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-17" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 의사가 아니야.</sc-raw-td><sc-raw-td class="de tog">Er ist kein Arzt.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-18" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나 그 커피 싫어.</sc-raw-td><sc-raw-td class="de tog">Ich mag den Kaffee nicht.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-19" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나 책이 한 권도 없어.</sc-raw-td><sc-raw-td class="de tog">Ich habe keine Bücher.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-20" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 7 ===== -->
+  <section class="step s7" id="s7">
+    <div class="step-head"><div class="step-n">07</div><div><p class="eyebrow">Schritt 7</p><h2 class="step-title">Test · 테스트</h2></div></div>
+    <p class="lede">연습에서 <strong>한 번도 사용하지 않은 새 명사</strong>가 등장합니다. 소유관사 규칙을 적용하세요.</p>
+
+    <div class="bsp"><span class="lab">테스트용 새 명사표</span>
+      <sc-raw-table class="g" style="margin:6px 0 0;font-size:14px">
+        <sc-raw-thead><sc-raw-tr><sc-raw-th>명사</sc-raw-th><sc-raw-th>성</sc-raw-th><sc-raw-th>뜻</sc-raw-th></sc-raw-tr></sc-raw-thead>
+        <sc-raw-tbody>
+          <sc-raw-tr><sc-raw-td class="k">Onkel</sc-raw-td><sc-raw-td>m (남성)</sc-raw-td><sc-raw-td>삼촌</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">Tante</sc-raw-td><sc-raw-td>f (여성)</sc-raw-td><sc-raw-td>이모</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">Fahrrad</sc-raw-td><sc-raw-td>n (중성)</sc-raw-td><sc-raw-td>자전거</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">Heft</sc-raw-td><sc-raw-td>n (중성)</sc-raw-td><sc-raw-td>공책</sc-raw-td></sc-raw-tr>
+        </sc-raw-tbody>
+      </sc-raw-table>
+    </div>
+
+    <div class="sub"><span class="de">7A.</span> 새 명사 독→한 해석</div>
+    <ol class="ex">
+      <li><div><p class="de">Das ist <strong>mein</strong> Onkel.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-1"></p></div></li>
+      <li><div><p class="de">Ich sehe <strong>meinen</strong> Onkel.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-2"></p></div></li>
+      <li><div><p class="de">Wo ist <strong>deine</strong> Tante?</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-3"></p></div></li>
+      <li><div><p class="de">Er sucht <strong>sein</strong> Fahrrad.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-4"></p></div></li>
+      <li><div><p class="de">Sie liebt <strong>ihren</strong> Onkel.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-5"></p></div></li>
+      <li><div><p class="de">Ich habe <strong>kein</strong> Fahrrad.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-6"></p></div></li>
+      <li><div><p class="de">Ist das <strong>dein</strong> Heft?</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-7"></p></div></li>
+      <li><div><p class="de">Das sind <strong>meine</strong> Hefte.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-8"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7B.</span> 새 명사 한→독 번역</div>
+    <p>주어를 빠뜨리지 말고 완전한 문장으로 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">이것은 내 삼촌이다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-1" data-answer="Das ist mein Onkel"></p></div></li>
+      <li><div><p class="de">나는 내 삼촌을 본다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-2" data-answer="Ich sehe meinen Onkel"></p></div></li>
+      <li><div><p class="de">그녀는 자기 이모를 사랑한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-3" data-answer="Sie liebt ihre Tante"></p></div></li>
+      <li><div><p class="de">그는 자기 자전거를 찾는다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-4" data-answer="Er sucht sein Fahrrad"></p></div></li>
+      <li><div><p class="de">나는 자전거가 없다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-5" data-answer="Ich habe kein Fahrrad"></p></div></li>
+      <li><div><p class="de">이것은 너의 공책이니?</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-6" data-answer="Ist das dein Heft"></p></div></li>
+      <li><div><p class="de">너의 이모는 친절하다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-7" data-answer="Deine Tante ist nett"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7C.</span> 새 명사 오류 수정</div>
+    <ol class="ex">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Ich sehe <strong>mein</strong> Onkel.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-1" data-answer="Ich sehe meinen Onkel"></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Sie liebt <strong>seine</strong> Tante.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-2" data-answer="Sie liebt ihre Tante"></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Das ist <strong>meinen</strong> Onkel.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-3" data-answer="Das ist mein Onkel"></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Er sucht <strong>seinen</strong> Fahrrad.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-4" data-answer="Er sucht sein Fahrrad"></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Ich habe <strong>keine</strong> Onkel.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-5" data-answer="Ich habe keinen Onkel"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7D.</span> 문법 핵심 정리</div>
+    <ol class="ex gram">
+      <li><div><p class="de">소유관사는 1과의 어떤 관사처럼 변하는가?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">기준 형태</span> <span class="mc" data-mc="t7d-1" data-key="t7d-1" data-answer="ein"><input type="hidden" data-key="t7d-1"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ein">ein</button><button type="button" data-val="der">der</button><button type="button" data-val="kein">kein</button></span></span></p></div></li>
+      <li><div><p class="de">각 인칭의 소유관사는?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">ich — 나의</span> <span class="mc" data-mc="t7d-2" data-key="t7d-2" data-answer="mein"><input type="hidden" data-key="t7d-2"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="dein">dein</button><button type="button" data-val="sein">sein</button><button type="button" data-val="mein">mein</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">du — 너의</span> <span class="mc" data-mc="t7d-3" data-key="t7d-3" data-answer="dein"><input type="hidden" data-key="t7d-3"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ihr">ihr</button><button type="button" data-val="dein">dein</button><button type="button" data-val="mein">mein</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">er — 그의</span> <span class="mc" data-mc="t7d-4" data-key="t7d-4" data-answer="sein"><input type="hidden" data-key="t7d-4"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="sein">sein</button><button type="button" data-val="ihr">ihr</button><button type="button" data-val="euer">euer</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">sie — 그녀의</span> <span class="mc" data-mc="t7d-5" data-key="t7d-5" data-answer="ihr"><input type="hidden" data-key="t7d-5"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ihr">ihr</button><button type="button" data-val="sein">sein</button><button type="button" data-val="unser">unser</button></span></span></p></div></li>
+      <li><div><p class="de">어미 -en이 붙는 격은? 여성·중성에서 4격과 같은 격은?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">-en이 붙는 격</span> <span class="mc" data-mc="t7d-6" data-key="t7d-6" data-answer="4격"><input type="hidden" data-key="t7d-6"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="3격">3격</button><button type="button" data-val="4격">4격</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">4격과 같은 격</span> <span class="mc" data-mc="t7d-7" data-key="t7d-7" data-answer="1격"><input type="hidden" data-key="t7d-7"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="1격">1격</button><button type="button" data-val="2격">2격</button><button type="button" data-val="3격">3격</button></span></span></p></div></li>
+      <li><div><p class="de">"자기 ~"를 말할 때 주인의 성별에 따라 무엇을 쓰는가?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">주인이 남자</span> <span class="mc" data-mc="t7d-8" data-key="t7d-8" data-answer="sein"><input type="hidden" data-key="t7d-8"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="sein">sein</button><button type="button" data-val="ihr">ihr</button><button type="button" data-val="euer">euer</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">주인이 여자</span> <span class="mc" data-mc="t7d-9" data-key="t7d-9" data-answer="ihr"><input type="hidden" data-key="t7d-9"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="ihr">ihr</button><button type="button" data-val="sein">sein</button><button type="button" data-val="unser">unser</button></span></span></p></div></li>
+      <li><div><p class="de">"개가 없다 / 돈이 없다"처럼 <strong>명사를 부정</strong>할 때 쓰는 말은? 또 ein은 단수에만 쓰지만, 이 말은 어떤 형태에도 쓸 수 있는가?</p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">명사 부정</span> <span class="mc" data-mc="t7d-10" data-key="t7d-10" data-answer="kein"><input type="hidden" data-key="t7d-10"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="kein">kein</button><button type="button" data-val="nicht">nicht</button><button type="button" data-val="nein">nein</button></span></span></p><p class="sol"><span class="ar">·</span> <span class="lbl" style="min-width:132px">ein엔 없는 형태</span> <span class="mc" data-mc="t7d-11" data-key="t7d-11" data-answer="복수"><input type="hidden" data-key="t7d-11"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-val="2격">2격</button><button type="button" data-val="무관사">무관사</button><button type="button" data-val="복수">복수</button></span></span></p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SELF-ASSESSMENT ===== -->
+  <div class="assess">
+    <p class="ahead"><span class="tagpill">지시</span> 자기 평가 · Selbstbewertung</p>
+    <p class="ainst">자신 있으면 <b>O</b>, 아직 불안하면 <b>△</b>, 모르겠으면 <b>X</b>를 누르세요.</p>
+    <div class="sub2">문법 이해</div>
+    <div class="check"><p>소유관사가 ein처럼 변한다는 것을 안다.</p><div class="rate" data-rate="g1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>남성 4격만 -en이 붙는다는 것을 안다.</p><div class="rate" data-rate="g2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>여성·중성은 1격=4격임을 안다.</p><div class="rate" data-rate="g3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>mein 변화표를 보지 않고 쓸 수 있다.</p><div class="rate" data-rate="g4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>nicht와 kein을 구분할 수 있다.</p><div class="rate" data-rate="g5"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>무관사 명사·직업도 kein으로 부정할 수 있다 (keinen Kaffee · kein Arzt).</p><div class="rate" data-rate="g6"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">단어</div>
+    <div class="check"><p>7개 소유관사(mein·dein·sein·ihr·unser·euer·Ihr)와 우리말 뜻을 외웠다.</p><div class="rate" data-rate="w1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>sein(남)·ihr(여) 구분과 euer→eure 변화를 안다.</p><div class="rate" data-rate="w2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">실전 적용</div>
+    <div class="check"><p>성·격에 맞는 소유관사 형태를 고를 수 있다.</p><div class="rate" data-rate="p1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>남성 4격에서 -en을 빠뜨리지 않는다.</p><div class="rate" data-rate="p2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>한국어를 보고 소유관사 문장을 쓸 수 있다.</p><div class="rate" data-rate="p3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>새 명사에도 소유관사 규칙을 적용할 수 있다.</p><div class="rate" data-rate="p4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="scorebox"><b>해석</b><br>O가 9개 이상 — 소유관사를 잘 이해했습니다! 다음 챕터로.<br>△가 3개 이상 — mein 변화표 + sein/ihr를 한 번 더 복습 후 Test를 다시.<br>X가 있다면 — Schritt 1부터 차근차근 다시 해보세요.</div>
+  </div>
+
+  <div class="footer">
+    <h3>Gut gemacht!</h3>
+    <p>입력한 답안은 자동으로 브라우저에 저장됩니다.<br>다 풀고 <strong>과제 제출하기</strong> 버튼으로 제출해 주세요.</p>
+    <div class="acts">
+      <button class="btn go" sc-camel-on-click="{{ submitNet }}">과제 제출하기</button>
+      <button class="btn" sc-camel-on-click="{{ print }}">인쇄 / PDF</button>
+    </div>
+  </div>
+
+<nav class="sd-nav" data-no-print aria-label="Hausaufgabe 이동"><a class="sd-prev" href="lektion-04.html"><span class="sd-dir">← 이전 · Lektion 04</span><span class="sd-ttl">어순 · 의문문 · 수사</span></a><a class="sd-next" href="lektion-06.html"><span class="sd-dir">다음 · Lektion 06 →</span><span class="sd-ttl">전치사와 격</span></a><a class="sd-toc" href="../../lektion.html?n=05"><span class="sd-dir">SODA GRAMMATIK KURS</span><span class="sd-ttl">Lektion 05 선택으로 돌아가기</span></a></nav>
+</div>
+</div>
+
+<a class="sd-home" href="../../lektion.html?n=05" aria-label="Lektion 05 선택으로 돌아가기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="sd-lab">선택</span></a>
+<div class="fontctl" aria-label="글씨 크기 조절"><button type="button" data-fs="dec" aria-label="작게">A−</button><button type="button" data-fs="reset" class="fs-val" aria-label="기본 크기"><span data-fs="val">100%</span></button><button type="button" data-fs="inc" aria-label="크게">A+</button></div>
+
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:960,&quot;height&quot;:760},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#384568&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#384568&quot;,&quot;#2563a8&quot;,&quot;#1a7a5c&quot;,&quot;#1c1e24&quot;]},&quot;mono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;디자인&quot;}}">
+class Component extends DCLogic {
+  state = { filled: 0, total: 0 };
+  get KEY() { return 'uebung-lektion-05-v3'; }
+  componentDidMount() {
+    try { this.store = JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch (e) { this.store = {}; }
+    if (!this.rootEl) return;
+    this.applyAccent();
+    window.addEventListener('beforeunload', () => { try { this.save(); } catch (e) {} });
+    const __wrap = this.rootEl.querySelector('.wrap');
+    const __ctl = document.querySelector('.fontctl');
+    if (__wrap && __ctl) {
+      let __fs = parseFloat(localStorage.getItem('uebung-fontscale')) || 1;
+      const __apply = () => { __wrap.style.zoom = __fs; const v = __ctl.querySelector('[data-fs="val"]'); if (v) v.textContent = Math.round(__fs*100)+'%'; };
+      __apply();
+      const __set = (d) => { __fs = Math.min(1.6, Math.max(0.7, Math.round((__fs+d)*10)/10)); localStorage.setItem('uebung-fontscale', __fs); __apply(); };
+      __ctl.querySelector('[data-fs="dec"]').addEventListener('click', () => __set(-0.1));
+      __ctl.querySelector('[data-fs="inc"]').addEventListener('click', () => __set(0.1));
+      __ctl.querySelector('[data-fs="reset"]').addEventListener('click', () => { __fs = 1; localStorage.setItem('uebung-fontscale', __fs); __apply(); });
+    }
+    this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { const v = this.store[el.dataset.key]; if (v != null) el.value = v; });
+    this.rootEl.querySelectorAll('[data-rate]').forEach((g) => { const v = this.store['rate:' + g.dataset.rate]; g.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === v ? 'true' : 'false'); }); });
+    this.rootEl.querySelectorAll('.mc[data-mc]').forEach((g) => this.syncMc(g));
+    this.rootEl.querySelectorAll('audio[data-aud]').forEach((au) => this.initPlayer(au));
+    this.initClips();
+    this.buildCheckBars();
+    this.recount();
+  }
+  componentDidUpdate(prev) { if (prev && (prev.accent !== this.props.accent || prev.mono !== this.props.mono)) this.applyAccent(); }
+  applyAccent() { if (this.rootEl) this.rootEl.classList.toggle('mono', !!this.props.mono);
+    if (this.rootEl && this.props.accent) { this.rootEl.style.setProperty('--accent', this.props.accent); document.documentElement.style.setProperty('--accent', this.props.accent); } }
+  setRoot = (el) => { this.rootEl = el; };
+    closeMc = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('.mc.open, .chx.open').forEach((g) => { g.classList.remove('open'); const t = g.querySelector('.mct'); if (t) t.setAttribute('aria-expanded', 'false'); }); };
+  openMc = (t) => { const g = t.closest('.mc, .chx'); const was = g.classList.contains('open'); this.closeMc(); if (!was) { g.classList.add('open'); t.setAttribute('aria-expanded', 'true'); } };
+  syncMc(g) {
+    const inp = g.querySelector('input[data-key]');
+    const v = inp ? (inp.value || '') : '';
+    g.querySelectorAll('button[data-val]').forEach((b) => { b.setAttribute('aria-pressed', v !== '' && b.dataset.val === v ? 'true' : 'false'); });
+    const __t = g.querySelector('.mct .mctv');
+    if (__t) { __t.textContent = v === '' ? '선택하기' : v; g.classList.toggle('picked', v !== ''); }
+  }
+  initPlayer(au) {
+    const box = au.closest('.audio'); if (!box) return; au.controls = true;
+    const id = au.dataset.aud; const rKey = 'aspeed:' + id; const speedBtns = [...box.querySelectorAll('[data-aprate]')];
+    if (!this.store) this.store = {};
+    const savedR = parseFloat(this.store[rKey]); const initR = !isNaN(savedR) ? savedR : 1;
+    au.playbackRate = initR; speedBtns.forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.aprate) === initR ? 'true' : 'false'));
+    const dlBtn = box.querySelector('[data-ap="dl"]');
+    if (dlBtn) dlBtn.addEventListener('click', () => { const a = document.createElement('a'); a.href = au.currentSrc || au.src; a.download = au.dataset.filename || 'audio.mp3'; document.body.appendChild(a); a.click(); a.remove(); });
+    speedBtns.forEach((b) => b.addEventListener('click', () => { const r = parseFloat(b.dataset.aprate); au.playbackRate = r; speedBtns.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); this.store[rKey] = r; this.save(); }));
+  }
+  initClips() {
+    if (!this.rootEl) return;
+    const all = [...this.rootEl.querySelectorAll('audio')];
+    all.forEach((a) => a.addEventListener('play', () => { all.forEach((b) => { if (b !== a && !b.paused) b.pause(); }); }));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((au) => {
+      const btn = () => this.rootEl && this.rootEl.querySelector('button[data-play="' + au.dataset.clip + '"]');
+      const off = () => { const b = btn(); if (b) b.classList.remove('on'); };
+      au.addEventListener('ended', off);
+      au.addEventListener('pause', off);
+      au.addEventListener('play', () => { const b = btn(); if (b) b.classList.add('on'); });
+    });
+    this.syncClipRate();
+  }
+  syncClipRate() {
+    if (!this.rootEl) return;
+    const r = parseFloat((this.store || {}).cliprate) || 1;
+    this.rootEl.querySelectorAll('button[data-cliprate]').forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.cliprate) === r ? 'true' : 'false'));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((a) => { a.playbackRate = r; });
+  }
+  setClipRate = (b) => { if (!this.store) this.store = {}; this.store.cliprate = parseFloat(b.dataset.cliprate) || 1; this.save(); this.syncClipRate(); };
+  playClip = (btn) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-clip="' + btn.dataset.play + '"]');
+    if (!au) return;
+    if (!au.paused) { au.pause(); return; }
+    au.playbackRate = parseFloat((this.store || {}).cliprate) || 1;
+    try { au.currentTime = 0; } catch (err) {}
+    const p = au.play();
+    if (p && p.catch) p.catch(() => btn.classList.remove('on'));
+  };
+  playSeg = (el) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-aud="story"]');
+    if (!au || !el.dataset.seg) return;
+    const ab = el.dataset.seg.split(',').map(parseFloat);
+    if (this.__segClear) this.__segClear();
+    const stop = () => { if (au.currentTime >= ab[1] + 0.15) au.pause(); };
+    const clear = () => { au.removeEventListener('timeupdate', stop); au.removeEventListener('pause', clear); el.classList.remove('on'); if (this.__segClear === clear) this.__segClear = null; };
+    this.__segClear = clear;
+    el.classList.add('on');
+    try { au.currentTime = Math.max(0, ab[0] - 0.1); } catch (err) {}
+    au.addEventListener('timeupdate', stop);
+    au.addEventListener('pause', clear);
+    const p = au.play();
+    if (p && p.catch) p.catch(() => clear());
+  };
+  save() { try { localStorage.setItem(this.KEY, JSON.stringify(this.store || {})); } catch (e) {} }
+  onInput = (e) => { const el = e.target; if (!el || !el.dataset || el.dataset.key == null) return; if (!this.store) this.store = {}; this.store[el.dataset.key] = el.value; this.save(); this.recount(); };
+  onClick = (e) => {
+    const __pl = e.target.closest && e.target.closest('button[data-play]'); if (__pl) { this.closeMc && this.closeMc(); this.playClip(__pl); return; }
+    const __cr = e.target.closest && e.target.closest('button[data-cliprate]'); if (__cr) { this.closeMc && this.closeMc(); this.setClipRate(__cr); return; }
+    const __sg = e.target.closest && e.target.closest('[data-seg]'); if (__sg) { this.closeMc && this.closeMc(); this.playSeg(__sg); return; }
+    const __rv = e.target.closest && e.target.closest('.chkbar [data-ansr]'); if (__rv) setTimeout(() => { const b = __rv.closest('.chkbar'); const sc = b && b.previousElementSibling; if (!sc) return; const on = /숨기기/.test(__rv.textContent); sc.querySelectorAll('.reveal').forEach((r) => r.classList.toggle('show', on)); }, 0);
+    const __cb = e.target.closest && e.target.closest('button[data-chk]'); if (__cb) { this.runCheck(__cb); return; }
+    const __ab = e.target.closest && e.target.closest('button[data-ansr]'); if (__ab) { this.toggleAnswers(__ab); return; }
+    const __mt = e.target.closest && e.target.closest('.mc>.mct');
+    if (__mt) { this.openMc(__mt); return; }
+    if (!(e.target.closest && e.target.closest('.mc'))) this.closeMc();
+    const mcBtn = e.target.closest && e.target.closest('.mc button[data-val]');
+    if (mcBtn) {
+      const g = mcBtn.closest('.mc');
+      const inp = g.querySelector('input[data-key]');
+      if (!this.store) this.store = {};
+      const next = (inp.value || '') === mcBtn.dataset.val ? '' : mcBtn.dataset.val;
+      inp.value = next; this.store[inp.dataset.key] = next;
+      this.save(); this.syncMc(g);
+      this.closeMc(); this.recount();
+      return;
+    }
+    const de = e.target.closest && e.target.closest('td.de.tog'); if (de) { de.classList.toggle('show'); return; }
+    const btn = e.target.closest && e.target.closest('button[data-val]'); if (!btn) return;
+    const group = btn.closest('[data-rate]'); if (!group) return;
+    const key = 'rate:' + group.dataset.rate; if (!this.store) this.store = {};
+    const next = this.store[key] === btn.dataset.val ? '' : btn.dataset.val; this.store[key] = next; this.save();
+    group.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === next ? 'true' : 'false'); });
+  };
+  recount = () => { if (!this.rootEl) return; const inputs = [...this.rootEl.querySelectorAll('input[data-key]:not([data-noprogress])')]; const total = inputs.length; const filled = inputs.filter((i) => (i.value || '').trim() !== '').length; this.setState({ filled, total }); };
+  print = () => { window.print(); };
+  secOf = (el) => { const x = el && el.closest && el.closest('section.step'); return x ? (x.id || null) : null; };
+  touch = (sec) => { if (!this.store) this.store = {}; const now = Date.now(); let L = this.store.__s; if (!Array.isArray(L)) { L = []; this.store.__s = L; } let cur = L[L.length - 1]; if (!cur || (now - cur.e) > 45 * 60 * 1000) { cur = { s: now, e: now, x: [] }; L.push(cur); } cur.e = now; if (sec && cur.x.indexOf(sec) < 0) cur.x.push(sec); };
+
+  chkNorm = (v) => (v == null ? '' : String(v)).normalize('NFC').replace(/\s+/g, ' ').trim().replace(/[.!?]+\s*$/, '');
+  chkFold = (s) => s.toLowerCase().replace(/\u00e4/g, 'ae').replace(/\u00f6/g, 'oe').replace(/\u00fc/g, 'ue').replace(/\u00df/g, 'ss');
+  chkMatch = (val, ans) => { const v = this.chkNorm(val); if (!v) return 'no'; const alts = String(ans).split('|').map((a) => this.chkNorm(a)); if (alts.indexOf(v) >= 0) return 'ok'; const fv = this.chkFold(v); if (alts.some((a) => this.chkFold(a) === fv)) return 'near'; return 'no'; };
+  cvalOf = (el) => { if (el.classList && el.classList.contains('mc')) { const i = el.querySelector('input[data-key]'); return i ? (i.value || '').trim() : ''; } return (el.value || '').trim(); };
+  buildCheckBars = () => {
+    if (!this.rootEl) return;
+    this.rootEl.querySelectorAll('.chkbar').forEach((b) => b.remove());
+    const seen = [];
+    const has = (el) => !!(el && el.querySelector && (el.querySelector('input[data-answer]') || el.querySelector('.mc[data-answer]')));
+    this.rootEl.querySelectorAll('input[data-answer], .mc[data-answer]').forEach((inp) => {
+      let c = inp.closest('ol, table');
+      if (!c) c = inp.closest('p');
+      if (!c) c = inp.parentElement;
+      if (!c || seen.indexOf(c) >= 0) return;
+      let last = c, n = 1;
+      seen.push(c);
+      while (last.nextElementSibling && last.nextElementSibling.tagName === c.tagName && has(last.nextElementSibling)) {
+        last = last.nextElementSibling; seen.push(last); n++;
+      }
+      const bar = document.createElement('div');
+      bar.className = 'chkbar';
+      bar.dataset.n = String(n);
+      bar.innerHTML = '<button type="button" data-chk>정답 확인</button><button type="button" data-ansr disabled>정답 보기</button><span class="chkres"></span>';
+      last.insertAdjacentElement('afterend', bar);
+    });
+  };
+  scopeOf = (bar) => { const n = parseInt(bar.dataset.n || '1', 10); const out = []; let el = bar.previousElementSibling; for (let i = 0; i < n && el; i++) { out.unshift(el); el = el.previousElementSibling; } return out; };
+  qsAll = (els, sel) => { const r = []; els.forEach((e) => { if (e.matches && e.matches(sel)) r.push(e); if (e.querySelectorAll) e.querySelectorAll(sel).forEach((x) => r.push(x)); }); return r; };
+  snapshot = (els) => { if (!els || !els.length) return; if (!this.store) this.store = {}; const fa = this.store.__fa || (this.store.__fa = {}); this.qsAll(els, '[data-key]').forEach((el) => { const k = el.dataset.key; if (!k || k === 'meta-name') return; if (Object.prototype.hasOwnProperty.call(fa, k)) return; fa[k] = this.cvalOf(el); }); this.save(); };
+  runCheck = (btn) => {
+    const bar = btn.closest('.chkbar'); if (!bar) return;
+    const els = this.scopeOf(bar); if (!els.length) return;
+    this.snapshot(els);
+    if (!this.store) this.store = {};
+    if (!this.store.__fa) this.store.__fa = {};
+    let ok = 0, near = 0, tot = 0;
+    this.qsAll(els, 'input[data-answer]').forEach((i) => {
+      tot++;
+      if (this.store.__fa[i.dataset.key] == null) this.store.__fa[i.dataset.key] = (i.value || '').trim();
+      i.classList.remove('ck-ok', 'ck-near', 'ck-no');
+      const st = this.chkMatch(i.value, i.dataset.answer);
+      i.classList.add('ck-' + st);
+      if (st === 'ok') ok++; else if (st === 'near') near++;
+    });
+    this.qsAll(els, '.mc[data-answer]').forEach((g) => {
+      tot++;
+      const fv = this.cvalOf(g);
+      if (this.store.__fa[g.dataset.key] == null) this.store.__fa[g.dataset.key] = fv;
+      g.classList.remove('ck-ok', 'ck-no');
+      const st = (fv && fv === g.dataset.answer) ? 'ok' : 'no';
+      g.classList.add('ck-' + st);
+      if (st === 'ok') ok++;
+    });
+    const ab = bar.querySelector('[data-ansr]'); if (ab) ab.disabled = false;
+    const res = bar.querySelector('.chkres'); if (res) res.textContent = '맞음 ' + ok + '/' + tot + (near ? ' · 표기 확인 ' + near : '');
+    this.touch(this.secOf(btn)); this.save();
+  };
+  toggleAnswers = (btn) => {
+    const bar = btn.closest('.chkbar'); if (!bar) return;
+    const els = this.scopeOf(bar); if (!els.length) return;
+    this.snapshot(els);
+    const on = btn.classList.toggle('on');
+    btn.textContent = on ? '정답 숨기기' : '정답 보기';
+    const put = (anchor, text) => {
+      let sp = anchor.nextElementSibling;
+      if (!(sp && sp.classList && sp.classList.contains('ckans'))) { sp = document.createElement('span'); sp.className = 'ckans'; anchor.insertAdjacentElement('afterend', sp); }
+      sp.textContent = on ? text : '';
+      sp.style.display = on ? '' : 'none';
+    };
+    this.qsAll(els, 'input[data-answer]').forEach((i) => put(i, i.dataset.answer.split('|')[0]));
+    this.qsAll(els, '.mc[data-answer]').forEach((g) => put(g, '정답: ' + g.dataset.answer));
+  };
+  clearCheckUI = () => {
+    if (!this.rootEl) return;
+    this.rootEl.querySelectorAll('input.ck-ok, input.ck-near, input.ck-no').forEach((i) => i.classList.remove('ck-ok', 'ck-near', 'ck-no'));
+    this.rootEl.querySelectorAll('.mc.ck-ok, .mc.ck-no').forEach((g) => g.classList.remove('ck-ok', 'ck-no'));
+    this.rootEl.querySelectorAll('.ckans').forEach((s) => s.remove());
+    this.rootEl.querySelectorAll('.chkbar .chkres').forEach((s) => { s.textContent = ''; });
+    this.rootEl.querySelectorAll('.chkbar [data-ansr]').forEach((b) => { b.disabled = true; b.classList.remove('on'); b.textContent = '정답 보기'; });
+  };
+  faText(key, v) {
+    const fa = (this.store && this.store.__fa) ? this.store.__fa[key] : null;
+    if (fa == null) return v || '____';
+    let t = fa || '무응답';
+    if (this.chkNorm(fa) !== this.chkNorm(v)) t += ' (정답 확인 후 수정: ' + (v || '공란') + ')';
+    return t;
+  }
+  reset = () => { if (!window.confirm('입력한 모든 답안을 지울까요?')) return; this.store = {}; this.save(); if (this.rootEl) { this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { el.value = ''; }); this.rootEl.querySelectorAll('[data-rate] button, .mc button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      this.rootEl.querySelectorAll('.mc[data-mc]').forEach((g) => this.syncMc(g));
+      this.closeMc(); this.clearCheckUI(); } this.syncClipRate(); if (this.rootEl) this.rootEl.querySelectorAll('.reveal.show').forEach((r) => r.classList.remove('show')); this.recount(); };
+  studentName() { const el = this.rootEl && this.rootEl.querySelector('input[data-key="meta-name"]'); return el ? (el.value || '').trim() : ''; }
+  buildText() {
+    const r = this.rootEl; if (!r) return '';
+    const inputs = [...r.querySelectorAll('input[data-key]:not([data-noprogress])')]; const filled = inputs.filter((i) => (i.value || '').trim() !== '').length;
+    const out = []; out.push('Sophia Deutsch Akademie'); out.push('Übung · Lektion 05 — Possessivartikel · 보강판');
+    out.push('이름: ' + (this.studentName() || '(미입력)')); out.push('제출 시각: ' + new Date().toLocaleString('ko-KR')); out.push('진행: ' + filled + ' / ' + inputs.length);
+    const serialize = (node) => { const parts = []; const walk = (n) => { if (n.nodeType === 3) { parts.push(n.nodeValue); return; } if (n.nodeType !== 1) return; if (n.classList && n.classList.contains('mc')) { const i2 = n.querySelector('input[data-key]'); const v = (i2 && i2.value) ? i2.value.trim() : ''; parts.push(' [' + this.faText(n.dataset.key || (i2 && i2.dataset.key), v) + '] '); return; } if (n.tagName === 'INPUT') { const v = (n.value || '').trim(); parts.push(' [' + this.faText(n.dataset.key, v) + '] '); return; } if (n.hasAttribute && n.hasAttribute('data-noser')) return; if (n.hasAttribute && n.hasAttribute('data-sp')) parts.push(' '); if (n.classList && n.classList.contains('note')) return; if (n.classList && n.classList.contains('rate')) { const sel = n.querySelector('button[aria-pressed="true"]'); parts.push(' (' + (sel ? sel.dataset.val : '-') + ') '); return; } n.childNodes.forEach(walk); }; node.childNodes.forEach(walk); return parts.join('').replace(/\s+/g, ' ').trim(); };
+    r.querySelectorAll('section.step').forEach((sec) => { const eb = sec.querySelector('.eyebrow'); const tt = sec.querySelector('.step-title'); out.push(''); out.push('==== ' + (eb ? eb.textContent.trim() : '') + ' — ' + (tt ? tt.textContent.trim() : '') + ' ====');
+      const items = sec.querySelectorAll('.sub2, p.mcq, ol.ex > li, table.sp tbody tr'); let n = 0;
+      items.forEach((it) => { if (it.matches('.sub2')) { out.push(''); out.push('— ' + it.textContent.trim()); n = 0; return; } if (it.matches('table.sp tbody tr')) { const ko = it.querySelector('.ko'); const cnt = it.querySelector('input[data-key]'); out.push('  • ' + (ko ? ko.textContent.trim() : '') + '  — 연습 ' + ((cnt && cnt.value) ? cnt.value : '0') + '회'); return; } if (!it.querySelector('input[data-key]')) return; n++; out.push('  ' + n + '. ' + serialize(it)); });
+      sec.querySelectorAll('table.g tbody tr').forEach((tr) => { if (tr.querySelector('input[data-key]')) out.push('  · ' + serialize(tr)); });
+    });
+    const assess = r.querySelector('.assess'); if (assess) { out.push(''); out.push('==== 자기 평가 ===='); assess.querySelectorAll('.check').forEach((ch) => { const stmt = ch.querySelector('p'); const sel = ch.querySelector('button[aria-pressed="true"]'); out.push('  [' + (sel ? sel.dataset.val : ' ') + '] ' + (stmt ? stmt.textContent.trim() : '')); }); }
+    return out.join('\n');
+  }
+  submitTxt = () => { const text = this.buildText(); const name = this.studentName() || '학생'; const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Lektion05_' + name + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); };
+  SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxgAblMFNpot1-dRxTbyIYyY1CNeiDGeVbky7QGziTLjIXKX_S9d1cAttBVfYwrk2pfkA/exec';
+  SUBMIT_CODE = 'SODA-GRAMMATIK';
+
+  submitNet = async () => {
+    if (this._sending) return;
+    const name = this.studentName();
+    if (!name) { window.alert('이름을 먼저 입력해 주세요.'); return; }
+    const url = this.SUBMIT_URL;
+    if (!url || url.indexOf('http') !== 0) { window.alert('제출 주소가 설정되지 않았습니다. 선생님께 알려 주세요.'); return; }
+    if (this._sent && !window.confirm('이미 제출했습니다. 다시 제출할까요?')) return;
+    const text = this.buildText();
+    const mk = (this.KEY.match(/lektion-(\d+)/) || [])[1] || '';
+    const m2 = text.match(/진행: (\d+) \/ (\d+)/);
+    this._sending = true;
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ code: this.SUBMIT_CODE, name: name, lesson: parseInt(mk, 10) || mk, title: text.split('\n')[1] || '', filled: m2 ? m2[1] : '', total: m2 ? m2[2] : '', report: text }) });
+      this._sent = true;
+      window.alert('제출되었습니다. 선생님께 답안이 전달되었어요.');
+    } catch (e) {
+      window.alert('제출에 실패했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요. 계속 안 되면 선생님께 알려 주세요.');
+    }
+    this._sending = false;
+  };
+
+  submitIos = async () => { const text = this.buildText(); try { await navigator.clipboard.writeText(text); } catch (e) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove(); } window.alert('모든 내용을 복사했습니다. 텍스트 편집 프로그램에 붙여넣기하여 그 파일을 제출해 주세요.'); };
+  renderVals() { const total = this.state.total; const pct = total ? Math.round((this.state.filled / total) * 100) : 0; return { setRoot: this.setRoot, onInput: this.onInput, onClick: this.onClick, submitTxt: this.submitTxt, submitNet: this.submitNet,
+      submitIos: this.submitIos, print: this.print, reset: this.reset, filled: this.state.filled, total: total, barStyle: { width: pct + '%' } }; }
+}
+</script>
+
+
+</body></html>

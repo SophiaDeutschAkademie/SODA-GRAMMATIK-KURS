@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<script>window.__resources={"https://unpkg.com/react@18.3.1/umd/react.production.min.js": "../assets/vendor/react.production.min.js", "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "../assets/vendor/react-dom.production.min.js"};</script>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/sd-nav.css">
+<link rel="icon" type="image/png" href="../assets/logo.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hausaufgabe Lektion 16 접속법</title>
+<script src="../assets/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<style>
+  :root{
+    --bg:#fbfbfa; --paper:#ffffff; --ink:#191b1f; --muted:#6b7280;
+    --line:#e6e7ec; --line2:#d3d6de; --accent:#384568; --err:#c4392e;
+    --sans:'Inter','Noto Sans KR','Helvetica Neue',Arial,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --c1:#3559b3; --t1:#eef1fa; --l1:#ccd6ef;
+    --c2:#6a45ab; --t2:#f3eefb; --l2:#dbcef0;
+    --c3:#0e7a5f; --t3:#e9f5f1; --l3:#c3e2d8;
+    --c4:#a05c12; --t4:#fbf2e6; --l4:#eddcc0;
+    --c5:#b03a6b; --t5:#fbeef4; --l5:#eecfdf;
+    --c6:#1f7fa3; --t6:#eaf4f9; --l6:#c9e2ee;
+    --c7:#4b4f58; --t7:#f2f3f5; --l7:#dcdee3;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 32px;}
+  p{margin:0 0 12px;text-wrap:pretty;}
+  strong{font-weight:700;color:var(--c,var(--accent));}
+  em{color:var(--muted);font-style:italic;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{color:var(--ink);text-decoration:underline;}
+
+  .toolbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid var(--line);}
+  .toolbar .row{max-width:900px;margin:0 auto;padding:10px 32px;display:flex;align-items:center;gap:10px;}
+  .tb-title{font-size:13px;font-weight:700;color:var(--muted);}
+  .tb-title span{color:var(--accent);}
+  .tb-spacer{flex:1;}
+  .prog{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+  .prog .bar{width:104px;height:7px;background:var(--line);border-radius:999px;overflow:hidden;}
+  .prog .bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s ease;}
+  .prog b{color:var(--ink);font-weight:700;font-size:13px;}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s;}
+  .btn:hover{border-color:var(--ink);background:#f4f5f7;}
+  .btn.go{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .btn.go:hover{background:#28324e;border-color:#28324e;}
+  .btn.ghost{background:#eef0f4;border-color:transparent;color:var(--accent);}
+  .btn.ghost:hover{background:#e3e7ee;border-color:transparent;}
+
+  .head{padding:44px 0 0;}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+  .brand img{height:44px;width:auto;display:block;}
+  .brand .bt b{display:block;font-size:14px;font-weight:700;color:var(--ink);line-height:1.2;}
+  .head h1{font-size:44px;line-height:1.08;margin:0 0 10px;font-weight:700;letter-spacing:-.025em;}
+  .head .lead{font-size:19px;color:var(--muted);margin:0;font-weight:500;}
+  .meta{display:flex;gap:24px;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line2);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  .meta .f{display:flex;align-items:center;gap:10px;}
+  .meta .f.grow{flex:1;}
+  .meta .f i{font-style:normal;font-weight:600;}
+  .meta input.name{flex:1;font-family:var(--sans);font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);border:1.5px solid var(--line2);border-radius:999px;background:#fff;padding:7px 15px;min-width:150px;}
+  .meta input.name:focus{outline:none;border-color:var(--accent);}
+
+  .toc{margin:36px 0 4px;display:grid;gap:4px;}
+  .toc .toc-row{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:11px 16px;border-radius:12px;background:var(--ct,#f3f4f7);align-items:center;}
+  .toc .tn{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--c,var(--accent));}
+  .toc .tn::before{content:'';width:9px;height:9px;border-radius:999px;background:var(--c,var(--accent));flex:none;}
+  .toc .td{font-size:14.5px;color:var(--muted);}
+  .toc .toc-row.c1{--c:var(--c1);--ct:var(--t1);}
+  .toc .toc-row.c2{--c:var(--c2);--ct:var(--t2);}
+  .toc .toc-row.c3{--c:var(--c3);--ct:var(--t3);}
+  .toc .toc-row.c4{--c:var(--c4);--ct:var(--t4);}
+  .toc .toc-row.c5{--c:var(--c5);--ct:var(--t5);}
+  .toc .toc-row.c6{--c:var(--c6);--ct:var(--t6);}
+  .toc .toc-row.c7{--c:var(--c7);--ct:var(--t7);}
+
+  .step{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;margin-top:64px;}
+  .step.s1{--c:var(--c1);--ct:var(--t1);--cl:var(--l1);}
+  .step.s2{--c:var(--c2);--ct:var(--t2);--cl:var(--l2);}
+  .step.s3{--c:var(--c3);--ct:var(--t3);--cl:var(--l3);}
+  .step.s4{--c:var(--c4);--ct:var(--t4);--cl:var(--l4);}
+  .step.s5{--c:var(--c5);--ct:var(--t5);--cl:var(--l5);}
+  .step.s6{--c:var(--c6);--ct:var(--t6);--cl:var(--l6);}
+  .step.s7{--c:var(--c7);--ct:var(--t7);--cl:var(--l7);}
+  .sheet.mono .step,.sheet.mono .toc .toc-row{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;}
+  .step-head{display:flex;gap:18px;align-items:center;background:var(--ct);border-radius:22px;padding:22px 24px;margin-bottom:26px;}
+  .step-n{flex:none;width:58px;height:58px;border-radius:18px;background:var(--c);color:#fff;font-size:23px;font-weight:700;display:grid;place-items:center;letter-spacing:-.02em;}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c);margin:0 0 3px;}
+  .step-title{font-size:29px;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.02em;}
+  .lede{color:#4b5058;font-size:16px;margin:0 0 20px;}
+  .sub{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin:52px 0 14px;padding-bottom:12px;border-bottom:2px solid var(--cl);}
+  .sub .de{flex:none;font-size:13px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:5px 12px;}
+  .sub em{font-size:14px;font-weight:500;color:var(--muted);font-style:normal;}
+  .sub2{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--c);margin:42px 0 8px;}
+  .sub2::before{content:'';width:14px;height:3px;border-radius:2px;background:var(--c);flex:none;}
+
+  table.g{width:100%;border-collapse:collapse;margin:16px 0 10px;font-size:15.5px;}
+  table.g caption{text-align:left;font-size:13px;font-weight:700;color:var(--c);padding-bottom:8px;}
+  table.g th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 12px;border-bottom:2px solid var(--cl);white-space:nowrap;}
+  table.g td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.g tr:hover td{background:var(--ct);}
+  table.g td.k{font-weight:600;color:var(--ink);white-space:nowrap;}
+  table.g.center td,table.g.center th{text-align:center;}
+  table.g.center td:first-child,table.g.center th:first-child{text-align:left;}
+  .ghost td{color:#9aa0aa;background:#fafafb;}
+
+  .tip{font-size:14.5px;color:#4b5058;margin:16px 0;padding:14px 18px;background:var(--ct);border-radius:14px;line-height:1.6;}
+  .tip b.t{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--c);border-radius:999px;padding:3px 10px;margin-right:10px;}
+  .bsp{margin:18px 0;padding:18px 20px;background:var(--paper);border:1.5px solid var(--cl);border-radius:18px;}
+  .bsp .lab{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c);background:var(--ct);border-radius:999px;padding:4px 12px;margin-bottom:10px;}
+  .bsp .de{font-size:16.5px;}
+  .bsp .ko{color:var(--muted);font-size:14.5px;}
+
+  .audio{position:sticky;top:54px;z-index:24;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 12px;padding:14px 16px;background:var(--paper);border:1.5px solid var(--cl);border-radius:20px;box-shadow:0 10px 26px rgba(24,26,32,.10);}
+  .audio-tag{font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;flex:none;}
+  .audio audio{flex:1 1 260px;min-width:200px;height:40px;}
+  .ap-extras{flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ap-speed{flex:none;display:flex;align-items:center;gap:4px;}
+  .ap-speed .lbl{font-size:11px;font-weight:700;color:var(--muted);margin-right:4px;}
+  .ap-speed button{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--muted);background:#f2f3f6;border:none;border-radius:999px;padding:7px 11px;cursor:pointer;line-height:1;}
+  .ap-speed button:hover{background:#e6e8ed;}
+  .ap-speed button[aria-pressed="true"]{background:var(--c);color:#fff;}
+  .ap-dl{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;flex:none;text-decoration:none;}
+  .ap-dl:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  ol.ex{list-style:none;counter-reset:ex;padding:0;margin:18px 0;}
+  ol.ex>li{counter-increment:ex;display:grid;grid-template-columns:30px 1fr;gap:4px 14px;padding:16px 0 17px;border-bottom:1px solid var(--line);}
+  ol.ex>li::before{content:counter(ex);font-size:12px;font-weight:700;color:var(--c);background:var(--ct);border-radius:999px;width:26px;height:26px;display:grid;place-items:center;margin-top:3px;}
+  ol.ex .de{font-size:16.5px;margin:0;}
+  ol.ex .sol{margin:10px 0 0;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14.5px;}
+  ol.ex .sol .bl.lg{flex:1 1 auto;display:inline-block;width:auto;min-width:180px;margin-top:0;}
+  ol.ex .sol .ar{color:var(--c);font-weight:700;font-size:15px;}
+  ol.ex strong[style*="underline"]{text-decoration-color:var(--c) !important;text-decoration-thickness:2px;text-underline-offset:3px;}
+  ol.ex p.de[style*="--err"]{padding:10px 14px !important;background:#fdf1f0 !important;border-left:4px solid var(--err) !important;border-radius:12px;}
+  .note{grid-column:2;font-family:var(--mono);font-size:12px;color:#8b909a;margin-top:6px;}
+  .vb{display:inline-block;font-weight:600;color:#3d434c;background:#e8eaef;padding:3px 11px;border-radius:999px;font-size:15px;white-space:nowrap;}
+  ol.ex .sol .giv{font-weight:600;color:var(--ink);}
+  ol.gram>li{padding:12px 0;}
+  ol.gram>li .de{line-height:2.2;font-size:16px;}
+  ol.gram input.bl{min-width:50px;}
+
+  input.bl{font-family:var(--sans);font-size:15.5px;font-weight:600;color:var(--c);background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px 9px;min-width:74px;text-align:center;transition:background .15s,border-color .15s;}
+  input.bl:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.bl::placeholder{color:#a5aab4;font-weight:400;}
+  input.bl.ko{text-align:left;min-width:230px;color:var(--ink);font-weight:500;}
+  input.bl.lg{display:block;width:100%;text-align:left;min-width:0;margin-top:8px;color:var(--ink);font-weight:500;}
+  input.bl.sm{width:58px;min-width:0;}
+  input.bl.rsn{text-align:left;min-width:160px;width:210px;color:var(--ink);font-weight:500;font-size:14px;}
+  input.bl.rsn::placeholder{font-style:italic;}
+
+  table.sp{width:100%;border-collapse:collapse;margin:14px 0;font-size:16px;}
+  table.sp th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 14px;border-bottom:2px solid var(--cl);}
+  table.sp th.c{text-align:center;}
+  table.sp td{padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.sp td.ko{color:#4b5058;width:40%;}
+  table.sp td.de{font-weight:600;width:42%;}
+  table.sp td.de.tog{cursor:pointer;color:transparent;background:var(--ct);border-radius:12px;user-select:none;position:relative;}
+  table.sp td.de.tog::after{content:'눌러서 확인';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--c);opacity:.6;}
+  table.sp td.de.tog.show{color:inherit;background:transparent;}
+  table.sp td.de.tog.show::after{display:none;}
+  table.sp td.cnt{width:18%;text-align:center;white-space:nowrap;}
+  input.cnt{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--c);width:56px;text-align:center;background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px;}
+  input.cnt:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.cnt::-webkit-inner-spin-button{opacity:.4;}
+  .cnt-u{font-size:12px;color:var(--muted);margin-left:6px;}
+
+  .assess{background:#eceef0;border:1.5px solid #d3d8db;border-radius:24px;margin:48px 0 0;padding:28px 28px 32px;}
+  .assess .ahead{font-size:15px;font-weight:700;color:#2f3a3a;margin:0 0 6px;display:flex;align-items:center;gap:10px;}
+  .assess .ahead .tagpill{flex:none;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.08em;background:#2f3a3a;color:#fff;border-radius:999px;padding:4px 12px;}
+  .assess .ainst{color:#4a5252;font-size:14.5px;margin:0 0 8px;}
+  .assess .sub2{color:#33403f;}
+  .assess .sub2::before{background:#33403f;}
+  .check{display:flex;align-items:center;gap:14px;padding:11px 2px;border-bottom:1px solid #dadfe0;}
+  .check p{margin:0;font-size:15px;flex:1;color:#23292a;}
+  .rate{display:inline-flex;gap:6px;flex:none;}
+  .rate button{font-family:var(--sans);width:36px;height:36px;border:1.5px solid #c3c9ca;background:#fff;color:#5a6363;font-weight:700;font-size:14px;cursor:pointer;border-radius:999px;line-height:1;transition:background .15s,border-color .15s;}
+  .rate button:hover{border-color:#2f3a3a;}
+  .rate button[aria-pressed="true"]{background:#2f3a3a;color:#fff;border-color:#2f3a3a;}
+  .scorebox{margin:22px 0 0;padding:18px 20px;background:#fff;border-radius:16px;font-size:14.5px;color:#414a4a;line-height:1.75;}
+  .scorebox b{color:#23292a;font-weight:700;}
+
+  .footer{margin:52px 0 80px;padding-top:28px;border-top:1px solid var(--line2);text-align:center;}
+  .footer h3{font-size:26px;margin:0 0 10px;font-weight:700;letter-spacing:-.02em;}
+  .footer p{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto 20px;}
+  .footer .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+  .fontctl{position:fixed;right:18px;bottom:18px;z-index:40;display:flex;align-items:center;gap:3px;background:rgba(25,27,31,.55);backdrop-filter:saturate(140%) blur(7px);-webkit-backdrop-filter:saturate(140%) blur(7px);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px;box-shadow:0 6px 20px rgba(0,0,0,.22);}
+  .fontctl button{font-family:var(--sans);color:#fff;background:transparent;border:none;cursor:pointer;font-weight:700;border-radius:999px;line-height:1;}
+  .fontctl button[data-fs="dec"],.fontctl button[data-fs="inc"]{width:34px;height:34px;font-size:14px;}
+  .fontctl button[data-fs="dec"]:hover,.fontctl button[data-fs="inc"]:hover{background:rgba(255,255,255,.2);}
+  .fontctl .fs-val{min-width:48px;height:34px;font-size:11px;opacity:.9;}
+  .fontctl .fs-val:hover{background:rgba(255,255,255,.15);}
+
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{size:A4;margin:16mm 14mm 20mm 14mm;}
+    body{background:#fff !important;font-size:10.5pt;line-height:1.5;}
+    .toolbar,.fontctl,.audio,.footer .acts{display:none !important;}
+    .wrap{max-width:none;padding:0;}
+    .head{padding-top:0;}
+    .head h1{font-size:22pt;}
+    .head .lead{font-size:11pt;}
+    .brand{margin-bottom:18px;}
+    .brand img{height:30px;}
+    .meta{margin-top:10px;padding-top:8px;}
+    .meta input.name{min-width:180px;font-size:11pt;}
+    .toc{margin:12px 0 4px;gap:2px;}
+    .toc .toc-row{padding:5px 10px;}
+    .toc .tn{font-size:10pt;}
+    .toc .td{font-size:9.5pt;}
+    .step{margin-top:18px;}
+    section.step{break-before:page;}
+    section.step:first-of-type{break-before:auto;}
+    .step-head{padding:12px 14px;margin-bottom:14px;border-radius:12px;}
+    .step-n{width:40px;height:40px;border-radius:12px;font-size:15pt;}
+    .eyebrow{font-size:8pt;}
+    .step-title{font-size:16pt;}
+    .lede{font-size:10pt;margin-bottom:10px;}
+    .sub{margin-top:22px;padding-bottom:6px;font-size:12pt;}
+    .sub .de{font-size:9pt;padding:3px 9px;}
+    .sub2{margin-top:16px;font-size:10.5pt;}
+    table.g,table.sp,ol.ex>li,.tip,.bsp,.check,.scorebox,.step-head,.sub{break-inside:avoid;}
+    input.bl,input.cnt,input.name{background:transparent !important;border:none !important;border-bottom:1.2px solid #333 !important;border-radius:0 !important;color:#000 !important;font-size:10.5pt;}
+    input::placeholder{color:transparent !important;}
+    input.bl.sm{width:64px;min-width:0;}
+    input.bl.ko{min-width:70%;max-width:100%;}
+    input.bl.lg{width:100%;min-width:0;}
+    input.bl.rsn{min-width:45%;width:auto;}
+    input.cnt{width:44px;}
+    ol.ex>li{padding:8px 0;}
+    ol.ex .de{font-size:10.5pt;}
+    ol.ex .sol{font-size:10pt;}
+    ol.ex p.de[style*="--err"]{background:#f5f5f5 !important;border-left-color:#999 !important;}
+    ol.gram>li .de{line-height:1.95;font-size:10.5pt;}
+    .note{font-size:8.5pt;}
+    .tip{padding:8px 12px;font-size:9.5pt;}
+    .bsp{padding:10px 14px;}
+    .bsp .de{font-size:10.5pt;}
+    .bsp .ko{font-size:9.5pt;}
+    table.g{font-size:10pt;}
+    table.g th{font-size:9pt;padding:5px 8px;}
+    table.g td{padding:6px 8px;}
+    table.g tr:hover td{background:transparent;}
+    table.sp{font-size:10.5pt;}
+    table.sp th{font-size:9pt;padding:5px 10px;}
+    table.sp td{padding:7px 10px;}
+    table.sp td.de.tog{color:#000 !important;background:transparent !important;}
+    table.sp td.de.tog::after{display:none !important;}
+    .vb{background:#eee;font-size:10pt;padding:1px 8px;}
+    .assess{break-before:page;background:#f4f5f6 !important;margin:16px 0 0;padding:18px 18px 22px;border-radius:14px;}
+    .assess .ahead{font-size:11pt;}
+    .assess .ainst{font-size:9.5pt;}
+    .check{padding:6px 0;}
+    .check p{font-size:10pt;}
+    .rate button{width:26px;height:26px;font-size:9pt;background:#fff;}
+    .scorebox{font-size:9.5pt;padding:12px 14px;}
+    .footer{margin:20px 0 0;padding-top:14px;}
+    .footer h3{font-size:14pt;}
+    .footer p{font-size:9.5pt;}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 18px;}
+    .head h1{font-size:32px;}
+    .head .lead{font-size:17px;}
+    .step-head{padding:16px;gap:14px;}
+    .step-n{width:48px;height:48px;font-size:19px;border-radius:14px;}
+    .step-title{font-size:24px;}
+    .sub{font-size:17px;}
+    .toolbar .row{flex-wrap:wrap;padding:8px 18px;}
+    .toc .toc-row{grid-template-columns:1fr;gap:4px;}
+    table.sp td{display:block;width:100%;}
+    table.sp td.ko{border-bottom:none;padding-bottom:0;}
+    table.sp td.cnt{text-align:left;}
+    .assess{padding:22px 18px 26px;border-radius:18px;}
+  }
+  .toc .toc-day{display:flex;align-items:baseline;gap:10px;margin:20px 0 6px;padding:0 4px;}
+  .toc .toc-day:first-child{margin-top:0;}
+  .toc .toc-day b{font-size:14.5px;font-weight:700;color:var(--ink);}
+  .toc .toc-day em{font-size:13px;color:var(--muted);font-style:normal;}
+  .toc a.toc-row{grid-template-columns:120px 1fr auto;text-decoration:none;color:inherit;transition:box-shadow .14s;}
+  .toc a.toc-row:hover{box-shadow:0 4px 14px rgba(24,26,32,.10);text-decoration:none;}
+  .toc a.toc-row .go{color:var(--c,var(--accent));font-weight:700;font-size:15px;opacity:.5;}
+  .toc a.toc-row:hover .go{opacity:1;}
+  .planbox{margin:22px 0 0;padding:16px 20px;background:#fff;border:1.5px dashed var(--line2);border-radius:16px;font-size:14.5px;color:#4b5058;line-height:1.6;}
+  .planbox b{color:var(--ink);font-weight:700;}
+  .daybar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:76px 0 0;padding:14px 22px;background:var(--ink);color:#fff;border-radius:999px;}
+  .daybar b{font-size:15px;font-weight:700;}
+  .daybar span{font-size:13.5px;color:rgba(255,255,255,.72);}
+  .daybar + section.step{margin-top:22px;}
+  section.step{scroll-margin-top:78px;}
+  .mc{display:inline-flex;flex-wrap:wrap;gap:5px;vertical-align:middle;}
+  .mc button{font-family:var(--sans);font-size:14px;font-weight:600;color:#4b5058;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.35;white-space:nowrap;transition:background .14s,color .14s,border-color .14s;}
+  .mc button:hover{background:#e4e7ec;}
+  .mc button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;}
+  .mcq{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px;font-size:16px;}
+  ol.gram>li .de .mc{margin:0 2px;}
+  ol.ex .sol .lbl{font-weight:700;color:var(--ink);}
+  @media print{
+    .toc a.toc-row .go{display:none;}
+    .toc .toc-day{margin:8px 0 3px;}
+    .toc .toc-day b{font-size:10pt;}
+    .toc .toc-day em{font-size:9pt;}
+    .planbox{margin:10px 0 0;padding:8px 12px;font-size:9.5pt;border-radius:10px;}
+    .daybar{margin:0 0 10px;padding:7px 14px;background:#e9e9e9 !important;color:#000;border-radius:8px;break-before:page;}
+    .daybar span{color:#444;}
+    .daybar + section.step{break-before:auto !important;margin-top:0;}
+    .mc button{background:#fff !important;border:1px solid #999 !important;color:#333 !important;padding:2px 9px;font-size:9.5pt;}
+    .mc button[aria-pressed="true"]{background:#333 !important;color:#fff !important;border-color:#333 !important;}
+    .mcq{font-size:10.5pt;}
+  }
+
+
+  .step[data-sec="s1"]{--c:var(--c1);--ct:var(--t1);--cl:var(--l1);}
+  .step[data-sec="s2"]{--c:var(--c2);--ct:var(--t2);--cl:var(--l2);}
+  .step[data-sec="s3"]{--c:var(--c3);--ct:var(--t3);--cl:var(--l3);}
+  .step[data-sec="s4"]{--c:var(--c4);--ct:var(--t4);--cl:var(--l4);}
+  .step[data-sec="s5"]{--c:var(--c5);--ct:var(--t5);--cl:var(--l5);}
+  .step[data-sec="s6"]{--c:var(--c6);--ct:var(--t6);--cl:var(--l6);}
+  .step[data-sec="s7"]{--c:var(--c7);--ct:var(--t7);--cl:var(--l7);}
+  .step[data-sec="mw1"],.step[data-sec="mw2"]{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;}
+  .step[data-sec="mw1"],.step[data-sec="mw2"]{background:#f7f8fa;border:1.5px solid var(--line);border-radius:22px;padding:24px 26px 28px;}
+  ol.ex.chq>li>div>p.de{margin-bottom:10px;}
+  .chx{display:flex;flex-direction:column;gap:6px;margin:0 0 6px;}
+  .chx.row{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;}
+  .chx.row .chl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--muted);min-width:40px;}
+  .chx button{font-family:var(--sans);font-size:14.5px;font-weight:500;line-height:1.5;text-align:left;padding:9px 15px;border:1.5px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);cursor:pointer;transition:background .14s,border-color .14s,color .14s;}
+  .chx.row button{padding:6px 13px;font-size:14px;white-space:nowrap;border-radius:999px;}
+  .chx button>b:first-child{font-weight:700;color:var(--muted);margin-right:5px;}
+  .chx button:hover{border-color:var(--c);background:var(--ct);}
+  .chx button[aria-pressed="true"]{border-color:var(--c);background:var(--c);color:#fff;font-weight:600;}
+  .chx button[aria-pressed="true"]>b:first-child{color:rgba(255,255,255,.68);}
+  .chx.ck-ok button[aria-pressed="true"]{border-color:#0e7a5f;background:#0e7a5f;}
+  .chx.ck-no button[aria-pressed="true"]{border-color:#c4392e;background:#c4392e;}
+  .chkbar{display:flex;align-items:center;gap:10px;margin:14px 0 2px;}
+  .chkbar button{font-family:var(--sans);font-size:13px;font-weight:600;white-space:nowrap;padding:7px 15px;border:1.5px solid var(--c);border-radius:999px;background:#fff;color:var(--c);cursor:pointer;}
+  .chkbar button:hover{background:var(--ct);}
+  .chkbar button[disabled]{opacity:.4;cursor:default;}
+  .chkbar .chkres{font-size:13px;color:var(--muted);}
+  input.ck-ok{border-bottom-color:#0e7a5f !important;background:rgba(14,122,95,.10) !important;}
+  input.ck-near{border-bottom-color:#a05c12 !important;background:rgba(160,92,18,.12) !important;}
+  input.ck-no{border-bottom-color:#c4392e !important;background:rgba(196,57,46,.09) !important;}
+  .ckans{font-family:var(--sans);font-size:12.5px;color:#0e7a5f;font-weight:700;margin-left:6px;white-space:nowrap;}
+  .chx + .ckans{display:block;margin:4px 0 0;white-space:normal;line-height:1.5;}
+  input.bl.md{width:104px;min-width:0;}
+  @media print{
+    .chkbar,.ckans{display:none !important;}
+    .chx button{border:0.8pt solid #999 !important;background:#fff !important;color:#000 !important;padding:3px 9px;font-size:9.5pt;border-radius:8px;}
+    .chx button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;}
+    .chx button[aria-pressed="true"]>b:first-child{color:#000;}
+    .step[data-sec="mw1"],.step[data-sec="mw2"]{background:#fff !important;border:1pt solid #999;border-radius:8px;padding:12px 14px;}
+    input.bl.md{width:100px;}
+  }
+
+  .gen{font-size:13.5px;color:var(--muted);font-weight:400;}
+  input.bl.type{text-align:left;min-width:110px;width:150px;color:var(--ink);font-weight:500;font-size:14.5px;}
+  .rlgrp{margin:0;}
+  p.rl{margin:0 0 12px;display:block;font-size:16px;}
+  .mc{position:relative;display:inline-flex;flex-direction:column;align-items:stretch;gap:0;vertical-align:middle;max-width:100%;}
+  p.sol{display:flex;align-items:center;flex-wrap:wrap;gap:7px;}
+  .mc>.mct{display:inline-flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--sans);font-size:14.5px;font-weight:600;color:#6b7280;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:7px 15px;min-width:132px;max-width:100%;cursor:pointer;line-height:1.35;text-align:left;transition:background .14s,border-color .14s,color .14s;}
+  .mc>.mct:hover{background:#e6e8ee;}
+  .mc>.mct i{font-style:normal;font-size:11px;opacity:.6;transition:transform .16s;flex:none;}
+  .mc.open>.mct{background:var(--ct);border-color:var(--c);color:var(--c);}
+  .mc.open>.mct i{transform:rotate(180deg);}
+  .mc.picked>.mct{background:var(--c);border-color:var(--c);color:#fff;}
+  .mc.ck-ok.picked>.mct{background:#0e7a5f;border-color:#0e7a5f;}
+  .mc.ck-near.picked>.mct{background:#a05c12;border-color:#a05c12;}
+  .mc.ck-no.picked>.mct{background:#c4392e;border-color:#c4392e;}
+  .mc>.mct .mctv{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mco{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:60;flex-direction:column;gap:4px;min-width:max(100%,168px);width:max-content;max-width:min(520px,78vw);background:#fff;border:1.5px solid var(--line2);border-radius:16px;padding:7px;box-shadow:0 14px 34px rgba(20,24,40,.15);}
+  .mc.open>.mco{display:flex;}
+  .mco button{text-align:left;white-space:normal;border-radius:11px;padding:8px 13px;font-size:15px;font-weight:500;background:#fff;border:1.5px solid transparent;color:var(--ink);cursor:pointer;line-height:1.45;font-family:var(--serif);}
+  .mco button:hover{background:var(--ct);}
+  .mco button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;}
+  p.rl .mc,ol.gram>li .de .mc,table .mc{display:inline-flex;}
+  .mc.ck-ok button[aria-pressed="true"]{background:#0e7a5f;border-color:#0e7a5f;}
+  .mc.ck-near button[aria-pressed="true"]{background:#a05c12;border-color:#a05c12;}
+  .mc.ck-no button[aria-pressed="true"]{background:#c4392e;border-color:#c4392e;}
+  .mc + .ckans{display:block;margin:4px 0 0;white-space:normal;line-height:1.5;}
+  @media print{
+    .gen{font-size:9.5pt;}
+    input.bl.type{min-width:30%;width:auto;}
+    p.rl{display:block;margin:0 0 5px;}
+    .mc,.mc.col{display:block;margin:3px 0;position:static;}
+    .mct{display:none !important;}
+    .mco{display:block !important;position:static;border:none !important;box-shadow:none !important;padding:0;max-width:100%;width:auto;background:transparent;}
+    .mco button{display:block;margin:2px 0;padding:3px 9px;font-size:9.5pt;border-radius:8px;white-space:normal;background:#fff !important;border:1px solid #999 !important;color:#333 !important;}
+    .mco button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;font-weight:700;}
+  }
+</style>
+</helmet>
+
+<div class="toolbar"><div class="row">
+  <button class="btn go" onclick="{{ submitNet }}">과제 제출하기</button>
+  <div class="tb-title">Übung · <span>L16</span></div>
+  <div class="tb-spacer"></div>
+  <div class="prog"><span><b>{{ filled }}</b> / {{ total }}</span><span class="bar"><i style="{{ barStyle }}"></i></span></div>
+  <button class="btn" onclick="{{ print }}">인쇄</button>
+  <button class="btn" onclick="{{ reset }}">초기화</button>
+</div></div>
+
+<div class="sheet" ref="{{ setRoot }}" oninput="{{ onInput }}" onclick="{{ onClick }}">
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand"><img src="../assets/logo.png" alt="Sophia Deutsch Akademie"><div class="bt"><b>Sophia Deutsch Akademie</b></div></div>
+    <h1 style="color:var(--accent)">Konjunktiv I und II</h1>
+    <p class="lead">접속법 — 가정·정중·간접화법</p>
+    <div class="meta">
+      <div class="f"><i style="font-size:13px;color:var(--accent)">Lektion</i><span style="color:var(--accent);font-weight:700;font-size:28px;letter-spacing:0;line-height:1">16</span></div>
+      <div class="f grow"><i>Name</i><input class="name" data-key="meta-name" data-noprogress="" placeholder="이름을 입력하세요"></div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-day"><b>1일차</b><em>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기</em></div>
+    <a class="toc-row c1" href="#s1"><span class="tn">이해</span><span class="td">직설법 vs 접속법 + 접속법 II 만들기 + 두 쓰임 + wenn 생략 + 접속법 I</span><span class="go">→</span></a>
+    <a class="toc-row c2" href="#s2"><span class="tn">분석</span><span class="td">종류 판별 · 접속법 II 채우기 · 간접화법 · wenn 생략 · 오류</span><span class="go">→</span></a>
+    <a class="toc-row c3" href="#s3"><span class="tn">읽기</span><span class="td">해석 + 접속법 종류·핵심 동사 분석</span><span class="go">→</span></a>
+    <div class="toc-day"><b>2일차</b><em>Mini-Wiederholung 1 먼저 · Schritt 4–5</em></div>
+    <a class="toc-row c4" href="#s4"><span class="tn">듣기</span><span class="td">받아쓰기 · 접속법 채우기 · 뜻 판단 · 이야기 듣기</span><span class="go">→</span></a>
+    <a class="toc-row c5" href="#s5"><span class="tn">쓰기</span><span class="td">직설법→접속법 → 한독 번역 → 통합 → 복수 간접화법</span><span class="go">→</span></a>
+    <div class="toc-day"><b>3일차</b><em>Mini-Wiederholung 2 먼저 · Schritt 6–7 · 마지막에 자기 평가</em></div>
+    <a class="toc-row c6" href="#s6"><span class="tn">말하기</span><span class="td">한국어 보고 독일어로 말하기</span><span class="go">→</span></a>
+    <a class="toc-row c7" href="#s7"><span class="tn">테스트</span><span class="td">새 동사로 접속법 규칙 적용 + 자기 평가</span><span class="go">→</span></a>
+  </nav>
+
+  <div class="planbox"><b>3일 학습 계획</b> — 이 과제는 3일에 나누어 풀도록 설계되어 있습니다. 한 번에 몰아서 풀지 마세요. 위 목차를 누르면 해당 단계로 바로 이동합니다.<br>1일차: Schritt 1–3 · 2일차: Mini-Wiederholung 1 → Schritt 4–5 · 3일차: Mini-Wiederholung 2 → Schritt 6–7 + 자기 평가.<br>'정답 확인' 버튼은 정답이 하나로 정해진 칸만 채점합니다. 해석·작문은 선생님이 첨삭합니다.<br><strong>제출 파일에는 '정답 확인'을 누른 시점의 처음 답안이 기록됩니다.</strong> 정답을 본 뒤 고쳐도 처음 답으로 채점되니, 확인 전에 끝까지 스스로 풀어 보세요.</div>
+
+
+  
+  <div class="daybar"><b>1일차</b><span>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기</span></div>
+<!-- ===== SCHRITT 1 ===== -->
+  <section class="step s1" id="s1" data-sec="s1" data-day="1">
+    <div class="step-head"><div class="step-n">01</div><div><p class="eyebrow">Schritt 1</p><h2 class="step-title">Verstehen · 이해</h2></div></div>
+    <p class="lede">교재를 보지 않고 <strong>직접 규칙을 발견하는</strong> 단계입니다.</p>
+    <p class="tip"><b class="t">복습</b>3과: sein(ist). 9과: 화법조동사(kann). 16과: 사실을 못 박지 않고 <strong>가정</strong>하거나 <strong>남의 말</strong>을 전할 때 동사를 한 발 물러선 모양으로!</p>
+
+    <div class="sub"><span class="de">1A.</span> 직설법 vs 접속법 — 한 발 물러서기</div>
+    <p>같은 내용도 태도에 따라 셋. 각 경우의 종류를 고르세요.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>태도</sc-raw-th><sc-raw-th>종류</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">시간이 있다</sc-raw-td><sc-raw-td class="gen">사실 단언</sc-raw-td><sc-raw-td><span class="mc" data-mc="v1a-1"><input type="hidden" data-key="v1a-1" data-answer="직설법"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="직설법">직설법</button><button type="button" data-opt="접속법 II">접속법 II</button><button type="button" data-opt="접속법 I">접속법 I</button></span></span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">시간이 있다면…</sc-raw-td><sc-raw-td class="gen">비현실 가정</sc-raw-td><sc-raw-td>접속법 <span class="mc" data-mc="v1a-2"><input type="hidden" data-key="v1a-2" data-answer="II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">그가 시간이 있다고 한다</sc-raw-td><sc-raw-td class="gen">남의 말 전달</sc-raw-td><sc-raw-td>접속법 <span class="mc" data-mc="v1a-3"><input type="hidden" data-key="v1a-3" data-answer="I"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p>→ 가정·정중은 접속법 <span class="mc" data-mc="v1a-r1"><input type="hidden" data-key="v1a-r1" data-answer="II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span>, 남의 말 전달은 접속법 <span class="mc" data-mc="v1a-r2"><input type="hidden" data-key="v1a-r2" data-answer="I"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span>.</p>
+
+    <div class="sub"><span class="de">1B.</span> 접속법 II 만들기 — würde + 원형, 고유형</div>
+    <p>대부분 würde+원형. 단 sein·haben·화법조동사는 고유형. 각 접속법 II형을 쓰세요.</p>
+    <sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">원형</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>접속법 II</sc-raw-th><sc-raw-th style="text-align:left">원형</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>접속법 II</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">gehen</sc-raw-td><sc-raw-td>가다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-1" data-answer="würde gehen|ginge"></sc-raw-td><sc-raw-td class="k">sein</sc-raw-td><sc-raw-td>~이다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-2" data-answer="wäre"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">haben</sc-raw-td><sc-raw-td>가지다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-3" data-answer="hätte"></sc-raw-td><sc-raw-td class="k">können</sc-raw-td><sc-raw-td>할 수 있다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-4" data-answer="könnte"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">müssen</sc-raw-td><sc-raw-td>해야 한다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-5" data-answer="müsste"></sc-raw-td><sc-raw-td class="k">kommen</sc-raw-td><sc-raw-td>오다</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1b-6" data-answer="würde kommen|käme"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p>→ 일반 동사는 <span class="mc" data-mc="v1b-r1"><input type="hidden" data-key="v1b-r1" data-answer="würde"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wäre">wäre</button><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="würde">würde</button></span></span>+원형, sein은 <span class="mc" data-mc="v1b-r2"><input type="hidden" data-key="v1b-r2" data-answer="wäre"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wäre">wäre</button><button type="button" data-opt="würde">würde</button><button type="button" data-opt="hätte">hätte</button></span></span>, haben은 <span class="mc" data-mc="v1b-r3"><input type="hidden" data-key="v1b-r3" data-answer="hätte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="würde">würde</button><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="wäre">wäre</button></span></span>로 직접.</p>
+
+    <div class="sub"><span class="de">1C.</span> 접속법 II의 두 쓰임 — 가정 · 정중</div>
+    <p>비현실 가정과 정중한 요청. 빈칸을 접속법 II로 채우세요.</p>
+    <p>Wenn ich Zeit <input class="bl md" data-key="v1c-1" data-answer="hätte">, <input class="bl md" data-key="v1c-2" data-answer="würde"> ich kommen. <span class="gen">시간이 있다면 갈 텐데</span></p>
+    <p><input class="bl md" data-key="v1c-3" data-answer="Könnten|könnten"> Sie mir helfen? <span class="gen">도와주시겠어요?</span></p>
+    <p>Ich <input class="bl md" data-key="v1c-4" data-answer="hätte"> gern einen Kaffee. <span class="gen">커피 한 잔 주세요</span></p>
+    <p>→ 비현실 가정은 <span class="mc" data-mc="v1c-r1"><input type="hidden" data-key="v1c-r1" data-answer="wenn"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="dass">dass</button><button type="button" data-opt="ob">ob</button><button type="button" data-opt="wenn">wenn</button></span></span>절 + 접속법, 정중은 könnte·<span class="mc" data-mc="v1c-r2"><input type="hidden" data-key="v1c-r2" data-answer="hätte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="wäre">wäre</button><button type="button" data-opt="würde">würde</button></span></span> gern.</p>
+
+    <div class="sub"><span class="de">1D.</span> wenn 생략 — 동사가 맨 앞으로</div>
+    <p>wenn을 빼면 동사가 문장 맨 앞으로 나옵니다. 빈칸을 채우세요.</p>
+    <p>Wenn ich Zeit hätte, … = <input class="bl md" data-key="v1d-1" data-answer="Hätte|hätte"> ich Zeit, würde ich kommen. <span class="gen">시간이 있다면</span></p>
+    <p>→ wenn을 빼면 동사(hätte)가 <span class="mc" data-mc="v1d-r1"><input type="hidden" data-key="v1d-r1" data-answer="맨 앞"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="두 번째">두 번째</button><button type="button" data-opt="맨 앞">맨 앞</button><button type="button" data-opt="맨 끝">맨 끝</button></span></span>으로 온다.</p>
+
+    <div class="sub"><span class="de">1E.</span> 과거 가정 · als ob · 접속법 I</div>
+    <p>이미 끝난 일의 가정, '마치 ~처럼', 남의 말 전달. 채우세요.</p>
+    <p>Wenn ich Zeit gehabt <input class="bl md" data-key="v1e-1" data-answer="hätte">, <input class="bl md" data-key="v1e-2" data-answer="wäre"> ich gekommen. <span class="gen">시간이 있었더라면 갔을 텐데</span></p>
+    <p>Er tut, als ob er krank <input class="bl md" data-key="v1e-3" data-answer="wäre">. <span class="gen">마치 아픈 것처럼 군다</span></p>
+    <p>접속법 I (er 기준): sein→<input class="bl sm" data-key="v1e-4" data-answer="sei">, haben→<input class="bl sm" data-key="v1e-5" data-answer="habe">, kommen→<input class="bl sm" data-key="v1e-6" data-answer="komme">.</p>
+    <p>→ 과거 가정은 hätte/wäre+<span class="mc" data-mc="v1e-r1"><input type="hidden" data-key="v1e-r1" data-answer="과거분사"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="원형">원형</button><button type="button" data-opt="현재분사">현재분사</button><button type="button" data-opt="과거분사">과거분사</button></span></span>, 남의 말 전달은 접속법 <span class="mc" data-mc="v1e-r2"><input type="hidden" data-key="v1e-r2" data-answer="I"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span>.</p>
+
+    <div class="sub"><span class="de">1F.</span> 핵심 규칙 자기 정리</div>
+    <ol class="ex gram">
+      <li><div><p class="de">접속법은 사실을 단언하지 않고 <span class="mc" data-mc="v1f-1"><input type="hidden" data-key="v1f-1" data-answer="가정·전달"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="질문">질문</button><button type="button" data-opt="가정·전달">가정·전달</button><button type="button" data-opt="명령">명령</button></span></span> 할 때 쓰는 동사 모양이다.</p></div></li>
+      <li><div><p class="de">접속법 <span class="mc" data-mc="v1f-2"><input type="hidden" data-key="v1f-2" data-answer="II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="II">II</button><button type="button" data-opt="I">I</button></span></span>는 가정·정중, 접속법 <span class="mc" data-mc="v1f-3"><input type="hidden" data-key="v1f-3" data-answer="I"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="II">II</button><button type="button" data-opt="I">I</button></span></span>은 남의 말 전달이다.</p></div></li>
+      <li><div><p class="de">접속법 II 일반 동사는 <span class="mc" data-mc="v1f-4"><input type="hidden" data-key="v1f-4" data-answer="würde"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="würde">würde</button><button type="button" data-opt="wäre">wäre</button></span></span> + 원형이다.</p></div></li>
+      <li><div><p class="de">sein의 접속법 II는 <span class="mc" data-mc="v1f-5"><input type="hidden" data-key="v1f-5" data-answer="wäre"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="würde">würde</button><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="wäre">wäre</button></span></span>, haben은 <span class="mc" data-mc="v1f-6"><input type="hidden" data-key="v1f-6" data-answer="hätte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="wäre">wäre</button><button type="button" data-opt="würde">würde</button></span></span>, können은 <span class="mc" data-mc="v1f-7"><input type="hidden" data-key="v1f-7" data-answer="könnte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="würde">würde</button><button type="button" data-opt="könnte">könnte</button><button type="button" data-opt="müsste">müsste</button></span></span>.</p></div></li>
+      <li><div><p class="de">과거 가정은 hätte/wäre + <span class="mc" data-mc="v1f-8"><input type="hidden" data-key="v1f-8" data-answer="과거분사"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="원형">원형</button><button type="button" data-opt="현재분사">현재분사</button><button type="button" data-opt="과거분사">과거분사</button></span></span>, 간접화법(접속법 I)은 sein→<span class="mc" data-mc="v1f-9"><input type="hidden" data-key="v1f-9" data-answer="sei"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="sei">sei</button><button type="button" data-opt="sein">sein</button><button type="button" data-opt="wäre">wäre</button></span></span>.</p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">1G.</span> 접속법 I이 직설법과 겹칠 때 → 접속법 II</div>
+    <p>간접화법은 접속법 I로 전달합니다. 그런데 접속법 I이 직설법과 <strong>똑같아지면</strong> 전달인지 구별이 안 됩니다. 아래 표에서 어떤 인칭이 겹치는지 확인하세요.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>인칭</sc-raw-th><sc-raw-th>직설법</sc-raw-th><sc-raw-th>접속법 I</sc-raw-th><sc-raw-th>겹침?</sc-raw-th><sc-raw-th>실제로 쓰는 형태</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">er (단수)</sc-raw-td><sc-raw-td>er hat</sc-raw-td><sc-raw-td>er habe</sc-raw-td><sc-raw-td>안 겹침</sc-raw-td><sc-raw-td>er <input class="bl md" data-key="v1g-1" data-answer="habe"> <span class="gen">(habe)</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie (복수)</sc-raw-td><sc-raw-td>sie haben</sc-raw-td><sc-raw-td>sie haben</sc-raw-td><sc-raw-td><strong>겹침</strong></sc-raw-td><sc-raw-td>sie <input class="bl md" data-key="v1g-3" data-answer="hätten"> <span class="gen">(→ 접속법 II)</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie (복수) · sein</sc-raw-td><sc-raw-td>sie sind</sc-raw-td><sc-raw-td>sie seien</sc-raw-td><sc-raw-td>안 겹침</sc-raw-td><sc-raw-td>sie <input class="bl md" data-key="v1g-6" data-answer="seien"> <span class="gen">(seien)</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p class="mcq">→ 겹치면 접속법 <span class="mc" data-mc="v1g-2"><input type="hidden" data-key="v1g-2" data-answer="II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="II">II</button><button type="button" data-opt="I">I</button></span></span> 로 바꿉니다: Sie sagen, sie hätten keine Zeit.</p>
+
+    <div class="sub2">겹치는 복수 sie를 접속법 II로</div>
+    <ol class="ex">
+      <li><div><p class="de">sie sprechen → sie <input class="bl md" data-key="v1g-4" data-answer="sprächen"> <span class="gen">(sprächen)</span></p></div></li>
+      <li><div><p class="de">sie kommen → sie <input class="bl md" data-key="v1g-5" data-answer="kämen"> <span class="gen">(kämen)</span></p></div></li>
+      <li><div><p class="de">sie lernen → sie <input class="bl md" data-key="v1g-r3" data-answer="würden"> lernen <span class="gen">(약변화 → würden + 원형)</span></p></div></li>
+    </ol>
+
+    <ol class="ex gram">
+      <li><div><p class="de">접속법 I이 직설법과 같아지면(특히 복수 sie·wir, 1인칭 ich) 접속법 <span class="mc" data-mc="v1g-r1"><input type="hidden" data-key="v1g-r1" data-answer="II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span> 로 바꿔 '전달'임을 드러낸다.</p></div></li>
+      <li><div><p class="de">약변화 동사는 접속법 II도 과거형과 겹쳐 <span class="mc" data-mc="v1g-r2"><input type="hidden" data-key="v1g-r2" data-answer="würden"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="würden">würden</button><button type="button" data-opt="wären">wären</button><button type="button" data-opt="hätten">hätten</button></span></span> + 원형으로 쓴다.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SCHRITT 2 ===== -->
+  <section class="step s2" id="s2" data-sec="s2" data-day="1">
+    <div class="step-head"><div class="step-n">02</div><div><p class="eyebrow">Schritt 2</p><h2 class="step-title">Erkennen · 분석</h2></div></div>
+    <p class="lede">접속법의 종류·형태를 스스로 판단하세요.</p>
+
+    <div class="sub"><span class="de">2A.</span> 종류 판별 — 직설법 / 접속법 II / 접속법 I</div>
+    <p>각 문장의 종류를 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Ich habe keine Zeit.</p><p class="sol"><span class="ar">→</span> <span class="mc" data-mc="e2a-1"><input type="hidden" data-key="e2a-1" data-answer="직설법"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 I">접속법 I</button><button type="button" data-opt="직설법">직설법</button><button type="button" data-opt="접속법 II">접속법 II</button></span></span></p></div></li>
+      <li><div><p class="de">Wenn ich Zeit hätte, würde ich kommen.</p><p class="sol"><span class="ar">→</span> <span class="mc" data-mc="e2a-2"><input type="hidden" data-key="e2a-2" data-answer="접속법 II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 I">접속법 I</button><button type="button" data-opt="직설법">직설법</button><button type="button" data-opt="접속법 II">접속법 II</button></span></span></p></div></li>
+      <li><div><p class="de">Er sagt, er sei krank.</p><p class="sol"><span class="ar">→</span> <span class="mc" data-mc="e2a-3"><input type="hidden" data-key="e2a-3" data-answer="접속법 I"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 I">접속법 I</button><button type="button" data-opt="직설법">직설법</button><button type="button" data-opt="접속법 II">접속법 II</button></span></span></p></div></li>
+      <li><div><p class="de">Könnten Sie mir helfen?</p><p class="sol"><span class="ar">→</span> <span class="mc" data-mc="e2a-4"><input type="hidden" data-key="e2a-4" data-answer="접속법 II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="직설법">직설법</button><button type="button" data-opt="접속법 II">접속법 II</button><button type="button" data-opt="접속법 I">접속법 I</button></span></span></p></div></li>
+      <li><div><p class="de">Sie kommt morgen.</p><p class="sol"><span class="ar">→</span> <span class="mc" data-mc="e2a-5"><input type="hidden" data-key="e2a-5" data-answer="직설법"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 II">접속법 II</button><button type="button" data-opt="접속법 I">접속법 I</button><button type="button" data-opt="직설법">직설법</button></span></span></p></div></li>
+      <li><div><p class="de">Sie sagt, sie habe keine Zeit.</p><p class="sol"><span class="ar">→</span> <span class="mc" data-mc="e2a-6"><input type="hidden" data-key="e2a-6" data-answer="접속법 I"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 I">접속법 I</button><button type="button" data-opt="직설법">직설법</button><button type="button" data-opt="접속법 II">접속법 II</button></span></span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2B.</span> 접속법 II 채우기 — 가정 · 정중</div>
+    <p>빈칸을 접속법 II(würde·wäre·hätte·könnte)로 채우세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Ich <input class="bl md" data-key="e2b-1" data-answer="würde"> nach Hause gehen. <span class="gen">나라면 집에 갈 텐데</span></p></div></li>
+      <li><div><p class="de">Wenn ich reich <input class="bl md" data-key="e2b-2" data-answer="wäre">, würde ich reisen. <span class="gen">부자라면</span></p></div></li>
+      <li><div><p class="de">Wenn ich Zeit <input class="bl md" data-key="e2b-3" data-answer="hätte">, würde ich kommen. <span class="gen">시간이 있다면</span></p></div></li>
+      <li><div><p class="de"><input class="bl md" data-key="e2b-4" data-answer="Könnten|könnten"> Sie mir helfen? <span class="gen">도와주시겠어요?</span></p></div></li>
+      <li><div><p class="de">Ich <input class="bl md" data-key="e2b-5" data-answer="hätte"> gern einen Kaffee. <span class="gen">커피 한 잔 주세요</span></p></div></li>
+      <li><div><p class="de">Das <input class="bl md" data-key="e2b-6" data-answer="wäre"> schön. <span class="gen">그거 좋을 텐데</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2C.</span> 접속법 I — 간접화법 (er/sie 전달)</div>
+    <p>남의 말을 전달하는 접속법 I로 채우세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Er sagt, er <input class="bl md" data-key="e2c-1" data-answer="sei"> krank. <span class="gen">아프다고 한다 (sein)</span></p></div></li>
+      <li><div><p class="de">Er sagt, er <input class="bl md" data-key="e2c-2" data-answer="lerne"> Deutsch. <span class="gen">독일어를 배운다고 (lernen)</span></p></div></li>
+      <li><div><p class="de">Sie sagt, sie <input class="bl md" data-key="e2c-3" data-answer="habe"> keine Zeit. <span class="gen">시간이 없다고 (haben)</span></p></div></li>
+      <li><div><p class="de">Er sagt, er <input class="bl md" data-key="e2c-4" data-answer="komme"> morgen. <span class="gen">내일 온다고 (kommen)</span></p></div></li>
+      <li><div><p class="de">Sie sagt, sie <input class="bl md" data-key="e2c-5" data-answer="sei"> hier. <span class="gen">여기 있다고 (sein)</span></p></div></li>
+      <li><div><p class="de">Er sagt, er <input class="bl md" data-key="e2c-6" data-answer="habe"> Zeit. <span class="gen">시간이 있다고 (haben)</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2D.</span> wenn 생략 · 과거 가정 · als ob</div>
+    <p>빈칸을 알맞은 접속법으로 채우세요.</p>
+    <ol class="ex">
+      <li><div><p class="de"><input class="bl md" data-key="e2d-1" data-answer="Hätte|hätte"> ich Zeit, würde ich kommen. <span class="gen">시간 있다면 (wenn 생략)</span></p></div></li>
+      <li><div><p class="de">Wenn ich früher gekommen <input class="bl md" data-key="e2d-2" data-answer="wäre">, hätte ich ihn getroffen. <span class="gen">더 일찍 왔더라면</span></p></div></li>
+      <li><div><p class="de">Wenn ich das Buch gelesen <input class="bl md" data-key="e2d-3" data-answer="hätte">, hätte ich es gewusst. <span class="gen">읽었더라면</span></p></div></li>
+      <li><div><p class="de">Er spricht, als ob er alles <input class="bl md" data-key="e2d-4" data-answer="wüsste">. <span class="gen">마치 다 아는 것처럼 (wissen → wüsste)</span></p></div></li>
+      <li><div><p class="de"><input class="bl md" data-key="e2d-5" data-answer="Wäre|wäre"> ich reich, würde ich reisen. <span class="gen">부자라면 (wenn 생략)</span></p></div></li>
+      <li><div><p class="de">Wenn du gefragt <input class="bl md" data-key="e2d-6" data-answer="hättest">, hätte ich geholfen. <span class="gen">네가 물었더라면</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2E.</span> 오류 찾기 — Fehlersuche</div>
+    <p>바르게 고친 것을 고르고, 오류 유형도 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Wenn ich Zeit <strong>haben würde</strong>, würde ich kommen. <span class="gen">시간 있다면</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="e2e-1"><input type="hidden" data-key="e2e-1" data-answer="Wenn ich Zeit hätte, würde ich kommen."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Wenn ich Zeit hatte, würde ich kommen.">Wenn ich Zeit hatte, würde ich kommen.</button><button type="button" data-opt="Wenn ich Zeit hätte, würde ich kommen.">Wenn ich Zeit hätte, würde ich kommen.</button><button type="button" data-opt="Wenn ich Zeit haben würde, würde ich kommen.">Wenn ich Zeit haben würde, würde ich kommen.</button></span></span></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2e-1t"><input type="hidden" data-key="e2e-1t" data-answer="würde 우회(고유형을 써야 함)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 I·II 혼동">접속법 I·II 혼동</button><button type="button" data-opt="과거 가정">과거 가정</button><button type="button" data-opt="würde 우회(고유형을 써야 함)">würde 우회(고유형을 써야 함)</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Wenn ich <strong>reich würde sein</strong>, würde ich reisen. <span class="gen">부자라면</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="e2e-2"><input type="hidden" data-key="e2e-2" data-answer="Wenn ich reich wäre, würde ich reisen."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Wenn ich reich wäre, würde ich reisen.">Wenn ich reich wäre, würde ich reisen.</button><button type="button" data-opt="Wenn ich reich sein würde, würde ich reisen.">Wenn ich reich sein würde, würde ich reisen.</button><button type="button" data-opt="Wenn ich reich war, würde ich reisen.">Wenn ich reich war, würde ich reisen.</button></span></span></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2e-2t"><input type="hidden" data-key="e2e-2t" data-answer="würde 우회(고유형을 써야 함)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wenn 생략">wenn 생략</button><button type="button" data-opt="würde 우회(고유형을 써야 함)">würde 우회(고유형을 써야 함)</button><button type="button" data-opt="접속법 I·II 혼동">접속법 I·II 혼동</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Er sagt, er <strong>ist</strong> krank. <span class="gen">아프다고 한다 (간접화법)</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="e2e-3"><input type="hidden" data-key="e2e-3" data-answer="Er sagt, er sei krank."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Er sagt, er wäre krank sei.">Er sagt, er wäre krank sei.</button><button type="button" data-opt="Er sagt, er ist krank.">Er sagt, er ist krank.</button><button type="button" data-opt="Er sagt, er sei krank.">Er sagt, er sei krank.</button></span></span></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2e-3t"><input type="hidden" data-key="e2e-3t" data-answer="간접화법인데 직설법을 씀"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="간접화법인데 직설법을 씀">간접화법인데 직설법을 씀</button><button type="button" data-opt="würde 우회(고유형을 써야 함)">würde 우회(고유형을 써야 함)</button><button type="button" data-opt="과거 가정">과거 가정</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Wenn ich Zeit gehabt <strong>würde</strong>, wäre ich gekommen. <span class="gen">시간 있었더라면</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="e2e-4"><input type="hidden" data-key="e2e-4" data-answer="Wenn ich Zeit gehabt hätte, wäre ich gekommen."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Wenn ich Zeit haben hätte, wäre ich gekommen.">Wenn ich Zeit haben hätte, wäre ich gekommen.</button><button type="button" data-opt="Wenn ich Zeit gehabt hätte, wäre ich gekommen.">Wenn ich Zeit gehabt hätte, wäre ich gekommen.</button><button type="button" data-opt="Wenn ich Zeit gehabt würde, wäre ich gekommen.">Wenn ich Zeit gehabt würde, wäre ich gekommen.</button></span></span></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2e-4t"><input type="hidden" data-key="e2e-4t" data-answer="과거 가정(hätte/wäre + 과거분사)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="würde 우회(고유형을 써야 함)">würde 우회(고유형을 써야 함)</button><button type="button" data-opt="wenn 생략">wenn 생략</button><button type="button" data-opt="과거 가정(hätte/wäre + 과거분사)">과거 가정(hätte/wäre + 과거분사)</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ <strong>Könntest</strong> Sie mir helfen? <span class="gen">정중 (Sie)</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="e2e-5"><input type="hidden" data-key="e2e-5" data-answer="Könnten Sie mir helfen?"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Könnten Sie mir helfen?">Könnten Sie mir helfen?</button><button type="button" data-opt="Könntest Sie mir helfen?">Könntest Sie mir helfen?</button><button type="button" data-opt="Könnte Sie mir helfen?">Könnte Sie mir helfen?</button></span></span></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2e-5t"><input type="hidden" data-key="e2e-5t" data-answer="Sie(존칭) 동사 활용"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wenn 생략">wenn 생략</button><button type="button" data-opt="Sie(존칭) 동사 활용">Sie(존칭) 동사 활용</button><button type="button" data-opt="과거 가정">과거 가정</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Er tut, als ob er krank <strong>ist</strong>. <span class="gen">마치 아픈 것처럼</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="e2e-6"><input type="hidden" data-key="e2e-6" data-answer="Er tut, als ob er krank wäre."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Er tut, als ob er krank ist.">Er tut, als ob er krank ist.</button><button type="button" data-opt="Er tut, als ob er wäre krank.">Er tut, als ob er wäre krank.</button><button type="button" data-opt="Er tut, als ob er krank wäre.">Er tut, als ob er krank wäre.</button></span></span></p><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc" data-mc="e2e-6t"><input type="hidden" data-key="e2e-6t" data-answer="als ob는 접속법으로"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="als ob는 접속법으로">als ob는 접속법으로</button><button type="button" data-opt="würde 우회(고유형을 써야 함)">würde 우회(고유형을 써야 함)</button><button type="button" data-opt="과거 가정">과거 가정</button></span></span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2F.</span> 접속법 I → II — 복수 sie 전달</div>
+    <p>복수 <strong>sie</strong>는 접속법 I이 직설법과 겹치므로 <strong>접속법 II</strong>로 바꿔 전달임을 드러냅니다. 단 <strong>sein</strong>은 <em>seien</em>이 뚜렷해 그대로. 빈칸을 알맞은 형태로 채우세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Sie sagen, sie <input class="bl md" data-key="e2f-1" data-answer="seien"> krank. <span class="gen">(sein — seien 유지)</span></p></div></li>
+      <li><div><p class="de">Sie sagen, sie <input class="bl md" data-key="e2f-2" data-answer="hätten"> keine Zeit. <span class="gen">(haben — 겹침 → II)</span></p></div></li>
+      <li><div><p class="de">Sie sagen, sie <input class="bl md" data-key="e2f-3" data-answer="sprächen"> Deutsch. <span class="gen">(sprechen — 겹침 → II)</span></p></div></li>
+      <li><div><p class="de">Sie sagen, sie <input class="bl md" data-key="e2f-4" data-answer="kämen"> morgen. <span class="gen">(kommen — 겹침 → II)</span></p></div></li>
+      <li><div><p class="de">Die Studenten sagen, sie <input class="bl md" data-key="e2f-5" data-answer="führen"> nach Berlin. <span class="gen">(fahren — 겹침 → II)</span></p></div></li>
+      <li><div><p class="de">Die Kinder sagen, sie <input class="bl md" data-key="e2f-6" data-answer="würden"> viel lernen. <span class="gen">(lernen — 약변화 → würde+원형)</span></p></div></li>
+    </ol>
+
+    </section>
+
+  <!-- ===== SCHRITT 3 ===== -->
+  <section class="step s3" id="s3" data-sec="s3" data-day="1">
+    <div class="step-head"><div class="step-n">03</div><div><p class="eyebrow">Schritt 3</p><h2 class="step-title">Lesen · 읽기</h2></div></div>
+    <p class="lede">문장을 읽고 해석한 뒤, 접속법의 종류·형태를 분석합니다.</p>
+    <div class="bsp"><span class="lab">Beispiel</span><p class="de">Wenn ich mehr Geld <strong>hätte</strong>, <strong>würde</strong> ich reisen.</p><p class="ko" style="margin:0">돈이 더 있다면 여행할 텐데. (hätte·würde = 접속법 II · 비현실 가정)</p></div>
+
+    <div class="sub"><span class="de">3A.</span> 읽기 + 해석</div>
+    <ol class="ex">
+      <li><div><p class="de">Wenn ich Zeit <strong>hätte</strong>, würde ich kommen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-1"></p></div></li>
+      <li><div><p class="de"><strong>Könnten</strong> Sie mir helfen?</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-2"></p></div></li>
+      <li><div><p class="de">Ich <strong>hätte</strong> gern einen Kaffee.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-3"></p></div></li>
+      <li><div><p class="de">Ich <strong>würde</strong> nach Hause gehen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-4"></p></div></li>
+      <li><div><p class="de">Wenn ich reich <strong>wäre</strong>, würde ich reisen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-5"></p></div></li>
+      <li><div><p class="de">Er sagt, er <strong>sei</strong> krank.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-6"></p></div></li>
+      <li><div><p class="de">Er sagt, er <strong>komme</strong> morgen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-7"></p></div></li>
+      <li><div><p class="de">Wenn ich Zeit gehabt <strong>hätte</strong>, wäre ich gekommen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-8"></p></div></li>
+      <li><div><p class="de">An deiner Stelle <strong>würde</strong> ich warten.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-9"></p></div></li>
+      <li><div><p class="de">Er tut, als ob er krank <strong>wäre</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-10"></p></div></li>
+      <li><div><p class="de">Sie sagt, sie <strong>habe</strong> keine Zeit.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-11"></p></div></li>
+      <li><div><p class="de"><strong>Hätte</strong> ich Zeit, würde ich kommen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-12"></p></div></li>
+      <li><div><p class="de">Das <strong>wäre</strong> schön.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-13"></p></div></li>
+      <li><div><p class="de">Wenn ich das gewusst <strong>hätte</strong>, wäre ich nicht gekommen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-14"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">3B.</span> 접속법 분석 — 종류 + 핵심 동사</div>
+    <p>굵은 부분의 <strong>종류</strong>와 <strong>핵심 동사 형태</strong>를 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Wenn ich Zeit <strong>hätte</strong>, <strong>würde</strong> ich kommen.</p><p class="sol"><span class="ar">·</span> 종류: <span class="mc" data-mc="r3b-1a"><input type="hidden" data-key="r3b-1a" data-answer="접속법 II (가정)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 I (간접화법)">접속법 I (간접화법)</button><button type="button" data-opt="접속법 II 과거 가정">접속법 II 과거 가정</button><button type="button" data-opt="wenn 생략 (동사 문두)">wenn 생략 (동사 문두)</button><button type="button" data-opt="접속법 II (가정)">접속법 II (가정)</button></span></span> · 동사: <span class="mc" data-mc="r3b-1b"><input type="hidden" data-key="r3b-1b" data-answer="hätte · würde"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="sei · habe">sei · habe</button><button type="button" data-opt="wäre · gekommen">wäre · gekommen</button><button type="button" data-opt="hätte · würde">hätte · würde</button></span></span></p></div></li>
+      <li><div><p class="de">Er sagt, er <strong>sei</strong> krank.</p><p class="sol"><span class="ar">·</span> 종류: <span class="mc" data-mc="r3b-2a"><input type="hidden" data-key="r3b-2a" data-answer="접속법 I (간접화법)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 II (가정)">접속법 II (가정)</button><button type="button" data-opt="접속법 I (간접화법)">접속법 I (간접화법)</button><button type="button" data-opt="접속법 II 과거 가정">접속법 II 과거 가정</button><button type="button" data-opt="wenn 생략 (동사 문두)">wenn 생략 (동사 문두)</button></span></span> · 동사: <span class="mc" data-mc="r3b-2b"><input type="hidden" data-key="r3b-2b" data-answer="sei"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="sei">sei</button><button type="button" data-opt="wäre">wäre</button></span></span></p></div></li>
+      <li><div><p class="de">Wenn ich Zeit gehabt <strong>hätte</strong>, <strong>wäre</strong> ich gekommen.</p><p class="sol"><span class="ar">·</span> 종류: <span class="mc" data-mc="r3b-3a"><input type="hidden" data-key="r3b-3a" data-answer="접속법 II 과거 가정"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wenn 생략 (동사 문두)">wenn 생략 (동사 문두)</button><button type="button" data-opt="접속법 II (가정)">접속법 II (가정)</button><button type="button" data-opt="접속법 I (간접화법)">접속법 I (간접화법)</button><button type="button" data-opt="접속법 II 과거 가정">접속법 II 과거 가정</button></span></span> · 동사: <span class="mc" data-mc="r3b-3b"><input type="hidden" data-key="r3b-3b" data-answer="hätte · wäre"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="hätte · wäre">hätte · wäre</button><button type="button" data-opt="sei · habe">sei · habe</button><button type="button" data-opt="würde · werden">würde · werden</button></span></span></p></div></li>
+      <li><div><p class="de"><strong>Hätte</strong> ich Zeit, würde ich kommen.</p><p class="sol"><span class="ar">·</span> 종류: <span class="mc" data-mc="r3b-4a"><input type="hidden" data-key="r3b-4a" data-answer="wenn 생략 (동사 문두)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 II 과거 가정">접속법 II 과거 가정</button><button type="button" data-opt="wenn 생략 (동사 문두)">wenn 생략 (동사 문두)</button><button type="button" data-opt="접속법 II (가정)">접속법 II (가정)</button><button type="button" data-opt="접속법 I (간접화법)">접속법 I (간접화법)</button></span></span> · 동사: <span class="mc" data-mc="r3b-4b"><input type="hidden" data-key="r3b-4b" data-answer="Hätte (문두)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Wäre (문두)">Wäre (문두)</button><button type="button" data-opt="Würde (문두)">Würde (문두)</button><button type="button" data-opt="Hätte (문두)">Hätte (문두)</button></span></span></p></div></li>
+    </ol>
+  </section>
+
+  
+  <div class="daybar"><b>2일차</b><span>Mini-Wiederholung 1 → Schritt 4–5 · 어제 내용을 먼저 인출하고 듣기·쓰기로</span></div>
+
+  <section class="step" id="mw1" data-sec="mw1" data-day="2" data-label="Mini-Wiederholung 1 (2일차 시작)">
+    <div class="sub2">Mini-Wiederholung 1 — 접속법 II</div>
+    <sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">원형</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>접속법 II</sc-raw-th><sc-raw-th style="text-align:left">원형</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>접속법 II</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">sein</sc-raw-td><sc-raw-td>~이다</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-1" data-answer="wäre"></sc-raw-td><sc-raw-td class="k">haben</sc-raw-td><sc-raw-td>가지다</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-2" data-answer="hätte"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">können</sc-raw-td><sc-raw-td>할 수 있다</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-3" data-answer="könnte"></sc-raw-td><sc-raw-td class="k">müssen</sc-raw-td><sc-raw-td>해야 한다</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-4" data-answer="müsste"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">gehen</sc-raw-td><sc-raw-td>가다</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-5" data-answer="würde gehen|ginge"></sc-raw-td><sc-raw-td class="k">kommen</sc-raw-td><sc-raw-td>오다</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-6" data-answer="würde kommen|käme"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 4 ===== -->
+  <section class="step s4" id="s4" data-sec="s4" data-day="2">
+    <div class="step-head"><div class="step-n">04</div><div><p class="eyebrow">Schritt 4</p><h2 class="step-title">Hören · 듣기</h2></div></div>
+    <p class="lede">오디오를 듣고 네 가지 과제를 수행하세요. 4A·4B·4C는 문장마다 ▶ 버튼으로, 4D는 이야기 음원으로 풉니다.</p>
+    <div class="hblock">
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+
+    <div class="sub"><span class="de">4A.</span> 받아쓰기 — Diktat</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="a4-1" preload="auto" src="../assets/audio/ec3e92c1fbdd.mp3"></audio><input class="bl lg" data-key="h4a-1" data-answer="Wenn ich Zeit hätte, würde ich kommen." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="a4-2" preload="auto" src="../assets/audio/2691b508a1cc.mp3"></audio><input class="bl lg" data-key="h4a-2" data-answer="Könnten Sie mir helfen?" placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="a4-3" preload="auto" src="../assets/audio/d682728ef9e9.mp3"></audio><input class="bl lg" data-key="h4a-3" data-answer="Ich hätte gern einen Kaffee." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="a4-4" preload="auto" src="../assets/audio/35c389ba5693.mp3"></audio><input class="bl lg" data-key="h4a-4" data-answer="Er sagt, er sei krank." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="a4-5" preload="auto" src="../assets/audio/3adf1ea3e043.mp3"></audio><input class="bl lg" data-key="h4a-5" data-answer="An deiner Stelle würde ich warten." placeholder="받아쓰기"></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">4B.</span> 접속법 채우기 — würde·wäre·hätte·sei</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="b4-1" preload="auto" src="../assets/audio/ec3e92c1fbdd.mp3"></audio><p class="de">Wenn ich Zeit <input class="bl md" data-key="h4b-1" data-answer="hätte">, würde ich kommen.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="b4-2" preload="auto" src="../assets/audio/2691b508a1cc.mp3"></audio><p class="de"><input class="bl md" data-key="h4b-2" data-answer="Könnten|könnten"> Sie mir helfen?</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="b4-3" preload="auto" src="../assets/audio/d682728ef9e9.mp3"></audio><p class="de">Ich <input class="bl md" data-key="h4b-3" data-answer="hätte"> gern einen Kaffee.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="b4-4" preload="auto" src="../assets/audio/8d0b7bacd859.mp3"></audio><p class="de">Ich <input class="bl md" data-key="h4b-4" data-answer="würde"> nach Hause gehen.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="b4-5" preload="auto" src="../assets/audio/12e05be3ffa4.mp3"></audio><p class="de">Wenn ich reich <input class="bl md" data-key="h4b-5" data-answer="wäre">, würde ich reisen.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-6" data-noser="" aria-label="6번 문장 듣기"></button><audio data-clip="b4-6" preload="auto" src="../assets/audio/35c389ba5693.mp3"></audio><p class="de">Er sagt, er <input class="bl md" data-key="h4b-6" data-answer="sei"> krank.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-7" data-noser="" aria-label="7번 문장 듣기"></button><audio data-clip="b4-7" preload="auto" src="../assets/audio/8202c37013ca.mp3"></audio><p class="de">Er sagt, er <input class="bl md" data-key="h4b-7" data-answer="komme"> morgen.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-8" data-noser="" aria-label="8번 문장 듣기"></button><audio data-clip="b4-8" preload="auto" src="../assets/audio/3adf1ea3e043.mp3"></audio><p class="de">An deiner Stelle <input class="bl md" data-key="h4b-8" data-answer="würde"> ich warten.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-9" data-noser="" aria-label="9번 문장 듣기"></button><audio data-clip="b4-9" preload="auto" src="../assets/audio/7380d6090dc8.mp3"></audio><p class="de">Sie sagt, sie <input class="bl md" data-key="h4b-9" data-answer="habe"> keine Zeit.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-10" data-noser="" aria-label="10번 문장 듣기"></button><audio data-clip="b4-10" preload="auto" src="../assets/audio/173868a8d1c6.mp3"></audio><p class="de">Das <input class="bl md" data-key="h4b-10" data-answer="wäre"> schön.</p></div></div></li>
+    </ol>
+    </div>
+
+    <div class="sub"><span class="de">4C.</span> 실제? 가정? — 접속법으로 뜻 판단하기</div>
+    <p>▶를 눌러 문장을 듣고, <strong>뜻</strong>에 맞는 것을 고르세요. 문장은 <strong>정답 보기</strong>를 누른 뒤에 나타납니다. 필요한 만큼 다시 들어도 됩니다.</p>
+    <p class="tip"><b class="t">Tip</b><strong>hätte · wäre · würde · könnte</strong>가 들리면 <strong>실제가 아닌 일</strong>입니다. habe · ist · komme(직설법)는 실제로 가능한 일입니다. <strong>hätte/wäre + 과거분사</strong>(gehabt, gereist)는 지나간 일에 대한 가정, <strong>als ob</strong> + 접속법 II 는 '~인 척'입니다. 정답 보기를 누르면 뜻을 알려 주는 말에 <span class="k1s">색 밑줄</span>이 표시됩니다.</p>
+    <div class="bsp"><span class="lab">Beispiel · 예시</span><p class="de">Wenn ich reich <span class="k1s">wäre</span>, <span class="k1s">würde</span> ich reisen. → 부자라면 여행할 텐데.</p><p class="ko">실제로는 부자가 아닙니다.</p><p class="de">Wenn ich reich <span class="k1s">bin</span>, reise ich. → 부자가 되면 여행한다.</p><p class="ko">직설법은 실제로 일어날 수 있는 일입니다.</p></div>
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+    <div class="sub2">4C-1 · 실제로 가능한 일? 가정?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-1" preload="auto" src="../assets/audio/e464460216fa.mp3"></audio><span class="mc" data-mc="h4c-1"><input type="hidden" data-key="h4c-1" data-answer="시간이 되면 온다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="시간이 되면 온다">시간이 되면 온다</button><button type="button" data-opt="시간이 없어서 못 온다">시간이 없어서 못 온다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Wenn ich Zeit <span class="k1">habe</span>, <span class="k1">komme</span> ich.</span><span class="rv-clue" data-noser="">단서: habe · komme = 직설법 → 실제로 가능한 일</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-2" preload="auto" src="../assets/audio/536b1737d62e.mp3"></audio><span class="mc" data-mc="h4c-2"><input type="hidden" data-key="h4c-2" data-answer="날씨가 좋지 않아서 산책하지 않는다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="날씨가 좋으면 산책한다">날씨가 좋으면 산책한다</button><button type="button" data-opt="날씨가 좋지 않아서 산책하지 않는다">날씨가 좋지 않아서 산책하지 않는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Wenn das Wetter schön <span class="k1">wäre</span>, <span class="k1">würde</span> ich spazieren gehen.</span><span class="rv-clue" data-noser="">단서: wäre · würde = 접속법 II → 실제로는 날씨가 좋지 않다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-3" preload="auto" src="../assets/audio/ec3e92c1fbdd.mp3"></audio><span class="mc" data-mc="h4c-3"><input type="hidden" data-key="h4c-3" data-answer="시간이 없어서 못 온다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="시간이 되면 온다">시간이 되면 온다</button><button type="button" data-opt="시간이 없어서 못 온다">시간이 없어서 못 온다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Wenn ich Zeit <span class="k1">hätte</span>, <span class="k1">würde</span> ich kommen.</span><span class="rv-clue" data-noser="">단서: hätte · würde = 접속법 II → 실제로는 시간이 없다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-4" preload="auto" src="../assets/audio/77dc76f7c543.mp3"></audio><span class="mc" data-mc="h4c-4"><input type="hidden" data-key="h4c-4" data-answer="날씨가 좋으면 산책한다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="날씨가 좋으면 산책한다">날씨가 좋으면 산책한다</button><button type="button" data-opt="날씨가 좋지 않아서 산책하지 않는다">날씨가 좋지 않아서 산책하지 않는다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Wenn das Wetter schön <span class="k1">ist</span>, <span class="k1">gehe</span> ich spazieren.</span><span class="rv-clue" data-noser="">단서: ist · gehe = 직설법 → 실제로 가능한 일</span></p></div></li>
+    </ol>
+    <div class="sub2">4C-2 · 지금? 그때? 정말?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-5" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-5" preload="auto" src="../assets/audio/170cb93ba09f.mp3"></audio><span class="mc" data-mc="h4c-5"><input type="hidden" data-key="h4c-5" data-answer="지금 돈이 없어서 여행을 못 간다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="지금 돈이 없어서 여행을 못 간다">지금 돈이 없어서 여행을 못 간다</button><button type="button" data-opt="그때 돈이 없어서 여행을 못 갔다">그때 돈이 없어서 여행을 못 갔다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Wenn ich Geld <span class="k1">hätte</span>, <span class="k1">würde</span> ich reisen.</span><span class="rv-clue" data-noser="">단서: hätte + würde reisen = 지금에 대한 가정</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-6" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-6" preload="auto" src="../assets/audio/42fab9ab4aa9.mp3"></audio><span class="mc" data-mc="h4c-6"><input type="hidden" data-key="h4c-6" data-answer="그는 아픈 척한다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="그는 정말 아프다">그는 정말 아프다</button><button type="button" data-opt="그는 아픈 척한다">그는 아픈 척한다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Er tut, <span class="k1">als ob</span> er krank <span class="k1">wäre</span>.</span><span class="rv-clue" data-noser="">단서: als ob + wäre = 사실이 아닌 것처럼 → 아픈 척</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-7" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-7" preload="auto" src="../assets/audio/6180a0c06dbf.mp3"></audio><span class="mc" data-mc="h4c-7"><input type="hidden" data-key="h4c-7" data-answer="그때 돈이 없어서 여행을 못 갔다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="지금 돈이 없어서 여행을 못 간다">지금 돈이 없어서 여행을 못 간다</button><button type="button" data-opt="그때 돈이 없어서 여행을 못 갔다">그때 돈이 없어서 여행을 못 갔다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Wenn ich Geld <span class="k1">gehabt hätte</span>, <span class="k1">wäre</span> ich <span class="k1">gereist</span>.</span><span class="rv-clue" data-noser="">단서: hätte/wäre + 과거분사 = 지나간 일에 대한 가정</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-8" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-8" preload="auto" src="../assets/audio/fe97b276d9b0.mp3"></audio><span class="mc" data-mc="h4c-8"><input type="hidden" data-key="h4c-8" data-answer="그는 정말 아프다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="그는 정말 아프다">그는 정말 아프다</button><button type="button" data-opt="그는 아픈 척한다">그는 아픈 척한다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Er <span class="k1">ist</span> krank.</span><span class="rv-clue" data-noser="">단서: ist = 직설법 → 실제로 아프다</span></p></div></li>
+    </ol>
+
+    <div class="hblock">
+    <div class="sub"><span class="de">4D.</span> 이야기 듣기 — Lenas Wunsch</div>
+    <p>이야기를 <strong>두 번</strong> 듣습니다. 첫 번째에는 <strong>내용</strong>을, 두 번째에는 <strong>접속법 형태</strong>을 듣습니다. 대본은 모두 푼 뒤에 여세요.</p>
+    <div class="audio">
+      <span class="audio-tag">♪ Lenas Wunsch</span>
+      <audio controls="{{ true }}" preload="auto" data-aud="story" data-filename="Lektion_16_Lenas_Wunsch.mp3" src="../assets/audio/ebde85184e34.mp3"></audio>
+      <div class="ap-extras">
+        <div class="ap-speed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button data-aprate="0.75" aria-pressed="false">0.75×</button><button data-aprate="1" aria-pressed="true">1×</button><button data-aprate="1.25" aria-pressed="false">1.25×</button></div>
+        <button class="ap-dl" data-ap="dl" type="button" aria-label="오디오 다운로드">⤓ MP3</button>
+      </div>
+    </div>
+    <div class="sub2">4D-1 · 1차 듣기 — 내용</div>
+    <p>이야기를 끝까지 한 번 듣고 질문에 답하세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">레나에게는 시간이 많나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q1"><input type="hidden" data-key="h4d-q1" data-answer="아니다, 시간이 별로 없다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="아니다, 시간이 별로 없다">아니다, 시간이 별로 없다</button><button type="button" data-opt="그렇다, 시간이 많다">그렇다, 시간이 많다</button></span></span></p></div></li>
+      <li><div><p class="de">시간이 더 있다면 레나는 무엇을 배울까요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q2"><input type="hidden" data-key="h4d-q2" data-answer="이탈리아어"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="이탈리아어">이탈리아어</button><button type="button" data-opt="독일어">독일어</button><button type="button" data-opt="영어">영어</button></span></span></p></div></li>
+      <li><div><p class="de">벤은 주말에 어떻다고 말하나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q3"><input type="hidden" data-key="h4d-q3" data-answer="쉰다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="쉰다">쉰다</button><button type="button" data-opt="일한다">일한다</button><button type="button" data-opt="로마에 간다">로마에 간다</button></span></span></p></div></li>
+      <li><div><p class="de">벤은 언제 가라고 하나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q4"><input type="hidden" data-key="h4d-q4" data-answer="5월"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="5월">5월</button><button type="button" data-opt="이번 주말">이번 주말</button><button type="button" data-opt="작년">작년</button></span></span></p></div></li>
+      <li><div><p class="de">작년에 레나는 왜 로마에 가지 못했나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc" data-mc="h4d-q5"><input type="hidden" data-key="h4d-q5" data-answer="시간이 없어서"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="시간이 없어서">시간이 없어서</button><button type="button" data-opt="돈이 없어서">돈이 없어서</button><button type="button" data-opt="날씨가 나빠서">날씨가 나빠서</button></span></span></p></div></li>
+    </ol>
+    <div class="sub2">4D-2 · 2차 듣기 — 들린 접속법 형태 쓰기</div>
+    <p>다시 들으면서 빈칸에 들린 <strong>동사 형태</strong>를 쓰세요. 왼쪽은 쓰임입니다.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>쓰임</sc-raw-th><sc-raw-th>들린 문장</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>가정</sc-raw-td><sc-raw-td style="text-align:left">Wenn sie mehr Zeit <input class="bl w4d" data-key="h4d-t1-1" data-answer="hätte">, <input class="bl w4d" data-key="h4d-t1-2" data-answer="würde"> sie Italienisch lernen.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>바람</sc-raw-td><sc-raw-td style="text-align:left">Sie <input class="bl w4d" data-key="h4d-t2-3" data-answer="wäre"> gern in Rom.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>남의 말 전하기</sc-raw-td><sc-raw-td style="text-align:left">Ihr Freund Ben sagt, er <input class="bl w4d" data-key="h4d-t3-4" data-answer="habe"> am Wochenende frei.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>남의 말 전하기</sc-raw-td><sc-raw-td style="text-align:left">Er sagt auch, das Wetter in Rom <input class="bl w4d" data-key="h4d-t4-5" data-answer="sei"> schön.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>정중한 부탁</sc-raw-td><sc-raw-td style="text-align:left">„<input class="bl w4d" data-key="h4d-t5-6" data-answer="Könntest|könntest"> du mir helfen?“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>정중한 표현</sc-raw-td><sc-raw-td style="text-align:left">„Ich <input class="bl w4d" data-key="h4d-t6-7" data-answer="hätte"> gern einen Plan für die Reise.“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>조언</sc-raw-td><sc-raw-td style="text-align:left">„An deiner Stelle <input class="bl w4d" data-key="h4d-t7-8" data-answer="würde"> ich im Mai fahren.“</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>바람</sc-raw-td><sc-raw-td style="text-align:left">„Das <input class="bl w4d" data-key="h4d-t8-9" data-answer="wäre"> schön!“</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p style="margin-top:18px">위 표에서 규칙을 찾아 완성해 보세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">hätte · wäre · würde 는 <span class="mc" data-mc="h4d-r1"><input type="hidden" data-key="h4d-r1" data-answer="접속법 II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="접속법 II">접속법 II</button><button type="button" data-opt="직설법 과거">직설법 과거</button><button type="button" data-opt="접속법 I">접속법 I</button></span></span> 이다.</p></div></li>
+      <li><div><p class="de">남의 말을 전할 때 er 뒤에는 <span class="mc" data-mc="h4d-r2"><input type="hidden" data-key="h4d-r2" data-answer="habe · sei"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="habe · sei">habe · sei</button><button type="button" data-opt="hat · ist">hat · ist</button><button type="button" data-opt="hätte · wäre">hätte · wäre</button></span></span> 를 쓴다.</p></div></li>
+      <li><div><p class="de">Könntest du …? 는 <span class="mc" data-mc="h4d-r3"><input type="hidden" data-key="h4d-r3" data-answer="정중한 부탁"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="정중한 부탁">정중한 부탁</button><button type="button" data-opt="명령">명령</button><button type="button" data-opt="과거 사실">과거 사실</button></span></span> 이다.</p></div></li>
+    </ol>
+    <div class="sub2">4D-3 · hatte vs hätte · 과거 가정 · als ob</div>
+    <p>빈칸에 들린 말을 쓰고, 알맞은 것을 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Letztes Jahr <input class="bl w4d" data-key="h4d-p1-10" data-answer="hatte"> sie keine Zeit.</p><p class="sol" data-sp=""><span class="lbl">이 문장은?</span> <span class="mc" data-mc="h4d-p1r"><input type="hidden" data-key="h4d-p1r" data-answer="실제 일 (직설법)"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="실제 일 (직설법)">실제 일 (직설법)</button><button type="button" data-opt="가정 (접속법)">가정 (접속법)</button></span></span></p></div></li>
+      <li><div><p class="de">Wenn sie Zeit gehabt <input class="bl w4d" data-key="h4d-p2-11" data-answer="hätte">, <input class="bl w4d" data-key="h4d-p2-12" data-answer="wäre"> sie schon damals gefahren.</p><p class="sol" data-sp=""><span class="lbl">실제로 레나는?</span> <span class="mc" data-mc="h4d-p2r"><input type="hidden" data-key="h4d-p2r" data-answer="그때 가지 못했다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="그때 가지 못했다">그때 가지 못했다</button><button type="button" data-opt="그때 갔다">그때 갔다</button></span></span></p></div></li>
+      <li><div><p class="de">Ben lacht und tut, als ob er ein Lehrer <input class="bl w4d" data-key="h4d-p3-13" data-answer="wäre">.</p><p class="sol" data-sp=""><span class="lbl">벤은 실제로 선생님인가?</span> <span class="mc" data-mc="h4d-p3r"><input type="hidden" data-key="h4d-p3r" data-answer="아니다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="아니다">아니다</button><button type="button" data-opt="그렇다">그렇다</button></span></span></p></div></li>
+    </ol>
+    <ol class="ex">
+      <li><div><p class="de">hätte/wäre + 과거분사 는 <span class="mc" data-mc="h4d-s1"><input type="hidden" data-key="h4d-s1" data-answer="지나간 일에 대한 가정"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="지나간 일에 대한 가정">지나간 일에 대한 가정</button><button type="button" data-opt="지금 일에 대한 가정">지금 일에 대한 가정</button></span></span> 이다.</p></div></li>
+      <li><div><p class="de">사실을 말하는 과거형은 <span class="mc" data-mc="h4d-s2"><input type="hidden" data-key="h4d-s2" data-answer="hatte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="hatte">hatte</button><button type="button" data-opt="hätte">hätte</button></span></span> 이다.</p></div></li>
+    </ol>
+    <details class="script">
+      <summary>대본 보기 — 다 푼 뒤에 여세요</summary>
+      <p class="sinst">줄을 누르면 그 줄만 다시 들을 수 있습니다.</p>
+      <div class="slegend"><span class="t-a">접속법 II (hätte · wäre · würde · könnte)</span><span class="t-b">접속법 I (남의 말 전하기)</span><span class="t-c">직설법 (실제 일)</span></div>
+      <button type="button" class="sline" data-seg="0.57,3.76"><span class="sn">1</span><span class="sde">Lena arbeitet viel und <span class="t-c">hat</span> wenig Zeit.</span><span class="sko">레나는 일을 많이 해서 시간이 별로 없다.</span></button>
+      <button type="button" class="sline" data-seg="4.98,8.72"><span class="sn">2</span><span class="sde">Wenn sie mehr Zeit <span class="t-a">hätte</span>, <span class="t-a">würde</span> sie Italienisch lernen.</span><span class="sko">시간이 더 있다면 그녀는 이탈리아어를 배울 텐데.</span></button>
+      <button type="button" class="sline" data-seg="9.94,11.71"><span class="sn">3</span><span class="sde">Sie <span class="t-a">wäre</span> gern in Rom.</span><span class="sko">그녀는 로마에 있으면 좋겠다고 생각한다.</span></button>
+      <button type="button" class="sline" data-seg="12.93,16.32"><span class="sn">4</span><span class="sde">Ihr Freund Ben sagt, er <span class="t-b">habe</span> am Wochenende frei.</span><span class="sko">그녀의 친구 벤은 주말에 쉰다고 말한다.</span></button>
+      <button type="button" class="sline" data-seg="17.53,20.45"><span class="sn">5</span><span class="sde">Er sagt auch, das Wetter in Rom <span class="t-b">sei</span> schön.</span><span class="sko">로마 날씨가 좋다는 말도 한다.</span></button>
+      <button type="button" class="sline" data-seg="21.66,24.12"><span class="sn">6</span><span class="sde">„<span class="t-a">Könntest</span> du mir helfen?“, fragt Lena.</span><span class="sko">&quot;나 좀 도와줄 수 있어?&quot; 레나가 묻는다.</span></button>
+      <button type="button" class="sline" data-seg="25.33,27.82"><span class="sn">7</span><span class="sde">„Ich <span class="t-a">hätte</span> gern einen Plan für die Reise.“</span><span class="sko">&quot;여행 계획이 하나 있으면 좋겠어.&quot;</span></button>
+      <button type="button" class="sline" data-seg="29.04,32.42"><span class="sn">8</span><span class="sde">Ben lacht und tut, <span class="t-a">als ob</span> er ein Lehrer <span class="t-a">wäre</span>.</span><span class="sko">벤은 웃으며 선생님인 척한다.</span></button>
+      <button type="button" class="sline" data-seg="33.63,37.26"><span class="sn">9</span><span class="sde">„An deiner Stelle <span class="t-a">würde</span> ich im Mai fahren“, sagt er.</span><span class="sko">&quot;나라면 5월에 가겠어.&quot; 그가 말한다.</span></button>
+      <button type="button" class="sline" data-seg="38.48,40.93"><span class="sn">10</span><span class="sde">„Das <span class="t-a">wäre</span> schön!“, sagt Lena.</span><span class="sko">&quot;그러면 좋겠다!&quot; 레나가 말한다.</span></button>
+      <button type="button" class="sline" data-seg="42.15,44.52"><span class="sn">11</span><span class="sde">Letztes Jahr <span class="t-c">hatte</span> sie keine Zeit.</span><span class="sko">작년에 그녀는 시간이 없었다.</span></button>
+      <button type="button" class="sline" data-seg="45.74,49.57"><span class="sn">12</span><span class="sde">Wenn sie Zeit <span class="t-a">gehabt hätte</span>, <span class="t-a">wäre</span> sie schon damals <span class="t-a">gefahren</span>.</span><span class="sko">시간이 있었더라면 그녀는 그때 이미 갔을 것이다.</span></button>
+    </details>
+    </div>
+  </section>
+
+  <!-- ===== SCHRITT 5 ===== -->
+  <section class="step s5" id="s5" data-sec="s5" data-day="2">
+    <div class="step-head"><div class="step-n">05</div><div><p class="eyebrow">Schritt 5</p><h2 class="step-title">Schreiben · 쓰기</h2></div></div>
+    <p class="lede">단계적으로 난이도가 올라갑니다. 5C에서는 아무 도움 없이 스스로!</p>
+
+    <div class="sub"><span class="de">5A.</span> 직설법 → 접속법 II (가정·정중)</div>
+    <p>빈칸을 접속법 II(würde·wäre·hätte·könnte·müsste)로 채우세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Wenn ich Geld <input class="bl md" data-key="s5a-1" data-answer="hätte">, <input class="bl md" data-key="s5a-1b" data-answer="würde"> ich ein Auto kaufen. <span class="gen">돈이 있다면 차를 살 텐데</span></p></div></li>
+      <li><div><p class="de"><input class="bl md" data-key="s5a-2" data-answer="Könnten|könnten|Würden|würden"> Sie die Tür öffnen? <span class="gen">문을 열어주시겠어요?</span></p></div></li>
+      <li><div><p class="de">Ich <input class="bl md" data-key="s5a-3" data-answer="hätte"> gern ein Glas Wasser. <span class="gen">물 한 잔 주세요</span></p></div></li>
+      <li><div><p class="de">An deiner Stelle <input class="bl md" data-key="s5a-4" data-answer="würde"> ich mehr lernen. <span class="gen">나라면 더 공부하겠어</span></p></div></li>
+      <li><div><p class="de">Wenn sie hier <input class="bl md" data-key="s5a-5" data-answer="wäre">, <input class="bl md" data-key="s5a-5b" data-answer="wäre"> es schön. <span class="gen">그녀가 여기 있다면 좋을 텐데</span></p></div></li>
+      <li><div><p class="de">Ich <input class="bl md" data-key="s5a-6" data-answer="würde"> mit ihm sprechen. <span class="gen">나라면 그에게 말하겠어</span></p></div></li>
+      <li><div><p class="de">Ich <input class="bl md" data-key="s5a-7" data-answer="müsste"> mehr lernen. <span class="gen">더 공부해야 할 텐데 (müssen)</span></p></div></li>
+      <li><div><p class="de">Das <input class="bl md" data-key="s5a-8" data-answer="wäre"> toll. <span class="gen">그거 멋질 텐데</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5B.</span> 한→독 번역 <em>— 접속법으로</em></div>
+    <p>한국어를 접속법으로 쓰세요. <strong>주어를 빠뜨리지 마세요.</strong></p>
+    <ol class="ex">
+      <li><div><p class="de">돈이 있다면 차를 살 텐데. <span class="vb">haben · kaufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-1" data-answer="Wenn ich Geld hätte, würde ich ein Auto kaufen."></p></div></li>
+      <li><div><p class="de">문을 열어주시겠어요? <span class="vb">öffnen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-2" data-answer="Könnten Sie die Tür öffnen?|Würden Sie die Tür öffnen?"></p></div></li>
+      <li><div><p class="de">물 한 잔 주세요.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-3" data-answer="Ich hätte gern ein Glas Wasser."></p></div></li>
+      <li><div><p class="de">나라면 더 공부하겠어. <span class="vb">lernen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-4" data-answer="An deiner Stelle würde ich mehr lernen.|Ich würde mehr lernen."></p></div></li>
+      <li><div><p class="de">그녀가 여기 있다면 좋을 텐데. <span class="vb">sein</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-5" data-answer="Wenn sie hier wäre, wäre es schön."></p></div></li>
+      <li><div><p class="de">그가 아프다고 한다. <span class="vb">간접화법</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-6" data-answer="Er sagt, er sei krank."></p></div></li>
+      <li><div><p class="de">그녀가 시간이 없다고 한다. <span class="vb">간접화법</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-7" data-answer="Sie sagt, sie habe keine Zeit."></p></div></li>
+      <li><div><p class="de">더 일찍 왔더라면 그를 만났을 텐데. <span class="vb">과거 가정</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-8" data-answer="Wenn ich früher gekommen wäre, hätte ich ihn getroffen."></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5C.</span> 한→독 통합 <em>— 도움 없음</em></div>
+    <p>가정·정중·간접화법·과거 가정을 모두 스스로 적용하세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">나라면 집에 갈 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-1" data-answer="Ich würde nach Hause gehen."></p></div></li>
+      <li><div><p class="de">그거 좋을 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-2" data-answer="Das wäre schön."></p></div></li>
+      <li><div><p class="de">그가 아프다고 한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-3" data-answer="Er sagt, er sei krank."></p></div></li>
+      <li><div><p class="de">돈이 있다면 차를 살 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-4" data-answer="Wenn ich Geld hätte, würde ich ein Auto kaufen."></p></div></li>
+      <li><div><p class="de">나라면 기다리겠어.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-5" data-answer="An deiner Stelle würde ich warten.|Ich würde warten."></p></div></li>
+      <li><div><p class="de">그녀가 시간이 없다고 한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-6" data-answer="Sie sagt, sie habe keine Zeit."></p></div></li>
+      <li><div><p class="de">시간이 있었더라면 왔을 텐데. (과거 가정)</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-7" data-answer="Wenn ich Zeit gehabt hätte, wäre ich gekommen."></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5D.</span> 복수 간접화법 — 접속법 I → II 적용</div>
+    <p>주어가 <strong>복수 sie</strong>입니다. 접속법 I이 직설법과 겹치면 접속법 II로(단 sein은 seien 유지). 동사 원형만 제공됩니다.</p>
+    <ol class="ex">
+      <li><div><p class="de">그들이 시간이 없다고 한다. <span class="vb">haben</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-1" data-answer="Sie sagen, sie hätten keine Zeit."></p></div></li>
+      <li><div><p class="de">그들이 독일어를 한다고 한다. <span class="vb">sprechen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-2" data-answer="Sie sagen, sie sprächen Deutsch."></p></div></li>
+      <li><div><p class="de">그들이 아프다고 한다. <span class="vb">sein</span> <span class="gen">(seien 유지)</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-3" data-answer="Sie sagen, sie seien krank."></p></div></li>
+      <li><div><p class="de">그 학생들이 베를린에 간다고 한다. <span class="vb">fahren</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-4" data-answer="Die Studenten sagen, sie führen nach Berlin.|Sie sagen, sie führen nach Berlin."></p></div></li>
+    </ol>
+
+    </section>
+
+  
+  <div class="daybar"><b>3일차</b><span>Mini-Wiederholung 2 → Schritt 6–7 + 자기 평가</span></div>
+
+  <section class="step" id="mw2" data-sec="mw2" data-day="3" data-label="Mini-Wiederholung 2 (3일차 시작)">
+    <div class="sub2">Mini-Wiederholung 2 — 과거 가정 + 접속법 I</div>
+    <sc-raw-table class="g center" style="max-width:520px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">원형</sc-raw-th><sc-raw-th>접속법 I (er)</sc-raw-th><sc-raw-th style="text-align:left">원형</sc-raw-th><sc-raw-th>접속법 I (er)</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">sein</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-1" data-answer="sei"></sc-raw-td><sc-raw-td class="k">haben</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-2" data-answer="habe"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">kommen</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-3" data-answer="komme"></sc-raw-td><sc-raw-td class="k">gehen</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-4" data-answer="gehe"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <ol class="ex" style="margin-top:8px">
+      <li><div><p class="de">Er sagt, er <input class="bl md" data-key="mw2-5" data-answer="sei"> krank. <span class="gen">아프다고 한다 (접속법 I)</span></p></div></li>
+      <li><div><p class="de">Wenn ich Zeit gehabt <input class="bl md" data-key="mw2-6" data-answer="hätte">, wäre ich gekommen. <span class="gen">시간 있었더라면</span></p></div></li>
+      <li><div><p class="de">Wenn ich reich <input class="bl md" data-key="mw2-7" data-answer="wäre">… <span class="gen">부자라면 (sein)</span></p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SCHRITT 6 ===== -->
+  <section class="step s6" id="s6" data-sec="s6" data-day="3">
+    <div class="step-head"><div class="step-n">06</div><div><p class="eyebrow">Schritt 6</p><h2 class="step-title">Sprechen · 말하기</h2></div></div>
+    <p class="lede">Deutsch 칸은 가려져 있습니다. 한국어만 보고 독일어로 말한 뒤, 칸을 눌러 확인하세요.</p>
+
+    <div class="sub2">Round 1 — 접속법 II · 가정·정중</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">시간 있으면 갈 텐데.</sc-raw-td><sc-raw-td class="de tog">Wenn ich Zeit hätte, würde ich kommen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-1" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">도와주시겠어요?</sc-raw-td><sc-raw-td class="de tog">Könnten Sie mir helfen?</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-2" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">커피 한 잔 주세요.</sc-raw-td><sc-raw-td class="de tog">Ich hätte gern einen Kaffee.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-3" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나라면 집에 갈 텐데.</sc-raw-td><sc-raw-td class="de tog">Ich würde nach Hause gehen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-4" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">내가 부자라면.</sc-raw-td><sc-raw-td class="de tog">Wenn ich reich wäre.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-5" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">베를린에 가보고 싶어.</sc-raw-td><sc-raw-td class="de tog">Ich würde gern nach Berlin reisen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-6" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나라면 기다리겠어.</sc-raw-td><sc-raw-td class="de tog">An deiner Stelle würde ich warten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-7" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그거 좋을 텐데.</sc-raw-td><sc-raw-td class="de tog">Das wäre schön.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-8" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 2 — 과거 가정 · 접속법 I</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">그가 아프대.</sc-raw-td><sc-raw-td class="de tog">Er sagt, er sei krank.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-9" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그가 내일 온대.</sc-raw-td><sc-raw-td class="de tog">Er sagt, er komme morgen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-10" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그녀가 시간 없대.</sc-raw-td><sc-raw-td class="de tog">Sie sagt, sie habe keine Zeit.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-11" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">시간 있었더라면 갔을 텐데.</sc-raw-td><sc-raw-td class="de tog">Wenn ich Zeit gehabt hätte, wäre ich gekommen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-12" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">네가 물었더라면 도왔을 텐데.</sc-raw-td><sc-raw-td class="de tog">Wenn du gefragt hättest, hätte ich geholfen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-13" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">마치 아픈 것처럼 굴어.</sc-raw-td><sc-raw-td class="de tog">Er tut, als ob er krank wäre.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-14" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">시간 있다면 갈 텐데. (wenn 생략)</sc-raw-td><sc-raw-td class="de tog">Hätte ich Zeit, würde ich kommen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-15" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그럴 수 있을 텐데.</sc-raw-td><sc-raw-td class="de tog">Das könnte sein.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-16" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 3 — 복수 간접화법 (접속법 I → II)</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">걔네 시간 없대.</sc-raw-td><sc-raw-td class="de tog">Sie sagen, sie hätten keine Zeit.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-17" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">걔네 독일어 한대.</sc-raw-td><sc-raw-td class="de tog">Sie sagen, sie sprächen Deutsch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-18" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">걔네 아프대. (sein 유지)</sc-raw-td><sc-raw-td class="de tog">Sie sagen, sie seien krank.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-19" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">걔네 내일 온대.</sc-raw-td><sc-raw-td class="de tog">Sie sagen, sie kämen morgen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-20" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">걔네 많이 배운대. (약변화)</sc-raw-td><sc-raw-td class="de tog">Sie sagen, sie würden viel lernen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-21" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 7 ===== -->
+  <section class="step s7" id="s7" data-sec="s7" data-day="3">
+    <div class="step-head"><div class="step-n">07</div><div><p class="eyebrow">Schritt 7</p><h2 class="step-title">Test · 테스트</h2></div></div>
+    <p class="lede">연습에서 <strong>한 번도 사용하지 않은 새 동사</strong>가 등장합니다. 접속법 규칙을 적용하세요.</p>
+
+    <div class="bsp"><span class="lab">테스트용 새 동사표</span>
+      <sc-raw-table class="g" style="margin:6px 0 0;font-size:14px">
+        <sc-raw-thead><sc-raw-tr><sc-raw-th>원형</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>접속법 II</sc-raw-th></sc-raw-tr></sc-raw-thead>
+        <sc-raw-tbody>
+          <sc-raw-tr><sc-raw-td class="k">gewinnen</sc-raw-td><sc-raw-td>(복권에) 당첨되다</sc-raw-td><sc-raw-td>würde gewinnen</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">fliegen</sc-raw-td><sc-raw-td>비행기로 가다</sc-raw-td><sc-raw-td>würde fliegen</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">bleiben</sc-raw-td><sc-raw-td>머물다</sc-raw-td><sc-raw-td>würde bleiben</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">anrufen</sc-raw-td><sc-raw-td>전화하다</sc-raw-td><sc-raw-td>würde anrufen</sc-raw-td></sc-raw-tr>
+        </sc-raw-tbody>
+      </sc-raw-table>
+    </div>
+
+    <div class="sub"><span class="de">7A.</span> 새 동사 독→한 해석</div>
+    <ol class="ex">
+      <li><div><p class="de">Wenn ich im Lotto gewinnen <strong>würde</strong>, würde ich ein Haus kaufen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-1"></p></div></li>
+      <li><div><p class="de">Ich <strong>würde</strong> gern nach Berlin fliegen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-2"></p></div></li>
+      <li><div><p class="de">An deiner Stelle <strong>würde</strong> ich zu Hause bleiben.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-3"></p></div></li>
+      <li><div><p class="de">Ich würde dich anrufen, wenn ich Zeit <strong>hätte</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-4"></p></div></li>
+      <li><div><p class="de">Er sagt, er <strong>gewinne</strong> oft.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-5"></p></div></li>
+      <li><div><p class="de">Sie sagt, sie <strong>fliege</strong> morgen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-6"></p></div></li>
+      <li><div><p class="de">Wenn ich reich <strong>wäre</strong>, würde ich nicht arbeiten.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-7"></p></div></li>
+      <li><div><p class="de"><strong>Könntest</strong> du mich anrufen?</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-8"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7B.</span> 새 동사 한→독 번역</div>
+    <p>접속법으로 종류를 맞춰 쓰세요. 주어를 빼뜨리지 마세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">복권에 당첨되면 집을 살 텐데. <span class="vb">gewinnen · kaufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-1" data-answer="Wenn ich im Lotto gewinnen würde, würde ich ein Haus kaufen."></p></div></li>
+      <li><div><p class="de">베를린에 비행기로 가고 싶어. <span class="vb">fliegen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-2" data-answer="Ich würde gern nach Berlin fliegen."></p></div></li>
+      <li><div><p class="de">나라면 집에 머물겠어. <span class="vb">bleiben</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-3" data-answer="An deiner Stelle würde ich zu Hause bleiben."></p></div></li>
+      <li><div><p class="de">시간이 있다면 너에게 전화할 텐데. <span class="vb">anrufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-4" data-answer="Ich würde dich anrufen, wenn ich Zeit hätte.|Wenn ich Zeit hätte, würde ich dich anrufen."></p></div></li>
+      <li><div><p class="de">그가 자주 이긴다고 한다. <span class="vb">간접화법 gewinnen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-5" data-answer="Er sagt, er gewinne oft."></p></div></li>
+      <li><div><p class="de">그녀가 내일 비행기로 간다고 한다. <span class="vb">간접화법 fliegen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-6" data-answer="Sie sagt, sie fliege morgen."></p></div></li>
+      <li><div><p class="de">네가 전화했더라면 내가 갔을 텐데. <span class="vb">과거 가정 anrufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-7" data-answer="Wenn du mich angerufen hättest, wäre ich gekommen."></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7C.</span> 새 동사 오류 수정</div>
+    <p>바르게 고친 것을 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Wenn ich <strong>reich würde sein</strong>, würde ich nicht arbeiten. <span class="gen">부자라면</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="t7c-1"><input type="hidden" data-key="t7c-1" data-answer="Wenn ich reich wäre, würde ich nicht arbeiten."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Wenn ich reich wäre, würde ich nicht arbeiten.">Wenn ich reich wäre, würde ich nicht arbeiten.</button><button type="button" data-opt="Wenn ich reich sein würde, würde ich nicht arbeiten.">Wenn ich reich sein würde, würde ich nicht arbeiten.</button><button type="button" data-opt="Wenn ich reich war, würde ich nicht arbeiten.">Wenn ich reich war, würde ich nicht arbeiten.</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Er sagt, er <strong>gewinnt</strong> oft. <span class="gen">간접화법</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="t7c-2"><input type="hidden" data-key="t7c-2" data-answer="Er sagt, er gewinne oft."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Er sagt, er gewönne oft sei.">Er sagt, er gewönne oft sei.</button><button type="button" data-opt="Er sagt, er gewinne oft.">Er sagt, er gewinne oft.</button><button type="button" data-opt="Er sagt, er gewinnt oft.">Er sagt, er gewinnt oft.</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Ich würde gern nach Berlin <strong>fliegen würde</strong>. <span class="gen">가보고 싶어 (würde 중복)</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="t7c-3"><input type="hidden" data-key="t7c-3" data-answer="Ich würde gern nach Berlin fliegen."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Ich würde gern nach Berlin fliegen würde.">Ich würde gern nach Berlin fliegen würde.</button><button type="button" data-opt="Ich wäre gern nach Berlin fliegen.">Ich wäre gern nach Berlin fliegen.</button><button type="button" data-opt="Ich würde gern nach Berlin fliegen.">Ich würde gern nach Berlin fliegen.</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Wenn du mich angerufen <strong>würdest</strong>, wäre ich gekommen. <span class="gen">과거 가정</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="t7c-4"><input type="hidden" data-key="t7c-4" data-answer="Wenn du mich angerufen hättest, wäre ich gekommen."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Wenn du mich angerufen hättest, wäre ich gekommen.">Wenn du mich angerufen hättest, wäre ich gekommen.</button><button type="button" data-opt="Wenn du mich anrufen würdest, wäre ich gekommen.">Wenn du mich anrufen würdest, wäre ich gekommen.</button><button type="button" data-opt="Wenn du mich angerufen wärest, wäre ich gekommen.">Wenn du mich angerufen wärest, wäre ich gekommen.</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ <strong>Könntest</strong> Sie mich anrufen? <span class="gen">정중 (Sie)</span></p><p class="sol"><span class="ar">→</span> <span class="mc col" data-mc="t7c-5"><input type="hidden" data-key="t7c-5" data-answer="Könnten Sie mich anrufen?"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Könnte Sie mich anrufen?">Könnte Sie mich anrufen?</button><button type="button" data-opt="Könnten Sie mich anrufen?">Könnten Sie mich anrufen?</button><button type="button" data-opt="Könntest Sie mich anrufen?">Könntest Sie mich anrufen?</button></span></span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7D.</span> 문법 핵심 빈칸</div>
+    <ol class="ex gram">
+      <li><div><p class="de">접속법은 사실을 단언하지 않고 <span class="mc" data-mc="t7d-1"><input type="hidden" data-key="t7d-1" data-answer="가정·전달"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="명령">명령</button><button type="button" data-opt="질문">질문</button><button type="button" data-opt="가정·전달">가정·전달</button></span></span> 할 때 쓰는 동사 모양이다.</p></div></li>
+      <li><div><p class="de">접속법 <span class="mc" data-mc="t7d-2"><input type="hidden" data-key="t7d-2" data-answer="II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span>는 가정·정중, 접속법 <span class="mc" data-mc="t7d-3"><input type="hidden" data-key="t7d-3" data-answer="I"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="I">I</button><button type="button" data-opt="II">II</button></span></span>은 남의 말 전달.</p></div></li>
+      <li><div><p class="de">일반 동사 접속법 II는 <span class="mc" data-mc="t7d-4"><input type="hidden" data-key="t7d-4" data-answer="würde"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wäre">wäre</button><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="würde">würde</button></span></span> + 원형이다.</p></div></li>
+      <li><div><p class="de">sein→<span class="mc" data-mc="t7d-5"><input type="hidden" data-key="t7d-5" data-answer="wäre"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wäre">wäre</button><button type="button" data-opt="würde">würde</button><button type="button" data-opt="hätte">hätte</button></span></span>, haben→<span class="mc" data-mc="t7d-6"><input type="hidden" data-key="t7d-6" data-answer="hätte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="würde">würde</button><button type="button" data-opt="hätte">hätte</button><button type="button" data-opt="wäre">wäre</button></span></span>, können→<span class="mc" data-mc="t7d-7"><input type="hidden" data-key="t7d-7" data-answer="könnte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="müsste">müsste</button><button type="button" data-opt="würde">würde</button><button type="button" data-opt="könnte">könnte</button></span></span>.</p></div></li>
+      <li><div><p class="de">과거 가정은 hätte/wäre + <span class="mc" data-mc="t7d-8"><input type="hidden" data-key="t7d-8" data-answer="과거분사"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="과거분사">과거분사</button><button type="button" data-opt="원형">원형</button><button type="button" data-opt="현재분사">현재분사</button></span></span>, 간접화법 sein→<span class="mc" data-mc="t7d-9"><input type="hidden" data-key="t7d-9" data-answer="sei"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wäre">wäre</button><button type="button" data-opt="sei">sei</button><button type="button" data-opt="sein">sein</button></span></span>.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SELF-ASSESSMENT ===== -->
+  <div class="assess" data-sec="assess">
+    <p class="ahead"><span class="tagpill">지시</span> 자기 평가 · Selbstbewertung</p>
+    <p class="ainst">자신 있으면 <b>O</b>, 아직 불안하면 <b>△</b>, 모르겠으면 <b>X</b>를 누르세요.</p>
+    <div class="sub2">문법 이해</div>
+    <div class="check"><p>접속법이 현실에서 한 발 물러선 동사임을 안다.</p><div class="rate" data-rate="g1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>접속법 II(würde·wäre·hätte)를 만들 수 있다.</p><div class="rate" data-rate="g2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>가정과 정중 표현을 구분한다.</p><div class="rate" data-rate="g3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>과거 가정(hätte/wäre + 과거분사)을 안다.</p><div class="rate" data-rate="g4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>접속법 I(간접화법, sei·habe·komme)을 안다.</p><div class="rate" data-rate="g5"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>접속법 I이 직설법과 겹치면(복수 sie) 접속법 II로 바꿔 전달할 수 있다.</p><div class="rate" data-rate="g6"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">단어</div>
+    <div class="check"><p>wäre·hätte·könnte를 외웠다.</p><div class="rate" data-rate="w1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>접속법 I(sei·habe·komme)의 형태를 안다.</p><div class="rate" data-rate="w2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">실전 적용</div>
+    <div class="check"><p>가정문(wenn … hätte/wäre)을 쓸 수 있다.</p><div class="rate" data-rate="p1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>정중한 요청을 만들 수 있다.</p><div class="rate" data-rate="p2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>간접화법을 접속법 I로 쓸 수 있다.</p><div class="rate" data-rate="p3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>새 동사에도 접속법 규칙을 적용할 수 있다.</p><div class="rate" data-rate="p4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="scorebox"><b>해석</b><br>O가 9개 이상 — 접속법을 잘 이해했습니다! 다음 챕터로.<br>△가 3개 이상 — 접속법 II·I를 한 번 더 복습 후 Test를 다시.<br>X가 있다면 — Schritt 1부터 차근차근 다시 해보세요.</div>
+  </div>
+
+  <div class="footer">
+    <h3>Gut gemacht!</h3>
+    <p>입력한 답안은 자동으로 브라우저에 저장됩니다.<br>다 풀고 <strong>과제 제출하기</strong> 버튼으로 제출해 주세요.</p>
+    <div class="acts">
+      <button class="btn go" onclick="{{ submitNet }}">과제 제출하기</button>
+      <button class="btn" onclick="{{ print }}">인쇄 / PDF</button>
+    </div>
+  </div>
+
+<nav class="sd-nav" data-no-print aria-label="Hausaufgabe 이동"><a class="sd-prev" href="lektion-15.html"><span class="sd-dir">← 이전 · Lektion 15</span><span class="sd-ttl">수동태</span></a><a class="sd-toc" href="../../lektion.html?n=16"><span class="sd-dir">SODA GRAMMATIK KURS</span><span class="sd-ttl">Lektion 16 선택으로 돌아가기</span></a></nav>
+</div>
+</div>
+
+<a class="sd-home" href="../../lektion.html?n=16" aria-label="Lektion 16 선택으로 돌아가기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="sd-lab">선택</span></a>
+<div class="fontctl" aria-label="글씨 크기 조절"><button type="button" data-fs="dec" aria-label="작게">A−</button><button type="button" data-fs="reset" class="fs-val" aria-label="기본 크기"><span data-fs="val">100%</span></button><button type="button" data-fs="inc" aria-label="크게">A+</button></div>
+
+
+
+
+</x-dc>
+
+<style>
+  .col{min-width:0;}
+
+  /* ===== Schritt 4C · 4D ===== */
+  .ser-only{display:none !important;}
+  .hblock{position:relative;}
+  .clipbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 0;}
+  .cliptag{flex:none;font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;}
+  ol.ex .lrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  button.play{flex:none;width:40px;height:40px;border-radius:999px;border:none;background:var(--c);color:#fff;cursor:pointer;display:inline-grid;place-items:center;font-family:var(--sans);font-size:13px;line-height:1;padding:0;box-shadow:0 4px 12px rgba(24,26,32,.14);transition:background .15s,transform .1s;}
+  button.play::before{content:'\25B6\FE0E';margin-left:2px;}
+  button.play.on{background:var(--ink);}
+  button.play.on::before{content:'\25A0';margin-left:0;}
+  button.play:active{transform:scale(.94);}
+  input.bl.w4d{min-width:0;width:118px;}
+  .reveal{display:none;margin:10px 0 0;padding:10px 14px;background:var(--ct);border-radius:12px;}
+  .reveal.show{display:block;}
+  .reveal .rv-de{display:block;font-size:16.5px;font-weight:600;color:var(--ink);}
+  .reveal .rv-clue{display:block;font-size:13.5px;color:#4b5058;margin-top:4px;}
+  .k1,.k1s{color:var(--c);border-bottom:2.5px solid var(--c);}
+  .k1s{font-weight:700;}
+  details.script{margin:28px 0 0;border:1.5px solid var(--cl);border-radius:18px;background:var(--paper);overflow:hidden;}
+  details.script>summary{cursor:pointer;list-style:none;padding:14px 18px;font-size:15px;font-weight:700;color:var(--c);background:var(--ct);}
+  details.script>summary::-webkit-details-marker{display:none;}
+  details.script>summary::before{content:'\25B8\FE0E';display:inline-block;margin-right:8px;transition:transform .15s;}
+  details.script[open]>summary::before{transform:rotate(90deg);}
+  .sinst{font-size:13.5px;color:var(--muted);margin:12px 18px 8px;}
+  .slegend{display:flex;flex-wrap:wrap;gap:8px;margin:0 18px 12px;font-size:12.5px;}
+  .slegend span{padding:2px 10px;}
+  button.sline{display:grid;grid-template-columns:28px 1fr;gap:2px 10px;width:100%;text-align:left;background:#fff;border:none;border-top:1px solid var(--line);padding:10px 18px;cursor:pointer;font-family:var(--sans);color:var(--ink);line-height:1.5;}
+  button.sline:hover{background:var(--ct);}
+  button.sline.on{background:var(--ct);box-shadow:inset 4px 0 0 var(--c);}
+  button.sline .sn{grid-row:span 2;font-size:12px;font-weight:700;color:var(--c);padding-top:3px;}
+  button.sline .sde{font-size:16px;font-weight:500;}
+  button.sline .sko{font-size:13.5px;color:var(--muted);}
+  .t-a,.t-b,.t-c{border-radius:6px;padding:0 3px;}
+  .t-a{background:#e3ecfb;box-shadow:inset 0 -2px 0 #3559b3;}
+  .t-b{background:#fff1d6;box-shadow:inset 0 -2px 0 #e0a43a;}
+  .t-c{background:#e3f4ee;box-shadow:inset 0 -2px 0 #0e7a5f;}
+  @media print{ button.play,.clipbar,.reveal,details.script{display:none !important;} }
+  /* ===== Schritt 4A · 4B 문장별 재생 ===== */
+  ol.ex .lrow > input.bl.lg{flex:1 1 220px;width:auto;min-width:0;margin-top:0;}
+  ol.ex .lrow > p.de{flex:1 1 220px;}
+</style>
+
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:960,&quot;height&quot;:760},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#384568&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#384568&quot;,&quot;#2563a8&quot;,&quot;#1a7a5c&quot;,&quot;#1c1e24&quot;]},&quot;mono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;디자인&quot;}}">
+class Component extends DCLogic {
+  state = { filled: 0, total: 0 };
+  get KEY() { return 'uebung-lektion-16-v4'; }
+  componentDidMount() {
+    try { this.store = JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch (e) { this.store = {}; }
+    if (!this.rootEl) return;
+    this.applyAccent();
+    window.addEventListener('beforeunload', () => { try { this.save(); } catch (e) {} });
+    const __wrap = this.rootEl.querySelector('.wrap'); const __ctl = document.querySelector('.fontctl');
+    if (__wrap && __ctl) { let __fs = parseFloat(localStorage.getItem('uebung-fontscale')) || 1; const __apply = () => { __wrap.style.zoom = __fs; const v = __ctl.querySelector('[data-fs="val"]'); if (v) v.textContent = Math.round(__fs*100)+'%'; }; __apply(); const __set = (d) => { __fs = Math.min(1.6, Math.max(0.7, Math.round((__fs+d)*10)/10)); localStorage.setItem('uebung-fontscale', __fs); __apply(); }; __ctl.querySelector('[data-fs="dec"]').addEventListener('click', () => __set(-0.1)); __ctl.querySelector('[data-fs="inc"]').addEventListener('click', () => __set(0.1)); __ctl.querySelector('[data-fs="reset"]').addEventListener('click', () => { __fs = 1; localStorage.setItem('uebung-fontscale', __fs); __apply(); }); }
+    this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { const v = this.store[el.dataset.key]; if (v != null) el.value = v; });
+    this.rootEl.querySelectorAll('[data-rate]').forEach((g) => { const v = this.store['rate:' + g.dataset.rate]; g.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === v ? 'true' : 'false'); }); });
+    this.rootEl.querySelectorAll('.mc').forEach((w) => { this.syncMc(w); this.mcLabel(w); });
+    this.rootEl.querySelectorAll('audio[data-aud]').forEach((au) => this.initPlayer(au));
+    this.initClips();
+    this.buildCheckBars(); this.recount();
+  }
+  componentDidUpdate(prev) { if (prev && (prev.accent !== this.props.accent || prev.mono !== this.props.mono)) this.applyAccent(); }
+  applyAccent() { if (this.rootEl) this.rootEl.classList.toggle('mono', !!this.props.mono);
+    if (this.rootEl && this.props.accent) { this.rootEl.style.setProperty('--accent', this.props.accent); document.documentElement.style.setProperty('--accent', this.props.accent); } }
+  setRoot = (el) => { this.rootEl = el; };
+  initPlayer(au) { const box = au.closest('.audio'); if (!box) return; au.controls = true; const id = au.dataset.aud; const rKey = 'aspeed:' + id; const speedBtns = [...box.querySelectorAll('[data-aprate]')]; if (!this.store) this.store = {}; const savedR = parseFloat(this.store[rKey]); const initR = !isNaN(savedR) ? savedR : 1; au.playbackRate = initR; speedBtns.forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.aprate) === initR ? 'true' : 'false')); const dlBtn = box.querySelector('[data-ap="dl"]'); if (dlBtn) dlBtn.addEventListener('click', () => { const a = document.createElement('a'); a.href = au.currentSrc || au.src; a.download = au.dataset.filename || 'audio.mp3'; document.body.appendChild(a); a.click(); a.remove(); }); speedBtns.forEach((b) => b.addEventListener('click', () => { const r = parseFloat(b.dataset.aprate); au.playbackRate = r; speedBtns.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); this.store[rKey] = r; this.save(); })); }
+  syncMc = (w) => { const inp = w.querySelector('input[data-key]'); const v = inp ? (inp.value || '') : ''; w.querySelectorAll('button[data-opt]').forEach((b) => b.setAttribute('aria-pressed', (v !== '' && b.dataset.opt === v) ? 'true' : 'false')); };
+  closeMc = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('.mc.open').forEach((g) => { g.classList.remove('open'); const t = g.querySelector('.mct'); if (t) t.setAttribute('aria-expanded', 'false'); }); };
+  mcLabel = (g) => { const inp = g.querySelector('input[data-key]'); const t = g.querySelector('.mct .mctv'); if (!inp || !t) return; const v = (inp.value || '').trim(); t.textContent = v === '' ? '선택하기' : v; g.classList.toggle('picked', v !== ''); };
+  pickMc = (btn) => { const w = btn.closest('.mc'); if (!w) return; const inp = w.querySelector('input[data-key]'); if (!inp) return; if (!this.store) this.store = {}; const next = inp.value === btn.dataset.opt ? '' : btn.dataset.opt; inp.value = next; this.store[inp.dataset.key] = next; w.classList.remove('ck-ok', 'ck-near', 'ck-no'); this.syncMc(w); this.mcLabel(w); this.touch(this.secOf(w)); this.save(); this.recount(); };
+  ansText = (n) => { if (!n) return ' [____] '; const v = (n.value || '').trim(); const fa = (this.store && this.store.__fa) ? this.store.__fa[n.dataset.key] : null; const base = (fa != null ? fa : v); let t = base || '____'; if (fa != null && (fa || '') !== v) t = t + ' \u203B\uD655\uC778 \uD6C4 \uC218\uC815: ' + (v || '(\uC9C0\uC6C0)'); return ' [' + t + '] '; };
+  initClips() {
+    if (!this.rootEl) return;
+    const all = [...this.rootEl.querySelectorAll('audio')];
+    all.forEach((a) => a.addEventListener('play', () => { all.forEach((b) => { if (b !== a && !b.paused) b.pause(); }); }));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((au) => {
+      const btn = () => this.rootEl && this.rootEl.querySelector('button[data-play="' + au.dataset.clip + '"]');
+      const off = () => { const b = btn(); if (b) b.classList.remove('on'); };
+      au.addEventListener('ended', off);
+      au.addEventListener('pause', off);
+      au.addEventListener('play', () => { const b = btn(); if (b) b.classList.add('on'); });
+    });
+    this.syncClipRate();
+  }
+  syncClipRate() {
+    if (!this.rootEl) return;
+    const r = parseFloat((this.store || {}).cliprate) || 1;
+    this.rootEl.querySelectorAll('button[data-cliprate]').forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.cliprate) === r ? 'true' : 'false'));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((a) => { a.playbackRate = r; });
+  }
+  setClipRate = (b) => { if (!this.store) this.store = {}; this.store.cliprate = parseFloat(b.dataset.cliprate) || 1; this.save(); this.syncClipRate(); };
+  playClip = (btn) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-clip="' + btn.dataset.play + '"]');
+    if (!au) return;
+    if (!au.paused) { au.pause(); return; }
+    au.playbackRate = parseFloat((this.store || {}).cliprate) || 1;
+    try { au.currentTime = 0; } catch (err) {}
+    const p = au.play();
+    if (p && p.catch) p.catch(() => btn.classList.remove('on'));
+  };
+  playSeg = (el) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-aud="story"]');
+    if (!au || !el.dataset.seg) return;
+    const ab = el.dataset.seg.split(',').map(parseFloat);
+    if (this.__segClear) this.__segClear();
+    const stop = () => { if (au.currentTime >= ab[1] + 0.15) au.pause(); };
+    const clear = () => { au.removeEventListener('timeupdate', stop); au.removeEventListener('pause', clear); el.classList.remove('on'); if (this.__segClear === clear) this.__segClear = null; };
+    this.__segClear = clear;
+    el.classList.add('on');
+    try { au.currentTime = Math.max(0, ab[0] - 0.1); } catch (err) {}
+    au.addEventListener('timeupdate', stop);
+    au.addEventListener('pause', clear);
+    const p = au.play();
+    if (p && p.catch) p.catch(() => clear());
+  };
+  save() { try { localStorage.setItem(this.KEY, JSON.stringify(this.store || {})); } catch (e) {} }
+  onInput = (e) => { const el = e.target; if (!el || !el.dataset || el.dataset.key == null) return; if (!this.store) this.store = {}; this.store[el.dataset.key] = el.value; el.classList.remove('ck-ok', 'ck-near', 'ck-no'); this.touch(this.secOf(el)); this.save(); this.recount(); };
+  chkNorm = (v) => (v == null ? '' : String(v)).normalize('NFC').replace(/\s+/g, ' ').trim().replace(/[.!?]+\s*$/, '');
+  chkFold = (s) => s.toLowerCase().replace(/\u00e4/g, 'ae').replace(/\u00f6/g, 'oe').replace(/\u00fc/g, 'ue').replace(/\u00df/g, 'ss');
+  chkMatch = (val, ans) => { const v = this.chkNorm(val); if (!v) return 'no'; const alts = String(ans).split('|').map((a) => this.chkNorm(a)); if (alts.indexOf(v) >= 0) return 'ok'; const fv = this.chkFold(v); if (alts.some((a) => this.chkFold(a) === fv)) return 'near'; return 'no'; };
+  secOf = (el) => { const s = el && el.closest && el.closest('[data-sec]'); return s ? s.dataset.sec : null; };
+  touch = (sec) => { if (!this.store) this.store = {}; const now = Date.now(); let L = this.store.__s; if (!Array.isArray(L)) { L = []; this.store.__s = L; } let cur = L[L.length - 1]; if (!cur || (now - cur.e) > 45 * 60 * 1000) { cur = { s: now, e: now, x: [] }; L.push(cur); } cur.e = now; if (sec && cur.x.indexOf(sec) < 0) cur.x.push(sec); };
+  buildCheckBars = () => { if (!this.rootEl) return; const seen = []; this.rootEl.querySelectorAll('input[data-answer]').forEach((inp) => { let c = inp.closest('ol, table'); if (!c) c = inp.closest('p'); if (!c) c = inp.parentElement; if (!c || seen.indexOf(c) >= 0) return; seen.push(c); const bar = document.createElement('div'); bar.className = 'chkbar'; bar.innerHTML = '<button type="button" data-chk>정답 확인</button><button type="button" data-ansr disabled>정답 보기</button><span class="chkres"></span>'; c.insertAdjacentElement('afterend', bar); }); };
+  runCheck = (btn) => { const bar = btn.closest('.chkbar'); const scope = bar && bar.previousElementSibling; if (!scope) return; if (!this.store) this.store = {}; if (!this.store.__fa) this.store.__fa = {}; let ok = 0, near = 0, tot = 0; scope.querySelectorAll('input[data-answer]').forEach((i) => { tot++; const fv = (i.value || '').trim(); if (this.store.__fa[i.dataset.key] == null) this.store.__fa[i.dataset.key] = fv; const host = i.closest('.mc') || i; host.classList.remove('ck-ok', 'ck-near', 'ck-no'); const st = this.chkMatch(i.value, i.dataset.answer); host.classList.add('ck-' + st); if (st === 'ok') ok++; else if (st === 'near') near++; }); const ab = bar.querySelector('[data-ansr]'); if (ab) ab.disabled = false; const res = bar.querySelector('.chkres'); if (res) res.textContent = '맞음 ' + ok + '/' + tot + (near ? ' · 표기 확인 ' + near : '') + ' · 제출 기준 답안 기록됨'; this.touch(this.secOf(btn)); this.save(); };
+  toggleAnswers = (btn) => { const bar = btn.closest('.chkbar'); const scope = bar && bar.previousElementSibling; if (!scope) return; const on = btn.classList.toggle('on'); btn.textContent = on ? '정답 숨기기' : '정답 보기'; scope.querySelectorAll('input[data-answer]').forEach((i) => { const host = i.closest('.mc') || i; let sp = host.nextElementSibling; if (!(sp && sp.classList && sp.classList.contains('ckans'))) { sp = document.createElement('span'); sp.className = 'ckans'; host.insertAdjacentElement('afterend', sp); } sp.textContent = on ? i.dataset.answer.split('|')[0] : ''; sp.style.display = on ? '' : 'none'; }); scope.querySelectorAll('.reveal').forEach((r) => r.classList.toggle('show', on)); };
+  clearCheckUI = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('.ck-ok, .ck-near, .ck-no').forEach((i) => i.classList.remove('ck-ok', 'ck-near', 'ck-no')); this.rootEl.querySelectorAll('.ckans').forEach((s) => s.remove()); this.rootEl.querySelectorAll('.reveal.show').forEach((r) => r.classList.remove('show')); this.rootEl.querySelectorAll('.chkbar .chkres').forEach((s) => { s.textContent = ''; }); this.rootEl.querySelectorAll('.chkbar [data-ansr]').forEach((b) => { b.disabled = true; b.classList.remove('on'); b.textContent = '정답 보기'; }); };
+  onClick = (e) => {
+    const __pl = e.target.closest && e.target.closest('button[data-play]'); if (__pl) { this.closeMc(); this.playClip(__pl); return; }
+    const __cr = e.target.closest && e.target.closest('button[data-cliprate]'); if (__cr) { this.closeMc(); this.setClipRate(__cr); return; }
+    const __sg = e.target.closest && e.target.closest('[data-seg]'); if (__sg) { this.closeMc(); this.playSeg(__sg); return; }
+    const __mt = e.target.closest && e.target.closest('.mc>.mct');
+    if (__mt) { const g = __mt.closest('.mc'); const wasOpen = g.classList.contains('open'); this.closeMc(); if (!wasOpen) { g.classList.add('open'); __mt.setAttribute('aria-expanded', 'true'); } return; }
+    const __mo = e.target.closest && e.target.closest('.mc button[data-opt]'); if (__mo) { this.pickMc(__mo); this.closeMc(); return; }
+    if (!(e.target.closest && e.target.closest('.mc'))) this.closeMc();
+    const __cb = e.target.closest && e.target.closest('button[data-chk]'); if (__cb) { this.runCheck(__cb); return; }
+    const __ab = e.target.closest && e.target.closest('button[data-ansr]'); if (__ab) { this.toggleAnswers(__ab); return; } const de = e.target.closest && e.target.closest('td.de.tog'); if (de) { de.classList.toggle('show'); return; } const btn = e.target.closest && e.target.closest('button[data-val]'); if (!btn) return; const group = btn.closest('[data-rate]'); if (!group) return; const key = 'rate:' + group.dataset.rate; if (!this.store) this.store = {}; const next = this.store[key] === btn.dataset.val ? '' : btn.dataset.val; this.store[key] = next; this.touch(this.secOf(group)); this.save(); group.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === next ? 'true' : 'false'); }); };
+  recount = () => { if (!this.rootEl) return; const inputs = [...this.rootEl.querySelectorAll('input[data-key]:not([data-noprogress])')]; const total = inputs.length; const filled = inputs.filter((i) => (i.value || '').trim() !== '').length; this.setState({ filled, total }); };
+  print = () => { window.print(); };
+  reset = () => { if (!window.confirm('입력한 모든 답안을 지울까요?')) return; this.clearCheckUI(); this.store = {}; this.save(); if (this.rootEl) { this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { el.value = ''; }); this.rootEl.querySelectorAll('.mc button[data-opt]').forEach((b) => b.setAttribute('aria-pressed', 'false')); this.rootEl.querySelectorAll('.mc').forEach((g) => this.mcLabel(g)); this.closeMc(); this.rootEl.querySelectorAll('[data-rate] button').forEach((b) => b.setAttribute('aria-pressed', 'false')); } this.syncClipRate(); this.recount(); };
+  studentName() { const el = this.rootEl && this.rootEl.querySelector('input[data-key="meta-name"]'); return el ? (el.value || '').trim() : ''; }
+  buildText() { const r = this.rootEl; if (!r) return ''; const inputs = [...r.querySelectorAll('input[data-key]:not([data-noprogress])')]; const filled = inputs.filter((i) => (i.value || '').trim() !== '').length; const out = []; out.push('Sophia Deutsch Akademie'); out.push('Übung · Lektion 16 — Konjunktiv I und II · 보강판 · v4'); out.push('이름: ' + (this.studentName() || '(미입력)')); out.push('제출 시각: ' + new Date().toLocaleString('ko-KR')); out.push('진행: ' + filled + ' / ' + inputs.length); out.push('채점 기준: 「정답 확인」을 누른 시점의 최초 답안 (확인 후 고친 답은 ※로 표시)'); const serialize = (node) => { const parts = []; const walk = (n) => { if (n.nodeType === 3) { parts.push(n.nodeValue); return; } if (n.nodeType !== 1) return; if (n.tagName === 'INPUT') { parts.push(this.ansText(n)); return; } if (n.classList && n.classList.contains('mc')) { parts.push(this.ansText(n.querySelector('input[data-key]'))); return; } if (n.classList && n.classList.contains('note')) return; if (n.hasAttribute && n.hasAttribute('data-noser')) return; if (n.hasAttribute && n.hasAttribute('data-sp')) parts.push(' '); if (n.tagName === 'TD' || n.tagName === 'TH') parts.push(' | '); if (n.classList && n.classList.contains('rate')) { const sel = n.querySelector('button[aria-pressed="true"]'); parts.push(' (' + (sel ? sel.dataset.val : '-') + ') '); return; } n.childNodes.forEach(walk); }; node.childNodes.forEach(walk); return parts.join('').replace(/\s+/g, ' ').trim(); }; r.querySelectorAll('section.step').forEach((sec) => { const eb = sec.querySelector('.eyebrow'); const tt = sec.querySelector('.step-title'); out.push(''); out.push('==== ' + (sec.dataset.label || ((eb ? eb.textContent.trim() : '') + ' — ' + (tt ? tt.textContent.trim() : ''))) + ' ===='); const items = sec.querySelectorAll('.sub, .sub2, ol.ex > li, table.sp tbody tr, table.g tbody tr, :scope > p'); let n = 0; items.forEach((it) => { if (it.matches('.sub, .sub2')) { out.push(''); out.push('— ' + it.textContent.trim()); n = 0; return; } if (it.matches('table.g tbody tr')) { if (it.querySelector('input[data-key]')) out.push('  · ' + serialize(it)); return; } if (it.matches('table.sp tbody tr')) { const ko = it.querySelector('.ko'); const cnt = it.querySelector('input[data-key]'); out.push('  • ' + (ko ? ko.textContent.trim() : '') + '  — 연습 ' + ((cnt && cnt.value) ? cnt.value : '0') + '회'); return; } if (!it.querySelector('input[data-key]')) return; n++; out.push('  ' + n + '. ' + serialize(it)); }); }); const assess = r.querySelector('.assess'); if (assess) { out.push(''); out.push('==== 자기 평가 ===='); assess.querySelectorAll('.check').forEach((ch) => { const stmt = ch.querySelector('p'); const sel = ch.querySelector('button[aria-pressed="true"]'); out.push('  [' + (sel ? sel.dataset.val : ' ') + '] ' + (stmt ? stmt.textContent.trim() : '')); }); }     try {
+      const SL = { s1: 'Schritt 1', s2: 'Schritt 2', s3: 'Schritt 3', s4: 'Schritt 4', s5: 'Schritt 5', s6: 'Schritt 6', s7: 'Schritt 7', mw1: 'Mini-Wiederholung 1', mw2: 'Mini-Wiederholung 2', assess: '자기 평가' };
+      const ORD = ['s1', 's2', 's3', 'mw1', 's4', 's5', 'mw2', 's6', 's7', 'assess'];
+      const ses = (this.store && Array.isArray(this.store.__s)) ? this.store.__s : [];
+      if (ses.length) {
+        out.push(''); out.push('==== 학습 기록 ===='); out.push('(각 단계를 학습한 날짜·시간이 자동 기록됩니다)');
+        const fd = (t) => new Date(t).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' });
+        const ft = (t) => new Date(t).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+        ses.forEach((s, i) => {
+          const xs = ORD.filter((k) => (s.x || []).indexOf(k) >= 0);
+          const labs = []; let j = 0;
+          while (j < xs.length) {
+            if (/^s\d$/.test(xs[j])) { let k = j; while (k + 1 < xs.length && /^s\d$/.test(xs[k + 1]) && parseInt(xs[k + 1][1], 10) === parseInt(xs[k][1], 10) + 1) k++; labs.push(k > j ? ('Schritt ' + xs[j][1] + '\u2013' + xs[k][1]) : SL[xs[j]]); j = k + 1; }
+            else { labs.push(SL[xs[j]]); j++; }
+          }
+          out.push('세션 ' + (i + 1) + ' | ' + fd(s.s) + ' ' + ft(s.s) + '\u2013' + ft(s.e) + ' | ' + (labs.join(', ') || '-'));
+        });
+      }
+    } catch (__e) {}
+    return out.join('\n'); }
+  submitTxt = () => { const text = this.buildText(); const name = this.studentName() || '학생'; const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Lektion16_' + name + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); };
+  SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxgAblMFNpot1-dRxTbyIYyY1CNeiDGeVbky7QGziTLjIXKX_S9d1cAttBVfYwrk2pfkA/exec';
+  SUBMIT_CODE = 'SODA-GRAMMATIK';
+
+  submitNet = async () => {
+    if (this._sending) return;
+    const name = this.studentName();
+    if (!name) { window.alert('이름을 먼저 입력해 주세요.'); return; }
+    const url = this.SUBMIT_URL;
+    if (!url || url.indexOf('http') !== 0) { window.alert('제출 주소가 설정되지 않았습니다. 선생님께 알려 주세요.'); return; }
+    if (this._sent && !window.confirm('이미 제출했습니다. 다시 제출할까요?')) return;
+    const text = this.buildText();
+    const mk = (this.KEY.match(/lektion-(\d+)/) || [])[1] || '';
+    const m2 = text.match(/진행: (\d+) \/ (\d+)/);
+    this._sending = true;
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ code: this.SUBMIT_CODE, name: name, lesson: parseInt(mk, 10) || mk, title: text.split('\n')[1] || '', filled: m2 ? m2[1] : '', total: m2 ? m2[2] : '', report: text }) });
+      this._sent = true;
+      window.alert('제출되었습니다. 선생님께 답안이 전달되었어요.');
+    } catch (e) {
+      window.alert('제출에 실패했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요. 계속 안 되면 선생님께 알려 주세요.');
+    }
+    this._sending = false;
+  };
+
+  submitIos = async () => { const text = this.buildText(); try { await navigator.clipboard.writeText(text); } catch (e) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove(); } window.alert('모든 내용을 복사했습니다.'); };
+  renderVals() { const total = this.state.total; const pct = total ? Math.round((this.state.filled / total) * 100) : 0; return { setRoot: this.setRoot, onInput: this.onInput, onClick: this.onClick, submitTxt: this.submitTxt, submitNet: this.submitNet,
+      submitIos: this.submitIos, print: this.print, reset: this.reset, filled: this.state.filled, total: total, barStyle: { width: pct + '%' } }; }
+}
+</script>
+
+
+</body></html>

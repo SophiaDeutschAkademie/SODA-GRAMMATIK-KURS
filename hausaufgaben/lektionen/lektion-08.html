@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<script>window.__resources={"https://unpkg.com/react@18.3.1/umd/react.production.min.js": "../assets/vendor/react.production.min.js", "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "../assets/vendor/react-dom.production.min.js"};</script>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/sd-nav.css">
+<link rel="icon" type="image/png" href="../assets/logo.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hausaufgabe Lektion 08 비교급 · 최상급</title>
+<script src="../assets/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<style>
+  :root{
+    --bg:#fbfbfa; --paper:#ffffff; --ink:#191b1f; --muted:#6b7280;
+    --line:#e6e7ec; --line2:#d3d6de; --accent:#384568; --err:#c4392e;
+    --sans:'Inter','Noto Sans KR','Helvetica Neue',Arial,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --c1:#3559b3; --t1:#eef1fa; --l1:#ccd6ef;
+    --c2:#6a45ab; --t2:#f3eefb; --l2:#dbcef0;
+    --c3:#0e7a5f; --t3:#e9f5f1; --l3:#c3e2d8;
+    --c4:#a05c12; --t4:#fbf2e6; --l4:#eddcc0;
+    --c5:#b03a6b; --t5:#fbeef4; --l5:#eecfdf;
+    --c6:#1f7fa3; --t6:#eaf4f9; --l6:#c9e2ee;
+    --c7:#4b4f58; --t7:#f2f3f5; --l7:#dcdee3;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 32px;}
+  p{margin:0 0 12px;text-wrap:pretty;}
+  strong{font-weight:700;color:var(--c,var(--accent));}
+  em{color:var(--muted);font-style:italic;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{color:var(--ink);text-decoration:underline;}
+
+  .toolbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid var(--line);}
+  .toolbar .row{max-width:900px;margin:0 auto;padding:10px 32px;display:flex;align-items:center;gap:10px;}
+  .tb-title{font-size:13px;font-weight:700;color:var(--muted);}
+  .tb-title span{color:var(--accent);}
+  .tb-spacer{flex:1;}
+  .prog{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+  .prog .bar{width:104px;height:7px;background:var(--line);border-radius:999px;overflow:hidden;}
+  .prog .bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s ease;}
+  .prog b{color:var(--ink);font-weight:700;font-size:13px;}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s;}
+  .btn:hover{border-color:var(--ink);background:#f4f5f7;}
+  .btn.go{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .btn.go:hover{background:#28324e;border-color:#28324e;}
+  .btn.ghost{background:#eef0f4;border-color:transparent;color:var(--accent);}
+  .btn.ghost:hover{background:#e3e7ee;border-color:transparent;}
+
+  .head{padding:44px 0 0;}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+  .brand img{height:44px;width:auto;display:block;}
+  .brand .bt b{display:block;font-size:14px;font-weight:700;color:var(--ink);line-height:1.2;}
+  .head h1{font-size:44px;line-height:1.08;margin:0 0 10px;font-weight:700;letter-spacing:-.025em;}
+  .head .lead{font-size:19px;color:var(--muted);margin:0;font-weight:500;}
+  .meta{display:flex;gap:24px;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line2);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  .meta .f{display:flex;align-items:center;gap:10px;}
+  .meta .f.grow{flex:1;}
+  .meta .f i{font-style:normal;font-weight:600;}
+  .meta input.name{flex:1;font-family:var(--sans);font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);border:1.5px solid var(--line2);border-radius:999px;background:#fff;padding:7px 15px;min-width:150px;}
+  .meta input.name:focus{outline:none;border-color:var(--accent);}
+
+  .toc{margin:36px 0 4px;display:grid;gap:4px;}
+  .toc .toc-row{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:11px 16px;border-radius:12px;background:var(--ct,#f3f4f7);align-items:center;}
+  .toc .tn{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--c,var(--accent));}
+  .toc .tn::before{content:'';width:9px;height:9px;border-radius:999px;background:var(--c,var(--accent));flex:none;}
+  .toc .td{font-size:14.5px;color:var(--muted);}
+  .toc .toc-row.c1{--c:var(--c1);--ct:var(--t1);}
+  .toc .toc-row.c2{--c:var(--c2);--ct:var(--t2);}
+  .toc .toc-row.c3{--c:var(--c3);--ct:var(--t3);}
+  .toc .toc-row.c4{--c:var(--c4);--ct:var(--t4);}
+  .toc .toc-row.c5{--c:var(--c5);--ct:var(--t5);}
+  .toc .toc-row.c6{--c:var(--c6);--ct:var(--t6);}
+  .toc .toc-row.c7{--c:var(--c7);--ct:var(--t7);}
+
+  .step{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;margin-top:64px;}
+  .step.s1{--c:var(--c1);--ct:var(--t1);--cl:var(--l1);}
+  .step.s2{--c:var(--c2);--ct:var(--t2);--cl:var(--l2);}
+  .step.s3{--c:var(--c3);--ct:var(--t3);--cl:var(--l3);}
+  .step.s4{--c:var(--c4);--ct:var(--t4);--cl:var(--l4);}
+  .step.s5{--c:var(--c5);--ct:var(--t5);--cl:var(--l5);}
+  .step.s6{--c:var(--c6);--ct:var(--t6);--cl:var(--l6);}
+  .step.s7{--c:var(--c7);--ct:var(--t7);--cl:var(--l7);}
+  .sheet.mono .step,.sheet.mono .toc .toc-row{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;}
+  .step-head{display:flex;gap:18px;align-items:center;background:var(--ct);border-radius:22px;padding:22px 24px;margin-bottom:26px;}
+  .step-n{flex:none;width:58px;height:58px;border-radius:18px;background:var(--c);color:#fff;font-size:23px;font-weight:700;display:grid;place-items:center;letter-spacing:-.02em;}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c);margin:0 0 3px;}
+  .step-title{font-size:29px;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.02em;}
+  .lede{color:#4b5058;font-size:16px;margin:0 0 20px;}
+  .sub{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin:52px 0 14px;padding-bottom:12px;border-bottom:2px solid var(--cl);}
+  .sub .de{flex:none;font-size:13px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:5px 12px;}
+  .sub em{font-size:14px;font-weight:500;color:var(--muted);font-style:normal;}
+  .sub2{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--c);margin:42px 0 8px;}
+  .sub2::before{content:'';width:14px;height:3px;border-radius:2px;background:var(--c);flex:none;}
+
+  table.g{width:100%;border-collapse:collapse;margin:16px 0 10px;font-size:15.5px;}
+  table.g caption{text-align:left;font-size:13px;font-weight:700;color:var(--c);padding-bottom:8px;}
+  table.g th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 12px;border-bottom:2px solid var(--cl);white-space:nowrap;}
+  table.g td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.g tr:hover td{background:var(--ct);}
+  table.g td.k{font-weight:600;color:var(--ink);white-space:nowrap;}
+  table.g.center td,table.g.center th{text-align:center;}
+  table.g.center td:first-child,table.g.center th:first-child{text-align:left;}
+  .ghost td{color:#9aa0aa;background:#fafafb;}
+
+  .tip{font-size:14.5px;color:#4b5058;margin:16px 0;padding:14px 18px;background:var(--ct);border-radius:14px;line-height:1.6;}
+  .tip b.t{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--c);border-radius:999px;padding:3px 10px;margin-right:10px;}
+  .bsp{margin:18px 0;padding:18px 20px;background:var(--paper);border:1.5px solid var(--cl);border-radius:18px;}
+  .bsp .lab{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c);background:var(--ct);border-radius:999px;padding:4px 12px;margin-bottom:10px;}
+  .bsp .de{font-size:16.5px;}
+  .bsp .ko{color:var(--muted);font-size:14.5px;}
+
+  .audio{position:sticky;top:54px;z-index:24;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 12px;padding:14px 16px;background:var(--paper);border:1.5px solid var(--cl);border-radius:20px;box-shadow:0 10px 26px rgba(24,26,32,.10);}
+  .audio-tag{font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;flex:none;}
+  .audio audio{flex:1 1 260px;min-width:200px;height:40px;}
+  .ap-extras{flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ap-speed{flex:none;display:flex;align-items:center;gap:4px;}
+  .ap-speed .lbl{font-size:11px;font-weight:700;color:var(--muted);margin-right:4px;}
+  .ap-speed button{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--muted);background:#f2f3f6;border:none;border-radius:999px;padding:7px 11px;cursor:pointer;line-height:1;}
+  .ap-speed button:hover{background:#e6e8ed;}
+  .ap-speed button[aria-pressed="true"]{background:var(--c);color:#fff;}
+  .ap-dl{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;flex:none;text-decoration:none;}
+  .ap-dl:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  ol.ex{list-style:none;counter-reset:ex;padding:0;margin:18px 0;}
+  ol.ex>li{counter-increment:ex;display:grid;grid-template-columns:30px 1fr;gap:4px 14px;padding:16px 0 17px;border-bottom:1px solid var(--line);}
+  ol.ex>li::before{content:counter(ex);font-size:12px;font-weight:700;color:var(--c);background:var(--ct);border-radius:999px;width:26px;height:26px;display:grid;place-items:center;margin-top:3px;}
+  ol.ex .de{font-size:16.5px;margin:0;}
+  ol.ex .sol{margin:10px 0 0;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14.5px;}
+  ol.ex .sol .bl.lg{flex:1 1 auto;display:inline-block;width:auto;min-width:180px;margin-top:0;}
+  ol.ex .sol .ar{color:var(--c);font-weight:700;font-size:15px;}
+  ol.ex strong[style*="underline"]{text-decoration-color:var(--c) !important;text-decoration-thickness:2px;text-underline-offset:3px;}
+  ol.ex p.de[style*="--err"]{padding:10px 14px !important;background:#fdf1f0 !important;border-left:4px solid var(--err) !important;border-radius:12px;}
+  .note{grid-column:2;font-family:var(--mono);font-size:12px;color:#8b909a;margin-top:6px;}
+  .vb{display:inline-block;font-weight:600;color:#3d434c;background:#e8eaef;padding:3px 11px;border-radius:999px;font-size:15px;white-space:nowrap;}
+  ol.ex .sol .giv{font-weight:600;color:var(--ink);}
+  ol.gram>li{padding:12px 0;}
+  ol.gram>li .de{line-height:2.2;font-size:16px;}
+  ol.gram input.bl{min-width:50px;}
+
+  input.bl{font-family:var(--sans);font-size:15.5px;font-weight:600;color:var(--c);background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px 9px;min-width:74px;text-align:center;transition:background .15s,border-color .15s;}
+  input.bl:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.bl::placeholder{color:#a5aab4;font-weight:400;}
+  input.bl.ko{text-align:left;min-width:230px;color:var(--ink);font-weight:500;}
+  input.bl.lg{display:block;width:100%;text-align:left;min-width:0;margin-top:8px;color:var(--ink);font-weight:500;}
+  input.bl.sm{width:58px;min-width:0;}
+  input.bl.rsn{text-align:left;min-width:160px;width:210px;color:var(--ink);font-weight:500;font-size:14px;}
+  input.bl.rsn::placeholder{font-style:italic;}
+
+  table.sp{width:100%;border-collapse:collapse;margin:14px 0;font-size:16px;}
+  table.sp th{font-size:12px;letter-spacing:.03em;color:var(--muted);text-align:left;font-weight:700;padding:9px 14px;border-bottom:2px solid var(--cl);}
+  table.sp th.c{text-align:center;}
+  table.sp td{padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  table.sp td.ko{color:#4b5058;width:40%;}
+  table.sp td.de{font-weight:600;width:42%;}
+  table.sp td.de.tog{cursor:pointer;color:transparent;background:var(--ct);border-radius:12px;user-select:none;position:relative;}
+  table.sp td.de.tog::after{content:'눌러서 확인';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--c);opacity:.6;}
+  table.sp td.de.tog.show{color:inherit;background:transparent;}
+  table.sp td.de.tog.show::after{display:none;}
+  table.sp td.cnt{width:18%;text-align:center;white-space:nowrap;}
+  input.cnt{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--c);width:56px;text-align:center;background:#f1f2f5;border:none;border-bottom:2px solid var(--cl);border-radius:10px 10px 4px 4px;padding:4px;}
+  input.cnt:focus{outline:none;background:var(--ct);border-bottom-color:var(--c);}
+  input.cnt::-webkit-inner-spin-button{opacity:.4;}
+  .cnt-u{font-size:12px;color:var(--muted);margin-left:6px;}
+
+  .assess{background:#eceef0;border:1.5px solid #d3d8db;border-radius:24px;margin:48px 0 0;padding:28px 28px 32px;}
+  .assess .ahead{font-size:15px;font-weight:700;color:#2f3a3a;margin:0 0 6px;display:flex;align-items:center;gap:10px;}
+  .assess .ahead .tagpill{flex:none;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.08em;background:#2f3a3a;color:#fff;border-radius:999px;padding:4px 12px;}
+  .assess .ainst{color:#4a5252;font-size:14.5px;margin:0 0 8px;}
+  .assess .sub2{color:#33403f;}
+  .assess .sub2::before{background:#33403f;}
+  .check{display:flex;align-items:center;gap:14px;padding:11px 2px;border-bottom:1px solid #dadfe0;}
+  .check p{margin:0;font-size:15px;flex:1;color:#23292a;}
+  .rate{display:inline-flex;gap:6px;flex:none;}
+  .rate button{font-family:var(--sans);width:36px;height:36px;border:1.5px solid #c3c9ca;background:#fff;color:#5a6363;font-weight:700;font-size:14px;cursor:pointer;border-radius:999px;line-height:1;transition:background .15s,border-color .15s;}
+  .rate button:hover{border-color:#2f3a3a;}
+  .rate button[aria-pressed="true"]{background:#2f3a3a;color:#fff;border-color:#2f3a3a;}
+  .scorebox{margin:22px 0 0;padding:18px 20px;background:#fff;border-radius:16px;font-size:14.5px;color:#414a4a;line-height:1.75;}
+  .scorebox b{color:#23292a;font-weight:700;}
+
+  .footer{margin:52px 0 80px;padding-top:28px;border-top:1px solid var(--line2);text-align:center;}
+  .footer h3{font-size:26px;margin:0 0 10px;font-weight:700;letter-spacing:-.02em;}
+  .footer p{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto 20px;}
+  .footer .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+  .fontctl{position:fixed;right:18px;bottom:18px;z-index:40;display:flex;align-items:center;gap:3px;background:rgba(25,27,31,.55);backdrop-filter:saturate(140%) blur(7px);-webkit-backdrop-filter:saturate(140%) blur(7px);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px;box-shadow:0 6px 20px rgba(0,0,0,.22);}
+  .fontctl button{font-family:var(--sans);color:#fff;background:transparent;border:none;cursor:pointer;font-weight:700;border-radius:999px;line-height:1;}
+  .fontctl button[data-fs="dec"],.fontctl button[data-fs="inc"]{width:34px;height:34px;font-size:14px;}
+  .fontctl button[data-fs="dec"]:hover,.fontctl button[data-fs="inc"]:hover{background:rgba(255,255,255,.2);}
+  .fontctl .fs-val{min-width:48px;height:34px;font-size:11px;opacity:.9;}
+  .fontctl .fs-val:hover{background:rgba(255,255,255,.15);}
+
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{size:A4;margin:16mm 14mm 20mm 14mm;}
+    body{background:#fff !important;font-size:10.5pt;line-height:1.5;}
+    .toolbar,.fontctl,.audio,.footer .acts{display:none !important;}
+    .wrap{max-width:none;padding:0;}
+    .head{padding-top:0;}
+    .head h1{font-size:22pt;}
+    .head .lead{font-size:11pt;}
+    .brand{margin-bottom:18px;}
+    .brand img{height:30px;}
+    .meta{margin-top:10px;padding-top:8px;}
+    .meta input.name{min-width:180px;font-size:11pt;}
+    .toc{margin:12px 0 4px;gap:2px;}
+    .toc .toc-row{padding:5px 10px;}
+    .toc .tn{font-size:10pt;}
+    .toc .td{font-size:9.5pt;}
+    .step{margin-top:18px;}
+    section.step{break-before:page;}
+    section.step:first-of-type{break-before:auto;}
+    .step-head{padding:12px 14px;margin-bottom:14px;border-radius:12px;}
+    .step-n{width:40px;height:40px;border-radius:12px;font-size:15pt;}
+    .eyebrow{font-size:8pt;}
+    .step-title{font-size:16pt;}
+    .lede{font-size:10pt;margin-bottom:10px;}
+    .sub{margin-top:22px;padding-bottom:6px;font-size:12pt;}
+    .sub .de{font-size:9pt;padding:3px 9px;}
+    .sub2{margin-top:16px;font-size:10.5pt;}
+    table.g,table.sp,ol.ex>li,.tip,.bsp,.check,.scorebox,.step-head,.sub{break-inside:avoid;}
+    input.bl,input.cnt,input.name{background:transparent !important;border:none !important;border-bottom:1.2px solid #333 !important;border-radius:0 !important;color:#000 !important;font-size:10.5pt;}
+    input::placeholder{color:transparent !important;}
+    input.bl.sm{width:64px;min-width:0;}
+    input.bl.ko{min-width:70%;max-width:100%;}
+    input.bl.lg{width:100%;min-width:0;}
+    input.bl.rsn{min-width:45%;width:auto;}
+    input.cnt{width:44px;}
+    ol.ex>li{padding:8px 0;}
+    ol.ex .de{font-size:10.5pt;}
+    ol.ex .sol{font-size:10pt;}
+    ol.ex p.de[style*="--err"]{background:#f5f5f5 !important;border-left-color:#999 !important;}
+    ol.gram>li .de{line-height:1.95;font-size:10.5pt;}
+    .note{font-size:8.5pt;}
+    .tip{padding:8px 12px;font-size:9.5pt;}
+    .bsp{padding:10px 14px;}
+    .bsp .de{font-size:10.5pt;}
+    .bsp .ko{font-size:9.5pt;}
+    table.g{font-size:10pt;}
+    table.g th{font-size:9pt;padding:5px 8px;}
+    table.g td{padding:6px 8px;}
+    table.g tr:hover td{background:transparent;}
+    table.sp{font-size:10.5pt;}
+    table.sp th{font-size:9pt;padding:5px 10px;}
+    table.sp td{padding:7px 10px;}
+    table.sp td.de.tog{color:#000 !important;background:transparent !important;}
+    table.sp td.de.tog::after{display:none !important;}
+    .vb{background:#eee;font-size:10pt;padding:1px 8px;}
+    .assess{break-before:page;background:#f4f5f6 !important;margin:16px 0 0;padding:18px 18px 22px;border-radius:14px;}
+    .assess .ahead{font-size:11pt;}
+    .assess .ainst{font-size:9.5pt;}
+    .check{padding:6px 0;}
+    .check p{font-size:10pt;}
+    .rate button{width:26px;height:26px;font-size:9pt;background:#fff;}
+    .scorebox{font-size:9.5pt;padding:12px 14px;}
+    .footer{margin:20px 0 0;padding-top:14px;}
+    .footer h3{font-size:14pt;}
+    .footer p{font-size:9.5pt;}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 18px;}
+    .head h1{font-size:32px;}
+    .head .lead{font-size:17px;}
+    .step-head{padding:16px;gap:14px;}
+    .step-n{width:48px;height:48px;font-size:19px;border-radius:14px;}
+    .step-title{font-size:24px;}
+    .sub{font-size:17px;}
+    .toolbar .row{flex-wrap:wrap;padding:8px 18px;}
+    .toc .toc-row{grid-template-columns:1fr;gap:4px;}
+    table.sp td{display:block;width:100%;}
+    table.sp td.ko{border-bottom:none;padding-bottom:0;}
+    table.sp td.cnt{text-align:left;}
+    .assess{padding:22px 18px 26px;border-radius:18px;}
+  }
+  .toc .toc-day{display:flex;align-items:baseline;gap:10px;margin:20px 0 6px;padding:0 4px;}
+  .toc .toc-day:first-child{margin-top:0;}
+  .toc .toc-day b{font-size:14.5px;font-weight:700;color:var(--ink);}
+  .toc .toc-day em{font-size:13px;color:var(--muted);font-style:normal;}
+  .toc a.toc-row{grid-template-columns:120px 1fr auto;text-decoration:none;color:inherit;transition:box-shadow .14s;}
+  .toc a.toc-row:hover{box-shadow:0 4px 14px rgba(24,26,32,.10);text-decoration:none;}
+  .toc a.toc-row .go{color:var(--c,var(--accent));font-weight:700;font-size:15px;opacity:.5;}
+  .toc a.toc-row:hover .go{opacity:1;}
+  .planbox{margin:22px 0 0;padding:16px 20px;background:#fff;border:1.5px dashed var(--line2);border-radius:16px;font-size:14.5px;color:#4b5058;line-height:1.6;}
+  .planbox b{color:var(--ink);font-weight:700;}
+  .daybar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:76px 0 0;padding:14px 22px;background:var(--ink);color:#fff;border-radius:999px;}
+  .daybar b{font-size:15px;font-weight:700;}
+  .daybar span{font-size:13.5px;color:rgba(255,255,255,.72);}
+  .daybar + section.step{margin-top:22px;}
+  section.step{scroll-margin-top:78px;}
+  .mc{display:inline-flex;flex-wrap:wrap;gap:5px;vertical-align:middle;}
+  .mc button{font-family:var(--sans);font-size:14px;font-weight:600;color:#4b5058;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.35;white-space:nowrap;transition:background .14s,color .14s,border-color .14s;}
+  .mc button:hover{background:#e4e7ec;}
+  .mc button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;}
+  .mcq{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px;font-size:16px;}
+  ol.gram>li .de .mc{margin:0 2px;}
+  ol.ex .sol .lbl{font-weight:700;color:var(--ink);}
+  @media print{
+    .toc a.toc-row .go{display:none;}
+    .toc .toc-day{margin:8px 0 3px;}
+    .toc .toc-day b{font-size:10pt;}
+    .toc .toc-day em{font-size:9pt;}
+    .planbox{margin:10px 0 0;padding:8px 12px;font-size:9.5pt;border-radius:10px;}
+    .daybar{margin:0 0 10px;padding:7px 14px;background:#e9e9e9 !important;color:#000;border-radius:8px;break-before:page;}
+    .daybar span{color:#444;}
+    .daybar + section.step{break-before:auto !important;margin-top:0;}
+    .mc button{background:#fff !important;border:1px solid #999 !important;color:#333 !important;padding:2px 9px;font-size:9.5pt;}
+    .mc button[aria-pressed="true"]{background:#333 !important;color:#fff !important;border-color:#333 !important;}
+    .mcq{font-size:10.5pt;}
+  }
+
+
+  .step[data-sec="s1"]{--c:var(--c1);--ct:var(--t1);--cl:var(--l1);}
+  .step[data-sec="s2"]{--c:var(--c2);--ct:var(--t2);--cl:var(--l2);}
+  .step[data-sec="s3"]{--c:var(--c3);--ct:var(--t3);--cl:var(--l3);}
+  .step[data-sec="s4"]{--c:var(--c4);--ct:var(--t4);--cl:var(--l4);}
+  .step[data-sec="s5"]{--c:var(--c5);--ct:var(--t5);--cl:var(--l5);}
+  .step[data-sec="s6"]{--c:var(--c6);--ct:var(--t6);--cl:var(--l6);}
+  .step[data-sec="s7"]{--c:var(--c7);--ct:var(--t7);--cl:var(--l7);}
+  .step[data-sec="mw1"],.step[data-sec="mw2"]{--c:var(--accent);--ct:#f2f4f8;--cl:#dde1ea;}
+  .step[data-sec="mw1"],.step[data-sec="mw2"]{background:#f7f8fa;border:1.5px solid var(--line);border-radius:22px;padding:24px 26px 28px;}
+  ol.ex.chq>li>div>p.de{margin-bottom:10px;}
+  .chx{display:flex;flex-direction:column;gap:6px;margin:0 0 6px;}
+  .chx.row{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;}
+  .chx.row .chl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--muted);min-width:40px;}
+  .chx button{font-family:var(--sans);font-size:14.5px;font-weight:500;line-height:1.5;text-align:left;padding:9px 15px;border:1.5px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);cursor:pointer;transition:background .14s,border-color .14s,color .14s;}
+  .chx.row button{padding:6px 13px;font-size:14px;white-space:nowrap;border-radius:999px;}
+  .chx button>b:first-child{font-weight:700;color:var(--muted);margin-right:5px;}
+  .chx button:hover{border-color:var(--c);background:var(--ct);}
+  .chx button[aria-pressed="true"]{border-color:var(--c);background:var(--c);color:#fff;font-weight:600;}
+  .chx button[aria-pressed="true"]>b:first-child{color:rgba(255,255,255,.68);}
+  .chx.ck-ok button[aria-pressed="true"]{border-color:#0e7a5f;background:#0e7a5f;}
+  .chx.ck-no button[aria-pressed="true"]{border-color:#c4392e;background:#c4392e;}
+  .chkbar{display:flex;align-items:center;gap:10px;margin:14px 0 2px;}
+  .chkbar button{font-family:var(--sans);font-size:13px;font-weight:600;white-space:nowrap;padding:7px 15px;border:1.5px solid var(--c);border-radius:999px;background:#fff;color:var(--c);cursor:pointer;}
+  .chkbar button:hover{background:var(--ct);}
+  .chkbar button[disabled]{opacity:.4;cursor:default;}
+  .chkbar .chkres{font-size:13px;color:var(--muted);}
+  input.ck-ok{border-bottom-color:#0e7a5f !important;background:rgba(14,122,95,.10) !important;}
+  input.ck-near{border-bottom-color:#a05c12 !important;background:rgba(160,92,18,.12) !important;}
+  input.ck-no{border-bottom-color:#c4392e !important;background:rgba(196,57,46,.09) !important;}
+  .ckans{font-family:var(--sans);font-size:12.5px;color:#0e7a5f;font-weight:700;margin-left:6px;white-space:nowrap;}
+  .chx + .ckans{display:block;margin:4px 0 0;white-space:normal;line-height:1.5;}
+  input.bl.md{width:104px;min-width:0;}
+  @media print{
+    .chkbar,.ckans{display:none !important;}
+    .chx button{border:0.8pt solid #999 !important;background:#fff !important;color:#000 !important;padding:3px 9px;font-size:9.5pt;border-radius:8px;}
+    .chx button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;}
+    .chx button[aria-pressed="true"]>b:first-child{color:#000;}
+    .step[data-sec="mw1"],.step[data-sec="mw2"]{background:#fff !important;border:1pt solid #999;border-radius:8px;padding:12px 14px;}
+    input.bl.md{width:100px;}
+  }
+</style>
+</helmet>
+
+<div class="toolbar"><div class="row">
+  <button class="btn go" onclick="{{ submitNet }}">과제 제출하기</button>
+  <div class="tb-title">Übung · <span>L08</span></div>
+  <div class="tb-spacer"></div>
+  <div class="prog"><span><b>{{ filled }}</b> / {{ total }}</span><span class="bar"><i style="{{ barStyle }}"></i></span></div>
+  <button class="btn" onclick="{{ print }}">인쇄</button>
+  <button class="btn" onclick="{{ reset }}">초기화</button>
+</div></div>
+
+<div class="sheet" ref="{{ setRoot }}" oninput="{{ onInput }}" onclick="{{ onClick }}">
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand"><img src="../assets/logo.png" alt="Sophia Deutsch Akademie"><div class="bt"><b>Sophia Deutsch Akademie</b></div></div>
+    <h1>Komparativ und Superlativ</h1>
+    <p class="lead">비교급 · 최상급</p>
+    <div class="meta">
+      <div class="f"><i style="font-size:13px;color:var(--accent)">Lektion</i><span style="color:var(--accent);font-weight:700;font-size:28px;letter-spacing:0;line-height:1">08</span></div>
+      <div class="f grow"><i>Name</i><input class="name" data-key="meta-name" data-noprogress="" placeholder="이름을 입력하세요"></div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-day"><b>1일차</b><em>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기</em></div>
+    <a class="toc-row c1" href="#s1"><span class="tn">이해</span><span class="td">세 등급 + 비교급·움라우트 + 최상급 + 명사 앞 비교급 + 불규칙 + als/wie</span><span class="go">→</span></a>
+    <a class="toc-row c2" href="#s2"><span class="tn">분석</span><span class="td">비교급 채우기 · 서술/명사앞 · -est 삽입 · als/wie · 오류 찾기</span><span class="go">→</span></a>
+    <a class="toc-row c3" href="#s3"><span class="tn">읽기</span><span class="td">해석 + 등급 분석</span><span class="go">→</span></a>
+    <div class="toc-day"><b>2일차</b><em>Mini-Wiederholung 1 먼저 · Schritt 4–5</em></div>
+    <a class="toc-row c4" href="#s4"><span class="tn">듣기</span><span class="td">받아쓰기 · 비교급·최상급 채우기 · 뜻 판단 · 이야기 듣기</span><span class="go">→</span></a>
+    <a class="toc-row c5" href="#s5"><span class="tn">쓰기</span><span class="td">채우기 → 한독 번역 → 통합 → 숫자·서수</span><span class="go">→</span></a>
+    <div class="toc-day"><b>3일차</b><em>Mini-Wiederholung 2 먼저 · Schritt 6–7 · 마지막에 자기 평가</em></div>
+    <a class="toc-row c6" href="#s6"><span class="tn">말하기</span><span class="td">한국어 보고 독일어로 말하기</span><span class="go">→</span></a>
+    <a class="toc-row c7" href="#s7"><span class="tn">테스트</span><span class="td">새 형용사로 규칙 적용 + 자기 평가</span><span class="go">→</span></a>
+  </nav>
+
+  <div class="planbox"><b>3일 학습 계획</b> — 이 과제는 3일에 나누어 풀도록 설계되어 있습니다. 한 번에 몰아서 풀지 마세요. 위 목차를 누르면 해당 단계로 바로 이동합니다.<br>1일차: Schritt 1–3 · 2일차: Mini-Wiederholung 1 → Schritt 4–5 · 3일차: Mini-Wiederholung 2 → Schritt 6–7 + 자기 평가.<br>'정답 확인' 버튼은 정답이 하나로 정해진 칸만 채점합니다. 해석·근거·이유·작문은 선생님이 첨삭합니다.<br>제출 파일에는 각 단계를 학습한 날짜와, <b>정답을 확인하기 전에 입력했던 답</b>이 기록됩니다. 정답을 본 뒤 고친 칸은 따로 표시됩니다.</div>
+
+
+  
+  <div class="daybar"><b>1일차</b><span>Schritt 1–3 · 규칙 세우기 → 분석 → 읽기</span></div>
+<!-- ===== SCHRITT 1 ===== -->
+  <section class="step s1" id="s1" data-sec="s1" data-day="1">
+    <div class="step-head"><div class="step-n">01</div><div><p class="eyebrow">Schritt 1</p><h2 class="step-title">Verstehen · 이해</h2></div></div>
+    <p class="lede">교재를 보지 않고 <strong>직접 규칙을 발견하는</strong> 단계입니다.</p>
+    <p class="tip"><b class="t">복습</b>7과: 형용사 어미(der gute Mann). 8과: 비교를 단어가 아니라 <strong>형용사 어미</strong>로 말해요 — '더'는 -er에, '가장'은 am -sten에 녹아 있어요!</p>
+
+    <div class="sub"><span class="de">1A.</span> 세 등급 — 원급 · 비교급 · 최상급</div>
+    <p>형용사 <strong>schnell</strong>의 세 등급을 고르세요.</p>
+    <div class="qgroup"><sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>등급</sc-raw-th><sc-raw-th>형태</sc-raw-th><sc-raw-th>뜻</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">원급 Positiv</sc-raw-td><sc-raw-td>schnell</sc-raw-td><sc-raw-td class="gen">빠르다</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">비교급 Komparativ (+er)</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1a-1" data-answer="schneller"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="schneller">schneller</button><button type="button" data-opt="schnellerer">schnellerer</button><button type="button" data-opt="mehr schnell">mehr schnell</button></span></span></sc-raw-td><sc-raw-td class="gen">더 빠르다</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">최상급 Superlativ (am -sten)</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1a-2" data-answer="am schnellsten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am schnellsten">am schnellsten</button><button type="button" data-opt="am schnellste">am schnellste</button><button type="button" data-opt="der schnellsten">der schnellsten</button></span></span></sc-raw-td><sc-raw-td class="gen">가장 빠르다</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <div class="mcq"><p class="de">→ '더'는 어미 <span class="slot empty" data-slot="v1a-r1" data-ph="①">①</span>에, '가장'은 <span class="slot empty" data-slot="v1a-r2" data-ph="②">②</span>에 녹아 있다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="v1a-r1" data-answer="-er"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="-er">-er</button><button type="button" data-opt="-est">-est</button><button type="button" data-opt="mehr">mehr</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="v1a-r2" data-answer="am -sten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="der -ste">der -ste</button><button type="button" data-opt="am -sten">am -sten</button><button type="button" data-opt="so … wie">so … wie</button></span></span></span></div></div></div>
+
+    <div class="sub"><span class="de">1B.</span> 비교급 만들기 — -er + als · 움라우트</div>
+    <p>각 형용사의 비교급을 고르세요. <strong>짧은 형용사는 a·o·u가 움라우트</strong>로 바뀝니다.</p>
+    <div class="qgroup"><sc-raw-table class="g center">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">원급</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>비교급</sc-raw-th><sc-raw-th style="text-align:left">원급</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>비교급</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">schnell</sc-raw-td><sc-raw-td>빠른</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1b-1" data-answer="schneller"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="schneller">schneller</button><button type="button" data-opt="schnäller">schnäller</button><button type="button" data-opt="mehr schnell">mehr schnell</button></span></span></sc-raw-td><sc-raw-td class="k">alt</sc-raw-td><sc-raw-td>늙은</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1b-2" data-answer="älter"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="älter">älter</button><button type="button" data-opt="alter">alter</button><button type="button" data-opt="älterer">älterer</button></span></span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">groß</sc-raw-td><sc-raw-td>큰</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1b-3" data-answer="größer"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="größer">größer</button><button type="button" data-opt="grösser">grösser</button><button type="button" data-opt="gröser">gröser</button></span></span></sc-raw-td><sc-raw-td class="k">jung</sc-raw-td><sc-raw-td>젊은</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1b-4" data-answer="jünger"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="jünger">jünger</button><button type="button" data-opt="junger">junger</button><button type="button" data-opt="jüngerer">jüngerer</button></span></span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">lang</sc-raw-td><sc-raw-td>긴</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1b-5" data-answer="länger"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="länger">länger</button><button type="button" data-opt="langer">langer</button><button type="button" data-opt="lännger">lännger</button></span></span></sc-raw-td><sc-raw-td class="k">klein</sc-raw-td><sc-raw-td>작은</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1b-6" data-answer="kleiner"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="kleiner">kleiner</button><button type="button" data-opt="kleiner als">kleiner als</button><button type="button" data-opt="kläiner">kläiner</button></span></span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <div class="mcq"><p class="de">→ "~보다"는 <span class="slot empty" data-slot="v1b-r1" data-ph="①">①</span> 하나. 비교급엔 이미 '더'가 있으니 <span class="slot empty" data-slot="v1b-r2" data-ph="②">②</span>를 또 붙이면 안 된다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="v1b-r1" data-answer="als"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="als">als</button><button type="button" data-opt="wie">wie</button><button type="button" data-opt="so">so</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="v1b-r2" data-answer="mehr"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="sehr">sehr</button><button type="button" data-opt="mehr">mehr</button><button type="button" data-opt="viel">viel</button></span></span></span></div></div></div>
+
+    <div class="sub"><span class="de">1C.</span> 최상급 — 두 자리</div>
+    <p>최상급은 자리에 따라 두 모습입니다. 고르세요. (groß)</p>
+    <div class="qgroup"><sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>자리</sc-raw-th><sc-raw-th>형태</sc-raw-th><sc-raw-th>예</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">서술 (sein 뒤)</sc-raw-td><sc-raw-td><span class="mc dd" data-key="v1c-1" data-answer="am"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am">am</button><button type="button" data-opt="der">der</button><button type="button" data-opt="die">die</button></span></span> -sten</sc-raw-td><sc-raw-td>Anna ist <span class="mc dd" data-key="v1c-2" data-answer="am größten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am größten">am größten</button><button type="button" data-opt="am größte">am größte</button><button type="button" data-opt="die größte">die größte</button></span></span>.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">명사 앞 (정관사+-st)</sc-raw-td><sc-raw-td>der … -ste</sc-raw-td><sc-raw-td>der <span class="mc dd" data-key="v1c-3" data-answer="größte"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="größte">größte</button><button type="button" data-opt="größten">größten</button><button type="button" data-opt="am größten">am größten</button></span></span> Mann</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <div class="mcq"><p class="de">→ am -sten은 <span class="slot empty" data-slot="v1c-r1" data-ph="①">①</span> 전용, 명사 앞엔 7과 형용사 <span class="slot empty" data-slot="v1c-r2" data-ph="②">②</span>가 붙는다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="v1c-r1" data-answer="서술"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="서술">서술</button><button type="button" data-opt="명사 앞">명사 앞</button><button type="button" data-opt="둘 다">둘 다</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="v1c-r2" data-answer="어미"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="움라우트">움라우트</button><button type="button" data-opt="어미">어미</button><button type="button" data-opt="am">am</button></span></span></span></div></div></div>
+
+    <div class="sub"><span class="de">1D.</span> 불규칙 비교 — 통째로</div>
+    <sc-raw-table class="g center" style="max-width:560px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">원급</sc-raw-th><sc-raw-th>비교급</sc-raw-th><sc-raw-th>최상급 (서술)</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">gut (좋은)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-1" data-answer="besser"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-2" data-answer="am besten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">viel (많은)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-3" data-answer="mehr"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-4" data-answer="am meisten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">gern (즐겨)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-5" data-answer="lieber"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-6" data-answer="am liebsten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">hoch (높은)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-7" data-answer="höher"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-8" data-answer="am höchsten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">nah (가까운)</sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-9" data-answer="näher"></sc-raw-td><sc-raw-td><input class="bl md" data-key="v1d-10" data-answer="am nächsten"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub"><span class="de">1E.</span> als vs so … wie</div>
+    <p>다름(비교)은 als, 같음(원급)은 so … wie. 빈칸을 채우세요.</p>
+    <p>Tom ist größer <input class="bl sm" data-key="v1e-1" data-answer="als"> Anna. <span class="gen">— 톰은 안나보다 크다</span></p>
+    <p>Tom ist <input class="bl sm" data-key="v1e-2" data-answer="so"> groß <input class="bl sm" data-key="v1e-3" data-answer="wie"> Anna. <span class="gen">— 톰은 안나만큼 크다</span></p>
+
+    <div class="sub"><span class="de">1F.</span> 명사 앞 비교급·최상급 + -est 삽입</div>
+    <p>명사 앞에서는 비교급·최상급도 형용사입니다 — <strong>어간만 자라고 7과 어미는 그대로</strong> 붙어요. 빈칸에 어미를 쓰세요.</p>
+    <ol class="ex gram">
+      <li><div><p class="de">der schnell<strong>e</strong> Mann → 비교급 der schneller<input class="bl" data-key="v1f2-1" data-answer="e|-e" style="width:44px;min-width:0"> Mann → 최상급 der schnellst<input class="bl" data-key="v1f2-2" data-answer="e|-e" style="width:44px;min-width:0"> Mann — 어미는 셋 다 같다!</p></div></li>
+      <li><div><p class="de">남성 4격이면 어미도 따라 바뀐다: Ich sehe den größer<input class="bl" data-key="v1f2-3" data-answer="en|-en" style="width:44px;min-width:0"> Mann. <span class="gen">(7과 남성 4격)</span></p></div></li>
+      <li><div><p class="de">-t·-d·-s·-ß·-z로 끝나면 최상급에 -e-를 끼워 <strong>-est</strong>: alt → am <input class="bl md" data-key="v1f2-4" data-answer="ältest">en, kurz → am <input class="bl md" data-key="v1f2-5" data-answer="kürzest">en.</p></div></li>
+      <li><div><p class="de">단, groß는 예외: am <input class="bl md" data-key="v1f2-6" data-answer="größt">en (✕ größesten).</p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">1G.</span> 핵심 규칙 자기 정리 <em style="font-style:normal;color:var(--muted);font-size:11px;letter-spacing:.04em">— 맞는 것을 고르세요</em></div>
+    <ol class="ex gram">
+      <li><div><div class="mcq"><p class="de">비교급은 형용사에 <span class="slot empty" data-slot="v1f-1" data-ph="①">①</span>를 붙이고, "~보다"는 <span class="slot empty" data-slot="v1f-2" data-ph="②">②</span>이다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="v1f-1" data-answer="-er"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="-er">-er</button><button type="button" data-opt="-est">-est</button><button type="button" data-opt="mehr">mehr</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="v1f-2" data-answer="als"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="als">als</button><button type="button" data-opt="wie">wie</button><button type="button" data-opt="so">so</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">짧은 형용사는 단모음 a·o·u가 <span class="slot empty" data-slot="v1f-3" data-ph="__">__</span>로 바뀐다.</p><div class="opts"><span class="ogrp"><span class="mc dd" data-key="v1f-3" data-answer="ä·ö·ü"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="e·i·o">e·i·o</button><button type="button" data-opt="ä·ö·ü">ä·ö·ü</button><button type="button" data-opt="변화 없음">변화 없음</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">서술 최상급은 <span class="slot empty" data-slot="v1f-4" data-ph="①">①</span> 형태, 명사 앞은 <span class="slot empty" data-slot="v1f-5" data-ph="②">②</span> 형태이다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="v1f-4" data-answer="am -sten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am -sten">am -sten</button><button type="button" data-opt="der -ste">der -ste</button><button type="button" data-opt="-er">-er</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="v1f-5" data-answer="der -ste"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am -sten">am -sten</button><button type="button" data-opt="der -ste">der -ste</button><button type="button" data-opt="so … wie">so … wie</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">불규칙: gut→<span class="slot empty" data-slot="v1f-6" data-ph="①">①</span>, viel→<span class="slot empty" data-slot="v1f-7" data-ph="②">②</span>, gut의 최상급은 am <span class="slot empty" data-slot="v1f-8" data-ph="③">③</span>.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="v1f-6" data-answer="besser"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="güter">güter</button><button type="button" data-opt="besser">besser</button><button type="button" data-opt="mehr">mehr</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="v1f-7" data-answer="mehr"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr">mehr</button><button type="button" data-opt="vieler">vieler</button><button type="button" data-opt="meist">meist</button></span></span></span><span class="ogrp"><span class="onum">③</span><span class="mc dd" data-key="v1f-8" data-answer="besten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="gutesten">gutesten</button><button type="button" data-opt="liebsten">liebsten</button><button type="button" data-opt="besten">besten</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">같음(원급)은 <span class="slot empty" data-slot="v1f-9" data-ph="①">①</span> … wie로 표현하고, 비교급에 <span class="slot empty" data-slot="v1f-10" data-ph="②">②</span>를 중복하면 안 된다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="v1f-9" data-answer="so"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="als">als</button><button type="button" data-opt="so">so</button><button type="button" data-opt="wie">wie</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="v1f-10" data-answer="mehr"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am">am</button><button type="button" data-opt="als">als</button><button type="button" data-opt="mehr">mehr</button></span></span></span></div></div></div></li>
+    </ol>
+    <div class="sub"><span class="de">1H.</span> 그림으로 정리 <em style="font-style:normal;color:var(--muted);font-size:11px;letter-spacing:.04em">— 위에서 세운 규칙을 한 장으로</em></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:28px 38px;margin:20px 0 6px">
+
+      <div style="border-top:1px solid var(--line2);padding-top:13px;break-inside:avoid">
+        <p style="font-family:var(--sans);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 15px">01 · 어미가 자란다</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end;height:96px">
+          <div style="height:28px;background:#e2e7f0;border-top:2px solid #9aa5bd"></div>
+          <div style="height:58px;background:#bcc5d8;border-top:2px solid #6a7794"></div>
+          <div style="height:90px;background:var(--accent);border-top:2px solid var(--ink)"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;border-top:1.5px solid var(--ink);padding-top:9px">
+          <span style="font-size:15px">schnell</span>
+          <span style="font-size:15px">schnell<strong>er</strong></span>
+          <span style="font-size:15px"><strong>am</strong> schnell<strong>sten</strong></span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:5px">
+          <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">원급</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">비교급</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--accent)">최상급</span>
+        </div>
+        <p style="margin:13px 0 0;font-size:13px;color:var(--muted);line-height:1.6">'더 / 가장'을 뜻하는 단어를 따로 쓰지 않는다. 어미가 그 뜻을 담는다.</p>
+      </div>
+
+      <div style="border-top:1px solid var(--line2);padding-top:13px;break-inside:avoid">
+        <p style="font-family:var(--sans);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 15px">02 · 짧은 형용사엔 점 두 개</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="flex:1;display:flex;gap:6px">
+            <span style="flex:1;text-align:center;border:1px solid var(--line2);padding:8px 0;font-size:19px;color:var(--muted)">a</span>
+            <span style="flex:1;text-align:center;border:1px solid var(--line2);padding:8px 0;font-size:19px;color:var(--muted)">o</span>
+            <span style="flex:1;text-align:center;border:1px solid var(--line2);padding:8px 0;font-size:19px;color:var(--muted)">u</span>
+          </div>
+          <span style="flex:none;font-family:var(--sans);color:var(--accent);font-weight:700;font-size:15px">→</span>
+          <div style="flex:1;display:flex;gap:6px">
+            <span style="flex:1;text-align:center;border:1px solid var(--ink);background:#eef2f8;padding:8px 0;font-size:19px;font-weight:600">ä</span>
+            <span style="flex:1;text-align:center;border:1px solid var(--ink);background:#eef2f8;padding:8px 0;font-size:19px;font-weight:600">ö</span>
+            <span style="flex:1;text-align:center;border:1px solid var(--ink);background:#eef2f8;padding:8px 0;font-size:19px;font-weight:600">ü</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;border-top:1px solid var(--line);padding-top:10px">
+          <div>
+            <p style="margin:0 0 4px;font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700">바뀜</p>
+            <p style="margin:0;font-size:15px">groß → gr<strong>ö</strong>ßer</p>
+          </div>
+          <div>
+            <p style="margin:0 0 4px;font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700">그대로</p>
+            <p style="margin:0;font-size:15px;color:var(--muted)">schnell → schneller</p>
+          </div>
+        </div>
+        <p style="margin:13px 0 0;font-size:13px;color:var(--muted);line-height:1.6">1음절 짧은 형용사만 해당. 긴 형용사와 -er·-el로 끝나는 형용사는 변하지 않는다.</p>
+      </div>
+
+      <div style="border-top:1px solid var(--line2);padding-top:13px;break-inside:avoid">
+        <p style="font-family:var(--sans);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 15px">03 · 최상급은 자리가 두 개</p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <span style="flex:none;width:58px;font-family:var(--sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700">sein 뒤</span>
+            <span style="font-size:15px">Anna ist</span>
+            <span style="border:1.5px solid var(--accent);background:#eef2f8;padding:2px 9px;font-weight:600;font-size:15px;white-space:nowrap">am größten</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <span style="flex:none;width:58px;font-family:var(--sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700">명사 앞</span>
+            <span style="font-size:15px">der</span>
+            <span style="border:1.5px solid var(--accent);background:#eef2f8;padding:2px 9px;font-weight:600;font-size:15px;white-space:nowrap">größt<span style="color:var(--err)">e</span></span>
+            <span style="font-size:15px">Mann</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;border-top:1px solid var(--line);padding-top:10px">
+            <span style="flex:none;width:58px;font-family:var(--sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--err);font-weight:700">✕</span>
+            <span style="font-size:15px;color:var(--muted);text-decoration:line-through">der am größte Mann</span>
+          </div>
+        </div>
+        <p style="margin:13px 0 0;font-size:13px;color:var(--muted);line-height:1.6">명사 앞에서는 am이 사라지고 그 자리에 <strong>7과 형용사 어미</strong>가 온다.</p>
+      </div>
+
+      <div style="border-top:1px solid var(--line2);padding-top:13px;break-inside:avoid">
+        <p style="font-family:var(--sans);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 15px">04 · 다름 als · 같음 so … wie</p>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <div style="display:flex;align-items:baseline;gap:12px">
+            <span style="flex:none;width:22px;text-align:center;font-size:19px;color:var(--accent);font-weight:600">≠</span>
+            <span style="font-size:15px">Tom ist größer <strong>als</strong> Anna.</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:12px">
+            <span style="flex:none;width:22px;text-align:center;font-size:19px;color:var(--accent);font-weight:600">=</span>
+            <span style="font-size:15px">Tom ist <strong>so</strong> groß <strong>wie</strong> Anna.</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--line);padding-top:10px">
+            <span style="flex:none;width:22px;text-align:center;font-size:15px;color:var(--err);font-weight:700">✕</span>
+            <span style="font-size:15px;color:var(--muted)"><span style="text-decoration:line-through">mehr</span> größer · größer <span style="text-decoration:line-through">wie</span></span>
+          </div>
+        </div>
+        <p style="margin:13px 0 0;font-size:13px;color:var(--muted);line-height:1.6">비교급엔 '더'가 이미 들어 있으니 mehr를 덧붙이지 않고, '~보다'는 wie가 아니라 als.</p>
+      </div>
+
+      <div style="border-top:1px solid var(--line2);padding-top:13px;break-inside:avoid">
+        <p style="font-family:var(--sans);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 15px">05 · 발음이 막히면 -e- 하나</p>
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:13px">
+          <span style="border:1px solid var(--line2);padding:5px 9px;font-family:var(--mono);font-size:13px;white-space:nowrap">-t</span>
+          <span style="border:1px solid var(--line2);padding:5px 9px;font-family:var(--mono);font-size:13px;white-space:nowrap">-d</span>
+          <span style="border:1px solid var(--line2);padding:5px 9px;font-family:var(--mono);font-size:13px;white-space:nowrap">-s</span>
+          <span style="border:1px solid var(--line2);padding:5px 9px;font-family:var(--mono);font-size:13px;white-space:nowrap">-ß</span>
+          <span style="border:1px solid var(--line2);padding:5px 9px;font-family:var(--mono);font-size:13px;white-space:nowrap">-z</span>
+          <span style="font-family:var(--sans);color:var(--accent);font-weight:700;font-size:15px">→</span>
+          <span style="border:1.5px solid var(--ink);background:#eef2f8;padding:5px 10px;font-family:var(--mono);font-size:13px;white-space:nowrap;font-weight:700">-<span style="color:var(--err)">e</span>st</span>
+        </div>
+        <p style="margin:0;font-size:15px">breit → am breit<span style="color:var(--err);font-weight:600">e</span>sten</p>
+        <p style="margin:13px 0 0;font-size:13px;color:var(--muted);line-height:1.6">-st만 붙이면 발음이 뭉치는 어간에 -e-를 끼운다. <strong>groß</strong>는 예외로 -e-를 넣지 않는다.</p>
+      </div>
+
+      <div style="border-top:1px solid var(--line2);padding-top:13px;break-inside:avoid">
+        <p style="font-family:var(--sans);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 15px">06 · 규칙 밖의 넷</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:9px 12px;align-items:baseline">
+          <span style="font-family:var(--sans);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--ink);padding-bottom:5px">원급</span>
+          <span style="font-family:var(--sans);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--ink);padding-bottom:5px">비교급</span>
+          <span style="font-family:var(--sans);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:1.5px solid var(--ink);padding-bottom:5px">최상급</span>
+          <span style="font-size:14.5px">gut</span><span style="font-size:14.5px;font-weight:600">besser</span><span style="font-size:14.5px;font-weight:600;color:var(--accent)">am besten</span>
+          <span style="font-size:14.5px">viel</span><span style="font-size:14.5px;font-weight:600">mehr</span><span style="font-size:14.5px;font-weight:600;color:var(--accent)">am meisten</span>
+          <span style="font-size:14.5px">gern</span><span style="font-size:14.5px;font-weight:600">lieber</span><span style="font-size:14.5px;font-weight:600;color:var(--accent)">am liebsten</span>
+          <span style="font-size:14.5px">hoch</span><span style="font-size:14.5px;font-weight:600">höher</span><span style="font-size:14.5px;font-weight:600;color:var(--accent)">am höchsten</span>
+        </div>
+        <p style="margin:13px 0 0;font-size:13px;color:var(--muted);line-height:1.6">어간이 통째로 바뀐다. 규칙으로 만들 수 없으니 세 칸을 묶어서 외운다.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== SCHRITT 2 ===== -->
+  <section class="step s2" id="s2" data-sec="s2" data-day="1">
+    <div class="step-head"><div class="step-n">02</div><div><p class="eyebrow">Schritt 2</p><h2 class="step-title">Erkennen · 분석</h2></div></div>
+    <p class="lede">움라우트·불규칙·서술/명사앞을 스스로 판단하세요.</p>
+
+    <div class="sub"><span class="de">2A.</span> 비교급 채우기</div>
+    <p>괄호의 형용사를 비교급으로 쓰세요. 움라우트·불규칙에 주의!</p>
+    <ol class="ex">
+      <li><div><p class="de">Anna ist <input class="bl md" data-key="e2a-1" data-answer="größer"> als Tom. <span class="gen">(groß)</span></p></div></li>
+      <li><div><p class="de">Der Zug ist <input class="bl md" data-key="e2a-2" data-answer="schneller"> als das Auto. <span class="gen">(schnell)</span></p></div></li>
+      <li><div><p class="de">Mein Bruder ist <input class="bl md" data-key="e2a-3" data-answer="älter"> als ich. <span class="gen">(alt)</span></p></div></li>
+      <li><div><p class="de">Tom ist <input class="bl md" data-key="e2a-4" data-answer="jünger"> als Anna. <span class="gen">(jung)</span></p></div></li>
+      <li><div><p class="de">Ich lerne <input class="bl md" data-key="e2a-5" data-answer="mehr"> als du. <span class="gen">(viel)</span></p></div></li>
+      <li><div><p class="de">Das Buch ist <input class="bl md" data-key="e2a-6" data-answer="besser"> als der Film. <span class="gen">(gut)</span></p></div></li>
+      <li><div><p class="de">Der Film ist <input class="bl md" data-key="e2a-7" data-answer="länger"> als das Buch. <span class="gen">(lang)</span></p></div></li>
+      <li><div><p class="de">Der Tee ist <input class="bl md" data-key="e2a-8" data-answer="wärmer"> als der Kaffee. <span class="gen">(warm)</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2B.</span> 최상급 — 서술 vs 명사 앞</div>
+    <p>괄호의 형용사를 자리에 맞는 최상급으로 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Anna ist <input class="bl md" data-key="e2b-1" data-answer="am größten">. <span class="gen">(groß)</span></p></div></li>
+      <li><div><p class="de">der <input class="bl md" data-key="e2b-2" data-answer="größte"> Mann <span class="gen">(groß)</span></p></div></li>
+      <li><div><p class="de">Berlin ist <input class="bl md" data-key="e2b-3" data-answer="am schönsten">. <span class="gen">(schön)</span></p></div></li>
+      <li><div><p class="de">der <input class="bl md" data-key="e2b-4" data-answer="schnellste"> Zug <span class="gen">(schnell)</span></p></div></li>
+      <li><div><p class="de">Das ist <input class="bl md" data-key="e2b-5" data-answer="am besten">. <span class="gen">(gut)</span></p></div></li>
+      <li><div><p class="de">die <input class="bl md" data-key="e2b-6" data-answer="beste"> Idee <span class="gen">(gut)</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2C.</span> als vs wie</div>
+    <p>다름이면 als, 같음(so … wie)이면 wie를 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Anna ist größer <input class="bl sm" data-key="e2c-1" data-answer="als"> Tom.</p></div></li>
+      <li><div><p class="de">Tom ist so groß <input class="bl sm" data-key="e2c-2" data-answer="wie"> Anna.</p></div></li>
+      <li><div><p class="de">Der Zug ist schneller <input class="bl sm" data-key="e2c-3" data-answer="als"> das Auto.</p></div></li>
+      <li><div><p class="de">Sie ist so alt <input class="bl sm" data-key="e2c-4" data-answer="wie"> ich.</p></div></li>
+      <li><div><p class="de">Ich lerne mehr <input class="bl sm" data-key="e2c-5" data-answer="als"> du.</p></div></li>
+      <li><div><p class="de">Er ist nicht so groß <input class="bl sm" data-key="e2c-6" data-answer="wie"> ich.</p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2D.</span> 오류 찾기 — Fehlersuche</div>
+    <p>틀린 문장을 보고 <strong>바르게 고친 문장</strong>과 <strong>오류 유형</strong>을 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Anna ist <strong>mehr groß</strong> als Tom.</p><div class="mcb dd" data-key="e2d-1" data-answer="Anna ist größer als Tom."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Anna ist mehr größer als Tom."><i>A</i>Anna ist mehr größer als Tom.</button><button type="button" data-opt="Anna ist größer als Tom."><i>B</i>Anna ist größer als Tom.</button><button type="button" data-opt="Anna ist am größten als Tom."><i>C</i>Anna ist am größten als Tom.</button></span></div><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc dd" data-key="e2d-1t" data-answer="mehr 중복"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr 중복">mehr 중복</button><button type="button" data-opt="wie·als">wie·als</button><button type="button" data-opt="어미 누락">어미 누락</button><button type="button" data-opt="움라우트">움라우트</button><button type="button" data-opt="am 오용">am 오용</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Anna ist größer <strong>wie</strong> Tom.</p><div class="mcb dd" data-key="e2d-2" data-answer="Anna ist größer als Tom."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Anna ist größer als Tom."><i>A</i>Anna ist größer als Tom.</button><button type="button" data-opt="Anna ist so groß wie Tom."><i>B</i>Anna ist so groß wie Tom.</button><button type="button" data-opt="Anna ist größer als wie Tom."><i>C</i>Anna ist größer als wie Tom.</button></span></div><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc dd" data-key="e2d-2t" data-answer="wie·als"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr 중복">mehr 중복</button><button type="button" data-opt="wie·als">wie·als</button><button type="button" data-opt="어미 누락">어미 누락</button><button type="button" data-opt="움라우트">움라우트</button><button type="button" data-opt="am 오용">am 오용</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ der <strong>größer</strong> Mann</p><div class="mcb dd" data-key="e2d-3" data-answer="der größere Mann"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="der am größten Mann"><i>A</i>der am größten Mann</button><button type="button" data-opt="der größerer Mann"><i>B</i>der größerer Mann</button><button type="button" data-opt="der größere Mann"><i>C</i>der größere Mann</button></span></div><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc dd" data-key="e2d-3t" data-answer="어미 누락"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr 중복">mehr 중복</button><button type="button" data-opt="wie·als">wie·als</button><button type="button" data-opt="어미 누락">어미 누락</button><button type="button" data-opt="움라우트">움라우트</button><button type="button" data-opt="am 오용">am 오용</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Tom ist <strong>alter</strong> als Anna.</p><div class="mcb dd" data-key="e2d-4" data-answer="Tom ist älter als Anna."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Tom ist älter als Anna."><i>A</i>Tom ist älter als Anna.</button><button type="button" data-opt="Tom ist mehr alt als Anna."><i>B</i>Tom ist mehr alt als Anna.</button><button type="button" data-opt="Tom ist am ältesten als Anna."><i>C</i>Tom ist am ältesten als Anna.</button></span></div><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc dd" data-key="e2d-4t" data-answer="움라우트"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr 중복">mehr 중복</button><button type="button" data-opt="wie·als">wie·als</button><button type="button" data-opt="어미 누락">어미 누락</button><button type="button" data-opt="움라우트">움라우트</button><button type="button" data-opt="am 오용">am 오용</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Anna ist am <strong>größte</strong>.</p><div class="mcb dd" data-key="e2d-5" data-answer="Anna ist am größten."><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="Anna ist am größer."><i>A</i>Anna ist am größer.</button><button type="button" data-opt="Anna ist am größten."><i>B</i>Anna ist am größten.</button><button type="button" data-opt="Anna ist am größsten."><i>C</i>Anna ist am größsten.</button></span></div><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc dd" data-key="e2d-5t" data-answer="어미 누락"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr 중복">mehr 중복</button><button type="button" data-opt="wie·als">wie·als</button><button type="button" data-opt="어미 누락">어미 누락</button><button type="button" data-opt="움라우트">움라우트</button><button type="button" data-opt="am 오용">am 오용</button></span></span></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ der <strong>am größte</strong> Mann</p><div class="mcb dd" data-key="e2d-6" data-answer="der größte Mann"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="der am größten Mann"><i>A</i>der am größten Mann</button><button type="button" data-opt="der größter Mann"><i>B</i>der größter Mann</button><button type="button" data-opt="der größte Mann"><i>C</i>der größte Mann</button></span></div><p class="sol"><span class="ar">⊞</span> 유형: <span class="mc dd" data-key="e2d-6t" data-answer="am 오용"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr 중복">mehr 중복</button><button type="button" data-opt="wie·als">wie·als</button><button type="button" data-opt="어미 누락">어미 누락</button><button type="button" data-opt="움라우트">움라우트</button><button type="button" data-opt="am 오용">am 오용</button></span></span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">2E.</span> 명사 앞 비교급·최상급 · -est</div>
+    <p>어간(비교급/최상급)에 7과 어미를 붙여 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Der <input class="bl md" data-key="e2e-1" data-answer="größere"> Mann kommt. <span class="gen">— 더 큰 (groß, 남성 1격)</span></p></div></li>
+      <li><div><p class="de">Ich sehe den <input class="bl md" data-key="e2e-2" data-answer="größeren"> Mann. <span class="gen">— 더 큰 (groß, 남성 4격)</span></p></div></li>
+      <li><div><p class="de">Das ist ein <input class="bl md" data-key="e2e-3" data-answer="besseres"> Buch. <span class="gen">— 더 좋은 (gut, 중성 1격 · 혼합 -es!)</span></p></div></li>
+      <li><div><p class="de">Die <input class="bl md" data-key="e2e-4" data-answer="jüngere"> Frau kommt. <span class="gen">— 더 젊은 (jung, 여성 1격 · 움라우트!)</span></p></div></li>
+      <li><div><p class="de">Er ist <input class="bl md" data-key="e2e-5" data-answer="am ältesten">. <span class="gen">— 가장 늙은 (alt, 서술 · -est!)</span></p></div></li>
+      <li><div><p class="de">Das Buch ist <input class="bl md" data-key="e2e-6" data-answer="am kürzesten">. <span class="gen">— 가장 짧은 (kurz, 서술 · -est!)</span></p></div></li>
+    </ol>
+
+    </section>
+
+  <!-- ===== SCHRITT 3 ===== -->
+  <section class="step s3" id="s3" data-sec="s3" data-day="1">
+    <div class="step-head"><div class="step-n">03</div><div><p class="eyebrow">Schritt 3</p><h2 class="step-title">Lesen · 읽기</h2></div></div>
+    <p class="lede">문장을 읽고 해석한 뒤, 비교 등급을 분석합니다.</p>
+    <div class="bsp"><span class="lab">Beispiel</span><p class="de">Anna ist <strong>größer</strong> als Tom.</p><p class="ko" style="margin:0">안나는 톰보다 크다. (groß → größer, 비교급 -er + als + 움라우트)</p></div>
+
+    <div class="sub"><span class="de">3A.</span> 읽기 + 해석</div>
+    <ol class="ex">
+      <li><div><p class="de">Anna ist <strong>größer</strong> als Tom.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-1"></p></div></li>
+      <li><div><p class="de">Der Zug ist <strong>schneller</strong> als das Auto.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-2"></p></div></li>
+      <li><div><p class="de">Mein Bruder ist <strong>älter</strong> als ich.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-3"></p></div></li>
+      <li><div><p class="de">Ich lerne <strong>mehr</strong> als du.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-4"></p></div></li>
+      <li><div><p class="de">Das ist die <strong>beste</strong> Idee.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-5"></p></div></li>
+      <li><div><p class="de">Berlin ist <strong>am schönsten</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-6"></p></div></li>
+      <li><div><p class="de">Anna ist <strong>am größten</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-7"></p></div></li>
+      <li><div><p class="de">Der <strong>größte</strong> Mann kommt.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-8"></p></div></li>
+      <li><div><p class="de">Tom ist <strong>jünger</strong> als Anna.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-9"></p></div></li>
+      <li><div><p class="de">Das Buch ist <strong>besser</strong> als der Film.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-10"></p></div></li>
+      <li><div><p class="de">Sie ist <strong>so groß wie</strong> ich.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-11"></p></div></li>
+      <li><div><p class="de">Der <strong>schnellste</strong> Zug kommt heute.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-12"></p></div></li>
+      <li><div><p class="de">Das ist <strong>am besten</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-13"></p></div></li>
+      <li><div><p class="de">Er ist <strong>länger</strong> hier als ich.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-14"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">3B.</span> 등급 분석 — 원급/비교급/최상급</div>
+    <p>굵은 부분의 <strong>등급</strong>과 <strong>원형(원급)</strong>을 쓰세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Anna ist <strong>größer</strong> als Tom.</p><p class="sol"><span class="ar">·</span> 등급: <span class="mc dd" data-key="r3b-1a" data-answer="비교급"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="원급">원급</button><button type="button" data-opt="비교급">비교급</button><button type="button" data-opt="최상급">최상급</button></span></span> · 원급: <input class="bl sm" data-key="r3b-1b" data-answer="groß" style="width:70px"></p></div></li>
+      <li><div><p class="de">Anna ist <strong>am größten</strong>.</p><p class="sol"><span class="ar">·</span> 등급: <span class="mc dd" data-key="r3b-2a" data-answer="최상급"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="원급">원급</button><button type="button" data-opt="비교급">비교급</button><button type="button" data-opt="최상급">최상급</button></span></span> · 원급: <input class="bl sm" data-key="r3b-2b" data-answer="groß" style="width:70px"></p></div></li>
+      <li><div><p class="de">der <strong>größte</strong> Mann</p><p class="sol"><span class="ar">·</span> 등급: <span class="mc dd" data-key="r3b-3a" data-answer="최상급"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="원급">원급</button><button type="button" data-opt="비교급">비교급</button><button type="button" data-opt="최상급">최상급</button></span></span> · 원급: <input class="bl sm" data-key="r3b-3b" data-answer="groß" style="width:70px"></p></div></li>
+      <li><div><p class="de">Sie ist <strong>so groß wie</strong> ich.</p><p class="sol"><span class="ar">·</span> 등급: <span class="mc dd" data-key="r3b-4a" data-answer="원급"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="원급">원급</button><button type="button" data-opt="비교급">비교급</button><button type="button" data-opt="최상급">최상급</button></span></span> · 원급: <input class="bl sm" data-key="r3b-4b" data-answer="groß" style="width:70px"></p></div></li>
+    </ol>
+  </section>
+
+  
+  <div class="daybar"><b>2일차</b><span>Mini-Wiederholung 1 → Schritt 4–5 · 어제 내용을 먼저 인출하고 듣기·쓰기로</span></div>
+
+  <section class="step" id="mw1" data-sec="mw1" data-day="2" data-label="Mini-Wiederholung 1 (2일차 시작)">
+    <div class="sub2">Mini-Wiederholung 1 — 비교급</div>
+    <sc-raw-table class="g center" style="max-width:560px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">원급</sc-raw-th><sc-raw-th>비교급</sc-raw-th><sc-raw-th style="text-align:left">원급</sc-raw-th><sc-raw-th>비교급</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">schnell</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-1" data-answer="schneller"></sc-raw-td><sc-raw-td class="k">alt</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-2" data-answer="älter"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">groß</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-3" data-answer="größer"></sc-raw-td><sc-raw-td class="k">jung</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-4" data-answer="jünger"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">gut (불규칙)</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-5" data-answer="besser"></sc-raw-td><sc-raw-td class="k">viel (불규칙)</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw1-6" data-answer="mehr"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 4 ===== -->
+  <section class="step s4" id="s4" data-sec="s4" data-day="2">
+    <div class="step-head"><div class="step-n">04</div><div><p class="eyebrow">Schritt 4</p><h2 class="step-title">Hören · 듣기</h2></div></div>
+    <p class="lede">오디오를 듣고 네 가지 과제를 수행하세요. 4A·4B·4C는 문장마다 ▶ 버튼으로, 4D는 이야기 음원으로 풉니다.</p>
+    <div class="hblock">
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+
+    <div class="sub"><span class="de">4A.</span> 받아쓰기 — Diktat</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="a4-1" preload="auto" src="../assets/audio/0b2a84d63577.mp3"></audio><input class="bl lg" data-key="h4a-1" data-answer="Anna ist größer als Tom." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="a4-2" preload="auto" src="../assets/audio/25c2f22880f7.mp3"></audio><input class="bl lg" data-key="h4a-2" data-answer="Mein Bruder ist älter als ich." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="a4-3" preload="auto" src="../assets/audio/bd4d3d9df26a.mp3"></audio><input class="bl lg" data-key="h4a-3" data-answer="Ich lerne mehr als du." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="a4-4" preload="auto" src="../assets/audio/884c89283660.mp3"></audio><input class="bl lg" data-key="h4a-4" data-answer="Das ist die beste Idee." placeholder="받아쓰기"></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="a4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="a4-5" preload="auto" src="../assets/audio/c52c90f9b14b.mp3"></audio><input class="bl lg" data-key="h4a-5" data-answer="Berlin ist am schönsten." placeholder="받아쓰기"></div></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">4B.</span> 비교급·최상급 채우기</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="b4-1" preload="auto" src="../assets/audio/0b2a84d63577.mp3"></audio><p class="de">Anna ist <input class="bl md" data-key="h4b-1" data-answer="größer"> als Tom.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="b4-2" preload="auto" src="../assets/audio/d1d5096d3ed0.mp3"></audio><p class="de">Der Zug ist <input class="bl md" data-key="h4b-2" data-answer="schneller"> als das Auto.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="b4-3" preload="auto" src="../assets/audio/25c2f22880f7.mp3"></audio><p class="de">Mein Bruder ist <input class="bl md" data-key="h4b-3" data-answer="älter"> als ich.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="b4-4" preload="auto" src="../assets/audio/bd4d3d9df26a.mp3"></audio><p class="de">Ich lerne <input class="bl md" data-key="h4b-4" data-answer="mehr"> als du.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-5" data-noser="" aria-label="5번 문장 듣기"></button><audio data-clip="b4-5" preload="auto" src="../assets/audio/884c89283660.mp3"></audio><p class="de">Das ist die <input class="bl md" data-key="h4b-5" data-answer="beste"> Idee.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-6" data-noser="" aria-label="6번 문장 듣기"></button><audio data-clip="b4-6" preload="auto" src="../assets/audio/c52c90f9b14b.mp3"></audio><p class="de">Berlin ist <input class="bl md" data-key="h4b-6" data-answer="am schönsten">.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-7" data-noser="" aria-label="7번 문장 듣기"></button><audio data-clip="b4-7" preload="auto" src="../assets/audio/ed78577decd5.mp3"></audio><p class="de">Anna ist <input class="bl md" data-key="h4b-7" data-answer="am größten">.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-8" data-noser="" aria-label="8번 문장 듣기"></button><audio data-clip="b4-8" preload="auto" src="../assets/audio/7e7b376e9355.mp3"></audio><p class="de">der <input class="bl md" data-key="h4b-8" data-answer="größte"> Mann</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-9" data-noser="" aria-label="9번 문장 듣기"></button><audio data-clip="b4-9" preload="auto" src="../assets/audio/75683fca1a50.mp3"></audio><p class="de">Tom ist <input class="bl md" data-key="h4b-9" data-answer="jünger"> als Anna.</p></div></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="b4-10" data-noser="" aria-label="10번 문장 듣기"></button><audio data-clip="b4-10" preload="auto" src="../assets/audio/aecacdf9c239.mp3"></audio><p class="de">Das ist <input class="bl md" data-key="h4b-10" data-answer="am besten">.</p></div></div></li>
+    </ol>
+    </div>
+
+    <div class="sub"><span class="de">4C.</span> 누가 더? 같다? — 비교 표현으로 뜻 판단하기</div>
+    <p>▶를 눌러 문장을 듣고, <strong>뜻</strong>에 맞는 것을 고르세요. 문장은 <strong>정답 보기</strong>를 누른 뒤에 나타납니다. 필요한 만큼 다시 들어도 됩니다.</p>
+    <p class="tip"><b class="t">Tip</b><strong>비교급(-er) + als</strong> 는 '~보다 더', <strong>so … wie</strong> 는 '~만큼 똑같이', <strong>nicht so … wie</strong> 는 '~만큼 ~하지 않다'입니다. 먼저 나온 사람이 늘 '더'인 것은 아닙니다. größer 인지 kleiner 인지, als 인지 wie 인지 끝까지 들으세요. 정답 보기를 누르면 뜻을 알려 주는 말에 <span class="k1s">색 밑줄</span>이 표시됩니다.</p>
+    <div class="bsp"><span class="lab">Beispiel · 예시</span><p class="de">Tom ist <span class="k1s">kleiner als</span> Anna. → 톰은 안나보다 작다.</p><p class="ko">안나가 더 큽니다.</p><p class="de">Tom ist <span class="k1s">so groß wie</span> Anna. → 톰은 안나만큼 크다.</p><p class="ko">두 사람의 키가 같습니다.</p></div>
+    <div class="clipbar"><span class="cliptag">♪ 문장마다 ▶</span><div class="ap-speed clipspeed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button type="button" data-cliprate="0.75" aria-pressed="false">0.75×</button><button type="button" data-cliprate="1" aria-pressed="true">1×</button></div></div>
+    <div class="sub2">4C-1 · 누가 더 클까?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-1" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-1" preload="auto" src="../assets/audio/0b2a84d63577.mp3"></audio><span class="mc dd" data-key="h4c-1" data-answer="안나가 더 크다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="안나가 더 크다">안나가 더 크다</button><button type="button" data-opt="톰이 더 크다">톰이 더 크다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Anna ist <span class="k1">größer als</span> Tom.</span><span class="rv-clue" data-noser="">단서: größer als = ~보다 더 크다 → 안나</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-2" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-2" preload="auto" src="../assets/audio/67e0791f81cd.mp3"></audio><span class="mc dd" data-key="h4c-2" data-answer="톰이 더 크다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="안나가 더 크다">안나가 더 크다</button><button type="button" data-opt="톰이 더 크다">톰이 더 크다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Anna ist <span class="k1">kleiner als</span> Tom.</span><span class="rv-clue" data-noser="">단서: kleiner als = ~보다 작다 → 톰이 더 크다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-3" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-3" preload="auto" src="../assets/audio/b16712de61e6.mp3"></audio><span class="mc dd" data-key="h4c-3" data-answer="톰이 더 크다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="안나가 더 크다">안나가 더 크다</button><button type="button" data-opt="톰이 더 크다">톰이 더 크다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Anna ist <span class="k1">nicht so groß wie</span> Tom.</span><span class="rv-clue" data-noser="">단서: nicht so groß wie = ~만큼 크지 않다 → 톰이 더 크다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-4" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-4" preload="auto" src="../assets/audio/1d95a9be85b7.mp3"></audio><span class="mc dd" data-key="h4c-4" data-answer="안나가 더 크다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="안나가 더 크다">안나가 더 크다</button><button type="button" data-opt="톰이 더 크다">톰이 더 크다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Tom ist <span class="k1">kleiner als</span> Anna.</span><span class="rv-clue" data-noser="">단서: 톰이 더 작다 → 안나가 더 크다</span></p></div></li>
+    </ol>
+    <div class="sub2">4C-2 · 같다? 다르다?</div>
+    <ol class="ex">
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-5" data-noser="" aria-label="1번 문장 듣기"></button><audio data-clip="c4-5" preload="auto" src="../assets/audio/3dbb72f03e98.mp3"></audio><span class="mc dd" data-key="h4c-5" data-answer="톰과 나는 나이가 같다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="톰과 나는 나이가 같다">톰과 나는 나이가 같다</button><button type="button" data-opt="톰이 나보다 나이가 많다">톰이 나보다 나이가 많다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Tom ist <span class="k1">so alt wie</span> ich.</span><span class="rv-clue" data-noser="">단서: so … wie = 똑같이</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-6" data-noser="" aria-label="2번 문장 듣기"></button><audio data-clip="c4-6" preload="auto" src="../assets/audio/d1d5096d3ed0.mp3"></audio><span class="mc dd" data-key="h4c-6" data-answer="기차가 자동차보다 빠르다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="기차와 자동차는 빠르기가 같다">기차와 자동차는 빠르기가 같다</button><button type="button" data-opt="기차가 자동차보다 빠르다">기차가 자동차보다 빠르다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Der Zug ist <span class="k1">schneller als</span> das Auto.</span><span class="rv-clue" data-noser="">단서: schneller als = ~보다 더 빠르다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-7" data-noser="" aria-label="3번 문장 듣기"></button><audio data-clip="c4-7" preload="auto" src="../assets/audio/a422aba4eb19.mp3"></audio><span class="mc dd" data-key="h4c-7" data-answer="톰이 나보다 나이가 많다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="톰과 나는 나이가 같다">톰과 나는 나이가 같다</button><button type="button" data-opt="톰이 나보다 나이가 많다">톰이 나보다 나이가 많다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Tom ist <span class="k1">älter als</span> ich.</span><span class="rv-clue" data-noser="">단서: älter als = ~보다 나이가 많다</span></p></div></li>
+      <li><div><div class="lrow"><button type="button" class="play" data-play="c4-8" data-noser="" aria-label="4번 문장 듣기"></button><audio data-clip="c4-8" preload="auto" src="../assets/audio/3b80278cd0f2.mp3"></audio><span class="mc dd" data-key="h4c-8" data-answer="기차와 자동차는 빠르기가 같다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="기차와 자동차는 빠르기가 같다">기차와 자동차는 빠르기가 같다</button><button type="button" data-opt="기차가 자동차보다 빠르다">기차가 자동차보다 빠르다</button></span></span></div><p class="reveal" data-sp=""><span class="rv-de">Der Zug ist <span class="k1">so schnell wie</span> das Auto.</span><span class="rv-clue" data-noser="">단서: so … wie = 똑같이</span></p></div></li>
+    </ol>
+
+    <div class="hblock">
+    <div class="sub"><span class="de">4D.</span> 이야기 듣기 — Zwei Freunde</div>
+    <p>이야기를 <strong>두 번</strong> 듣습니다. 첫 번째에는 <strong>내용</strong>을, 두 번째에는 <strong>비교 형태</strong>을 듣습니다. 대본은 모두 푼 뒤에 여세요.</p>
+    <div class="audio">
+      <span class="audio-tag">♪ Zwei Freunde</span>
+      <audio controls="{{ true }}" preload="auto" data-aud="story" data-filename="Lektion_08_Zwei_Freunde.mp3" src="../assets/audio/1dfe0f820927.mp3"></audio>
+      <div class="ap-extras">
+        <div class="ap-speed" role="group" aria-label="재생 속도"><span class="lbl">속도</span><button data-aprate="0.75" aria-pressed="false">0.75×</button><button data-aprate="1" aria-pressed="true">1×</button><button data-aprate="1.25" aria-pressed="false">1.25×</button></div>
+        <button class="ap-dl" data-ap="dl" type="button" aria-label="오디오 다운로드">⤓ MP3</button>
+      </div>
+    </div>
+    <div class="sub2">4D-1 · 1차 듣기 — 내용</div>
+    <p>이야기를 끝까지 한 번 듣고 질문에 답하세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">누가 나이가 더 많나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc dd" data-key="h4d-q1" data-answer="레오"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="레오">레오</button><button type="button" data-opt="얀">얀</button><button type="button" data-opt="나">나</button></span></span></p></div></li>
+      <li><div><p class="de">누가 가장 빨리 달리나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc dd" data-key="h4d-q2" data-answer="얀"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="얀">얀</button><button type="button" data-opt="레오">레오</button><button type="button" data-opt="나">나</button></span></span></p></div></li>
+      <li><div><p class="de">&#x27;나&#x27;는 무엇을 더 좋아하나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc dd" data-key="h4d-q3" data-answer="체스"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="체스">체스</button><button type="button" data-opt="축구">축구</button><button type="button" data-opt="음악">음악</button></span></span></p></div></li>
+      <li><div><p class="de">레오가 가장 좋아하는 것은?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc dd" data-key="h4d-q4" data-answer="음악"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="음악">음악</button><button type="button" data-opt="축구">축구</button><button type="button" data-opt="체스">체스</button></span></span></p></div></li>
+      <li><div><p class="de">&#x27;나&#x27;는 누구와 키가 같나요?</p><p class="sol" data-sp=""><span class="ar">→</span> <span class="mc dd" data-key="h4d-q5" data-answer="레오"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="레오">레오</button><button type="button" data-opt="얀">얀</button><button type="button" data-opt="아무도 없다">아무도 없다</button></span></span></p></div></li>
+    </ol>
+    <div class="sub2">4D-2 · 2차 듣기 — 들린 비교 형태 쓰기</div>
+    <p>다시 들으면서 빈칸에 들린 <strong>비교급 · 최상급</strong>을 쓰세요. 왼쪽은 원급입니다.</p>
+    <sc-raw-table class="g">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>원급</sc-raw-th><sc-raw-th>들린 문장</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>alt</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Leo ist <input class="bl w4d" data-key="h4d-t1-1" data-answer="älter"> als Jan.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>groß</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Aber Jan ist <input class="bl w4d" data-key="h4d-t2-2" data-answer="größer"> als Leo.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>groß (같다)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Ich bin <input class="bl w4d" data-key="h4d-t3-3" data-answer="so"> groß <input class="bl w4d" data-key="h4d-t3-4" data-answer="wie"> Leo.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>schnell</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Leo läuft <input class="bl w4d" data-key="h4d-t4-5" data-answer="schneller"> als ich.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>schnell (최상급)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Jan läuft <input class="bl w4d" data-key="h4d-t5-6" data-answer="am schnellsten">.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>gern</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Ich spiele <input class="bl w4d" data-key="h4d-t6-7" data-answer="lieber"> Schach.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>gut</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Beim Schach bin ich <input class="bl w4d" data-key="h4d-t7-8" data-answer="besser"> als meine Freunde.</sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k"><span class="ser-only">4D-2 · </span>gern (최상급)</sc-raw-td><sc-raw-td style="text-align:left" data-sp="">Leo mag Musik <input class="bl w4d" data-key="h4d-t8-9" data-answer="am liebsten">.</sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <p style="margin-top:18px">위 표에서 규칙을 찾아 완성해 보세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">비교급 뒤 &#x27;~보다&#x27;는 <span class="mc dd" data-key="h4d-r1" data-answer="als"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="als">als</button><button type="button" data-opt="wie">wie</button><button type="button" data-opt="so">so</button></span></span> 이다.</p></div></li>
+      <li><div><p class="de">alt · groß 의 비교급은 모음이 <span class="mc dd" data-key="h4d-r2" data-answer="ä · ö 로 바뀐다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="ä · ö 로 바뀐다">ä · ö 로 바뀐다</button><button type="button" data-opt="그대로다">그대로다</button></span></span> (älter, größer)</p></div></li>
+      <li><div><p class="de">gut 의 비교급은 <span class="mc dd" data-key="h4d-r3" data-answer="besser"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="besser">besser</button><button type="button" data-opt="guter">guter</button><button type="button" data-opt="güter">güter</button></span></span> 이다.</p></div></li>
+    </ol>
+    <div class="sub2">4D-3 · am -sten · so … wie</div>
+    <p>빈칸에 들린 말을 쓰고, 뜻을 고르세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">Jan läuft <input class="bl w4d" data-key="h4d-p1-10" data-answer="am schnellsten">.</p><p class="sol" data-sp=""><span class="lbl">뜻은?</span> <span class="mc dd" data-key="h4d-p1r" data-answer="셋 중 가장 빠르다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="셋 중 가장 빠르다">셋 중 가장 빠르다</button><button type="button" data-opt="레오보다만 빠르다">레오보다만 빠르다</button></span></span></p></div></li>
+      <li><div><p class="de">Ich bin <input class="bl w4d" data-key="h4d-p2-11" data-answer="so"> groß <input class="bl w4d" data-key="h4d-p2-12" data-answer="wie"> Leo.</p><p class="sol" data-sp=""><span class="lbl">뜻은?</span> <span class="mc dd" data-key="h4d-p2r" data-answer="나와 레오는 키가 같다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="나와 레오는 키가 같다">나와 레오는 키가 같다</button><button type="button" data-opt="레오가 더 크다">레오가 더 크다</button></span></span></p></div></li>
+      <li><div><p class="de">Aber zusammen ist es <input class="bl w4d" data-key="h4d-p3-13" data-answer="am schönsten">.</p><p class="sol" data-sp=""><span class="lbl">뜻은?</span> <span class="mc dd" data-key="h4d-p3r" data-answer="함께 있을 때가 가장 좋다"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="함께 있을 때가 가장 좋다">함께 있을 때가 가장 좋다</button><button type="button" data-opt="함께 있으면 덜 좋다">함께 있으면 덜 좋다</button></span></span></p></div></li>
+    </ol>
+    <p style="margin-top:18px">위 문장에서 규칙을 찾아 완성해 보세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">서술 자리 최상급은 <span class="mc dd" data-key="h4d-s1" data-answer="am + -sten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am + -sten">am + -sten</button><button type="button" data-opt="der + -er">der + -er</button></span></span> 이다.</p></div></li>
+      <li><div><p class="de">gern 의 최상급은 <span class="mc dd" data-key="h4d-s2" data-answer="am liebsten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="am liebsten">am liebsten</button><button type="button" data-opt="am gernsten">am gernsten</button><button type="button" data-opt="am besten">am besten</button></span></span> 이다.</p></div></li>
+    </ol>
+    <details class="script">
+      <summary>대본 보기 — 다 푼 뒤에 여세요</summary>
+      <p class="sinst">줄을 누르면 그 줄만 다시 들을 수 있습니다.</p>
+      <div class="slegend"><span class="t-a">비교급 (+ als)</span><span class="t-b">최상급 (am -sten)</span><span class="t-c">so … wie</span></div>
+      <button type="button" class="sline" data-seg="0.56,3.91"><span class="sn">1</span><span class="sde">Ich habe zwei gute Freunde, Leo und Jan.</span><span class="sko">나에게는 좋은 친구 두 명, 레오와 얀이 있다.</span></button>
+      <button type="button" class="sline" data-seg="5.11,7.03"><span class="sn">2</span><span class="sde">Leo ist <span class="t-a">älter als</span> Jan.</span><span class="sko">레오는 얀보다 나이가 많다.</span></button>
+      <button type="button" class="sline" data-seg="8.22,10.44"><span class="sn">3</span><span class="sde">Aber Jan ist <span class="t-a">größer als</span> Leo.</span><span class="sko">하지만 얀이 레오보다 키가 크다.</span></button>
+      <button type="button" class="sline" data-seg="11.64,13.52"><span class="sn">4</span><span class="sde">Ich bin <span class="t-c">so groß wie</span> Leo.</span><span class="sko">나는 레오만큼 키가 크다.</span></button>
+      <button type="button" class="sline" data-seg="14.71,16.60"><span class="sn">5</span><span class="sde">Leo läuft <span class="t-a">schneller als</span> ich.</span><span class="sko">레오는 나보다 빨리 달린다.</span></button>
+      <button type="button" class="sline" data-seg="17.80,19.50"><span class="sn">6</span><span class="sde">Jan läuft <span class="t-b">am schnellsten</span>.</span><span class="sko">얀이 가장 빨리 달린다.</span></button>
+      <button type="button" class="sline" data-seg="20.70,22.21"><span class="sn">7</span><span class="sde">Ich spiele <span class="t-a">lieber</span> Schach.</span><span class="sko">나는 체스 두는 것을 더 좋아한다.</span></button>
+      <button type="button" class="sline" data-seg="23.40,25.95"><span class="sn">8</span><span class="sde">Beim Schach bin ich <span class="t-a">besser als</span> meine Freunde.</span><span class="sko">체스에서는 내가 친구들보다 잘한다.</span></button>
+      <button type="button" class="sline" data-seg="27.14,30.11"><span class="sn">9</span><span class="sde">Jan findet Fußball <span class="t-a">interessanter als</span> Schach.</span><span class="sko">얀은 축구가 체스보다 재미있다고 생각한다.</span></button>
+      <button type="button" class="sline" data-seg="31.30,33.38"><span class="sn">10</span><span class="sde">Leo mag Musik <span class="t-b">am liebsten</span>.</span><span class="sko">레오는 음악을 가장 좋아한다.</span></button>
+      <button type="button" class="sline" data-seg="34.57,36.18"><span class="sn">11</span><span class="sde">Wir sind sehr verschieden.</span><span class="sko">우리는 서로 아주 다르다.</span></button>
+      <button type="button" class="sline" data-seg="37.37,39.75"><span class="sn">12</span><span class="sde">Aber zusammen ist es <span class="t-b">am schönsten</span>.</span><span class="sko">그래도 함께 있을 때가 가장 좋다.</span></button>
+    </details>
+    </div>
+  </section>
+
+  <!-- ===== SCHRITT 5 ===== -->
+  <section class="step s5" id="s5" data-sec="s5" data-day="2">
+    <div class="step-head"><div class="step-n">05</div><div><p class="eyebrow">Schritt 5</p><h2 class="step-title">Schreiben · 쓰기</h2></div></div>
+    <p class="lede">단계적으로 난이도가 올라갑니다. 5C에서는 아무 도움 없이 스스로!</p>
+
+    <div class="sub"><span class="de">5A.</span> 비교급·최상급 채우기</div>
+    <p>괄호의 형용사를 문맥에 맞는 등급·형태로 쓰세요. (원급 그대로일 수도 있습니다)</p>
+    <ol class="ex">
+      <li><div><p class="de">Anna ist <input class="bl md" data-key="s5a-1" data-answer="größer"> als Tom. <span class="gen">(groß)</span></p></div></li>
+      <li><div><p class="de">Anna ist <input class="bl md" data-key="s5a-2" data-answer="am größten">. <span class="gen">(groß)</span></p></div></li>
+      <li><div><p class="de">der <input class="bl md" data-key="s5a-3" data-answer="größte"> Mann <span class="gen">(groß)</span></p></div></li>
+      <li><div><p class="de">Tom ist <input class="bl md" data-key="s5a-4" data-answer="jünger"> als Anna. <span class="gen">(jung)</span></p></div></li>
+      <li><div><p class="de">Das Buch ist <input class="bl md" data-key="s5a-5" data-answer="besser"> als der Film. <span class="gen">(gut)</span></p></div></li>
+      <li><div><p class="de">Das ist die <input class="bl md" data-key="s5a-6" data-answer="beste"> Idee. <span class="gen">(gut)</span></p></div></li>
+      <li><div><p class="de">Sie ist so <input class="bl md" data-key="s5a-7" data-answer="alt"> wie ich. <span class="gen">(alt)</span></p></div></li>
+      <li><div><p class="de">Der Zug ist <input class="bl md" data-key="s5a-8" data-answer="schneller"> als das Auto. <span class="gen">(schnell)</span></p></div></li>
+      <li><div><p class="de">Berlin ist <input class="bl md" data-key="s5a-9" data-answer="am schönsten">. <span class="gen">(schön)</span></p></div></li>
+      <li><div><p class="de">der <input class="bl md" data-key="s5a-10" data-answer="schnellste"> Zug <span class="gen">(schnell)</span></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5B.</span> 한→독 번역 <em>— 동사 형태만 제공</em></div>
+    <p>한국어를 독일어로 쓰세요. 동사 형태만 제공됩니다. <strong>주어를 빠뜨리지 마세요.</strong></p>
+    <ol class="ex">
+      <li><div><p class="de">안나는 톰보다 크다. <span class="vb">ist</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-1" data-answer="Anna ist größer als Tom."></p></div></li>
+      <li><div><p class="de">기차가 차보다 빠르다. <span class="vb">ist</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-2" data-answer="Der Zug ist schneller als das Auto."></p></div></li>
+      <li><div><p class="de">우리 형이 나보다 나이 많다. <span class="vb">ist</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-3" data-answer="Mein Bruder ist älter als ich."></p></div></li>
+      <li><div><p class="de">나는 너보다 더 배운다. <span class="vb">lerne</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-4" data-answer="Ich lerne mehr als du."></p></div></li>
+      <li><div><p class="de">이 책이 영화보다 좋다. <span class="vb">ist</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-5" data-answer="Das Buch ist besser als der Film."></p></div></li>
+      <li><div><p class="de">안나가 가장 크다. <span class="vb">ist</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-6" data-answer="Anna ist am größten."></p></div></li>
+      <li><div><p class="de">그녀는 나만큼 크다. <span class="vb">ist</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-7" data-answer="Sie ist so groß wie ich."></p></div></li>
+      <li><div><p class="de">그게 제일 좋은 생각이다. <span class="vb">ist</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-8" data-answer="Das ist die beste Idee."></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5C.</span> 한→독 통합 <em>— 도움 없음</em></div>
+    <p>비교급·최상급 + 격 + 어순을 모두 스스로 적용하세요. 주어를 빠뜨리지 마세요.</p>
+    <ol class="ex">
+      <li><div><p class="de">그 개가 그 고양이보다 크다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-1" data-answer="Der Hund ist größer als die Katze."></p></div></li>
+      <li><div><p class="de">오늘이 어제보다 춥다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-2" data-answer="Heute ist es kälter als gestern.|Es ist heute kälter als gestern."></p></div></li>
+      <li><div><p class="de">그가 가장 빠르다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-3" data-answer="Er ist am schnellsten."></p></div></li>
+      <li><div><p class="de">가장 늙은 남자가 온다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-4" data-answer="Der älteste Mann kommt."></p></div></li>
+      <li><div><p class="de">제일 좋은 친구가 나를 돕는다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-5" data-answer="Der beste Freund hilft mir.|Mein bester Freund hilft mir."></p></div></li>
+      <li><div><p class="de">그녀는 나만큼 나이가 많다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-6" data-answer="Sie ist so alt wie ich."></p></div></li>
+      <li><div><p class="de">나는 커피보다 차를 더 즐겨 마신다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-7" data-answer="Ich trinke lieber Tee als Kaffee.|Ich mag Tee lieber als Kaffee."></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">5D.</span> 숫자 · 서수</div>
+    <p>21 이상은 '1의 자리 + und + 10의 자리' 순서로 한 단어! 서수는 어간 + 7과 어미.</p>
+    <ol class="ex">
+      <li><div><p class="de">21</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="s5d-1" data-answer="einundzwanzig"></p></div></li>
+      <li><div><p class="de">35</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="s5d-2" data-answer="fünfunddreißig"></p></div></li>
+      <li><div><p class="de">99</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="s5d-3" data-answer="neunundneunzig"></p></div></li>
+      <li><div><p class="de">첫 번째 남자</p><p class="sol"><span class="ar">→</span> der <input class="bl md" data-key="s5d-4" data-answer="erste"> Mann</p></div></li>
+      <li><div><p class="de">세 번째 책</p><p class="sol"><span class="ar">→</span> das <input class="bl md" data-key="s5d-5" data-answer="dritte"> Buch</p></div></li>
+      <li><div><p class="de">8월 3일에</p><p class="sol"><span class="ar">→</span> am <input class="bl md" data-key="s5d-6" data-answer="dritten"> August</p></div></li>
+    </ol>
+
+    </section>
+
+  
+  <div class="daybar"><b>3일차</b><span>Mini-Wiederholung 2 → Schritt 6–7 + 자기 평가</span></div>
+
+  <section class="step" id="mw2" data-sec="mw2" data-day="3" data-label="Mini-Wiederholung 2 (3일차 시작)">
+    <div class="sub2">Mini-Wiederholung 2 — 최상급 + 불규칙</div>
+    <sc-raw-table class="g center" style="max-width:560px">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">원급</sc-raw-th><sc-raw-th>비교급</sc-raw-th><sc-raw-th>최상급 (서술)</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="k">groß</sc-raw-td><sc-raw-td>größer</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-1" data-answer="am größten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">alt</sc-raw-td><sc-raw-td>älter</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-2" data-answer="am ältesten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">gut</sc-raw-td><sc-raw-td>besser</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-3" data-answer="am besten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">viel</sc-raw-td><sc-raw-td>mehr</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-4" data-answer="am meisten"></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">gern</sc-raw-td><sc-raw-td>lieber</sc-raw-td><sc-raw-td><input class="bl md" data-key="mw2-5" data-answer="am liebsten"></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+    <ol class="ex" style="margin-top:8px">
+      <li><div><p class="de">Anna ist <input class="bl md" data-key="mw2-6" data-answer="am größten">. <span class="gen">(가장 크다 · 서술)</span></p></div></li>
+      <li><div><p class="de">der <input class="bl md" data-key="mw2-7" data-answer="größte"> Mann <span class="gen">(가장 큰 · 명사 앞)</span></p></div></li>
+      <li><div><p class="de">Das ist die <input class="bl md" data-key="mw2-8" data-answer="beste"> Idee. <span class="gen">(제일 좋은)</span></p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SCHRITT 6 ===== -->
+  <section class="step s6" id="s6" data-sec="s6" data-day="3">
+    <div class="step-head"><div class="step-n">06</div><div><p class="eyebrow">Schritt 6</p><h2 class="step-title">Sprechen · 말하기</h2></div></div>
+    <p class="lede">Deutsch 칸은 가려져 있습니다. 한국어만 보고 독일어로 말한 뒤, 칸을 눌러 확인하세요.</p>
+
+    <div class="sub2">Round 1 — 비교급 -er + als</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">안나가 톰보다 커.</sc-raw-td><sc-raw-td class="de tog">Anna ist größer als Tom.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-1" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">기차가 차보다 빨라.</sc-raw-td><sc-raw-td class="de tog">Der Zug ist schneller als das Auto.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-2" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">우리 형이 나보다 나이 많아.</sc-raw-td><sc-raw-td class="de tog">Mein Bruder ist älter als ich.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-3" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">톰이 안나보다 어려.</sc-raw-td><sc-raw-td class="de tog">Tom ist jünger als Anna.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-4" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나 너보다 더 배워.</sc-raw-td><sc-raw-td class="de tog">Ich lerne mehr als du.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-5" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">이 책이 영화보다 좋아.</sc-raw-td><sc-raw-td class="de tog">Das Buch ist besser als der Film.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-6" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그녀는 나만큼 커.</sc-raw-td><sc-raw-td class="de tog">Sie ist so groß wie ich.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-7" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">오늘이 어제보다 추워.</sc-raw-td><sc-raw-td class="de tog">Heute ist es kälter als gestern.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-8" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 2 — 최상급 am -sten · 불규칙</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">안나가 제일 커.</sc-raw-td><sc-raw-td class="de tog">Anna ist am größten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-9" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">베를린이 제일 예뻐.</sc-raw-td><sc-raw-td class="de tog">Berlin ist am schönsten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-10" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그게 제일 좋아.</sc-raw-td><sc-raw-td class="de tog">Das ist am besten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-11" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">가장 큰 남자.</sc-raw-td><sc-raw-td class="de tog">der größte Mann</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-12" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">가장 빠른 기차.</sc-raw-td><sc-raw-td class="de tog">der schnellste Zug</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-13" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">제일 좋은 생각이야.</sc-raw-td><sc-raw-td class="de tog">Das ist die beste Idee.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-14" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그가 제일 늙었어.</sc-raw-td><sc-raw-td class="de tog">Er ist am ältesten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-15" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나는 커피를 제일 좋아해.</sc-raw-td><sc-raw-td class="de tog">Ich mag Kaffee am liebsten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-16" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+
+    <div class="sub2">Round 3 — 명사 앞 비교급 · -est</div>
+    <sc-raw-table class="sp">
+      <sc-raw-thead><sc-raw-tr><sc-raw-th>한국어</sc-raw-th><sc-raw-th>Deutsch</sc-raw-th><sc-raw-th class="c">연습 횟수</sc-raw-th></sc-raw-tr></sc-raw-thead>
+      <sc-raw-tbody>
+        <sc-raw-tr><sc-raw-td class="ko">더 큰 남자가 온다.</sc-raw-td><sc-raw-td class="de tog">Der größere Mann kommt.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-17" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">나는 더 좋은 책을 산다.</sc-raw-td><sc-raw-td class="de tog">Ich kaufe das bessere Buch.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-18" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">더 젊은 여자.</sc-raw-td><sc-raw-td class="de tog">die jüngere Frau</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-19" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그 책이 제일 짧아.</sc-raw-td><sc-raw-td class="de tog">Das Buch ist am kürzesten.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-20" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+      </sc-raw-tbody>
+    </sc-raw-table>
+  </section>
+
+  <!-- ===== SCHRITT 7 ===== -->
+  <section class="step s7" id="s7" data-sec="s7" data-day="3">
+    <div class="step-head"><div class="step-n">07</div><div><p class="eyebrow">Schritt 7</p><h2 class="step-title">Test · 테스트</h2></div></div>
+    <p class="lede">연습에서 <strong>한 번도 사용하지 않은 새 형용사</strong>가 등장합니다. 비교 규칙을 적용하세요.</p>
+
+    <div class="bsp"><span class="lab">테스트용 새 형용사표</span>
+      <sc-raw-table class="g" style="margin:6px 0 0;font-size:14px">
+        <sc-raw-thead><sc-raw-tr><sc-raw-th>원급</sc-raw-th><sc-raw-th>뜻</sc-raw-th><sc-raw-th>비교급</sc-raw-th><sc-raw-th>최상급(서술)</sc-raw-th></sc-raw-tr></sc-raw-thead>
+        <sc-raw-tbody>
+          <sc-raw-tr><sc-raw-td class="k">schwer</sc-raw-td><sc-raw-td>무거운</sc-raw-td><sc-raw-td>schwerer</sc-raw-td><sc-raw-td>am schwersten</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">leicht</sc-raw-td><sc-raw-td>가벼운</sc-raw-td><sc-raw-td>leichter</sc-raw-td><sc-raw-td>am leichtesten</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">stark</sc-raw-td><sc-raw-td>강한</sc-raw-td><sc-raw-td>stärker</sc-raw-td><sc-raw-td>am stärksten</sc-raw-td></sc-raw-tr>
+          <sc-raw-tr><sc-raw-td class="k">breit</sc-raw-td><sc-raw-td>넓은</sc-raw-td><sc-raw-td>breiter</sc-raw-td><sc-raw-td>am breitesten</sc-raw-td></sc-raw-tr>
+        </sc-raw-tbody>
+      </sc-raw-table>
+    </div>
+
+    <div class="sub"><span class="de">7A.</span> 새 형용사 독→한 해석</div>
+    <ol class="ex">
+      <li><div><p class="de">Das Auto ist <strong>schwerer</strong> als das Fahrrad.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-1"></p></div></li>
+      <li><div><p class="de">Das Buch ist <strong>leichter</strong> als der Tisch.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-2"></p></div></li>
+      <li><div><p class="de">Tom ist <strong>stärker</strong> als Anna.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-3"></p></div></li>
+      <li><div><p class="de">Der Mann ist <strong>am stärksten</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-4"></p></div></li>
+      <li><div><p class="de">Der Tisch ist <strong>am breitesten</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-5"></p></div></li>
+      <li><div><p class="de">Das Auto ist <strong>so schwer wie</strong> der Zug.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-6"></p></div></li>
+      <li><div><p class="de">Der <strong>stärkste</strong> Mann kommt.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-7"></p></div></li>
+      <li><div><p class="de">Das Buch ist <strong>am leichtesten</strong>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="t7a-8"></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7B.</span> 새 형용사 한→독 번역</div>
+    <ol class="ex">
+      <li><div><p class="de">그 차가 자전거보다 무겁다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-1" data-answer="Das Auto ist schwerer als das Fahrrad."></p></div></li>
+      <li><div><p class="de">톰이 안나보다 강하다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-2" data-answer="Tom ist stärker als Anna."></p></div></li>
+      <li><div><p class="de">그 남자가 가장 강하다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-3" data-answer="Der Mann ist am stärksten."></p></div></li>
+      <li><div><p class="de">가장 강한 남자가 온다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-4" data-answer="Der stärkste Mann kommt."></p></div></li>
+      <li><div><p class="de">그 책이 책상보다 가볍다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-5" data-answer="Das Buch ist leichter als der Tisch."></p></div></li>
+      <li><div><p class="de">그 차는 기차만큼 무겁다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-6" data-answer="Das Auto ist so schwer wie der Zug."></p></div></li>
+      <li><div><p class="de">그 책이 가장 가볍다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-7" data-answer="Das Buch ist am leichtesten."></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7C.</span> 새 형용사 오류 수정</div>
+    <ol class="ex">
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Tom ist <strong>mehr stark</strong> als Anna.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-1" data-answer="Tom ist stärker als Anna."></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Das Auto ist schwerer <strong>wie</strong> das Fahrrad.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-2" data-answer="Das Auto ist schwerer als das Fahrrad."></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Der <strong>stärkst</strong> Mann kommt.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-3" data-answer="Der stärkste Mann kommt."></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Der Mann ist am <strong>stärkste</strong>.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-4" data-answer="Der Mann ist am stärksten."></p></div></li>
+      <li><div><p class="de" style="padding:4px 8px;background:rgba(196,57,46,.05);border-left:2.5px solid var(--err)">✕ Tom ist <strong>starker</strong> als Anna.</p><p class="sol"><span class="ar">→</span> <input class="bl ko" style="min-width:220px" data-key="t7c-5" data-answer="Tom ist stärker als Anna."></p></div></li>
+    </ol>
+
+    <div class="sub"><span class="de">7D.</span> 문법 핵심 <em style="font-style:normal;color:var(--muted);font-size:11px;letter-spacing:.04em">— 맞는 것을 고르세요</em></div>
+    <ol class="ex gram">
+      <li><div><div class="mcq"><p class="de">비교급은 형용사에 <span class="slot empty" data-slot="t7d-1" data-ph="①">①</span>를 붙이고, "~보다"는 <span class="slot empty" data-slot="t7d-2" data-ph="②">②</span>이다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="t7d-1" data-answer="-er"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="mehr">mehr</button><button type="button" data-opt="-est">-est</button><button type="button" data-opt="-er">-er</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="t7d-2" data-answer="als"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wie">wie</button><button type="button" data-opt="so">so</button><button type="button" data-opt="als">als</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">짧은 형용사는 a·o·u가 <span class="slot empty" data-slot="t7d-3" data-ph="__">__</span>로 바뀐다.</p><div class="opts"><span class="ogrp"><span class="mc dd" data-key="t7d-3" data-answer="ä·ö·ü"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="변화 없음">변화 없음</button><button type="button" data-opt="ä·ö·ü">ä·ö·ü</button><button type="button" data-opt="e·i·o">e·i·o</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">서술 최상급은 <span class="slot empty" data-slot="t7d-4" data-ph="①">①</span> 형태, 명사 앞은 <span class="slot empty" data-slot="t7d-5" data-ph="②">②</span> 형태이다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="t7d-4" data-answer="am -sten"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="der -ste">der -ste</button><button type="button" data-opt="am -sten">am -sten</button><button type="button" data-opt="-er">-er</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="t7d-5" data-answer="der -ste"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="so … wie">so … wie</button><button type="button" data-opt="am -sten">am -sten</button><button type="button" data-opt="der -ste">der -ste</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">같음(원급)은 <span class="slot empty" data-slot="t7d-6" data-ph="①">①</span> … wie로 표현하고, 비교급에 <span class="slot empty" data-slot="t7d-7" data-ph="②">②</span>를 중복하면 안 된다.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="t7d-6" data-answer="so"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="wie">wie</button><button type="button" data-opt="als">als</button><button type="button" data-opt="so">so</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="t7d-7" data-answer="mehr"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="als">als</button><button type="button" data-opt="mehr">mehr</button><button type="button" data-opt="am">am</button></span></span></span></div></div></div></li>
+      <li><div><div class="mcq"><p class="de">불규칙: gut→<span class="slot empty" data-slot="t7d-8" data-ph="①">①</span>, viel→<span class="slot empty" data-slot="t7d-9" data-ph="②">②</span>.</p><div class="opts"><span class="ogrp"><span class="onum">①</span><span class="mc dd" data-key="t7d-8" data-answer="besser"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="höher">höher</button><button type="button" data-opt="besser">besser</button><button type="button" data-opt="mehr">mehr</button></span></span></span><span class="ogrp"><span class="onum">②</span><span class="mc dd" data-key="t7d-9" data-answer="mehr"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="meist">meist</button><button type="button" data-opt="lieber">lieber</button><button type="button" data-opt="mehr">mehr</button></span></span></span></div></div></div></li>
+    </ol>
+  </section>
+
+  <!-- ===== SELF-ASSESSMENT ===== -->
+  <div class="assess" data-sec="assess">
+    <p class="ahead"><span class="tagpill">지시</span> 자기 평가 · Selbstbewertung</p>
+    <p class="ainst">자신 있으면 <b>O</b>, 아직 불안하면 <b>△</b>, 모르겠으면 <b>X</b>를 누르세요.</p>
+    <div class="sub2">문법 이해</div>
+    <div class="check"><p>비교급(-er)과 최상급(am -sten)을 만들 수 있다.</p><div class="rate" data-rate="g1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>"~보다"가 als임을 안다.</p><div class="rate" data-rate="g2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>짧은 형용사의 움라우트를 안다.</p><div class="rate" data-rate="g3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>서술/명사 앞 최상급 차이를 안다.</p><div class="rate" data-rate="g4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>mehr를 중복하지 않는다.</p><div class="rate" data-rate="g5"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>명사 앞 비교급·최상급에 7과 어미를 붙일 수 있다 (der größere/größte Mann) · -est 삽입을 안다.</p><div class="rate" data-rate="g6"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">단어</div>
+    <div class="check"><p>불규칙(gut-besser-best, viel-mehr-meist)을 외웠다.</p><div class="rate" data-rate="w1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>als(다름)와 so…wie(같음)를 구분한다.</p><div class="rate" data-rate="w2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="sub2">실전 적용</div>
+    <div class="check"><p>비교급 문장을 만들 수 있다.</p><div class="rate" data-rate="p1"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>최상급을 자리에 맞게 쓸 수 있다.</p><div class="rate" data-rate="p2"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>한국어를 보고 비교 문장을 쓸 수 있다.</p><div class="rate" data-rate="p3"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="check"><p>새 형용사에도 비교 규칙을 적용할 수 있다.</p><div class="rate" data-rate="p4"><button data-val="O">O</button><button data-val="△">△</button><button data-val="X">X</button></div></div>
+    <div class="scorebox"><b>해석</b><br>O가 9개 이상 — 비교급·최상급을 잘 이해했습니다! 다음 챕터로.<br>△가 3개 이상 — 움라우트 + 불규칙을 한 번 더 복습 후 Test를 다시.<br>X가 있다면 — Schritt 1부터 차근차근 다시 해보세요.</div>
+  </div>
+
+  <div class="footer">
+    <h3>Gut gemacht!</h3>
+    <p>입력한 답안은 자동으로 브라우저에 저장됩니다.<br>다 풀고 <strong>과제 제출하기</strong> 버튼으로 제출해 주세요.</p>
+    <div class="acts">
+      <button class="btn go" onclick="{{ submitNet }}">과제 제출하기</button>
+      <button class="btn" onclick="{{ print }}">인쇄 / PDF</button>
+    </div>
+  </div>
+
+<nav class="sd-nav" data-no-print aria-label="Hausaufgabe 이동"><a class="sd-prev" href="lektion-07.html"><span class="sd-dir">← 이전 · Lektion 07</span><span class="sd-ttl">형용사 변화</span></a><a class="sd-next" href="lektion-09.html"><span class="sd-dir">다음 · Lektion 09 →</span><span class="sd-ttl">화법조동사 · 분리동사</span></a><a class="sd-toc" href="../../lektion.html?n=08"><span class="sd-dir">SODA GRAMMATIK KURS</span><span class="sd-ttl">Lektion 08 선택으로 돌아가기</span></a></nav>
+</div>
+</div>
+
+<a class="sd-home" href="../../lektion.html?n=08" aria-label="Lektion 08 선택으로 돌아가기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="sd-lab">선택</span></a>
+<div class="fontctl" aria-label="글씨 크기 조절"><button type="button" data-fs="dec" aria-label="작게">A−</button><button type="button" data-fs="reset" class="fs-val" aria-label="기본 크기"><span data-fs="val">100%</span></button><button type="button" data-fs="inc" aria-label="크게">A+</button></div>
+
+
+</x-dc>
+
+<style>
+  /* ===== L08 전용 — 슬롯형 객관식 · 선택지 카드 ===== */
+  .qgroup{display:block;}
+  .mcq{display:block;margin:12px 0 6px;}
+  .mcq .de{margin:0;line-height:2.2;font-size:16.5px;}
+  .slot{display:inline-block;min-width:86px;text-align:center;font-family:var(--sans);font-size:14.5px;font-weight:700;color:var(--c);background:var(--ct);border:1.5px solid var(--cl);border-radius:999px;padding:2px 12px;margin:0 5px;}
+  .slot.empty{color:#9aa1ae;background:#f1f2f5;border-color:#e6e7ec;font-weight:600;}
+  .slot.ck-ok{color:#0e7a5f;background:rgba(14,122,95,.10);border-color:#0e7a5f;}
+  .slot.ck-near{color:#a05c12;background:rgba(160,92,18,.12);border-color:#a05c12;}
+  .slot.ck-no{color:#c4392e;background:rgba(196,57,46,.09);border-color:#c4392e;}
+  .opts{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin:12px 0 2px;}
+  .ogrp{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--ct);border-radius:14px;}
+  .onum{font-family:var(--sans);font-size:12.5px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;width:22px;height:22px;display:grid;place-items:center;flex:none;}
+  .ogrp .mc{flex:1 1 auto;}
+  .mc{display:inline-flex;flex-wrap:wrap;gap:6px;vertical-align:middle;}
+  .mc button{font-family:var(--sans);font-size:14px;font-weight:600;color:#4b5058;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:6px 14px;cursor:pointer;line-height:1.35;white-space:nowrap;transition:background .14s,color .14s,border-color .14s;}
+  .mc button:hover{background:var(--ct);color:var(--ink);}
+  .mc button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;}
+  .mc.ck-ok button[aria-pressed="true"]{background:#0e7a5f;border-color:#0e7a5f;}
+  .mc.ck-near button[aria-pressed="true"]{background:#a05c12;border-color:#a05c12;}
+  .mc.ck-no button[aria-pressed="true"]{background:#c4392e;border-color:#c4392e;}
+  .mcb{display:flex;flex-direction:column;gap:6px;margin:12px 0 4px;max-width:600px;}
+  .mcb button{font-family:var(--serif);font-size:15.5px;font-weight:500;text-align:left;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 16px;cursor:pointer;display:flex;gap:11px;align-items:baseline;transition:background .14s,border-color .14s,color .14s;}
+  .mcb button i{font-style:normal;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted);flex:none;}
+  .mcb button:hover{border-color:var(--c);background:var(--ct);}
+  .mcb button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;}
+  .mcb button[aria-pressed="true"] i{color:rgba(255,255,255,.72);}
+  .mcb.ck-ok button[aria-pressed="true"]{background:#0e7a5f;border-color:#0e7a5f;}
+  .mcb.ck-near button[aria-pressed="true"]{background:#a05c12;border-color:#a05c12;}
+  .mcb.ck-no button[aria-pressed="true"]{background:#c4392e;border-color:#c4392e;}
+  .mcb + .ckans{display:block;margin:5px 0 0;white-space:normal;line-height:1.5;}
+  input.bl.type{text-align:left;min-width:110px;width:150px;color:var(--ink);font-weight:500;font-size:14.5px;}
+  .gen{font-size:13.5px;color:var(--muted);font-weight:400;}
+  ol.gram>li .de .mc{margin:0 2px;}
+  @media print{
+    .slot{background:transparent !important;border:none !important;border-bottom:1.2px solid #333 !important;border-radius:0 !important;color:#000 !important;min-width:68px;padding:0 6px;}
+    .opts{gap:3px;margin:5px 0 2px;}
+    .ogrp{padding:1px 0;background:transparent !important;border-radius:0;gap:8px;}
+    .onum{color:#000 !important;background:transparent !important;width:auto;height:auto;display:inline;font-size:9.5pt;}
+    .mc button{background:#fff !important;border:1px solid #999 !important;color:#333 !important;padding:2px 9px;font-size:9.5pt;}
+    .mc button[aria-pressed="true"]{background:#333 !important;color:#fff !important;border-color:#333 !important;}
+    .mcb{gap:3px;}
+    .mcb button{background:#fff !important;border:.8pt solid #999 !important;color:#000 !important;padding:3px 9px;font-size:9.5pt;border-radius:8px;}
+    .mcb button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;}
+    .mcb button[aria-pressed="true"] i{color:#000;}
+    .mcq{margin:6px 0 3px;}
+    .mcq .de{line-height:1.9;font-size:10.5pt;}
+    .gen{font-size:9.5pt;}
+    input.bl.type{min-width:30%;width:auto;}
+  }
+
+  /* ===== 클릭 드롭다운 (문장 선택 · 유형 선택) ===== */
+  .mcb.dd,.mc.dd{position:relative;display:inline-flex;flex-direction:column;align-items:flex-start;gap:0;max-width:100%;vertical-align:middle;}
+  .mct{display:inline-flex;align-items:center;justify-content:space-between;gap:10px;width:max-content;max-width:min(460px,100%);font-family:var(--sans);font-size:14.5px;font-weight:600;color:#6b7280;background:#f1f2f5;border:1.5px solid transparent;border-radius:999px;padding:7px 15px;min-width:150px;cursor:pointer;line-height:1.35;text-align:left;transition:background .14s,border-color .14s,color .14s;}
+  .mct:hover{background:#e6e8ee;}
+  .mct i{font-style:normal;font-size:11px;opacity:.6;transition:transform .16s;flex:none;}
+  .mct .mctv{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .dd.open>.mct{background:var(--ct);border-color:var(--c);color:var(--c);}
+  .dd.open>.mct i{transform:rotate(180deg);}
+  .dd.picked>.mct{background:var(--c);border-color:var(--c);color:#fff;}
+  .dd.ck-ok.picked>.mct{background:#0e7a5f;border-color:#0e7a5f;color:#fff;}
+  .dd.ck-near.picked>.mct{background:#a05c12;border-color:#a05c12;color:#fff;}
+  .dd.ck-no.picked>.mct{background:#c4392e;border-color:#c4392e;color:#fff;}
+  .mco{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:60;flex-direction:column;gap:4px;min-width:max(100%,200px);width:max-content;max-width:min(560px,78vw);background:#fff;border:1.5px solid var(--line2);border-radius:16px;padding:7px;box-shadow:0 14px 34px rgba(20,24,40,.15);}
+  .dd.open>.mco{display:flex;}
+  .mco button{text-align:left;white-space:normal;border-radius:11px;padding:8px 13px;font-size:15px;font-weight:500;background:#fff;border:1.5px solid transparent;color:var(--ink);cursor:pointer;line-height:1.45;font-family:var(--serif);width:100%;display:flex;gap:10px;align-items:baseline;}
+  .mco button:hover{background:var(--ct);}
+  .mco button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;}
+  .mco button>i{font-style:normal;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted);flex:none;}
+  .mco button[aria-pressed="true"]>i{color:rgba(255,255,255,.72);}
+  @media print{
+    .mcb.dd,.mc.dd{display:block;position:static;}
+    .mct{display:none !important;}
+    .mco{display:block !important;position:static;border:none !important;box-shadow:none !important;padding:0;max-width:100%;width:auto;background:transparent;}
+    .mco button{display:block;margin:2px 0;padding:3px 9px;font-size:9.5pt;border-radius:8px;white-space:normal;background:#fff !important;border:1px solid #999 !important;color:#333 !important;}
+    .mco button[aria-pressed="true"]{border:1.6pt solid #000 !important;background:#fff !important;color:#000 !important;font-weight:700;}
+    .mco button>i{color:#000 !important;}
+  }
+
+  .ogrp .mc.dd{flex:0 1 auto;}
+  table.g .mc.dd{align-items:flex-start;}
+  table.g .mct{min-width:118px;font-size:14px;padding:6px 13px;}
+  .ogrp .mct{min-width:132px;}
+  @media print{ .ogrp .mc.dd{display:block;} }
+
+  /* ===== Schritt 4C · 4D ===== */
+  .ser-only{display:none !important;}
+  .hblock{position:relative;}
+  .clipbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 0;}
+  .cliptag{flex:none;font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:999px;padding:7px 14px;}
+  ol.ex .lrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  button.play{flex:none;width:40px;height:40px;border-radius:999px;border:none;background:var(--c);color:#fff;cursor:pointer;display:inline-grid;place-items:center;font-family:var(--sans);font-size:13px;line-height:1;padding:0;box-shadow:0 4px 12px rgba(24,26,32,.14);transition:background .15s,transform .1s;}
+  button.play::before{content:'\25B6\FE0E';margin-left:2px;}
+  button.play.on{background:var(--ink);}
+  button.play.on::before{content:'\25A0';margin-left:0;}
+  button.play:active{transform:scale(.94);}
+  input.bl.w4d{min-width:0;width:118px;}
+  .reveal{display:none;margin:10px 0 0;padding:10px 14px;background:var(--ct);border-radius:12px;}
+  .reveal.show{display:block;}
+  .reveal .rv-de{display:block;font-size:16.5px;font-weight:600;color:var(--ink);}
+  .reveal .rv-clue{display:block;font-size:13.5px;color:#4b5058;margin-top:4px;}
+  .k1,.k1s{color:var(--c);border-bottom:2.5px solid var(--c);}
+  .k1s{font-weight:700;}
+  details.script{margin:28px 0 0;border:1.5px solid var(--cl);border-radius:18px;background:var(--paper);overflow:hidden;}
+  details.script>summary{cursor:pointer;list-style:none;padding:14px 18px;font-size:15px;font-weight:700;color:var(--c);background:var(--ct);}
+  details.script>summary::-webkit-details-marker{display:none;}
+  details.script>summary::before{content:'\25B8\FE0E';display:inline-block;margin-right:8px;transition:transform .15s;}
+  details.script[open]>summary::before{transform:rotate(90deg);}
+  .sinst{font-size:13.5px;color:var(--muted);margin:12px 18px 8px;}
+  .slegend{display:flex;flex-wrap:wrap;gap:8px;margin:0 18px 12px;font-size:12.5px;}
+  .slegend span{padding:2px 10px;}
+  button.sline{display:grid;grid-template-columns:28px 1fr;gap:2px 10px;width:100%;text-align:left;background:#fff;border:none;border-top:1px solid var(--line);padding:10px 18px;cursor:pointer;font-family:var(--sans);color:var(--ink);line-height:1.5;}
+  button.sline:hover{background:var(--ct);}
+  button.sline.on{background:var(--ct);box-shadow:inset 4px 0 0 var(--c);}
+  button.sline .sn{grid-row:span 2;font-size:12px;font-weight:700;color:var(--c);padding-top:3px;}
+  button.sline .sde{font-size:16px;font-weight:500;}
+  button.sline .sko{font-size:13.5px;color:var(--muted);}
+  .t-a,.t-b,.t-c{border-radius:6px;padding:0 3px;}
+  .t-a{background:#e3ecfb;box-shadow:inset 0 -2px 0 #3559b3;}
+  .t-b{background:#fff1d6;box-shadow:inset 0 -2px 0 #e0a43a;}
+  .t-c{background:#e3f4ee;box-shadow:inset 0 -2px 0 #0e7a5f;}
+  ol.ex .lrow > .chx{flex:1 1 240px;min-width:0;margin:0;}
+  @media print{ button.play,.clipbar,.reveal,details.script{display:none !important;} }
+  /* ===== Schritt 4A · 4B 문장별 재생 ===== */
+  ol.ex .lrow > input.bl.lg{flex:1 1 220px;width:auto;min-width:0;margin-top:0;}
+  ol.ex .lrow > p.de{flex:1 1 220px;}
+</style>
+
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:960,&quot;height&quot;:760},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#384568&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#384568&quot;,&quot;#2563a8&quot;,&quot;#1a7a5c&quot;,&quot;#1c1e24&quot;]},&quot;mono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;디자인&quot;}}">
+class Component extends DCLogic {
+  state = { filled: 0, total: 0 };
+  get KEY() { return 'uebung-lektion-08-v5'; }
+  get FIELDSEL() { return 'input[data-key]:not([data-noprogress]), .mc[data-key], .mcb[data-key]'; }
+  get ANSSEL() { return 'input[data-answer], .mc[data-answer], .mcb[data-answer]'; }
+  componentDidMount() {
+    try { this.store = JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch (e) { this.store = {}; }
+    if (!this.rootEl) return;
+    this.applyAccent();
+    window.addEventListener('beforeunload', () => { try { this.save(); } catch (e) {} });
+    const __wrap = this.rootEl.querySelector('.wrap');
+    const __ctl = document.querySelector('.fontctl');
+    if (__wrap && __ctl) {
+      let __fs = parseFloat(localStorage.getItem('uebung-fontscale')) || 1;
+      const __apply = () => { __wrap.style.zoom = __fs; const v = __ctl.querySelector('[data-fs="val"]'); if (v) v.textContent = Math.round(__fs*100)+'%'; };
+      __apply();
+      const __set = (d) => { __fs = Math.min(1.6, Math.max(0.7, Math.round((__fs+d)*10)/10)); localStorage.setItem('uebung-fontscale', __fs); __apply(); };
+      __ctl.querySelector('[data-fs="dec"]').addEventListener('click', () => __set(-0.1));
+      __ctl.querySelector('[data-fs="inc"]').addEventListener('click', () => __set(0.1));
+      __ctl.querySelector('[data-fs="reset"]').addEventListener('click', () => { __fs = 1; localStorage.setItem('uebung-fontscale', __fs); __apply(); });
+    }
+    this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { const v = this.store[el.dataset.key]; if (v != null) el.value = v; });
+    this.rootEl.querySelectorAll('.mc[data-key], .mcb[data-key]').forEach((g) => this.setMc(g, this.store[g.dataset.key] || '', false));
+    this.rootEl.querySelectorAll('[data-rate]').forEach((g) => { const v = this.store['rate:' + g.dataset.rate]; g.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === v ? 'true' : 'false'); }); });
+    this.rootEl.querySelectorAll('audio[data-aud]').forEach((au) => this.initPlayer(au));
+    this.initClips();
+    this.buildCheckBars();
+    this.recount();
+  }
+  componentDidUpdate(prev) { if (prev && (prev.accent !== this.props.accent || prev.mono !== this.props.mono)) this.applyAccent(); }
+  applyAccent() { if (this.rootEl) this.rootEl.classList.toggle('mono', !!this.props.mono);
+    if (this.rootEl && this.props.accent) { this.rootEl.style.setProperty('--accent', this.props.accent); document.documentElement.style.setProperty('--accent', this.props.accent); } }
+  setRoot = (el) => { this.rootEl = el; };
+  initPlayer(au) {
+    const box = au.closest('.audio'); if (!box) return; au.controls = true;
+    const id = au.dataset.aud; const rKey = 'aspeed:' + id; const speedBtns = [...box.querySelectorAll('[data-aprate]')];
+    if (!this.store) this.store = {};
+    const savedR = parseFloat(this.store[rKey]); const initR = !isNaN(savedR) ? savedR : 1;
+    au.playbackRate = initR; speedBtns.forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.aprate) === initR ? 'true' : 'false'));
+    const dlBtn = box.querySelector('[data-ap="dl"]');
+    if (dlBtn) dlBtn.addEventListener('click', () => { const a = document.createElement('a'); a.href = au.currentSrc || au.src; a.download = au.dataset.filename || 'audio.mp3'; document.body.appendChild(a); a.click(); a.remove(); });
+    speedBtns.forEach((b) => b.addEventListener('click', () => { const r = parseFloat(b.dataset.aprate); au.playbackRate = r; speedBtns.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); this.store[rKey] = r; this.save(); }));
+  }
+  initClips() {
+    if (!this.rootEl) return;
+    const all = [...this.rootEl.querySelectorAll('audio')];
+    all.forEach((a) => a.addEventListener('play', () => { all.forEach((b) => { if (b !== a && !b.paused) b.pause(); }); }));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((au) => {
+      const btn = () => this.rootEl && this.rootEl.querySelector('button[data-play="' + au.dataset.clip + '"]');
+      const off = () => { const b = btn(); if (b) b.classList.remove('on'); };
+      au.addEventListener('ended', off);
+      au.addEventListener('pause', off);
+      au.addEventListener('play', () => { const b = btn(); if (b) b.classList.add('on'); });
+    });
+    this.syncClipRate();
+  }
+  syncClipRate() {
+    if (!this.rootEl) return;
+    const r = parseFloat((this.store || {}).cliprate) || 1;
+    this.rootEl.querySelectorAll('button[data-cliprate]').forEach((b) => b.setAttribute('aria-pressed', parseFloat(b.dataset.cliprate) === r ? 'true' : 'false'));
+    this.rootEl.querySelectorAll('audio[data-clip]').forEach((a) => { a.playbackRate = r; });
+  }
+  setClipRate = (b) => { if (!this.store) this.store = {}; this.store.cliprate = parseFloat(b.dataset.cliprate) || 1; this.save(); this.syncClipRate(); };
+  playClip = (btn) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-clip="' + btn.dataset.play + '"]');
+    if (!au) return;
+    if (!au.paused) { au.pause(); return; }
+    au.playbackRate = parseFloat((this.store || {}).cliprate) || 1;
+    try { au.currentTime = 0; } catch (err) {}
+    const p = au.play();
+    if (p && p.catch) p.catch(() => btn.classList.remove('on'));
+  };
+  playSeg = (el) => {
+    if (!this.rootEl) return;
+    const au = this.rootEl.querySelector('audio[data-aud="story"]');
+    if (!au || !el.dataset.seg) return;
+    const ab = el.dataset.seg.split(',').map(parseFloat);
+    if (this.__segClear) this.__segClear();
+    const stop = () => { if (au.currentTime >= ab[1] + 0.15) au.pause(); };
+    const clear = () => { au.removeEventListener('timeupdate', stop); au.removeEventListener('pause', clear); el.classList.remove('on'); if (this.__segClear === clear) this.__segClear = null; };
+    this.__segClear = clear;
+    el.classList.add('on');
+    try { au.currentTime = Math.max(0, ab[0] - 0.1); } catch (err) {}
+    au.addEventListener('timeupdate', stop);
+    au.addEventListener('pause', clear);
+    const p = au.play();
+    if (p && p.catch) p.catch(() => clear());
+  };
+  save() { try { localStorage.setItem(this.KEY, JSON.stringify(this.store || {})); } catch (e) {} }
+  isMc = (el) => !!(el && el.classList && (el.classList.contains('mc') || el.classList.contains('mcb')));
+  valOf = (el) => (this.isMc(el) ? (el.dataset.sel || '') : (el.value || ''));
+  closeMc = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('.dd.open').forEach((g) => { g.classList.remove('open'); const t = g.querySelector('.mct'); if (t) t.setAttribute('aria-expanded', 'false'); }); };
+  setMc = (g, val, persist) => {
+    g.dataset.sel = val || '';
+    const __t = g.querySelector('.mct .mctv');
+    if (__t) { __t.textContent = val || '선택하기'; g.classList.toggle('picked', !!val); }
+    g.querySelectorAll('button[data-opt]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.opt === val ? 'true' : 'false'));
+    const sl = this.rootEl && this.rootEl.querySelector('.slot[data-slot="' + g.dataset.key + '"]');
+    if (sl) { sl.textContent = val || (sl.dataset.ph || '__'); sl.classList.toggle('empty', !val); sl.classList.remove('ck-ok', 'ck-near', 'ck-no'); }
+    if (persist) { if (!this.store) this.store = {}; this.store[g.dataset.key] = val; g.classList.remove('ck-ok', 'ck-near', 'ck-no'); this.touch(this.secOf(g)); this.save(); this.recount(); }
+  };
+  onInput = (e) => { const el = e.target; if (!el || !el.dataset || el.dataset.key == null) return; if (!this.store) this.store = {}; this.store[el.dataset.key] = el.value; el.classList.remove('ck-ok', 'ck-near', 'ck-no'); this.touch(this.secOf(el)); this.save(); this.recount(); };
+  chkNorm = (v) => (v == null ? '' : String(v)).normalize('NFC').replace(/\s+/g, ' ').trim().replace(/[.!?]+\s*$/, '');
+  chkFold = (s) => s.toLowerCase().replace(/\u00e4/g, 'ae').replace(/\u00f6/g, 'oe').replace(/\u00fc/g, 'ue').replace(/\u00df/g, 'ss');
+  chkMatch = (val, ans) => { const v = this.chkNorm(val); if (!v) return 'no'; const alts = String(ans).split('|').map((a) => this.chkNorm(a)); if (alts.indexOf(v) >= 0) return 'ok'; const fv = this.chkFold(v); if (alts.some((a) => this.chkFold(a) === fv)) return 'near'; return 'no'; };
+  secOf = (el) => { const s = el && el.closest && el.closest('[data-sec]'); return s ? s.dataset.sec : null; };
+  touch = (sec) => { if (!this.store) this.store = {}; const now = Date.now(); let L = this.store.__s; if (!Array.isArray(L)) { L = []; this.store.__s = L; } let cur = L[L.length - 1]; if (!cur || (now - cur.e) > 45 * 60 * 1000) { cur = { s: now, e: now, x: [] }; L.push(cur); } cur.e = now; if (sec && cur.x.indexOf(sec) < 0) cur.x.push(sec); };
+  buildCheckBars = () => { if (!this.rootEl) return; const seen = []; this.rootEl.querySelectorAll(this.ANSSEL).forEach((inp) => { let c = inp.closest('.qgroup') || inp.closest('ol, table'); if (!c) c = inp.closest('p'); if (!c) c = inp.parentElement; if (!c || seen.indexOf(c) >= 0) return; seen.push(c); const bar = document.createElement('div'); bar.className = 'chkbar'; bar.innerHTML = '<button type="button" data-chk>정답 확인</button><button type="button" data-ansr disabled>정답 보기</button><span class="chkres"></span>'; c.insertAdjacentElement('afterend', bar); }); };
+  snapshot = (scope) => {
+    if (!this.store) this.store = {};
+    const fa = this.store.__fa || (this.store.__fa = {});
+    scope.querySelectorAll('[data-key]').forEach((el) => {
+      const k = el.dataset.key; if (!k || k === 'meta-name') return;
+      if (Object.prototype.hasOwnProperty.call(fa, k)) return;
+      fa[k] = this.valOf(el).trim();
+    });
+    this.save();
+  };
+  runCheck = (btn) => {
+    const bar = btn.closest('.chkbar'); const scope = bar && bar.previousElementSibling; if (!scope) return;
+    this.snapshot(scope);
+    let ok = 0, near = 0, tot = 0;
+    scope.querySelectorAll(this.ANSSEL).forEach((i) => { tot++; i.classList.remove('ck-ok', 'ck-near', 'ck-no'); const st = this.chkMatch(this.valOf(i), i.dataset.answer); i.classList.add('ck-' + st); const sl = i.dataset.key ? this.rootEl.querySelector('.slot[data-slot="' + i.dataset.key + '"]') : null; if (sl) { sl.classList.remove('ck-ok', 'ck-near', 'ck-no'); sl.classList.add('ck-' + st); } if (st === 'ok') ok++; else if (st === 'near') near++; });
+    const ab = bar.querySelector('[data-ansr]'); if (ab) ab.disabled = false;
+    const res = bar.querySelector('.chkres'); if (res) res.textContent = '맞음 ' + ok + '/' + tot + (near ? ' · 표기 확인 ' + near : '');
+    this.touch(this.secOf(btn)); this.save();
+  };
+  toggleAnswers = (btn) => {
+    const bar = btn.closest('.chkbar'); const scope = bar && bar.previousElementSibling; if (!scope) return;
+    this.snapshot(scope);
+    const on = btn.classList.toggle('on'); btn.textContent = on ? '정답 숨기기' : '정답 보기';
+    scope.querySelectorAll(this.ANSSEL).forEach((i) => { let sp = i.nextElementSibling; if (!(sp && sp.classList && sp.classList.contains('ckans'))) { sp = document.createElement('span'); sp.className = 'ckans'; i.insertAdjacentElement('afterend', sp); } sp.textContent = on ? i.dataset.answer.split('|')[0] : ''; sp.style.display = on ? '' : 'none'; });
+  };
+  clearCheckUI = () => { if (!this.rootEl) return; this.rootEl.querySelectorAll('.ck-ok, .ck-near, .ck-no').forEach((i) => i.classList.remove('ck-ok', 'ck-near', 'ck-no')); this.rootEl.querySelectorAll('.ckans').forEach((s) => s.remove()); this.rootEl.querySelectorAll('.chkbar .chkres').forEach((s) => { s.textContent = ''; }); this.rootEl.querySelectorAll('.chkbar [data-ansr]').forEach((b) => { b.disabled = true; b.classList.remove('on'); b.textContent = '정답 보기'; }); };
+  onClick = (e) => {
+    const __pl = e.target.closest && e.target.closest('button[data-play]'); if (__pl) { this.closeMc && this.closeMc(); this.playClip(__pl); return; }
+    const __cr = e.target.closest && e.target.closest('button[data-cliprate]'); if (__cr) { this.closeMc && this.closeMc(); this.setClipRate(__cr); return; }
+    const __sg = e.target.closest && e.target.closest('[data-seg]'); if (__sg) { this.closeMc && this.closeMc(); this.playSeg(__sg); return; }
+    const __rv = e.target.closest && e.target.closest('.chkbar [data-ansr]'); if (__rv) setTimeout(() => { const b = __rv.closest('.chkbar'); const sc = b && b.previousElementSibling; if (!sc) return; const on = /숨기기/.test(__rv.textContent); sc.querySelectorAll('.reveal').forEach((r) => r.classList.toggle('show', on)); }, 0);
+    const __cb = e.target.closest && e.target.closest('button[data-chk]'); if (__cb) { this.runCheck(__cb); return; }
+    const __ab = e.target.closest && e.target.closest('button[data-ansr]'); if (__ab) { this.toggleAnswers(__ab); return; }
+    const __mt = e.target.closest && e.target.closest('.dd>.mct');
+    if (__mt) { const g = __mt.closest('.dd'); const was = g.classList.contains('open'); this.closeMc(); if (!was) { g.classList.add('open'); __mt.setAttribute('aria-expanded', 'true'); } return; }
+    if (!(e.target.closest && e.target.closest('.dd'))) this.closeMc();
+    const __mo = e.target.closest && e.target.closest('button[data-opt]');
+    if (__mo) { const g = __mo.closest('[data-key]'); if (g) { const cur = g.dataset.sel || ''; this.setMc(g, cur === __mo.dataset.opt ? '' : __mo.dataset.opt, true); this.closeMc(); } return; }
+    const de = e.target.closest && e.target.closest('td.de.tog'); if (de) { de.classList.toggle('show'); return; }
+    const btn = e.target.closest && e.target.closest('button[data-val]'); if (!btn) return;
+    const group = btn.closest('[data-rate]'); if (!group) return;
+    const key = 'rate:' + group.dataset.rate; if (!this.store) this.store = {};
+    const next = this.store[key] === btn.dataset.val ? '' : btn.dataset.val; this.store[key] = next; this.touch(this.secOf(group)); this.save();
+    group.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.val === next ? 'true' : 'false'); });
+  };
+  recount = () => { if (!this.rootEl) return; const els = [...this.rootEl.querySelectorAll(this.FIELDSEL)]; const filled = els.filter((i) => this.valOf(i).trim() !== '').length; this.setState({ filled, total: els.length }); };
+  print = () => { window.print(); };
+  reset = () => { if (!window.confirm('입력한 모든 답안을 지울까요?')) return; this.clearCheckUI(); this.store = {}; this.save(); if (this.rootEl) { this.rootEl.querySelectorAll('input[data-key]').forEach((el) => { el.value = ''; }); this.rootEl.querySelectorAll('.mc[data-key], .mcb[data-key]').forEach((g) => this.setMc(g, '', false)); this.rootEl.querySelectorAll('[data-rate] button').forEach((b) => b.setAttribute('aria-pressed', 'false')); } this.syncClipRate(); if (this.rootEl) this.rootEl.querySelectorAll('.reveal.show').forEach((r) => r.classList.remove('show')); this.recount(); };
+  studentName() { const el = this.rootEl && this.rootEl.querySelector('input[data-key="meta-name"]'); return el ? (el.value || '').trim() : ''; }
+  fieldText = (el) => {
+    const k = el.dataset.key; const cur = this.valOf(el).trim();
+    const fa = (this.store && this.store.__fa) ? this.store.__fa[k] : undefined;
+    if (fa === undefined) return cur || '____';
+    let t = fa || '(빈칸)';
+    if (cur !== fa) t += ' → 확인 후: ' + (cur || '(빈칸)');
+    return t;
+  };
+  buildText() {
+    const r = this.rootEl; if (!r) return '';
+    const fields = [...r.querySelectorAll(this.FIELDSEL)];
+    const filled = fields.filter((i) => this.valOf(i).trim() !== '').length;
+    const fa = (this.store && this.store.__fa) || {};
+    let ed = 0, blank = 0;
+    fields.forEach((el) => { const k = el.dataset.key; if (!Object.prototype.hasOwnProperty.call(fa, k)) return; if (this.valOf(el).trim() !== fa[k]) { ed++; if (!fa[k]) blank++; } });
+    const out = [];
+    out.push('Sophia Deutsch Akademie');
+    out.push('Übung · Lektion 08 — Komparativ und Superlativ · 보강판');
+    out.push('이름: ' + (this.studentName() || '(미입력)'));
+    out.push('제출 시각: ' + new Date().toLocaleString('ko-KR'));
+    out.push('진행: ' + filled + ' / ' + fields.length);
+    out.push('');
+    out.push('※ [ ] 안의 답은 정답을 확인하기 전에 학생이 입력한 답입니다.');
+    out.push('※ 정답을 본 뒤 고친 칸은 "→ 확인 후:" 로 함께 표시됩니다. — 수정 ' + ed + '칸' + (blank ? ' (그중 원래 빈칸 ' + blank + '칸)' : ''));
+    const serialize = (node) => {
+      const parts = [];
+      const walk = (n) => {
+        if (n.nodeType === 3) { parts.push(n.nodeValue); return; }
+        if (n.nodeType !== 1) return;
+        if (n.classList && n.classList.contains('opts')) return;
+        if (n.classList && n.classList.contains('slot')) { const k = n.dataset.slot; const f = this.rootEl.querySelector('.mc[data-key="' + k + '"], .mcb[data-key="' + k + '"]'); parts.push(' [' + (f ? this.fieldText(f) : '____') + '] '); return; }
+        if (this.isMc(n)) { parts.push(' [' + this.fieldText(n) + '] '); return; }
+        if (n.tagName === 'INPUT') { parts.push(' [' + this.fieldText(n) + '] '); return; }
+        if (n.hasAttribute && n.hasAttribute('data-noser')) return; if (n.hasAttribute && n.hasAttribute('data-sp')) parts.push(' '); if (n.classList && (n.classList.contains('note') || n.classList.contains('chkbar') || n.classList.contains('ckans'))) return;
+        if (n.classList && n.classList.contains('rate')) { const sel = n.querySelector('button[aria-pressed="true"]'); parts.push(' (' + (sel ? sel.dataset.val : '-') + ') '); return; }
+        n.childNodes.forEach(walk);
+      };
+      node.childNodes.forEach(walk);
+      return parts.join('').replace(/\s+/g, ' ').trim();
+    };
+    r.querySelectorAll('section.step').forEach((sec) => {
+      const eb = sec.querySelector('.eyebrow'); const tt = sec.querySelector('.step-title');
+      out.push(''); out.push('==== ' + (sec.dataset.label || ((eb ? eb.textContent.trim() : '') + ' — ' + (tt ? tt.textContent.trim() : ''))) + ' ====');
+      const items = sec.querySelectorAll(':scope > .sub, :scope > .sub2, :scope > p, :scope > .hblock > .sub, :scope > .hblock > .sub2, :scope > .hblock > p, ol.ex > li, table.sp tbody tr, table.g tbody tr');
+      let n = 0;
+      items.forEach((it) => {
+        if (it.matches('.sub, .sub2')) { out.push(''); out.push('— ' + it.textContent.trim()); n = 0; return; }
+        if (it.matches('table.sp tbody tr')) { const ko = it.querySelector('.ko'); const cnt = it.querySelector('input[data-key]'); out.push('  • ' + (ko ? ko.textContent.trim() : '') + '  — 연습 ' + ((cnt && cnt.value) ? cnt.value : '0') + '회'); return; }
+        if (!it.querySelector('[data-key]')) return;
+        if (it.matches('table.g tbody tr')) { out.push('  · ' + [...it.children].map((td) => serialize(td)).filter((x) => x).join(' | ')); return; }
+        if (it.matches('p')) { out.push('  · ' + serialize(it)); return; }
+        n++; out.push('  ' + n + '. ' + serialize(it));
+      });
+    });
+    const assess = r.querySelector('.assess');
+    if (assess) { out.push(''); out.push('==== 자기 평가 ===='); assess.querySelectorAll('.check').forEach((ch) => { const stmt = ch.querySelector('p'); const sel = ch.querySelector('button[aria-pressed="true"]'); out.push('  [' + (sel ? sel.dataset.val : ' ') + '] ' + (stmt ? stmt.textContent.trim() : '')); }); }
+    try {
+      const SL = { s1: 'Schritt 1', s2: 'Schritt 2', s3: 'Schritt 3', s4: 'Schritt 4', s5: 'Schritt 5', s6: 'Schritt 6', s7: 'Schritt 7', mw1: 'Mini-Wiederholung 1', mw2: 'Mini-Wiederholung 2', assess: '자기 평가' };
+      const ORD = ['s1', 's2', 's3', 'mw1', 's4', 's5', 'mw2', 's6', 's7', 'assess'];
+      const ses = (this.store && Array.isArray(this.store.__s)) ? this.store.__s : [];
+      if (ses.length) {
+        out.push(''); out.push('==== 학습 기록 ===='); out.push('(각 단계를 학습한 날짜·시간이 자동 기록됩니다)');
+        const fd = (t) => new Date(t).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' });
+        const ft = (t) => new Date(t).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+        ses.forEach((sn, i) => {
+          const xs = ORD.filter((k) => (sn.x || []).indexOf(k) >= 0);
+          const labs = []; let j = 0;
+          while (j < xs.length) {
+            if (/^s\d$/.test(xs[j])) { let k = j; while (k + 1 < xs.length && /^s\d$/.test(xs[k + 1]) && parseInt(xs[k + 1][1], 10) === parseInt(xs[k][1], 10) + 1) k++; labs.push(k > j ? ('Schritt ' + xs[j][1] + '\u2013' + xs[k][1]) : SL[xs[j]]); j = k + 1; }
+            else { labs.push(SL[xs[j]]); j++; }
+          }
+          out.push('세션 ' + (i + 1) + ' | ' + fd(sn.s) + ' ' + ft(sn.s) + '\u2013' + ft(sn.e) + ' | ' + (labs.join(', ') || '-'));
+        });
+      }
+    } catch (__e) {}
+    return out.join('\n');
+  }
+  submitTxt = () => { const text = this.buildText(); const name = this.studentName() || '학생'; const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Lektion08_' + name + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); };
+  SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxgAblMFNpot1-dRxTbyIYyY1CNeiDGeVbky7QGziTLjIXKX_S9d1cAttBVfYwrk2pfkA/exec';
+  SUBMIT_CODE = 'SODA-GRAMMATIK';
+
+  submitNet = async () => {
+    if (this._sending) return;
+    const name = this.studentName();
+    if (!name) { window.alert('이름을 먼저 입력해 주세요.'); return; }
+    const url = this.SUBMIT_URL;
+    if (!url || url.indexOf('http') !== 0) { window.alert('제출 주소가 설정되지 않았습니다. 선생님께 알려 주세요.'); return; }
+    if (this._sent && !window.confirm('이미 제출했습니다. 다시 제출할까요?')) return;
+    const text = this.buildText();
+    const mk = (this.KEY.match(/lektion-(\d+)/) || [])[1] || '';
+    const m2 = text.match(/진행: (\d+) \/ (\d+)/);
+    this._sending = true;
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ code: this.SUBMIT_CODE, name: name, lesson: parseInt(mk, 10) || mk, title: text.split('\n')[1] || '', filled: m2 ? m2[1] : '', total: m2 ? m2[2] : '', report: text }) });
+      this._sent = true;
+      window.alert('제출되었습니다. 선생님께 답안이 전달되었어요.');
+    } catch (e) {
+      window.alert('제출에 실패했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요. 계속 안 되면 선생님께 알려 주세요.');
+    }
+    this._sending = false;
+  };
+
+  submitIos = async () => { const text = this.buildText(); try { await navigator.clipboard.writeText(text); } catch (e) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove(); } window.alert('모든 내용을 복사했습니다. 텍스트 편집 프로그램에 붙여넣기하여 그 파일을 제출해 주세요.'); };
+  renderVals() { const total = this.state.total; const pct = total ? Math.round((this.state.filled / total) * 100) : 0; return { setRoot: this.setRoot, onInput: this.onInput, onClick: this.onClick, submitTxt: this.submitTxt, submitNet: this.submitNet,
+      submitIos: this.submitIos, print: this.print, reset: this.reset, filled: this.state.filled, total: total, barStyle: { width: pct + '%' } }; }
+}
+</script>
+
+
+
+</body></html>
