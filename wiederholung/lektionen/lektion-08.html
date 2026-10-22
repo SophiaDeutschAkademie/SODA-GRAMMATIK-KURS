@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="../assets/logo.png">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lektion 08 · 비교급 · 최상급 애니메이션</title>
+<style>@font-face{font-family:'Pretendard Variable';font-style:normal;font-display:block;font-weight:45 930;src:url(../assets/fonts/bb7c361536cb.woff2) format('woff2')}</style>
+<style>
+:root{
+  --paper:#FAFAF8;--ink:#1E1E1E;--ink2:#444;--mute:#6B6B66;--line:#E0E0DB;--line2:#ECEAE4;--beige:#F2F0EB;
+  --navy:#384568;--navy-e:#252E48;--navy-s:#ECEDF3;--navy-t:#CCD0E0;
+  --amb:#B87830;--amb-e:#87561A;--amb-i:#985A14;--amb-s:#FFF4E5;--amb-l:#E0C088;
+  --ok:#2D7A56;--ok-s:#E8F5EE;--no:#C44B3A;--no-s:#FBE8E5;
+  --grey:#8A877F;--grey-s:#EFEDE8;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --s:.8;--fw:1024px;--fh:576px;--cw:1024px;--cf:22px;--ch:80px;--pad:16px;--gap:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#E7E5DF;color:var(--ink);
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
+button:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+
+/* ── 플레이어 ── */
+#app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);padding:var(--pad)}
+#frame{position:relative;flex:none;width:var(--fw);height:var(--fh);border-radius:calc(16px * var(--s));overflow:hidden;
+  background:var(--paper);box-shadow:0 1px 2px rgba(40,36,24,.06),0 14px 34px rgba(40,36,24,.12);cursor:pointer}
+#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform:scale(var(--s));transform-origin:0 0;overflow:hidden;background:var(--paper)}
+#capbox{flex:none;width:var(--cw);height:var(--ch);display:flex;align-items:center;justify-content:center;padding:0 10px}
+#capbox.off{display:none}
+#cap{margin:0;max-width:1120px;text-align:center;font-size:var(--cf);line-height:1.55;font-weight:500;color:var(--ink);word-break:keep-all;overflow-wrap:break-word}
+#cap b{font-weight:700}
+#cap .c1{color:var(--navy);font-weight:800}
+#cap .c4{color:var(--amb-i);font-weight:800}
+#cap.in{animation:capIn .45s var(--ease)}
+@keyframes capIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+#ctrl{flex:none;width:var(--cw);user-select:none;-webkit-user-select:none}
+#tlw{position:relative;height:34px}
+#tl{position:absolute;left:0;right:0;top:6px;height:22px;display:flex;gap:3px}
+.seg{position:relative;height:8px;flex-basis:0;cursor:pointer;border-radius:4px}
+.seg .sf{position:absolute;inset:0;border-radius:4px;background:#D5D1C7;overflow:hidden}
+.seg .sf i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--navy)}
+.seg:hover .sf{background:#C9C4B9}
+.seg .chl{position:absolute;left:0;top:12px;font-size:12px;font-weight:800;line-height:1;color:var(--mute);white-space:nowrap;pointer-events:none}
+.seg.cur .chl{color:var(--navy)}
+#bar{display:flex;align-items:center;gap:8px;height:48px}
+.cb{flex:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink2);display:grid;place-items:center;cursor:pointer;padding:0}
+.cb svg{width:20px;height:20px;display:block}
+.cb:hover{border-color:#C9C4B9}
+#play{width:48px;height:48px;border-radius:50%;background:var(--navy);border-color:var(--navy);color:#fff}
+#play svg{width:22px;height:22px}
+#time{flex:none;margin-left:6px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--mute)}
+#where{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.tb{flex:none;height:40px;min-width:48px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:700;color:var(--ink2);cursor:pointer}
+.tb[aria-pressed="false"]{background:var(--grey-s);color:var(--grey)}
+.tb svg{width:17px;height:17px;vertical-align:-3px;margin-right:5px}
+.tb[aria-pressed="false"] .w1,.tb[aria-pressed="false"] .w2{opacity:0}
+.tb:disabled{opacity:.45;cursor:not-allowed}
+@media (max-width:620px){.tb .lb{display:none}.tb svg{margin-right:0}#time{display:none}#where{font-size:13px}.cb{width:36px;height:36px}#play{width:44px;height:44px}.tb{min-width:40px;padding:0 8px;height:36px}}
+
+/* 시작·종료 오버레이 (무대 좌표) */
+#ov{position:absolute;inset:0;z-index:60;display:grid;place-items:center;background:rgba(250,250,248,.82);transition:opacity .35s ease;cursor:default}
+#ov.hide{opacity:0;pointer-events:none}
+#ovb{display:flex;flex-direction:column;align-items:center;gap:20px}
+#ovp{width:128px;height:128px;border-radius:50%;border:0;background:var(--navy);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 28px rgba(56,69,104,.35)}
+#ovp svg{width:54px;height:54px;margin-left:8px}
+#ovt{font-size:30px;font-weight:800;color:var(--ink)}
+#ovh{font-size:19px;color:var(--mute);text-align:center;line-height:1.6}
+#ov.end{background:transparent;align-items:end;padding-bottom:80px}
+#ov.end #ovb{flex-direction:row;gap:18px;padding:12px 30px 12px 12px;background:#fff;border:2px solid var(--line);border-radius:48px;box-shadow:0 8px 24px rgba(40,36,24,.12);cursor:pointer}
+#ov.end #ovp{width:68px;height:68px;box-shadow:none}
+#ov.end #ovp svg{width:32px;height:32px;margin:0}
+#ov.end #ovt{font-size:25px}
+#ov.end #ovh,#ov.end #ovv{display:none}
+#ovv{max-width:900px;font-size:16px;line-height:1.5;color:var(--mute);text-align:center}
+
+/* ── 무대 크롬 ── */
+#chrome{position:absolute;inset:0;z-index:20;pointer-events:none;transition:opacity .4s}
+#chrome.hide{opacity:0}
+#tag{position:absolute;left:56px;top:32px;display:flex;align-items:center;gap:14px}
+#tag.in{animation:tagIn .5s var(--ease)}
+@keyframes tagIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+#tagL{min-width:46px;height:46px;padding:0 10px;border-radius:12px;background:var(--navy);color:#fff;font-size:22px;font-weight:800;display:grid;place-items:center}
+#tagT{font-size:24px;font-weight:700;color:var(--ink)}
+#brand{position:absolute;right:56px;top:42px;display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;color:var(--mute)}
+#brand img{width:22px;height:25px;display:block}
+
+/* ── 장면 공통 ── */
+.scene{position:absolute;inset:0;background:var(--paper);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility 0s linear .45s}
+.scene.on{opacity:1;visibility:visible;z-index:2;transition:opacity .45s ease,visibility 0s}
+.scene.leaving{opacity:1;visibility:visible;z-index:1;transition:none}
+.scene *{transition-property:opacity,transform,background-color,border-color,color,box-shadow,width,left,top,text-decoration-color;transition-duration:.55s;transition-timing-function:var(--ease)}
+.scene.instant *{transition:none!important;animation:none!important}
+.ab{position:absolute}
+.scene [data-in]{opacity:0;transform:translateY(18px)}
+.scene [data-in].up{transform:translateY(-34px)}
+.scene [data-in].pop{transform:scale(.55)}
+.scene [data-in].fl{transform:translateX(-30px)}
+.scene [data-in].fr{transform:translateX(30px)}
+.scene [data-in].fd{transform:none}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}.d4{transition-delay:.48s}
+.d5{transition-delay:.6s}.d6{transition-delay:.72s}.d7{transition-delay:.84s}.d8{transition-delay:.96s}
+.d9{transition-delay:1.08s}.d10{transition-delay:1.2s}.d12{transition-delay:1.44s}.d14{transition-delay:1.68s}
+.d16{transition-delay:1.92s}.d18{transition-delay:2.16s}.d20{transition-delay:2.4s}
+
+/* 타일(명사) · 칩(관사/조사) */
+.tile,.chip{display:inline-grid;place-items:center;white-space:nowrap;border-style:solid;border-width:2px 2px 5px;border-radius:16px;line-height:1;vertical-align:middle;letter-spacing:-.005em}
+.tile{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-color:#E3E0D8 #E3E0D8 #D3CEC2;color:var(--ink);padding:0 .5em;font-weight:720}
+.chip{padding:0 .38em;font-weight:820}
+.k0{background:var(--beige);border-color:#E4E0D6 #E4E0D6 #D1CBBD;color:var(--ink2)}
+.k1{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.k4{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.kg{background:var(--grey-s);border-color:#E2DFD7 #E2DFD7 #CCC7BB;color:var(--grey)}
+.kd{background:#fff;border:3px dashed var(--navy);color:var(--navy)}
+.z132{height:132px;font-size:84px;border-radius:22px;border-bottom-width:7px}
+.z120{height:120px;font-size:76px;border-radius:20px;border-bottom-width:6px}
+.z96{height:96px;font-size:50px}
+.z84{height:84px;font-size:44px;border-radius:15px}
+.z80{height:80px;font-size:42px;border-radius:14px}
+.z72{height:72px;font-size:38px;border-radius:13px}
+.z64{height:64px;font-size:32px;border-radius:12px;border-bottom-width:4px}
+.z56{height:56px;font-size:28px;border-radius:11px;border-bottom-width:4px}
+.jr{border-top-right-radius:0!important;border-bottom-right-radius:0!important;border-right-width:0}
+.jl{border-top-left-radius:0!important;border-bottom-left-radius:0!important}
+.t1{color:var(--navy)}.t4{color:var(--amb-i)}.tg{color:var(--grey)}
+
+/* 글 속 관사 칩 */
+.ic{display:inline-grid;place-items:center;padding:.04em .26em .08em;border-radius:.2em;font-weight:820;line-height:1.1;vertical-align:baseline;border:0}
+.ic.k1{background:var(--navy);color:#fff}
+.ic.k4{background:var(--amb);color:#fff}
+.ic.kd{background:#fff;border:.07em dashed var(--navy);color:var(--navy)}
+
+/* 바뀌는 글자(교체) */
+.sw{display:inline-grid}
+.sw>.fa,.sw>.fb{grid-area:1/1;transition-property:opacity,transform;transition-duration:.5s;transition-timing-function:var(--ease)}
+.sw>.fb{opacity:0;transform:translateY(60%)}
+
+/* ✕ → ✓ 표시 */
+.mark{display:inline-grid;flex:none;width:60px;height:60px}
+.mark>span{grid-area:1/1;border-radius:50%;display:grid;place-items:center;color:#fff}
+.mark .no{background:var(--no)}
+.mark .ok{background:var(--ok)}
+.mark svg{width:58%;height:58%;display:block}
+.mark>.fb{transform:scale(.3) rotate(-90deg)}
+.mk-no,.mk-ok{display:inline-grid;place-items:center;flex:none;width:52px;height:52px;border-radius:50%;color:#fff}
+.mk-no{background:var(--no)}.mk-ok{background:var(--ok)}
+.mk-no svg,.mk-ok svg{width:58%;height:58%}
+
+@media (prefers-reduced-motion:reduce){
+  .scene *{transition-duration:.12s!important;animation:none!important}
+  #cap.in,#tag.in{animation:none}
+}
+
+/* ───── 표지 ───── */
+.ibrand{display:flex;align-items:center;gap:14px;font-size:21px;font-weight:700;color:var(--ink)}
+.ibrand img{width:36px;height:41px;display:block}
+.ilk{font-size:26px;font-weight:750;color:var(--navy)}
+.ititle{font-size:78px;font-weight:820;letter-spacing:-.02em;line-height:1.1;color:var(--ink);white-space:nowrap}
+.ide{font-size:26px;font-weight:500;color:var(--mute)}
+.ihero{display:flex;align-items:center;gap:16px}
+.igl{font-size:36px;font-weight:650;color:var(--ink2)}
+.iline{width:1px;height:330px;background:var(--line)}
+
+/* ───── A 한국어로 먼저 보기 ───── */
+.icw .ring{border-radius:50%;background:#fff;border:6px solid var(--line2);display:grid;place-items:center;color:var(--navy)}
+.icw.cat .ring{width:136px;height:136px}
+.icw.mouse .ring{width:116px;height:116px}
+.icw .ring svg{width:76%;height:76%;display:block}
+#sA.s1 .cat .ring{border-color:var(--navy)}
+#sA.s1 .mouse .ring{border-color:var(--amb)}
+#sA.s2 .cat .ring{border-color:var(--amb)}
+#sA.s2 .mouse .ring{border-color:var(--navy)}
+.chase{width:150px;height:40px;color:var(--navy)}
+.chase svg{width:100%;height:100%;display:block;overflow:visible;transition:transform .7s var(--ease)}
+.chase .dash{animation:march 1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-28}}
+#sA.s2 .chase svg{transform:scaleX(-1);transition-delay:.35s}
+.chase-lb{text-align:center;font-size:21px;font-weight:700;color:var(--mute)}
+.verb{display:inline-grid;place-items:center;height:96px;font-size:50px;font-weight:720;color:var(--ink)}
+#sA .pt{z-index:3;transition-property:left;transition-duration:.9s;transition-timing-function:cubic-bezier(.55,0,.25,1)}
+#sA .pA{left:478px;top:330px}
+#sA .pB{left:720px;top:330px}
+#sA.s2 .pA{left:720px}
+#sA.s2 .pB{left:478px}
+#sA.a2 .pA .hop{animation:hopU .9s cubic-bezier(.55,0,.25,1)}
+#sA.a2 .pB .hop{animation:hopD .9s cubic-bezier(.55,0,.25,1)}
+@keyframes hopU{50%{transform:translateY(-88px)}}
+@keyframes hopD{50%{transform:translateY(88px)}}
+#sA.a1 .pt .chip{animation:ringPulse 1.1s .45s 2}
+@keyframes ringPulse{0%,100%{box-shadow:0 0 0 0 rgba(56,69,104,0)}50%{box-shadow:0 0 0 10px rgba(56,69,104,.16)}}
+.role{position:absolute;left:50%;top:122px;width:200px;margin-left:-100px;text-align:center;font-size:23px;font-weight:800;white-space:nowrap}
+.role::before{content:'';display:block;width:3px;height:16px;margin:0 auto 8px;border-radius:2px;background:currentColor}
+.role.r1{color:var(--navy)}.role.r4{color:var(--amb-i)}
+
+/* ───── B 앞에서 표시 ───── */
+.rlab b{display:block;font-size:30px;font-weight:820;color:var(--ink)}
+.rlab span{display:block;margin-top:6px;font-size:19px;font-weight:600;color:var(--mute)}
+.wg{display:flex;align-items:center}
+.pos{display:flex;flex-direction:column;align-items:center}
+.pos i{display:block;width:100%;height:10px;border:3px solid var(--mute);border-top:0;border-radius:0 0 8px 8px}
+.pos span{margin-top:6px;font-size:24px;font-weight:820;color:var(--mute)}
+#sB.s4 .pos i{border-color:var(--navy)}
+#sB.s4 .pos span{color:var(--navy);transform:scale(1.35)}
+.dgl{font-size:32px;font-weight:650;color:var(--ink2)}
+.term{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:650;color:var(--ink2)}
+.term b{padding:8px 18px;border-radius:12px;background:var(--navy);color:#fff;font-weight:800}
+.capT{text-align:center;font-size:30px;font-weight:800;color:var(--ink)}
+.capR{display:flex;align-items:center;gap:40px}
+.cw{font-size:112px;font-weight:820;line-height:1;letter-spacing:-.01em;display:inline-flex;align-items:baseline}
+.cw .lead{display:inline-grid}
+.cw .lead>span{justify-self:end}
+.capR .sw>span{transition-delay:1.25s}
+.capR.late .sw>span{transition-delay:1.6s}
+.capN{text-align:center;font-size:21px;font-weight:600;color:var(--mute)}
+
+/* ───── C 공통 머리 ───── */
+.csent{display:flex;align-items:center;gap:14px;font-size:46px;font-weight:720;color:var(--ink);white-space:nowrap}
+.blank{position:relative;display:inline-grid;place-items:center;width:156px;height:78px}
+.blank .bx{grid-area:1/1;width:100%;height:100%;border:3px dashed #B6B1A5;border-radius:14px}
+.blank .fly{grid-area:1/1;z-index:4;opacity:0;transform:translate(var(--fx,0px),var(--fy,0px)) scale(.74);
+  transition:opacity .3s ease .7s,transform 1s cubic-bezier(.55,0,.25,1) 1.05s}
+#sC3.s3 .blank .bx{opacity:0;transition-delay:1.9s}
+#sC3 .blank{transition-property:width;transition-duration:.5s}
+#sC3.s3 .blank{width:var(--bw,156px);transition-delay:2s}
+.cgl{font-size:24px;font-weight:600;color:var(--mute)}
+.cgl b{font-weight:800}
+.pill{display:flex;align-items:center;gap:14px;width:440px;height:58px;padding:0 20px 0 10px;background:#fff;border:2px solid var(--line);border-radius:29px;font-size:22px;font-weight:700;color:var(--ink2)}
+.pill .pn{flex:none;width:38px;height:38px;border-radius:50%;background:var(--grey-s);color:var(--grey);display:grid;place-items:center;font-size:19px;font-weight:820}
+.pill .pa{margin-left:auto;font-weight:820;font-size:24px;color:var(--ink)}
+.pill .pa.t4{color:var(--amb-i)}
+
+/* C1 성 */
+.bin{width:330px;height:254px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;overflow:hidden}
+.bh{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--beige);border-bottom:2px solid var(--line2)}
+.bh span{font-size:25px;font-weight:820;color:var(--ink2)}
+.bh b{font-size:40px;font-weight:850;color:var(--navy)}
+.bb{display:flex;flex-wrap:wrap;align-content:flex-start;gap:12px;padding:20px 20px}
+.it{display:inline-flex;align-items:center;gap:9px;height:58px;padding:0 16px;background:var(--paper);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px}
+.it b{font-size:29px;font-weight:820;color:var(--ink)}
+.it i{font-style:normal;font-size:18px;font-weight:600;color:var(--mute)}
+.chen{border-radius:6px;padding:0 2px}
+#sC1.s4 .chen{background:var(--navy);color:#fff}
+.chen-note{text-align:center;font-size:22px;font-weight:800;color:var(--navy)}
+.dict{height:196px;display:flex;align-items:center;gap:30px;padding:0 44px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:22px}
+.dtag{position:absolute;left:28px;top:-17px;padding:4px 14px;border-radius:8px;background:var(--ink2);color:#fff;font-size:17px;font-weight:800}
+.dent{display:flex;align-items:baseline;gap:16px}
+.dent b{font-size:54px;font-weight:850}
+.gm{padding:4px 14px;border-radius:10px;background:var(--navy-s);color:var(--navy);font-size:34px;font-weight:850}
+.dko{font-size:28px;color:var(--mute);font-weight:600}
+.darr{width:64px;color:var(--mute)}
+.darr svg{width:100%;display:block}
+.dres{display:flex;align-items:center;gap:12px}
+.dleg{display:flex;justify-content:center;gap:18px}
+.dleg span{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border-radius:14px;background:#fff;border:2px solid var(--line);font-size:24px;font-weight:650;color:var(--ink2)}
+.dleg b{color:var(--navy);font-weight:850}
+
+/* C2 격 */
+.slot{width:256px;height:254px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;text-align:center}
+.slot .sn{margin-top:30px;font-size:40px;font-weight:850}
+.slot .sk{margin-top:20px;font-size:40px;font-weight:720;color:var(--ink)}
+.slot .sl{margin-top:26px;font-size:22px;font-weight:650;color:var(--mute)}
+.sx1 .sn{color:var(--navy)}.sx4 .sn{color:var(--amb-i)}.sx2 .sn,.sx3 .sn{color:var(--grey)}
+#sC2.s2 .sx4{border-color:var(--amb);box-shadow:0 0 0 7px rgba(184,120,48,.16);transform:translateY(-10px)}
+#sC2.a2 .gl4{animation:txtPulse 1.1s .2s 2}
+@keyframes txtPulse{50%{background:var(--amb-s);box-shadow:0 0 0 6px var(--amb-s)}}
+
+/* C3 표에서 칸 찾기 */
+.grid{width:642px;height:328px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px}
+.gc{position:absolute;display:grid;place-items:center}
+.gh{top:0;width:118px;height:56px;font-size:28px;font-weight:850;color:var(--ink);line-height:1;align-content:center;gap:4px}
+.gh small,.rh small{font-size:14px;font-weight:650;color:var(--mute)}
+.rh{left:0;width:170px;height:68px;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding-left:24px;font-size:24px;font-weight:850;border-top:1px solid var(--line2)}
+.gd{width:118px;height:68px;font-size:30px;font-weight:800;color:#CFCAC0;border-top:1px solid var(--line2)}
+.corner{left:0;top:0;width:170px;height:56px}
+.corner svg{position:absolute;inset:0;width:100%;height:100%}
+.corner .cs{position:absolute;right:16px;top:6px;font-size:16px;font-weight:800;color:var(--mute)}
+.corner .ck{position:absolute;left:18px;bottom:6px;font-size:16px;font-weight:800;color:var(--mute)}
+.band{position:absolute;border-radius:14px;pointer-events:none}
+.band.bc{left:166px;top:-8px;width:126px;height:342px;background:rgba(56,69,104,.07);border:3px solid var(--navy)}
+.band.br{left:-8px;top:256px;width:656px;height:76px;background:rgba(184,120,48,.10);border:3px solid var(--amb)}
+#sC3.s1 .ghm{color:var(--navy)}
+#sC3.s2 .rh4{color:var(--amb-i)}
+.form{display:flex;align-items:center;justify-content:center;gap:16px;font-size:30px;font-weight:820;color:var(--mute)}
+.form span{padding:8px 18px;border-radius:12px;background:#fff;border:2px solid var(--line);color:var(--ink)}
+.form span.fr{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* 알약 활성 상태 */
+.scene [data-act]{transition-property:background-color,border-color,color,opacity,transform}
+
+/* ───── D1 변화표 ───── */
+.ttl{display:flex;align-items:baseline;gap:14px}
+.ttl b{font-size:28px;font-weight:850;color:var(--ink)}
+.ttl span{font-size:20px;font-weight:600;color:var(--mute)}
+.atab{width:550px;height:325px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden}
+.atab .th{position:absolute;top:0;width:100px;height:58px;display:grid;place-items:center;align-content:center;gap:3px;font-size:25px;font-weight:850;line-height:1}
+.atab .th small{font-size:14px;font-weight:650;color:var(--mute)}
+.atab .crn{position:absolute;left:0;top:0;width:150px;height:58px}
+.atab .crn svg{position:absolute;inset:0;width:100%;height:100%}
+.atab .crn .cs{position:absolute;right:14px;top:6px;font-size:15px;font-weight:800;color:var(--mute)}
+.atab .crn .ck{position:absolute;left:16px;bottom:6px;font-size:15px;font-weight:800;color:var(--mute)}
+.tr{position:absolute;left:0;width:546px;height:66px;border-top:1px solid var(--line2);transition-property:top,opacity,background-color!important;transition-duration:.9s!important}
+.tr.r1{top:58px}.tr.r2{top:124px}.tr.r3{top:190px}.tr.r4{top:256px}
+.tr .rh2{position:absolute;left:0;top:0;width:150px;height:66px;display:flex;align-items:center;gap:8px;padding-left:20px;font-size:23px;font-weight:850;color:var(--ink)}
+.tr .rh2 small{font-size:15px;font-weight:650;color:var(--mute)}
+.td{position:absolute;top:0;width:100px;height:66px;display:grid;place-items:center}
+.cv{display:inline-block;padding:5px 11px;border-radius:10px;font-size:29px;font-weight:850;line-height:1.1;color:var(--ink)}
+#sD1.s2 .r4{top:124px}
+#sD1.s2 .r2{top:190px}
+#sD1.s2 .r3{top:256px}
+#sD1.s2 .r1{background:var(--navy-s)}
+#sD1.s2 .r1 .cv,#sD1.s2 .r1 .rh2{color:var(--navy)}
+#sD1.s2 .r4{background:var(--amb-s)}
+#sD1.s2 .r4 .cv,#sD1.s2 .r4 .rh2{color:var(--amb-i)}
+#sD1.s3 .r1 .cm .cv{background:var(--navy);color:#fff}
+#sD1.s3 .r4 .cm .cv{background:var(--amb);color:#fff}
+.bdg{position:absolute;top:112px;height:24px;border-radius:12px;padding:0 10px;display:grid;place-items:center;font-size:14px;font-weight:820;white-space:nowrap;z-index:3}
+.bdg.chg{background:var(--amb);color:#fff}
+.bdg.eq{background:var(--ok-s);color:var(--ok);border:2px solid #BFDFCD}
+.colhl{position:absolute;top:4px;width:94px;height:313px;border:3px dashed var(--amb);border-radius:12px;z-index:4}
+.nopl{padding:8px 16px;border-radius:12px;background:var(--amb-s);border:2px solid var(--amb-l);font-size:19px;font-weight:800;color:var(--amb-i);white-space:nowrap}
+.dban{text-align:center;font-size:31px;font-weight:820;color:var(--navy)}
+
+/* ───── D2 복수 ───── */
+.colh{text-align:center;font-size:25px;font-weight:820;color:var(--ink2)}
+.colh small{display:block;margin-top:4px;font-size:15px;font-weight:650;color:var(--mute)}
+.glab{font-size:23px;font-weight:720;color:var(--mute)}
+.pair{display:flex;align-items:center;gap:12px}
+.parr{width:80px;color:#B6B1A5}
+.parr svg{width:100%;display:block}
+.chg{border-radius:7px;padding:0 1px}
+#sD2.s2 .chg{background:var(--navy-s);color:var(--navy);box-shadow:inset 0 -5px 0 var(--navy)}
+#sD2.a1 .pdie{animation:ringPulse 1.1s 1.1s 2}
+.exrow{display:flex;align-items:center;gap:18px;font-size:36px;font-weight:720;color:var(--ink)}
+.exrow s{color:var(--no);text-decoration-thickness:4px}
+
+/* ───── D3 정관사 vs 부정관사 ───── */
+.panel{width:520px;height:504px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:22px}
+.shelf{position:absolute;left:80px;top:34px;width:360px;height:184px}
+.bk{position:absolute;bottom:14px;border-radius:6px;background:var(--beige);border:3px solid #CEC8BA}
+.bk::before,.bk::after{content:'';position:absolute;left:6px;right:6px;height:3px;border-radius:2px;background:#DAD4C7}
+.bk::before{top:14px}.bk::after{bottom:14px}
+.bk.tg{background:var(--navy);border-color:var(--navy-e)}
+.bk.tg::before,.bk.tg::after{background:rgba(255,255,255,.35)}
+.sline{position:absolute;left:0;right:0;bottom:6px;height:8px;border-radius:4px;background:#D6D1C5}
+.ptr{position:absolute;left:161px;top:-26px;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:18px solid var(--navy)}
+#sD3.s1 .ptr{animation:bob 1.1s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-9px)}}
+.pick{position:absolute;top:-8px;width:68px;height:190px;border:3px dashed var(--navy);border-radius:12px;left:84px}
+#sD3.s2 .pick{animation:pick 4s ease-in-out infinite}
+@keyframes pick{0%,16%{left:84px}25%,41%{left:190px}50%,66%{left:6px}75%,91%{left:250px}100%{left:84px}}
+.ph{position:absolute;left:0;right:0;top:246px;display:flex;justify-content:center;gap:12px}
+.plab{position:absolute;left:0;right:0;top:356px;text-align:center;font-size:21px;font-weight:800;color:var(--navy)}
+.pdes{position:absolute;left:0;right:0;top:392px;text-align:center;font-size:27px;font-weight:600;color:var(--ink2)}
+.pdes b{font-weight:820;color:var(--ink)}
+.pset{position:absolute;left:0;right:0;top:444px;text-align:center}
+.pset span{display:inline-block;padding:6px 16px;border-radius:20px;background:var(--navy-s);font-size:19px;font-weight:800;color:var(--navy)}
+#sD3.s1 .pd{border-color:var(--navy);box-shadow:0 0 0 7px rgba(56,69,104,.10)}
+#sD3.s1 .pi{opacity:.4}
+#sD3.s2 .pi{opacity:1;border-color:var(--navy);box-shadow:0 0 0 7px rgba(56,69,104,.10)}
+#sD3.s2 .pd{opacity:.4;border-color:var(--line);box-shadow:none}
+
+/* ───── D4 처음엔 ein, 다시 der ───── */
+.bub{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:22px;padding:24px 30px 22px 92px}
+.bn{position:absolute;left:28px;top:30px;width:42px;height:42px;border-radius:50%;background:var(--ink2);color:#fff;display:grid;place-items:center;font-size:21px;font-weight:820}
+.bs{font-size:46px;font-weight:720;color:var(--ink);line-height:1.2}
+.bko{margin-top:8px;font-size:23px;font-weight:600;color:var(--mute)}
+.bt{margin-top:14px;font-size:19px;font-weight:800;color:var(--navy)}
+.dog{width:190px;text-align:center}
+.dog .ring{width:170px;height:170px;margin:0 auto;border-radius:50%;background:#fff;border:5px dashed var(--navy);display:grid;place-items:center;color:var(--navy)}
+.dog .ring svg{width:74%;height:74%;display:block}
+#sD4.s1 .dog .ring{border-style:solid;box-shadow:0 0 0 8px rgba(56,69,104,.10)}
+.dq{position:absolute;right:6px;top:4px;width:48px;height:48px;border-radius:50%;background:var(--ink2);color:#fff;display:grid;place-items:center;font-size:28px;font-weight:850}
+.dlb{margin-top:10px;font-size:22px;font-weight:800;color:var(--navy)}
+.exc{display:flex;align-items:center;gap:30px;height:100px;padding:0 30px;background:var(--navy-s);border-radius:20px;font-size:25px;color:var(--ink)}
+.exc>b{font-size:20px;font-weight:820;color:var(--navy)}
+.exc>span{display:inline-flex;align-items:center;gap:10px;font-weight:720}
+.exc>span em{font-style:normal;font-weight:600;color:var(--mute);font-size:20px}
+.exc svg{width:40px;height:40px;color:var(--navy);display:block}
+
+/* ───── E 실수 ───── */
+.card{background:#fff;border:2px solid var(--line);border-left:10px solid var(--no);border-bottom-width:5px;border-radius:20px;padding:24px 34px}
+.eh{display:flex;align-items:center;gap:14px}
+.trap{padding:5px 12px;border-radius:8px;background:var(--no);color:#fff;font-size:17px;font-weight:820}
+.eh b{font-size:29px;font-weight:820}
+.ew{margin-top:8px;font-size:20px;font-weight:600;color:var(--mute)}
+.es{margin-top:26px;display:flex;align-items:center;gap:26px}
+.sent{display:flex;align-items:center;font-size:52px;font-weight:720;color:var(--ink);white-space:nowrap}
+.sent>.w{margin-right:.28em}
+.grow{display:inline-block;width:0;overflow:hidden;white-space:nowrap;transition-property:width!important;transition-duration:.7s!important}
+.grow .gi{display:inline-block;padding-right:.28em}
+.err{text-decoration:underline wavy var(--no);text-decoration-thickness:3px;text-underline-offset:12px}
+#sE.s1 .e1 .err{text-decoration-color:transparent}
+#sE.s1 .e1{border-left-color:var(--ok)}
+#sE.s3 .e2{border-left-color:var(--ok)}
+#sE .e2 .ic{box-shadow:0 0 0 4px #fff,0 0 0 8px var(--no)}
+#sE.s3 .e2 .ic{box-shadow:0 0 0 4px #fff,0 0 0 8px transparent;transition-delay:.3s}
+.eko{position:absolute;right:40px;bottom:34px;font-size:25px;font-weight:720;color:var(--ok)}
+#sE.s1 .e1 .grow{transition-delay:.25s}
+
+/* ───── F 참고 ───── */
+.gcard{width:340px;height:300px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;padding:20px 24px}
+.gch{display:flex;align-items:center;justify-content:space-between}
+.gch .gl{font-size:25px;font-weight:820;color:var(--ink2)}
+.ends{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 14px}
+.end{padding:5px 11px;border-radius:9px;background:var(--beige);font-size:22px;font-weight:820;color:var(--ink)}
+.end small{font-size:16px;font-weight:650;color:var(--mute);margin-left:4px}
+.gx{font-size:23px;font-weight:650;line-height:1.72;color:var(--ink)}
+.gx u{text-decoration:none;background:var(--navy-s);color:var(--navy);border-radius:5px;padding:0 2px;font-weight:820}
+.gx small{color:var(--mute);font-size:17px;font-weight:600;margin-left:8px}
+.fnote{font-size:21px;font-weight:650;color:var(--mute)}
+.cmp{display:flex;align-items:center;gap:12px}
+.plus{font-size:34px;font-weight:700;color:var(--mute);padding:0 2px}
+.cmp .parr{width:58px}
+.cko{margin-left:10px;font-size:23px;font-weight:650;color:var(--mute)}
+.cmp u{text-decoration:none;border-bottom:4px solid var(--navy)}
+.pc{width:420px;height:372px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:24px;text-align:center}
+.pc .pl{margin-top:36px;font-size:140px;font-weight:850;line-height:1;color:var(--navy);letter-spacing:.02em}
+.pc .ps{margin-top:18px;font-size:34px;font-weight:820;color:var(--ink)}
+.pc .pe{margin-top:24px;font-size:27px;font-weight:600;color:var(--ink2)}
+.pc .pe b{font-weight:820;color:var(--ink)}
+
+/* ───── G 바로 쓰는 문장 ───── */
+.srow{width:1088px;height:104px;border-bottom:1px solid var(--line2)}
+.gs{position:absolute;left:0;top:6px;font-size:42px;font-weight:720;color:var(--ink);white-space:nowrap}
+.gp{position:absolute;left:2px;top:64px;font-size:18px;font-weight:600;color:var(--mute)}
+.gk{position:absolute;right:0;top:18px;font-size:26px;font-weight:650;color:var(--ink2);text-align:right}
+.gfoot{font-size:18px;font-weight:600;color:var(--mute)}
+
+/* ───── 정리 ───── */
+.sum{width:532px;height:116px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px}
+.sum .sc{position:absolute;left:22px;top:24px;width:38px;height:38px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center}
+.sum .sc svg{width:60%;height:60%}
+.sum .st{position:absolute;left:78px;top:20px;font-size:24px;font-weight:820;color:var(--ink);white-space:nowrap}
+.sum .se{position:absolute;left:78px;top:62px;font-size:23px;font-weight:650;color:var(--ink2);white-space:nowrap}
+.sum .se .x{color:var(--no);text-decoration:line-through}
+.nx{display:flex;align-items:center;gap:22px;height:96px;padding:0 32px;background:var(--navy);border-radius:20px;color:#fff}
+.nx .nl{font-size:20px;font-weight:700;opacity:.8}
+.nx .nt{font-size:28px;font-weight:820}
+.nx .nseq{margin-left:auto;display:flex;align-items:center;gap:14px}
+.nx .nseq span{display:inline-grid;place-items:center;gap:2px;padding:6px 16px;border-radius:12px;background:#fff;color:var(--ink);font-size:28px;font-weight:850;line-height:1.05}
+.nx .nseq small{font-size:14px;font-weight:650;color:var(--mute)}
+.nx .nseq i{font-style:normal;font-size:26px;opacity:.7}
+.endc{inset:0;z-index:30;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.endc img{width:92px;height:106px;display:block;margin-bottom:10px}
+.endc .en{font-size:34px;font-weight:820;color:var(--ink)}
+.endc .et{font-size:21px;font-weight:600;font-style:italic;color:var(--navy)}
+.endc .el{margin-top:18px;font-size:19px;font-weight:600;color:var(--mute)}
+
+.scene.s0 [data-in="0"]{opacity:1;transform:none}
+.scene.s1 [data-in="1"]{opacity:1;transform:none}
+.scene.s2 [data-in="2"]{opacity:1;transform:none}
+.scene.s3 [data-in="3"]{opacity:1;transform:none}
+.scene.s4 [data-in="4"]{opacity:1;transform:none}
+.scene.s5 [data-in="5"]{opacity:1;transform:none}
+.scene.s6 [data-in="6"]{opacity:1;transform:none}
+.scene.s7 [data-in="7"]{opacity:1;transform:none}
+.scene.s8 [data-in="8"]{opacity:1;transform:none}
+.scene.s9 [data-in="9"]{opacity:1;transform:none}
+.scene.s0 [data-dim="0"]{opacity:.26}
+.scene.s1 [data-dim="1"]{opacity:.26}
+.scene.s2 [data-dim="2"]{opacity:.26}
+.scene.s3 [data-dim="3"]{opacity:.26}
+.scene.s4 [data-dim="4"]{opacity:.26}
+.scene.s5 [data-dim="5"]{opacity:.26}
+.scene.s6 [data-dim="6"]{opacity:.26}
+.scene.s7 [data-dim="7"]{opacity:.26}
+.scene.s8 [data-dim="8"]{opacity:.26}
+.scene.s9 [data-dim="9"]{opacity:.26}
+.scene.s0 [data-out="0"]{opacity:0;transform:translateY(-14px)}
+.scene.s1 [data-out="1"]{opacity:0;transform:translateY(-14px)}
+.scene.s2 [data-out="2"]{opacity:0;transform:translateY(-14px)}
+.scene.s3 [data-out="3"]{opacity:0;transform:translateY(-14px)}
+.scene.s4 [data-out="4"]{opacity:0;transform:translateY(-14px)}
+.scene.s5 [data-out="5"]{opacity:0;transform:translateY(-14px)}
+.scene.s6 [data-out="6"]{opacity:0;transform:translateY(-14px)}
+.scene.s7 [data-out="7"]{opacity:0;transform:translateY(-14px)}
+.scene.s8 [data-out="8"]{opacity:0;transform:translateY(-14px)}
+.scene.s9 [data-out="9"]{opacity:0;transform:translateY(-14px)}
+.scene.s0 [data-sw="0"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s0 [data-sw="0"]>.fb{opacity:1;transform:none}
+.scene.s0 .mark[data-sw="0"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s0 .mark[data-sw="0"]>.fb{transform:none}
+.scene.s0 [data-sw="0"][data-to="k4"],.scene.s0 [data-cs="0"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s0 [data-sw="0"][data-to="k1"],.scene.s0 [data-cs="0"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s0 .grow[data-grow="0"]{width:var(--w)}
+.scene.s0 .fly[data-fly="0"]{opacity:1;transform:none}
+.scene.s0 [data-act="0"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s0 [data-act="0"] .pn{background:var(--navy);color:#fff}
+.scene.s1 [data-sw="1"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s1 [data-sw="1"]>.fb{opacity:1;transform:none}
+.scene.s1 .mark[data-sw="1"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s1 .mark[data-sw="1"]>.fb{transform:none}
+.scene.s1 [data-sw="1"][data-to="k4"],.scene.s1 [data-cs="1"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s1 [data-sw="1"][data-to="k1"],.scene.s1 [data-cs="1"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s1 .grow[data-grow="1"]{width:var(--w)}
+.scene.s1 .fly[data-fly="1"]{opacity:1;transform:none}
+.scene.s1 [data-act="1"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s1 [data-act="1"] .pn{background:var(--navy);color:#fff}
+.scene.s2 [data-sw="2"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s2 [data-sw="2"]>.fb{opacity:1;transform:none}
+.scene.s2 .mark[data-sw="2"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s2 .mark[data-sw="2"]>.fb{transform:none}
+.scene.s2 [data-sw="2"][data-to="k4"],.scene.s2 [data-cs="2"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s2 [data-sw="2"][data-to="k1"],.scene.s2 [data-cs="2"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s2 .grow[data-grow="2"]{width:var(--w)}
+.scene.s2 .fly[data-fly="2"]{opacity:1;transform:none}
+.scene.s2 [data-act="2"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s2 [data-act="2"] .pn{background:var(--navy);color:#fff}
+.scene.s3 [data-sw="3"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s3 [data-sw="3"]>.fb{opacity:1;transform:none}
+.scene.s3 .mark[data-sw="3"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s3 .mark[data-sw="3"]>.fb{transform:none}
+.scene.s3 [data-sw="3"][data-to="k4"],.scene.s3 [data-cs="3"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s3 [data-sw="3"][data-to="k1"],.scene.s3 [data-cs="3"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s3 .grow[data-grow="3"]{width:var(--w)}
+.scene.s3 .fly[data-fly="3"]{opacity:1;transform:none}
+.scene.s3 [data-act="3"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s3 [data-act="3"] .pn{background:var(--navy);color:#fff}
+.scene.s4 [data-sw="4"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s4 [data-sw="4"]>.fb{opacity:1;transform:none}
+.scene.s4 .mark[data-sw="4"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s4 .mark[data-sw="4"]>.fb{transform:none}
+.scene.s4 [data-sw="4"][data-to="k4"],.scene.s4 [data-cs="4"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s4 [data-sw="4"][data-to="k1"],.scene.s4 [data-cs="4"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s4 .grow[data-grow="4"]{width:var(--w)}
+.scene.s4 .fly[data-fly="4"]{opacity:1;transform:none}
+.scene.s4 [data-act="4"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s4 [data-act="4"] .pn{background:var(--navy);color:#fff}
+.scene.s5 [data-sw="5"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s5 [data-sw="5"]>.fb{opacity:1;transform:none}
+.scene.s5 .mark[data-sw="5"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s5 .mark[data-sw="5"]>.fb{transform:none}
+.scene.s5 [data-sw="5"][data-to="k4"],.scene.s5 [data-cs="5"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s5 [data-sw="5"][data-to="k1"],.scene.s5 [data-cs="5"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s5 .grow[data-grow="5"]{width:var(--w)}
+.scene.s5 .fly[data-fly="5"]{opacity:1;transform:none}
+.scene.s5 [data-act="5"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s5 [data-act="5"] .pn{background:var(--navy);color:#fff}
+.scene.s6 [data-sw="6"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s6 [data-sw="6"]>.fb{opacity:1;transform:none}
+.scene.s6 .mark[data-sw="6"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s6 .mark[data-sw="6"]>.fb{transform:none}
+.scene.s6 [data-sw="6"][data-to="k4"],.scene.s6 [data-cs="6"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s6 [data-sw="6"][data-to="k1"],.scene.s6 [data-cs="6"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s6 .grow[data-grow="6"]{width:var(--w)}
+.scene.s6 .fly[data-fly="6"]{opacity:1;transform:none}
+.scene.s6 [data-act="6"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s6 [data-act="6"] .pn{background:var(--navy);color:#fff}
+.scene.s7 [data-sw="7"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s7 [data-sw="7"]>.fb{opacity:1;transform:none}
+.scene.s7 .mark[data-sw="7"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s7 .mark[data-sw="7"]>.fb{transform:none}
+.scene.s7 [data-sw="7"][data-to="k4"],.scene.s7 [data-cs="7"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s7 [data-sw="7"][data-to="k1"],.scene.s7 [data-cs="7"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s7 .grow[data-grow="7"]{width:var(--w)}
+.scene.s7 .fly[data-fly="7"]{opacity:1;transform:none}
+.scene.s7 [data-act="7"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s7 [data-act="7"] .pn{background:var(--navy);color:#fff}
+.scene.s8 [data-sw="8"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s8 [data-sw="8"]>.fb{opacity:1;transform:none}
+.scene.s8 .mark[data-sw="8"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s8 .mark[data-sw="8"]>.fb{transform:none}
+.scene.s8 [data-sw="8"][data-to="k4"],.scene.s8 [data-cs="8"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s8 [data-sw="8"][data-to="k1"],.scene.s8 [data-cs="8"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s8 .grow[data-grow="8"]{width:var(--w)}
+.scene.s8 .fly[data-fly="8"]{opacity:1;transform:none}
+.scene.s8 [data-act="8"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s8 [data-act="8"] .pn{background:var(--navy);color:#fff}
+.scene.s9 [data-sw="9"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s9 [data-sw="9"]>.fb{opacity:1;transform:none}
+.scene.s9 .mark[data-sw="9"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s9 .mark[data-sw="9"]>.fb{transform:none}
+.scene.s9 [data-sw="9"][data-to="k4"],.scene.s9 [data-cs="9"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s9 [data-sw="9"][data-to="k1"],.scene.s9 [data-cs="9"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s9 .grow[data-grow="9"]{width:var(--w)}
+.scene.s9 .fly[data-fly="9"]{opacity:1;transform:none}
+.scene.s9 [data-act="9"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s9 [data-act="9"] .pn{background:var(--navy);color:#fff}
+</style>
+<style id="l02css">
+:root{--tel:#2B7A72;--tel-e:#1C5751;--tel-s:#E4F2EF;--tel-i:#1F6D65}
+.k3{background:var(--tel);border-color:var(--tel) var(--tel) var(--tel-e);color:#fff}
+.t3{color:var(--tel-i)}
+#cap .c3{color:var(--tel-i);font-weight:800}
+.q-gl{font-size:28px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.q-grp{display:flex;justify-content:center}
+.q-role{text-align:center;font-size:25px;font-weight:820;white-space:nowrap}
+.q-role::before{content:'';display:block;width:3px;height:18px;margin:0 auto 10px;border-radius:2px;background:currentColor}
+.q-note{font-size:22px;font-weight:700;color:var(--mute);white-space:nowrap}
+.q-note2{font-size:21px;font-weight:650;color:var(--ink2);text-align:center;white-space:nowrap}
+.q-card{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px}
+.q-hd{position:absolute;left:0;right:0;top:0;height:62px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:25px;font-weight:820;color:var(--ink);border-bottom:2px solid var(--line2)}
+.q-hd small{font-size:18px;font-weight:650;color:var(--mute)}
+.q-rows{position:absolute;left:0;right:0;top:62px;bottom:0;display:flex;flex-direction:column;justify-content:space-evenly;padding:4px 30px}
+.q-r{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.q-lab{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;background:var(--grey-s);color:var(--ink2);font-size:21px;font-weight:750;white-space:nowrap}
+.q-big{font-size:44px;font-weight:820;color:var(--ink);line-height:1.1;white-space:nowrap}
+.q-mid{font-size:32px;font-weight:780;color:var(--ink);line-height:1.25;white-space:nowrap}
+.q-mid u{text-decoration:none;background:var(--grey-s);border-radius:8px;padding:0 6px}
+.q-txt{font-size:23px;font-weight:650;color:var(--ink2);white-space:nowrap}
+.q-ko{font-size:22px;font-weight:650;color:var(--mute);white-space:nowrap}
+.q-ko2{font-size:26px;font-weight:700;color:var(--ink2);white-space:nowrap;margin-right:auto}
+.q-pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 16px;border-radius:999px;font-size:21px;font-weight:800;white-space:nowrap;background:var(--grey-s);color:var(--ink2)}
+.q-pill.c1{background:var(--navy);color:#fff}.q-pill.c3{background:var(--tel);color:#fff}.q-pill.c4{background:var(--amb);color:#fff}
+.q-pill.q-off{background:transparent;border:2px dashed var(--line);color:var(--grey)}
+.q-ctr{display:flex;justify-content:center}
+.q-band{background:var(--navy-s);border-radius:18px;display:flex;align-items:center;gap:18px;padding:0 28px}
+.q-band.q-col{flex-direction:column;align-items:flex-start;justify-content:center;gap:14px}
+.q-bt{font-size:24px;font-weight:820;color:var(--navy);white-space:nowrap}
+.q-seq{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:26px;font-weight:800;color:var(--mute);white-space:nowrap}
+.q-seq b{color:var(--ink)}.q-seq b.t3{color:var(--tel-i)}.q-seq b.t4{color:var(--amb-i)}
+.q-seq i{display:inline-block;width:1px;height:28px;background:var(--navy-t);margin:0 8px}
+.q-box{display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:2px solid var(--line);border-radius:16px;font-size:24px;font-weight:780;color:var(--ink)}
+.q-box.hd{background:var(--beige)}
+.q-arr{display:grid;place-items:center;font-size:26px;font-weight:800;color:var(--mute)}
+.q-fl{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 24px}
+.q-bt2{font-size:26px;font-weight:820;color:var(--ink)}.q-bt2 small{font-size:18px;color:var(--mute);font-weight:700;margin-left:6px}
+.q-bt3{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:820;color:var(--ink)}
+.q-chips{display:flex;flex-wrap:wrap;gap:8px}
+.q-ex{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px}
+.q-exk{font-size:36px;font-weight:800;color:var(--ink)}
+.q-exr{display:flex;align-items:center;gap:12px}
+.q-op{font-size:28px;font-weight:800;color:var(--mute)}
+.q-strike{position:relative;display:inline-block}
+.q-strike::after{content:'';position:absolute;left:-6px;right:-6px;top:52%;height:4px;border-radius:2px;background:var(--no);transform:rotate(-7deg)}
+.q-cbody{position:absolute;left:0;right:0;top:62px;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.q-tab{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden}
+.q-th,.q-td{position:absolute;display:grid;place-items:center;text-align:center}
+.q-th{font-size:23px;font-weight:850;line-height:1.1;background:var(--beige);align-content:center;gap:2px}
+.q-th small{display:block;font-size:15px;font-weight:650;color:var(--mute)}
+.q-crn{font-size:17px;font-weight:800;color:var(--mute)}
+.q-td{font-size:30px;font-weight:820}
+.q-td.sm{font-size:24px}
+.q-rl{font-size:23px;font-weight:780;color:var(--ink2)}
+.q-rb{position:absolute;left:0;right:0;border-top:1px solid var(--line2)}.q-rb.z{background:#FBFAF7}
+.q-vl{position:absolute;top:0;bottom:0;width:1px;background:var(--line2)}
+.q-hl{position:absolute;border:3px solid var(--tel);border-radius:12px}
+.q-tip{gap:10px}.q-tip>div{display:flex;align-items:center;gap:26px;font-size:50px;font-weight:840;color:var(--ink)}.q-tip i{font-style:normal;color:var(--mute);font-size:36px}
+.q-foot{position:absolute;left:0;right:0;bottom:22px;text-align:center;font-size:22px;font-weight:750;color:var(--ink2)}
+.q-vrow{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;display:flex;align-items:center;gap:18px;padding:0 26px}
+.q-vrow.trap{border-color:#EFC4BC;background:#FFFBFA}
+.q-verb{display:flex;flex-direction:column;min-width:230px}.q-verb b{font-size:34px;font-weight:840;color:var(--ink)}.q-verb small{font-size:19px;font-weight:650;color:var(--mute)}
+.q-trap{margin-left:auto;padding:6px 14px;border-radius:9px;background:var(--no);color:#fff;font-size:21px;font-weight:820;white-space:nowrap}
+.q-oknote{margin-left:auto;padding:6px 14px;border-radius:9px;background:var(--ok-s);color:var(--ok);font-size:21px;font-weight:820;white-space:nowrap}
+.q-vl2{position:absolute;left:28px;right:28px;top:84px;display:grid;grid-template-columns:1fr 1fr;gap:14px 14px}
+.q-vl2 span,.q-vl3 span{display:flex;align-items:baseline;gap:8px;font-size:19px;font-weight:650;color:var(--mute);white-space:nowrap}
+.q-vl2 b,.q-vl3 b{font-size:28px;font-weight:820;color:var(--ink)}
+.q-vl3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 20px;margin-top:6px}
+.q-ord{display:flex;align-items:center;gap:12px;font-size:24px;font-weight:780;color:var(--ink);white-space:nowrap}
+.q-n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-size:18px;font-weight:800;margin-left:8px}
+.q-mk{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:30px;font-weight:900;flex:none}
+.q-mk.no{background:var(--no)}.q-mk.ok{background:var(--ok)}
+.q-line{display:flex;align-items:center;gap:22px;padding:0 30px}
+.q-ncol{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.q-arr2{font-size:26px;font-weight:800;color:var(--mute);line-height:1}
+.q-pad{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+.q-sp{flex:1}
+.q-pr{display:flex;gap:18px;margin-top:6px}.q-pr span{display:inline-flex;align-items:baseline;gap:8px;padding:6px 16px;border-radius:12px;background:var(--beige);font-size:30px;font-weight:820;color:var(--ink)}.q-pr small{font-size:19px;color:var(--mute);font-weight:700}
+
+/* ── 2과 도식 v2 부품 ── */
+.q-cb{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;font-size:19px;font-weight:800;color:#fff;white-space:nowrap;letter-spacing:-.01em}
+.q-cb.c1{background:var(--navy)}.q-cb.c3{background:var(--tel)}.q-cb.c4{background:var(--amb)}.q-cb.c2{background:#B3AFA6}
+.q-cb.lg{height:42px;padding:0 18px;font-size:22px}
+.q-cb small{font-size:15px;font-weight:700;opacity:.85}
+.lnk{pointer-events:none}
+.lnk svg{display:block;overflow:visible}
+.dr{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1)}
+.ah{opacity:0;transition:opacity .35s ease .65s}
+.q-colc{display:flex;flex-direction:column;align-items:center;gap:12px}
+.q-gl2{font-size:24px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.q-hd2{display:flex;align-items:baseline;gap:10px;font-size:25px;font-weight:820;color:var(--ink);white-space:nowrap}
+.q-hd2 small{font-size:18px;font-weight:700;color:var(--mute)}
+.q-sub{font-size:19px;font-weight:700;color:var(--mute);white-space:nowrap}
+.kp{transition:box-shadow .5s ease}
+.scene.s2 .kp.r1{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--navy)}
+.scene.s2 .kp.r3{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--tel)}
+.scene.s2 .kp.r4{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--amb)}
+.q-wt{display:inline-flex;align-items:center;justify-content:center;height:72px;padding:0 26px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:14px;font-size:40px;font-weight:840;transition:box-shadow .5s ease}
+.q-flag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:12px;font-size:20px;font-weight:800;white-space:nowrap}
+.q-flag.k{background:var(--beige);color:var(--ink2)}.q-flag.d{background:var(--navy);color:#fff}
+.q-node{display:flex;align-items:center;justify-content:center;gap:10px;border-radius:16px;font-size:23px;font-weight:800;white-space:nowrap}
+.q-node.st{background:var(--beige);color:var(--ink2);border:2px dashed #D3CEC3}
+.q-node.res{background:var(--navy);color:#fff;box-shadow:var(--sh1)}
+.q-dec{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:0 24px}
+.q-dh{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:820;color:var(--ink)}
+.q-dh small{font-size:17px;font-weight:700;color:var(--mute)}
+.q-num{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-size:17px;font-weight:800;flex:none}
+.q-mx{background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;overflow:hidden}
+.q-mx .h,.q-mx .c,.q-mx .r{position:absolute;display:grid;place-items:center;text-align:center}
+.q-mx .h{font-size:21px;font-weight:850;background:var(--beige)}
+.q-mx .h small{display:block;font-size:13px;font-weight:700;color:var(--mute)}
+.q-mx .r{font-size:22px;font-weight:780;color:var(--ink2)}
+.q-mx .c{font-size:20px;font-weight:800;color:#CFCAC0}
+.q-mx .ln{position:absolute;left:0;right:0;height:1px;background:var(--line2)}
+.q-mx .vl{position:absolute;top:0;bottom:0;width:1px;background:var(--line2)}
+.q-band2{position:absolute;border-radius:10px}
+.q-cross{position:absolute;display:grid;place-items:center;border-radius:12px;font-size:30px;font-weight:850;color:#fff}
+.q-ex2{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.q-ex2 b{font-weight:850;color:var(--ink)}
+.q-seg{display:flex;align-items:stretch;border-radius:14px;overflow:hidden;border:2px solid var(--line);background:#fff}
+.q-seg span{display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:62px;font-size:21px;font-weight:850;color:#fff;line-height:1.1}
+.q-seg span small{font-size:14px;font-weight:700;opacity:.85}
+.q-seg .s1{background:var(--navy)}.q-seg .s3{background:var(--tel)}.q-seg .s4{background:var(--amb)}
+.q-seg .s2{background:repeating-linear-gradient(135deg,#F3F1EC 0 8px,#E9E6DF 8px 16px);color:#8A857B;text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:var(--no)}
+.q-toks{display:flex;align-items:flex-end;gap:8px}
+.tok{display:inline-flex;flex-direction:column;align-items:center;gap:6px}
+.tok b{display:inline-flex;align-items:center;justify-content:center;height:54px;padding:0 14px;border-radius:12px;background:var(--beige);font-size:28px;font-weight:820;color:var(--ink)}
+.tok small{font-size:15px;font-weight:750;color:var(--mute);white-space:nowrap}
+.tok.p4 b{background:var(--amb);color:#fff}.tok.p3 b{background:var(--tel);color:#fff}.tok.ps b{background:var(--navy);color:#fff}
+.tok.nn b{background:#fff;border:2px solid var(--navy);color:var(--navy)}
+.tok.ey b{background:transparent;border:2px dashed #C9C4B9;color:#B3AEA4;min-width:92px}
+.tok.bl b{background:#fff;border:2px dashed var(--mute);color:var(--mute);min-width:84px}
+.q-grp2{position:absolute;display:flex;align-items:center;gap:10px}
+.q-brk{font-size:18px;font-weight:800;color:var(--mute);white-space:nowrap}
+.q-end{display:inline-flex;align-items:center;justify-content:center;height:62px;min-width:46px;padding:0 10px;border-radius:12px;color:#fff;margin-left:4px}
+.q-end.e3{background:var(--tel)}.q-end.e4{background:var(--amb)}
+.q-stem{font-size:52px;font-weight:840;color:var(--ink)}
+.q-wd{display:flex;align-items:center;font-size:52px;font-weight:840}
+.q-pipe{display:flex;align-items:center;gap:16px;padding:0 24px}
+.q-kh{display:inline-block;line-height:44px;height:44px;padding:0 14px;border-radius:10px;background:var(--beige);font-size:22px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.q-kh b{font-weight:850}
+.q-op2{font-size:26px;font-weight:800;color:var(--mute);width:28px;text-align:center}
+.q-op2.no{color:var(--no)}.q-op2.ok{color:var(--ok)}
+.q-diam{position:absolute}
+.q-box2{position:absolute;display:flex;align-items:center;gap:12px;padding:0 18px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;font-size:21px;font-weight:780;color:var(--ink);white-space:nowrap;box-shadow:var(--sh1)}
+.q-dict{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:12px;background:#fff;border:2px solid var(--line);font-size:20px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.q-dict b{color:var(--ink);font-weight:850}
+.q-noun{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.q-noun .g{font-size:16px;font-weight:800;color:var(--mute);letter-spacing:.02em}
+.q-noun .w{font-size:30px;font-weight:820;color:var(--ink)}
+.q-noun .k{font-size:18px;font-weight:650;color:var(--mute)}
+.mu{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:7px;text-decoration-color:#8FA0C8}
+.q-bub{position:relative;display:inline-block;line-height:56px;height:56px;padding:0 20px;border-radius:18px;font-size:27px;font-weight:800;white-space:nowrap}
+.q-bub.q{background:var(--beige);color:var(--ink)}.q-bub.a{background:var(--navy);color:#fff}
+.q-ph{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:14px;font-size:32px;font-weight:850;background:#fff;border:2px solid var(--line);border-bottom-width:4px;color:var(--ink)}
+.q-ph.z{background:var(--navy);color:#fff;border-color:var(--navy)}
+.q-rn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--beige);color:var(--ink2);font-size:17px;font-weight:800;flex:none}
+.q-uline{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:8px}
+.q-uline.t3{text-decoration-color:rgba(43,122,114,.45)}.q-uline.t4{text-decoration-color:rgba(184,120,48,.45)}
+.scene.s0 [data-in="0"] .dr{stroke-dashoffset:0}.scene.s0 [data-in="0"] .ah{opacity:1}
+.scene.s1 [data-in="1"] .dr{stroke-dashoffset:0}.scene.s1 [data-in="1"] .ah{opacity:1}
+.scene.s2 [data-in="2"] .dr{stroke-dashoffset:0}.scene.s2 [data-in="2"] .ah{opacity:1}
+.scene.s3 [data-in="3"] .dr{stroke-dashoffset:0}.scene.s3 [data-in="3"] .ah{opacity:1}
+.scene.s4 [data-in="4"] .dr{stroke-dashoffset:0}.scene.s4 [data-in="4"] .ah{opacity:1}
+.scene.s5 [data-in="5"] .dr{stroke-dashoffset:0}.scene.s5 [data-in="5"] .ah{opacity:1}
+.scene.s6 [data-in="6"] .dr{stroke-dashoffset:0}.scene.s6 [data-in="6"] .ah{opacity:1}
+.scene.s7 [data-in="7"] .dr{stroke-dashoffset:0}.scene.s7 [data-in="7"] .ah{opacity:1}
+.scene.s8 [data-in="8"] .dr{stroke-dashoffset:0}.scene.s8 [data-in="8"] .ah{opacity:1}
+.scene.s9 [data-in="9"] .dr{stroke-dashoffset:0}.scene.s9 [data-in="9"] .ah{opacity:1}
+.tokg{position:relative;display:inline-flex;align-items:flex-end;gap:8px;padding:12px 8px 6px;border:2px dashed #8E99B8;border-radius:16px}
+.tokg em{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#fff;padding:0 8px;font-style:normal;font-size:15px;font-weight:800;color:var(--navy);white-space:nowrap}
+.mu2{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:7px;text-decoration-color:rgba(255,255,255,.55)}
+
+/* ── 3과 부품: 어미 색(같은 색 = 같은 어미) ── */
+:root{--ee:#5561A8;--est:#B04A64;--et:#2D7A56;--een:#9A6331;--vc:#C44B3A}
+.en-e{background:var(--ee);border-color:var(--ee) var(--ee) #3D4785;color:#fff}
+.en-st{background:var(--est);border-color:var(--est) var(--est) #8A3450;color:#fff}
+.en-t{background:var(--et);border-color:var(--et) var(--et) #1F5A3F;color:#fff}
+.en-en{background:var(--een);border-color:var(--een) var(--een) #744821;color:#fff}
+.tx-e{color:var(--ee)}.tx-st{color:var(--est)}.tx-t{color:var(--et)}.tx-en{color:var(--een)}.tx-v{color:var(--vc)}
+.q-eb{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 13px;border-radius:999px;font-size:20px;font-weight:850;color:#fff;white-space:nowrap}
+.q-eb.en-e{background:var(--ee)}.q-eb.en-st{background:var(--est)}.q-eb.en-t{background:var(--et)}.q-eb.en-en{background:var(--een)}
+.q-row3{display:flex;align-items:center;gap:0;white-space:nowrap}
+.q-subj{display:inline-block;width:70px;font-size:26px;font-weight:800;color:var(--mute)}
+.q-eq{display:flex;align-items:center;justify-content:center;gap:18px}
+.q-eqb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:210px;height:92px;padding:0 20px;border-radius:16px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1)}
+.q-eqb b{font-size:28px;font-weight:850;color:var(--ink)}.q-eqb small{font-size:16px;font-weight:700;color:var(--mute)}
+.q-eqb.st{border-color:#C9CFE3 #C9CFE3 #AEB6D2}.q-eqb.en{border-color:#E6C7CF #E6C7CF #D3A6B2}
+.q-cut{display:inline-flex;align-items:center;height:62px;padding:0 10px;margin-left:6px;border:2px dashed #C9C4B9;border-radius:12px;font-size:52px;font-weight:840;color:#B7B2A8;text-decoration:line-through;text-decoration-color:var(--no);text-decoration-thickness:4px}
+.q-vw{display:inline-block;padding:0 4px;border-radius:8px;background:#FBE8E5;color:var(--vc)}
+.q-vo{display:inline-block;padding:0 4px;border-radius:8px;background:#EFEDE8;color:#9A958B}
+.q-cg{display:grid;grid-template-columns:auto 34px auto;align-items:center;gap:10px 14px}
+.q-cg .inf{font-size:26px;font-weight:750;color:#8A857B;text-align:right}
+.q-cg .ar{font-size:24px;color:var(--mute);text-align:center}
+.q-cg .fm{font-size:30px;font-weight:840;color:var(--ink)}
+.q-cg .ko{font-size:16px;font-weight:700;color:var(--mute);margin-left:8px}
+.q-sec{display:flex;flex-direction:column;gap:6px;padding:7px 0;border-top:1px solid var(--line2)}
+.q-sec:first-child{border-top:none}
+.q-tg{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:9px;font-size:17px;font-weight:850;white-space:nowrap}
+.q-tg.rg{background:var(--ok-s);color:var(--ok)}.q-tg.ir{background:var(--no-s);color:var(--no)}
+.q-tab3{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden}
+.q-tab3 .th,.q-tab3 .td{position:absolute;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.q-tab3 .th{font-size:21px;font-weight:850;background:var(--beige);color:var(--ink);flex-direction:column;gap:0;line-height:1.15}
+.q-tab3 .th small{font-size:14px;font-weight:700;color:var(--mute)}
+.q-tab3 .td{font-size:28px;font-weight:820;color:var(--ink)}
+.q-tab3 .td.p{font-size:21px;font-weight:750;color:var(--ink2)}
+.q-tab3 .td.p b{font-weight:850;color:var(--ink)}
+.q-tab3 .rb{position:absolute;left:0;right:0;border-top:1px solid var(--line2)}
+.q-tab3 .rb.z{background:#FBFAF7}
+.q-tab3 .vl{position:absolute;top:0;bottom:0;width:1px;background:var(--line2)}
+.q-tab3 .dim{color:#9A958B}
+.q-flow{display:flex;align-items:center;gap:14px}
+.q-fc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 18px;border-radius:14px;background:var(--beige)}
+.q-fc b{font-size:28px;font-weight:850;color:var(--ink)}.q-fc small{font-size:15px;font-weight:750;color:var(--mute)}
+
+/* ── 4과 부품: 자리 칸(동사 자리 = 남색), 숫자 칸, 의문사 칩 ── */
+.w4-sl{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:84px;padding:0 18px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1);flex:none}
+.w4-sl small{font-size:15px;font-weight:750;color:var(--mute);line-height:1;white-space:nowrap}
+.w4-sl b{font-size:30px;font-weight:850;color:var(--ink);line-height:1.12;white-space:nowrap}
+.w4-sl.v{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e)}
+.w4-sl.v small{color:rgba(255,255,255,.72)}.w4-sl.v b{color:#fff}
+.w4-sl.s{background:#F3F5FB;border-color:#C9CFE3 #C9CFE3 #AEB6D2}
+.w4-sl.k{background:#FAF8F3}
+.w4-sl.k b{font-size:28px}
+.w4-srow{display:flex;align-items:center;gap:16px;white-space:nowrap}
+.w4-cn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--beige);font-size:19px;font-weight:850;color:var(--ink2)}
+.w4-colh{font-size:19px;font-weight:850;color:var(--mute);text-align:center;white-space:nowrap}
+.w4-colh.v{color:var(--navy)}
+.w4-vband{border-radius:18px;background:rgba(56,69,104,.06);border:2px dashed rgba(56,69,104,.28)}
+.q-tg.nv{background:var(--navy-s);color:var(--navy)}
+.w4-wch{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:160px;height:92px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1)}
+.w4-wch b{font-size:30px;font-weight:850;color:var(--navy);line-height:1.1}.w4-wch small{font-size:17px;font-weight:750;color:var(--mute)}
+.w4-ring{border-radius:18px;border:3px solid var(--navy);box-shadow:0 0 0 6px rgba(56,69,104,.12)}
+.w4-num{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:140px;height:96px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1)}
+.w4-num b{font-size:28px;font-weight:850;color:var(--navy);line-height:1}
+.w4-num span{font-size:22px;font-weight:780;color:var(--ink);line-height:1.1}
+.w4-num.w{flex-direction:row;gap:16px;width:240px;height:78px}
+.w4-num.hl{background:#FFF6F4;border-color:#EBC3BB #EBC3BB #DDA79C}
+.w4-num small{font-size:14px;font-weight:800;color:var(--vc)}
+.w4-fn{display:inline-grid;place-items:center;min-width:64px;height:54px;padding:0 10px;border-radius:12px;background:var(--navy);color:#fff;font-size:28px;font-weight:850}
+.w4-fx{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.w4-fx .q-fc{padding:6px 14px}
+.w4-fx .q-fc b{font-size:25px}
+.w4-res{font-size:30px;font-weight:850;color:var(--ink);white-space:nowrap}
+.w4-res i{font-style:normal;color:var(--vc)}
+.w4-neg{display:inline-block;padding:0 6px;border-radius:8px;background:#FBE8E5;color:var(--vc)}
+.w4-lbl{display:inline-flex;align-items:center;justify-content:center;min-width:92px;height:34px;padding:0 12px;border-radius:9px;background:var(--beige);font-size:17px;font-weight:850;color:var(--ink2);white-space:nowrap}
+.w4-ex{font-size:26px;font-weight:800;color:var(--ink);white-space:nowrap}
+.w4-ex small{font-size:17px;font-weight:700;color:var(--mute);margin-left:8px}
+
+.w4-c1{color:var(--navy)}.w4-c3{color:var(--tel-i)}.w4-c4{color:var(--amb-i)}
+
+/* ── 5과 부품: 앞 글자(누구 것인지) = 청록, 끝(ein과 같이) = 주황 ── */
+.w5-pf{color:var(--tel-i);background:rgba(43,122,114,.12);border-radius:6px;padding:0 3px}
+.w5-en{color:var(--amb-i);background:rgba(184,120,48,.14);border-radius:6px;padding:0 2px}
+.w5-en:empty{display:none}
+.w5-g{color:#9A958B}
+.w5-box{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:72px;padding:0 22px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1);font-size:30px;font-weight:840;color:var(--ink);white-space:nowrap}
+.w5-box.gy{background:#FAF8F3;color:#8A857B;font-weight:760}
+.w5-box.hl{border-color:#BFD9D5 #BFD9D5 #9EC6C0;background:#F2FAF8}
+.w5-lab{font-size:17px;font-weight:850;color:var(--mute);text-align:center;white-space:nowrap}
+.w5-row{display:flex;align-items:center;gap:14px;white-space:nowrap}
+.w5-ko{font-size:22px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.w5-ex{font-size:26px;font-weight:820;color:var(--ink);white-space:nowrap}
+.w5-ex small{font-size:17px;font-weight:700;color:var(--mute);margin-left:8px}
+.w5-kp{display:inline-flex;align-items:center;justify-content:center;height:72px;padding:0 18px;border-radius:14px 0 0 14px;background:var(--tel);color:#fff;font-size:30px;font-weight:850}
+.w5-kn{display:inline-flex;align-items:center;justify-content:center;height:72px;padding:0 18px;border-radius:0 14px 14px 0;background:#fff;border:2px solid var(--line);border-left:none;font-size:30px;font-weight:850;color:var(--ink)}
+.w5-tab{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden;box-shadow:var(--sh1)}
+.w5-tab .th,.w5-tab .td{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.15}
+.w5-tab .th{background:var(--beige);font-size:19px;font-weight:850;color:var(--ink)}
+.w5-tab .th small{font-size:13px;font-weight:700;color:var(--mute)}
+.w5-tab .td{font-size:25px;font-weight:820;color:var(--ink)}
+.w5-tab .td small{font-size:15px;font-weight:700;color:#A39E94}
+.w5-tab .td.p{font-size:19px;font-weight:750;color:var(--ink2);flex-direction:row;gap:6px}
+.w5-tab .td.p b{color:var(--ink);font-weight:850}
+.w5-tab .td.ex{font-size:19px;font-weight:750;color:var(--ink2);flex-direction:row;gap:6px}
+.w5-tab .td.ex b{font-size:21px;color:var(--ink)}
+.w5-tab .td.hl{background:rgba(184,120,48,.12)}
+.w5-tab .rb{position:absolute;left:0;right:0;border-top:1px solid var(--line2)}
+.w5-tab .rb.z{background:#FBFAF7}
+.w5-tab .vl{position:absolute;top:0;bottom:0;width:1px;background:var(--line2)}
+.w5-sec{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line2)}
+.w5-sec:first-child{border-top:none;padding-top:0}
+.w5-dot{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--beige);font-size:15px;font-weight:850;color:var(--ink2);flex:none}
+
+/* ── 6과 부품: 전치사 칩(격 색), 공간 그림 칸, 격 배지 2격(보라) ── */
+:root{--c2:#7A6AA8;--c2-s:rgba(122,106,168,.13)}
+.w6-pp{display:inline-flex;align-items:center;justify-content:center;height:60px;min-width:96px;padding:0 18px;border-radius:14px;font-size:28px;font-weight:850;color:#fff;white-space:nowrap;box-shadow:var(--sh1)}
+.w6-pp.c3{background:var(--tel)}.w6-pp.c4{background:var(--amb)}.w6-pp.c2{background:var(--c2)}
+.w6-pp.c34{background:linear-gradient(135deg,var(--tel) 0 50%,var(--amb) 50% 100%)}
+.w6-pp.sm{height:46px;min-width:70px;padding:0 13px;font-size:22px;border-radius:11px}
+.q-cb.c2x{background:var(--c2)}
+.w6-row{display:flex;align-items:center;gap:14px;white-space:nowrap}
+.w6-box{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:64px;padding:0 20px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1);font-size:28px;font-weight:840;color:var(--ink);white-space:nowrap}
+.w6-ko{font-size:21px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.w6-ex{font-size:24px;font-weight:820;color:var(--ink);white-space:nowrap}
+.w6-ex small{font-size:16px;font-weight:700;color:var(--mute);margin-left:8px}
+.w6-t3{color:var(--tel-i)}.w6-t4{color:var(--amb-i)}.w6-t2{color:var(--c2)}
+.w6-kt{display:inline-flex;align-items:center;justify-content:center;height:64px;padding:0 18px;border-radius:14px 0 0 14px;background:#fff;border:2px solid var(--line);border-right:none;font-size:28px;font-weight:850;color:var(--ink)}
+.w6-kp{display:inline-flex;align-items:center;justify-content:center;height:64px;padding:0 18px;border-radius:0 14px 14px 0;background:var(--tel);color:#fff;font-size:26px;font-weight:850}
+.w6-tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;width:200px;height:150px;padding-bottom:10px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1)}
+.w6-tile b{font-size:24px;font-weight:850;color:var(--ink);line-height:1}
+.w6-tile small{font-size:14px;font-weight:750;color:var(--mute)}
+.w6-tile svg{flex:none}
+.w6-tab{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden;box-shadow:var(--sh1)}
+.w6-tab .th,.w6-tab .td{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2}
+.w6-tab .th{background:var(--beige);font-size:18px;font-weight:850;color:var(--ink)}
+.w6-tab .td{font-size:24px;font-weight:820;color:var(--ink)}
+.w6-tab .td.l{align-items:flex-start;padding-left:18px;font-size:18px;font-weight:760;color:var(--ink2)}
+.w6-tab .td.l b{font-size:20px;color:var(--ink);font-weight:850}
+.w6-tab .rb{position:absolute;left:0;right:0;border-top:1px solid var(--line2)}
+.w6-tab .rb.z{background:#FBFAF7}
+.w6-tab .vl{position:absolute;top:0;bottom:0;width:1px;background:var(--line2)}
+.w6-sec{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line2)}
+.w6-sec:first-child{border-top:none;padding-top:0}
+.w6-step{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;height:100px;padding:0 24px;border-radius:16px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;box-shadow:var(--sh1)}
+.w6-step b{font-size:26px;font-weight:850;color:var(--ink)}
+.w6-step small{font-size:16px;font-weight:720;color:var(--mute)}
+.w6-num{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-size:17px;font-weight:850;margin-right:8px}
+
+/* ── 2026-09-24 도식 정교화: 취소선은 낱말 폭 안에서 곧게, 단계 번호는 카드 안 왼쪽, 구분선은 카드 폭 전체 ── */
+#stage .q-strike{position:relative;display:inline-block;color:var(--mute)}
+#stage .q-strike::after{left:-3px;right:-3px;top:calc(50% - 1px);height:3px;transform:none;border-radius:2px}
+#stage .w6-step{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:18px;row-gap:3px;align-content:center;align-items:center;justify-items:start}
+#stage .w6-step .w6-num{grid-row:1 / span 2;width:46px;height:46px;font-size:21px;margin:0}
+#stage .w6-sec{align-self:stretch}
+#stage .w6-mv{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 16px 16px}
+#stage .w6-mv svg{display:block;flex:none}
+#stage .w6-mvt{display:flex;align-items:baseline;gap:10px}
+#stage .w6-mvt b{font-size:26px;font-weight:880;color:var(--amb-i)}
+#stage .w6-mvt small{font-size:17px;font-weight:760;color:var(--ink2)}
+#stage .w6-tile{justify-content:flex-start;padding-top:8px;padding-bottom:8px;gap:3px}
+#stage .w6-tab .td.lab{background:var(--beige)}
+#stage .nx .nseq span{padding:8px 20px 9px;font-size:25px;gap:4px}
+#stage .nx .nseq small{font-size:14px;line-height:1}
+
+/* ── 7과 부품: 어미 -e(파랑) · -en(주황) · -er/-es(청록, 정관사 끝글자) ── */
+:root{--e7:#3B6FB6;--e7-s:rgba(59,111,182,.13)}
+.w7-e{color:var(--e7);background:var(--e7-s);border-radius:6px;padding:0 2px}
+.w7-n{color:var(--amb-i);background:rgba(184,120,48,.14);border-radius:6px;padding:0 2px}
+.w7-x{color:var(--tel-i);background:rgba(43,122,114,.14);border-radius:6px;padding:0 2px}
+.w7-v{color:var(--navy);font-weight:880}
+.w7-big{font-size:34px;font-weight:860;color:var(--ink);white-space:nowrap}
+.w7-kb{display:inline-flex;align-items:center;height:60px;padding:0 16px;border-radius:12px;background:var(--e7);color:#fff;font-size:30px;font-weight:850}
+.w7-grid{position:relative;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden;box-shadow:var(--sh1)}
+.w7-grid .h,.w7-grid .c{position:absolute;display:flex;align-items:center;justify-content:center;font-weight:850}
+.w7-grid .h{background:var(--beige);font-size:18px;color:var(--ink)}
+.w7-grid .c{font-size:30px}
+.w7-grid .c.e{background:var(--e7-s);color:var(--e7)}
+.w7-grid .c.n{background:rgba(184,120,48,.16);color:var(--amb-i)}
+.w7-bar{display:inline-block;height:18px;border-radius:6px}
+.w7-bar.a{background:var(--navy)}.w7-bar.j{background:var(--amb)}
+.w7-lbl{font-size:16px;font-weight:800;color:var(--mute);white-space:nowrap}
+.w7-q{display:flex;flex-direction:column;justify-content:center;gap:8px;height:160px;padding:0 28px;border-radius:18px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;box-shadow:var(--sh1)}
+.w7-q b{font-size:28px;font-weight:860;color:var(--ink)}
+.w7-q small{font-size:18px;font-weight:720;color:var(--mute)}
+
+/* ── 8~11과 공통 부품: 문장 괄호 칸, 계단, 시간선, 칩 색 ── */
+.w6-pp.nv{background:var(--navy)}.w6-pp.te{background:var(--tel)}.w6-pp.am{background:var(--amb)}.w6-pp.pu{background:var(--c2)}.w6-pp.bl{background:#3B6FB6}
+.w6-pp.wh{background:#fff;color:var(--ink);border:2px solid var(--line);border-bottom-width:4px}
+.k-slot{display:flex;align-items:center;justify-content:center;height:64px;padding:0 12px;border-radius:14px;font-size:27px;font-weight:850;white-space:nowrap;box-shadow:var(--sh1)}
+.k-pre{background:#fff;border:2px solid var(--line);border-bottom-width:4px;color:var(--ink)}
+.k-v2{background:var(--navy);color:#fff}
+.k-mid{background:#F4F1EA;border:2px dashed #CFC8BA;color:var(--ink2);box-shadow:none}
+.k-end{background:var(--tel);color:#fff}
+.k-endam{background:var(--amb);color:#fff}
+.k-lab{margin-top:8px;font-size:16px;font-weight:800;color:var(--mute);text-align:center;white-space:nowrap}
+.k-br{font-size:16px;font-weight:850;color:var(--navy);white-space:nowrap}
+.q-mk.tri{background:#C9A227}
+.w8-e{color:var(--amb-i);background:rgba(184,120,48,.14);border-radius:6px;padding:0 2px}
+.w8-t{color:var(--tel-i);background:rgba(43,122,114,.13);border-radius:6px;padding:0 2px}
+.w8-n{color:var(--navy);background:rgba(56,69,104,.11);border-radius:6px;padding:0 2px}
+.w8-p{color:var(--c2);background:rgba(122,106,168,.13);border-radius:6px;padding:0 2px}
+.w8-big{font-size:34px;font-weight:880;color:var(--ink);white-space:nowrap}
+.w8-mono{letter-spacing:.01em}
+.w8-col{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+#stage .q-strike{position:relative;display:inline-block;color:var(--mute)}
+#stage .q-strike::after{left:-3px;right:-3px;top:calc(50% - 1px);height:3px;transform:none;border-radius:2px}
+#stage .w6-sec{align-self:stretch}
+#stage .w6-step{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:18px;row-gap:3px;align-content:center;align-items:center;justify-items:start}
+#stage .w6-step .w6-num{grid-row:1 / span 2;width:46px;height:46px;font-size:21px;margin:0}
+#stage .w6-tab .td.lab{background:var(--beige)}
+#stage .nx .nseq span{padding:8px 20px 9px;font-size:25px;gap:4px}
+#stage .nx .nseq small{font-size:14px;line-height:1}
+/* 낱말 안의 표시는 글자색만(칸 사이가 벌어지지 않게), 낱말 전체 표시는 배경 칩 */
+.w8-e{color:var(--amb-i);background:none;padding:0;border-radius:0}
+.w8-eb{color:var(--amb-i);background:rgba(184,120,48,.14);border-radius:6px;padding:0 3px}
+.w8-ce{color:#3B6FB6}
+.w8-cn{color:var(--amb-i)}
+.w8-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:14px;padding:22px 26px}
+.w8-slots{display:flex;align-items:flex-start;gap:14px}
+.w8-slot{display:flex;flex-direction:column;align-items:center}
+
+</style>
+<style id="dsv2">
+/* ── 디자인 v2 공통 층: 1·2과 공통, 이후 과도 같은 규칙 ── */
+:root{--tel:#2B7A72;--tel-e:#1C5751;--tel-s:#E4F2EF;--tel-i:#1F6D65;--g2:#9A968D;--g2-s:#EFEDE8;
+  --cb:#E4E0D6;--cbb:#D5CFC2;--sh1:0 1px 2px rgba(37,46,72,.06),0 12px 28px -16px rgba(37,46,72,.30);
+  --sh2:0 2px 6px rgba(37,46,72,.07),0 20px 44px -20px rgba(37,46,72,.38)}
+#stage{background:radial-gradient(circle at 1px 1px,rgba(56,69,104,.085) 1.15px,transparent 1.45px) 0 0/28px 28px,var(--paper)}
+.bin,.dict,.slot,.grid,.atab,.panel,.bub,.card,.gcard,.pc,.sum,.pill,.q-card,.q-tab,.q-vrow,.q-box{border-top-color:var(--cb);border-right-color:var(--cb);border-bottom-color:var(--cbb);box-shadow:var(--sh1)}
+.bin,.dict,.slot,.grid,.pill,.q-box{border-left-color:var(--cb)}
+.atab,.panel,.gcard,.pc,.sum,.q-card,.q-tab,.q-vrow,.bub{border-left-color:var(--cb)}
+.tile{box-shadow:0 10px 18px -14px rgba(37,46,72,.55)}
+.chip.k1,.chip.k3,.chip.k4{box-shadow:0 12px 20px -12px rgba(37,46,72,.55)}
+#tagL{box-shadow:0 8px 16px -10px rgba(37,46,72,.7)}
+#tagT{letter-spacing:-.01em}
+#sdots{display:flex;align-items:center;gap:7px;margin-left:4px}
+#sdots i{display:block;width:8px;height:8px;border-radius:50%;background:#D9D5CC;transition:background .3s,transform .3s}
+#sdots i.p{background:#AEB4C6}
+#sdots i.c{background:var(--navy);transform:scale(1.3)}
+#cap{font-weight:550}
+#cap .c3{color:var(--tel-i);font-weight:800}
+/* 격 표시는 색 배지로 통일(1격 남색 · 3격 청록 · 4격 주황) */
+.role{width:184px;margin-left:-92px;padding:7px 0;border-radius:999px;color:#fff!important;font-size:20px;box-shadow:0 8px 16px -10px rgba(37,46,72,.6)}
+.role.r1{background:var(--navy)}.role.r4{background:var(--amb)}
+.role::before{position:absolute;left:50%;top:-26px;margin:0 0 0 -1.5px}
+.role.r1::before{background:var(--navy)}.role.r4::before{background:var(--amb)}
+</style>
+<style id="cv-css">
+/* ── 시작 화면(표지) ── */
+#ov .cv{display:none}
+#ov:not(.end){display:block;background:var(--paper)}
+#ov:not(.end) .cv{display:block;position:absolute;inset:0;cursor:pointer}
+.cv-brand{position:absolute;left:112px;top:62px;display:flex;align-items:center;gap:14px;font-size:16px;line-height:1;color:var(--ink)}
+.cv-brand svg{width:26px;height:30px;display:block}
+.cv-brand b{font-weight:650;letter-spacing:-.005em}
+.cv-brand span{color:#9A988F;font-weight:450}
+.cv-no{position:absolute;right:104px;top:50%;transform:translateY(-54%);font-size:420px;font-weight:160;line-height:1;letter-spacing:-.05em;color:#ECEBE5;font-variant-numeric:tabular-nums;pointer-events:none}
+.cv-art{position:absolute;right:150px;top:50%;width:250px;height:288px;transform:translateY(-50%)}
+.cv-r{position:absolute;left:112px;top:var(--cvt);width:var(--cvw)}
+.cv-lk{font-size:19px;font-weight:560;line-height:1.3;letter-spacing:.01em;color:#8E8C84}
+.cv-t{margin:18px 0 0;font-size:var(--cvf);font-weight:700;line-height:1.06;letter-spacing:-.04em;color:var(--ink)}
+.cv-t span{display:block}
+.cv-de{margin-top:24px;font-size:27px;font-weight:420;line-height:1.35;color:#77756D;letter-spacing:-.005em}
+#ov:not(.end) #ovb{position:absolute;left:112px;top:var(--cvb);flex-direction:row;align-items:center;gap:18px}
+#ov:not(.end) #ovp{width:64px;height:64px;background:var(--ink);box-shadow:none;transition:transform .2s var(--ease),background-color .2s}
+#ov:not(.end) #ovp:hover{background:var(--navy);transform:scale(1.04)}
+#ov:not(.end) #ovp svg{width:26px;height:26px;margin-left:4px}
+#ov:not(.end) #ovt{font-size:21px;font-weight:650;color:var(--ink)}
+#ov:not(.end) #ovh{display:flex;gap:16px;margin-left:14px;font-size:16px;line-height:1.3;color:#9A988F;text-align:left}
+#ov:not(.end) #ovh b{font-weight:600;color:#6B6B66}
+#ov:not(.end) #ovv{display:none}
+#ovp:focus-visible{outline:3px solid var(--navy);outline-offset:5px}
+.cv-foot{position:absolute;left:112px;right:112px;top:642px;padding-top:18px;border-top:1px solid #E7E5DF;display:flex;gap:34px;font-size:14px;line-height:1.4;color:#A3A198}
+.cv-foot kbd{font:inherit;font-weight:620;color:#77756D;margin-right:8px}
+@keyframes cvUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes cvFade{from{opacity:0}to{opacity:1}}
+#ov:not(.end) .cv-r{animation:cvUp .7s var(--ease) .1s both}
+#ov:not(.end) #ovb{animation:cvUp .7s var(--ease) .22s both}
+#ov:not(.end) .cv-no,#ov:not(.end) .cv-art{animation:cvFade 1.1s ease .05s both}
+@media (prefers-reduced-motion:reduce){#ov .cv *,#ov #ovb{animation:none!important}}
+</style></head>
+<body>
+<div id="app">
+  <div id="frame" role="region" aria-label="Lektion 08 애니메이션 화면">
+    <div id="stage">
+      <div id="chrome" class="hide"><div id="tag"><span id="tagL"></span><span id="tagT"></span></div>
+        <div id="brand"><img src="../assets/img/070733410e35.png" alt=""><span>Lektion 08 · 비교급 · 최상급</span></div></div>
+
+<section class="scene" id="sIntro" data-l="" data-t="표지">
+<div class="ab ibrand" style="left:96px;top:190px" data-in="0"><img src="../assets/img/070733410e35.png" alt=""><span>Sophia Deutsch Akademie</span></div><div class="ab ilk d1" style="left:98px;top:306px" data-in="0">Lektion 08</div><div class="ab ititle d2" style="left:92px;top:352px" data-in="0">비교급 · 최상급</div><div class="ab ide d3" style="left:98px;top:438px;font-size:23px" lang="de" data-in="0">Komparativ und Superlativ</div><div class="ab iline fd d4" style="left:650px;top:196px" data-in="0"></div><div class="ab w6-row" style="left:700px;top:170px;gap:16px" data-in="1"><span class="q-tg nv" style="width:86px;justify-content:center">원급</span><span class="w6-box" lang="de" style="width:250px"><span>schnell</span></span><span class="w6-ko">빠르다</span></div><div class="ab w6-row d2" style="left:700px;top:266px;gap:16px" data-in="1"><span class="q-tg nv" style="width:86px;justify-content:center">비교급</span><span class="w6-box" lang="de" style="width:250px"><span>schnell<span class="w8-e">er</span></span></span><span class="w6-ko">더 빠르다</span></div><div class="ab w6-row d4" style="left:700px;top:362px;gap:16px" data-in="1"><span class="q-tg nv" style="width:86px;justify-content:center">최상급</span><span class="w6-box" lang="de" style="width:250px"><span><span class="w8-eb">am</span> schnell<span class="w8-e">sten</span></span></span><span class="w6-ko">가장 빠르다</span></div>
+</section>
+<section class="scene" id="sA" data-l="A" data-t="한국어로 먼저 보기">
+<div class="ab q-card q-pad" style="left:110px;top:104px;width:510px;height:250px;gap:10px;align-items:flex-start;justify-content:flex-start;padding-top:24px" data-in="0"><div class="q-hd2">한국어 <small>형용사는 그대로 — 앞에 더 · 가장</small></div><div class="w8-big" style="font-size:30px">빠르다</div><div class="w8-big" style="font-size:30px"><span class="w8-n">더</span> 빠르다</div><div class="w8-big" style="font-size:30px"><span class="w8-n">가장</span> 빠르다</div></div><div class="ab q-card q-pad" style="left:660px;top:104px;width:510px;height:250px;gap:10px;align-items:flex-start;justify-content:flex-start;padding-top:24px" data-in="1"><div class="q-hd2">독일어 <small>형용사 끝이 바뀜</small></div><div class="w8-big" style="font-size:30px" lang="de">schnell</div><div class="w8-big" style="font-size:30px" lang="de">schnell<span class="w8-e">er</span></div><div class="w8-big" style="font-size:30px" lang="de"><span class="w8-eb">am</span> schnell<span class="w8-e">sten</span></div></div><div class="ab q-card q-pad d3" style="left:110px;top:384px;width:1060px;height:140px;gap:14px;align-items:flex-start" data-in="1"><div class="w6-row" style="gap:18px"><span class="w6-ex" lang="de">Der Zug ist schnell<span class="w8-e">er</span> <span class="w8-eb">als</span> der Bus.</span><span class="w6-ko">기차는 버스보다 더 빨라요</span></div><div class="w6-row" style="gap:18px"><span class="w6-ex" lang="de">Der Zug ist <span class="w8-eb">am</span> schnell<span class="w8-e">sten</span>.</span><span class="w6-ko">기차가 가장 빨라요</span></div></div>
+</section>
+<section class="scene" id="sB" data-l="B" data-t="비교급 — -er + als">
+<div class="ab" style="left:110px;top:104px" data-in="0"><div class="k-slot k-pre" lang="de" style="width:150px">groß</div><div class="k-lab" style="width:150px">형용사</div></div><div class="ab d1" style="left:272px;top:118px" data-in="0"><span class="q-op" style="font-size:30px;width:26px;display:inline-block;text-align:center">+</span></div><div class="ab d2" style="left:310px;top:104px" data-in="0"><div class="k-slot k-endam" lang="de" style="width:150px">-er</div><div class="k-lab" style="width:150px">비교급 어미</div></div><div class="ab d3" style="left:472px;top:118px" data-in="0"><span class="q-op" style="font-size:30px;width:26px;display:inline-block;text-align:center">+</span></div><div class="ab d4" style="left:510px;top:104px" data-in="0"><div class="k-slot k-v2" lang="de" style="width:150px">als</div><div class="k-lab" style="width:150px">‘~보다’</div></div><div class="ab d5" style="left:672px;top:118px" data-in="0"><span class="q-op" style="font-size:30px;width:26px;display:inline-block;text-align:center">+</span></div><div class="ab d6" style="left:710px;top:104px" data-in="0"><div class="k-slot k-pre" lang="de" style="width:150px">Tom</div><div class="k-lab" style="width:150px">비교 대상</div></div><div class="ab d7" style="left:910px;top:104px" data-in="0"><div class="w8-col"><span class="q-sub">‘~보다’는</span><span class="w6-ex" lang="de" style="font-size:26px">als 하나뿐</span></div></div><div class="ab q-card q-line d8" style="left:110px;top:222px;width:1060px;height:80px;gap:24px;padding:0 28px" data-in="0"><span class="w6-ex" lang="de" style="font-size:26px">Anna ist größ<span class="w8-e">er</span> <span class="w8-eb">als</span> Tom.</span><span class="w6-ko">안나는 톰보다 커요</span></div><div class="ab q-card q-pad" style="left:110px;top:330px;width:340px;height:196px;gap:6px;align-items:flex-start;justify-content:flex-start;padding-top:18px" data-in="1"><div class="q-hd2" lang="de">a → ä</div><div class="w6-ex" lang="de" style="font-size:21px">alt → <span class="w8-e">ä</span>lter</div><div class="w6-ex" lang="de" style="font-size:21px">lang → l<span class="w8-e">ä</span>nger</div><div class="w6-ex" lang="de" style="font-size:21px">stark → st<span class="w8-e">ä</span>rker</div><div class="w6-ex" lang="de" style="font-size:21px">kalt → k<span class="w8-e">ä</span>lter</div></div><div class="ab q-card q-pad d2" style="left:470px;top:330px;width:340px;height:196px;gap:6px;align-items:flex-start;justify-content:flex-start;padding-top:18px" data-in="1"><div class="q-hd2" lang="de">o → ö</div><div class="w6-ex" lang="de" style="font-size:21px">groß → gr<span class="w8-e">ö</span>ßer</div></div><div class="ab q-card q-pad d4" style="left:830px;top:330px;width:340px;height:196px;gap:6px;align-items:flex-start;justify-content:flex-start;padding-top:18px" data-in="1"><div class="q-hd2" lang="de">u → ü</div><div class="w6-ex" lang="de" style="font-size:21px">jung → j<span class="w8-e">ü</span>nger</div><div class="w6-ex" lang="de" style="font-size:21px">kurz → k<span class="w8-e">ü</span>rzer</div><div class="w6-ex" lang="de" style="font-size:21px">dumm → d<span class="w8-e">ü</span>mmer</div></div><div class="ab q-band d6" style="left:110px;top:548px;width:1060px;height:70px;gap:12px" data-in="1"><span class="q-bt">그대로</span><span class="w6-ex" lang="de" style="font-size:21px">laut → lauter</span><span class="q-sub">이중모음</span><span class="w6-ex" lang="de" style="font-size:21px;margin-left:18px">langsam → langsamer</span><span class="q-sub">긴 형용사</span></div>
+</section>
+<section class="scene" id="sB2" data-l="B" data-t="다를 때 als · 같을 때 so … wie">
+<div class="ab q-card q-pad" style="left:110px;top:104px;width:510px;height:190px;gap:12px;align-items:flex-start" data-in="0"><div class="q-hd2">서로 다를 때 <small>비교급 + als</small></div><span class="w6-ex" lang="de">Tom ist größ<span class="w8-e">er</span> <span class="w8-eb">als</span> Anna.</span><span class="w6-ko">톰은 안나보다 더 커요</span></div><div class="ab q-card q-pad d3" style="left:660px;top:104px;width:510px;height:190px;gap:12px;align-items:flex-start" data-in="0"><div class="q-hd2">정도가 같을 때 <small>so + 원급 + wie</small></div><span class="w6-ex" lang="de">Tom ist <span class="w8-eb">so</span> groß <span class="w8-eb">wie</span> Anna.</span><span class="w6-ko">톰은 안나만큼 커요</span></div><div class="ab q-card q-pad d5" style="left:110px;top:326px;width:1060px;height:130px;gap:12px;align-items:flex-start" data-in="0"><div class="w6-row" style="gap:18px"><span class="w6-ex" lang="de" style="font-size:22px">Tom ist nicht so groß wie Anna.</span><span class="w6-ko">톰은 안나만큼 크지 않아요</span></div><div class="w6-row" style="gap:18px"><span class="w6-ex" lang="de" style="font-size:22px">Tom ist genauso groß wie Anna.</span><span class="w6-ko">genauso = 똑같이 (뜻이 더 강함)</span></div></div>
+</section>
+<section class="scene" id="sC1" data-l="C" data-t="최상급 — 쓰는 자리에 따라 둘">
+<div class="ab q-card w8-card" style="left:110px;top:100px;width:1060px;height:196px" data-in="0"><div class="q-hd2">① 동사 뒤에서 설명할 때</div><div class="w6-row" style="gap:34px;align-items:flex-start"><div class="w8-slots"><div class="w8-slot"><div class="k-slot k-pre" lang="de" style="width:130px"><span>Anna</span></div><div class="k-lab" style="width:130px">주어</div></div><div class="w8-slot"><div class="k-slot k-v2" lang="de" style="width:110px"><span>ist</span></div><div class="k-lab" style="width:110px">sein</div></div><div class="w8-slot"><div class="k-slot k-pre" lang="de" style="width:230px"><span><span class="w8-eb">am</span> größ<span class="w8-e">ten</span></span></div><div class="k-lab" style="width:230px">최상급</div></div></div><div class="w8-col" style="padding-top:6px"><span class="q-tg nv">am + -sten</span><span class="w6-ko">안나가 가장 크다</span></div></div></div><div class="ab q-card w8-card" style="left:110px;top:316px;width:1060px;height:196px" data-in="1"><div class="q-hd2">② 명사 앞에서 꾸밀 때</div><div class="w6-row" style="gap:34px;align-items:flex-start"><div class="w8-slots"><div class="w8-slot"><div class="k-slot k-pre" lang="de" style="width:110px"><span>der</span></div><div class="k-lab" style="width:110px">정관사</div></div><div class="w8-slot"><div class="k-slot k-pre" lang="de" style="width:170px"><span>größ<span class="w8-e">te</span></span></div><div class="k-lab" style="width:170px">최상급</div></div><div class="w8-slot"><div class="k-slot k-pre" lang="de" style="width:150px"><span>Mann</span></div><div class="k-lab" style="width:150px">명사</div></div></div><div class="w8-col" style="padding-top:6px"><span class="q-tg nv">정관사 + -ste</span><span class="w6-ko">가장 큰 남자</span></div></div></div><div class="ab q-band d4" style="left:110px;top:536px;width:1060px;height:74px;gap:14px" data-in="1"><span class="q-mk no" style="width:40px;height:40px;font-size:22px">✕</span><span class="w6-ex q-strike" lang="de" style="font-size:22px">der am größte Mann</span><span class="q-txt">명사 앞에는 am을 쓰지 않아요</span></div>
+</section>
+<section class="scene" id="sC2" data-l="C" data-t="명사 앞 — 어간만 바뀌고 어미는 그대로">
+<div class="ab q-card q-pad" style="left:110px;top:100px;width:620px;height:236px;gap:12px;align-items:stretch;justify-content:flex-start;padding-top:24px" data-in="0"><div class="q-hd2">남성 1격 <small>셋 다 어미 -e (7과 약변화)</small></div><div class="w6-row" style="gap:18px"><span class="w4-lbl" style="min-width:84px">원급</span><span class="w6-ex" lang="de">der schnell<span class="w8-ce">e</span> Mann</span><span class="q-cb c3" style="margin-left:auto;background:#3B6FB6">-e</span></div><div class="w6-row" style="gap:18px"><span class="w4-lbl" style="min-width:84px">비교급</span><span class="w6-ex" lang="de">der schneller<span class="w8-ce">e</span> Mann</span><span class="q-cb c3" style="margin-left:auto;background:#3B6FB6">-e</span></div><div class="w6-row" style="gap:18px"><span class="w4-lbl" style="min-width:84px">최상급</span><span class="w6-ex" lang="de">der schnellst<span class="w8-ce">e</span> Mann</span><span class="q-cb c3" style="margin-left:auto;background:#3B6FB6">-e</span></div></div><div class="ab q-card q-pad d4" style="left:760px;top:100px;width:410px;height:236px;gap:12px;align-items:flex-start;justify-content:flex-start;padding-top:24px" data-in="0"><div class="q-hd2">어간</div><div class="w6-ex" lang="de" style="font-size:21px">schnell → schneller → schnellst</div><div class="q-sub">어미는 명사의 성 · 격이 정해요</div></div><div class="ab w6-tab" style="left:110px;top:364px;width:1060px;height:169px" data-in="1"><div class="th" style="left:0;top:0;width:100px;height:42px"></div><div class="th" style="left:100px;top:0;width:239px;height:42px">m</div><div class="th" style="left:339px;top:0;width:239px;height:42px">f</div><div class="th" style="left:578px;top:0;width:239px;height:42px">n</div><div class="th" style="left:817px;top:0;width:239px;height:42px">pl</div><div class="rb" style="top:42px;height:60px"></div><div class="td lab" style="left:0;top:42px;width:100px;height:60px;font-size:18px">1격</div><div class="td" lang="de" style="left:100px;top:42px;width:239px;height:60px;font-size:22px"><span>der größt<span class="w8-ce">e</span></span></div><div class="td" lang="de" style="left:339px;top:42px;width:239px;height:60px;font-size:22px"><span>die größt<span class="w8-ce">e</span></span></div><div class="td" lang="de" style="left:578px;top:42px;width:239px;height:60px;font-size:22px"><span>das größt<span class="w8-ce">e</span></span></div><div class="td" lang="de" style="left:817px;top:42px;width:239px;height:60px;font-size:22px"><span>die größt<span class="w8-cn">en</span></span></div><div class="rb z" style="top:102px;height:60px"></div><div class="td lab" style="left:0;top:102px;width:100px;height:60px;font-size:18px">4격</div><div class="td" lang="de" style="left:100px;top:102px;width:239px;height:60px;font-size:22px"><span>den größt<span class="w8-cn">en</span></span></div><div class="td" lang="de" style="left:339px;top:102px;width:239px;height:60px;font-size:22px"><span>die größt<span class="w8-ce">e</span></span></div><div class="td" lang="de" style="left:578px;top:102px;width:239px;height:60px;font-size:22px"><span>das größt<span class="w8-ce">e</span></span></div><div class="td" lang="de" style="left:817px;top:102px;width:239px;height:60px;font-size:22px"><span>die größt<span class="w8-cn">en</span></span></div><div class="vl" style="left:100px"></div><div class="vl" style="left:339px"></div><div class="vl" style="left:578px"></div><div class="vl" style="left:817px"></div></div>
+</section>
+<section class="scene" id="sC3" data-l="C" data-t="철자 — -est가 붙는 형용사">
+<div class="ab q-card q-pad" style="left:110px;top:104px;width:1060px;height:150px;gap:14px;align-items:flex-start" data-in="0"><div class="q-hd2">어간 끝이 이 글자면 <small>발음하기 쉽게 -est</small></div><div class="w6-row" style="gap:10px"><span class="w6-pp wh sm" lang="de">-t</span><span class="w6-pp wh sm" lang="de">-d</span><span class="w6-pp wh sm" lang="de">-s</span><span class="w6-pp wh sm" lang="de">-ß</span><span class="w6-pp wh sm" lang="de">-z</span></div></div><div class="ab q-card q-pad d2" style="left:110px;top:282px;width:510px;height:170px;gap:10px;align-items:flex-start" data-in="0"><div class="q-hd2" lang="de">alt</div><span class="w6-ex" lang="de">am ält<span class="w8-e">est</span>en</span><span class="w6-ko">가장 늙은 · 가장 오래된</span></div><div class="ab q-card q-pad d3" style="left:660px;top:282px;width:510px;height:170px;gap:10px;align-items:flex-start" data-in="0"><div class="q-hd2" lang="de">kurz</div><span class="w6-ex" lang="de">am kürz<span class="w8-e">est</span>en</span><span class="w6-ko">가장 짧은</span></div><div class="ab q-band d5" style="left:110px;top:482px;width:1060px;height:74px;gap:12px" data-in="0"><span class="q-bt">예외</span><span class="w6-ex" lang="de" style="font-size:22px">groß → am größten</span><span class="q-mk no" style="width:36px;height:36px;font-size:20px;margin-left:16px">✕</span><span class="w6-ex q-strike" lang="de" style="font-size:22px">am größesten</span></div>
+</section>
+<section class="scene" id="sD" data-l="D" data-t="가장 많이 하는 실수">
+<div class="ab q-card q-pad" style="left:110px;top:110px;width:490px;height:150px;gap:10px;align-items:flex-start" data-in="0"><div class="q-hd2">함정 1 <small>mehr를 또 붙임</small></div><div class="w6-row" style="gap:12px"><span class="q-mk no">✕</span><span class="w6-ex" lang="de">Anna ist <span class="q-strike">mehr groß</span> als Tom.</span></div></div><div class="ab lnk fd d2" style="left:0px;top:0px" data-in="0"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M610 185 L647.0 185.0" stroke="#384568" stroke-width="4"/><path class="ah" d="M660.0 185.0 L646.0 192.7 L646.0 177.3 Z" fill="#384568"/></svg></div><div class="ab q-card q-pad d3" style="left:670px;top:110px;width:500px;height:150px;gap:10px;align-items:flex-start" data-in="0"><div class="q-hd2">고침 <small>비교급 = 형용사 + -er</small></div><div class="w6-row" style="gap:12px"><span class="q-mk ok">✓</span><span class="w6-ex" lang="de">Anna ist größ<span class="w8-e">er</span> als Tom.</span></div></div><div class="ab q-card q-pad" style="left:110px;top:320px;width:490px;height:150px;gap:10px;align-items:flex-start" data-in="1"><div class="q-hd2">함정 2 <small>명사 앞 어미 누락</small></div><div class="w6-row" style="gap:12px"><span class="q-mk no">✕</span><span class="w6-ex" lang="de">Der <span class="q-strike">größer</span> Mann heißt Tom.</span></div></div><div class="ab lnk fd d2" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M610 395 L647.0 395.0" stroke="#384568" stroke-width="4"/><path class="ah" d="M660.0 395.0 L646.0 402.7 L646.0 387.3 Z" fill="#384568"/></svg></div><div class="ab q-card q-pad d3" style="left:670px;top:320px;width:500px;height:150px;gap:10px;align-items:flex-start" data-in="1"><div class="q-hd2">고침 <small>명사 앞이면 어미</small></div><div class="w6-row" style="gap:12px"><span class="q-mk ok">✓</span><span class="w6-ex" lang="de">Der größer<span class="w8-ce">e</span> Mann heißt Tom.</span></div></div><div class="ab q-band d5" style="left:110px;top:530px;width:1060px;height:70px" data-in="1"><span class="q-bt">참고</span><span class="q-txt">mehr는 viel의 비교급일 때만 — Ich lerne mehr als du.</span></div>
+</section>
+<section class="scene" id="sE" data-l="E" data-t="참고 — 불규칙 다섯 · 발음">
+<div class="ab w6-tab" style="left:110px;top:100px;width:1060px;height:299px" data-in="0"><div class="th" style="left:0;top:0;width:150px;height:42px">뜻</div><div class="th" style="left:150px;top:0;width:300px;height:42px">원급</div><div class="th" style="left:450px;top:0;width:300px;height:42px">비교급</div><div class="th" style="left:750px;top:0;width:306px;height:42px">최상급</div><div class="rb" style="top:42px;height:50px"></div><div class="td lab" style="left:0;top:42px;width:150px;height:50px;font-size:18px">좋은</div><div class="td" lang="de" style="left:150px;top:42px;width:300px;height:50px;font-size:22px"><span>gut</span></div><div class="td" lang="de" style="left:450px;top:42px;width:300px;height:50px;font-size:22px"><span>besser</span></div><div class="td" lang="de" style="left:750px;top:42px;width:306px;height:50px;font-size:22px"><span>am besten</span></div><div class="rb z" style="top:92px;height:50px"></div><div class="td lab" style="left:0;top:92px;width:150px;height:50px;font-size:18px">많은</div><div class="td" lang="de" style="left:150px;top:92px;width:300px;height:50px;font-size:22px"><span>viel</span></div><div class="td" lang="de" style="left:450px;top:92px;width:300px;height:50px;font-size:22px"><span>mehr</span></div><div class="td" lang="de" style="left:750px;top:92px;width:306px;height:50px;font-size:22px"><span>am meisten</span></div><div class="rb" style="top:142px;height:50px"></div><div class="td lab" style="left:0;top:142px;width:150px;height:50px;font-size:18px">즐겨</div><div class="td" lang="de" style="left:150px;top:142px;width:300px;height:50px;font-size:22px"><span>gern</span></div><div class="td" lang="de" style="left:450px;top:142px;width:300px;height:50px;font-size:22px"><span>lieber</span></div><div class="td" lang="de" style="left:750px;top:142px;width:306px;height:50px;font-size:22px"><span>am liebsten</span></div><div class="rb z" style="top:192px;height:50px"></div><div class="td lab" style="left:0;top:192px;width:150px;height:50px;font-size:18px">높은</div><div class="td" lang="de" style="left:150px;top:192px;width:300px;height:50px;font-size:22px"><span>hoch</span></div><div class="td" lang="de" style="left:450px;top:192px;width:300px;height:50px;font-size:22px"><span>höher</span></div><div class="td" lang="de" style="left:750px;top:192px;width:306px;height:50px;font-size:22px"><span>am höchsten</span></div><div class="rb" style="top:242px;height:50px"></div><div class="td lab" style="left:0;top:242px;width:150px;height:50px;font-size:18px">가까운</div><div class="td" lang="de" style="left:150px;top:242px;width:300px;height:50px;font-size:22px"><span>nah</span></div><div class="td" lang="de" style="left:450px;top:242px;width:300px;height:50px;font-size:22px"><span>näher</span></div><div class="td" lang="de" style="left:750px;top:242px;width:306px;height:50px;font-size:22px"><span>am nächsten</span></div><div class="vl" style="left:150px"></div><div class="vl" style="left:450px"></div><div class="vl" style="left:750px"></div></div><div class="ab q-card q-pad" style="left:110px;top:430px;width:510px;height:160px;gap:8px;align-items:flex-start" data-in="1"><div class="q-hd2" lang="de">ö <small>‘에’ 소리 + 입술 동그랗게</small></div><span class="w6-ex" lang="de">größer</span><div class="q-sub">‘그뢰서’처럼 들려요</div></div><div class="ab q-card q-pad d3" style="left:660px;top:430px;width:510px;height:160px;gap:8px;align-items:flex-start" data-in="1"><div class="q-hd2" lang="de">ü <small>‘이’ 소리 + 입술 동그랗게</small></div><span class="w6-ex" lang="de">kürzer</span><div class="q-sub">‘퀴르처’처럼 들려요</div></div>
+</section>
+<section class="scene" id="sF" data-l="F" data-t="바로 쓰는 문장">
+<div class="ab q-card q-line" style="left:110px;top:96px;width:1060px;height:92px" data-in="0"><span class="q-rn">1</span><span class="q-mid" lang="de" style="min-width:470px">Anna ist größ<span class="w8-e">er</span> als Tom.</span><span class="q-ko2">안나가 톰보다 커.</span><span class="q-tg nv">o → ö</span></div><div class="ab q-card q-line" style="left:110px;top:202px;width:1060px;height:92px" data-in="1"><span class="q-rn">2</span><span class="q-mid" lang="de" style="min-width:470px">Mein Bruder ist ält<span class="w8-e">er</span> als ich.</span><span class="q-ko2">우리 형이 나보다 나이 많아.</span><span class="q-tg nv">a → ä</span></div><div class="ab q-card q-line" style="left:110px;top:308px;width:1060px;height:92px" data-in="2"><span class="q-rn">3</span><span class="q-mid" lang="de" style="min-width:470px">Ich lerne <span class="w8-eb">mehr</span> als du.</span><span class="q-ko2">나 너보다 더 배워.</span><span class="q-tg nv">viel 불규칙</span></div><div class="ab q-card q-line" style="left:110px;top:414px;width:1060px;height:92px" data-in="3"><span class="q-rn">4</span><span class="q-mid" lang="de" style="min-width:470px">Das ist die <span class="w8-eb">beste</span> Idee.</span><span class="q-ko2">그게 제일 좋은 생각이야.</span><span class="q-tg nv">gut 불규칙</span></div><div class="ab q-card q-line" style="left:110px;top:520px;width:1060px;height:92px" data-in="4"><span class="q-rn">5</span><span class="q-mid" lang="de" style="min-width:470px">Berlin ist <span class="w8-eb">am schönsten</span>.</span><span class="q-ko2">베를린이 제일 예뻐.</span><span class="q-tg nv">am -sten</span></div>
+</section>
+<section class="scene" id="sZ" data-l="정리" data-t="오늘 배운 내용">
+<div class="ab sum" style="left:96px;top:104px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">비교급 = 형용사 + -er</div><div class="se"><span lang="de">Anna ist größer als Tom.</span></div></div><div class="ab sum d2" style="left:652px;top:104px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">‘~보다’ = als</div><div class="se">같은 정도는 <span lang="de">so … wie</span></div></div><div class="ab sum d4" style="left:96px;top:238px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">최상급은 자리에 따라 둘</div><div class="se"><span lang="de">am größten · der größte</span></div></div><div class="ab sum d6" style="left:652px;top:238px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">명사 앞 = 7과 어미</div><div class="se"><span lang="de">der größere · der größte Mann</span></div></div><div class="ab sum d8" style="left:96px;top:372px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">짧은 형용사 움라우트</div><div class="se"><span lang="de">alt → älter · jung → jünger</span></div></div><div class="ab sum d10" style="left:652px;top:372px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">불규칙 · mehr 금지</div><div class="se"><span lang="de">gut – besser – best</span> (mehr groß ✕)</div></div><div class="ab nx" style="left:96px;top:522px;width:1088px" data-in="1"><span class="nl">다음 · 9과</span><span class="nt">화법조동사 · 분리동사</span><span class="nseq" lang="de"><span>kann<small>② 두 번째</small></span><i>…</i><span>sprechen<small>∞ 맨 끝</small></span></span></div><div class="ab endc fd" data-in="2"><img src="../assets/img/070733410e35.png" alt=""><div class="en">Sophia Deutsch Akademie</div><div class="et" lang="en">Innovative Learning Beyond the Traditional</div><div class="el">Lektion 08 · 비교급 · 최상급</div></div>
+</section>
+      <div id="ov" style="--cvt:153px;--cvb:529px;--cvf:104px;--cvw:600px"><div class="cv"><div class="cv-no" aria-hidden="true">08</div><div class="cv-brand"><svg viewBox="0 0 160 184" aria-hidden="true"><path d="M0 47 94 1v93L0 140z" fill="#57585A"/><path d="M33 69 126 22v93L33 161z" fill="#ED1C24"/><path d="M65 90 159 43v93L65 182z" fill="#F3C811"/></svg><b lang="de">Sophia Deutsch Akademie</b><span>소피아 독일어학원</span></div><div class="cv-r"><div class="cv-lk" lang="de">Lektion 08</div><h1 class="cv-t"><span>비교급</span><span>최상급</span></h1><div class="cv-de" lang="de">Komparativ und Superlativ</div></div><div class="cv-foot" aria-hidden="true"><span><kbd>Space</kbd>재생/일시정지</span><span><kbd>← →</kbd>장면 이동</span><span><kbd>M</kbd>나레이션</span><span><kbd>F</kbd>전체 화면</span></div></div><!--/cv--><div id="ovb"><button id="ovp" type="button" aria-label="재생"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></button><div id="ovt">재생</div><div id="ovh"></div><div id="ovv"></div></div></div>
+    </div>
+  </div>
+  <div id="capbox"><p id="cap" aria-live="polite"></p></div>
+  <div id="ctrl">
+    <div id="tlw"><div id="tl" aria-label="장면 이동"></div></div>
+    <div id="bar">
+      <button class="cb" id="prev" type="button" aria-label="이전 장면" title="이전 장면 (←)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2.4v14H6zM19 5.5v13L9.5 12z" fill="currentColor"/></svg></button>
+      <button class="cb" id="play" type="button" aria-label="재생"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></button>
+      <button class="cb" id="next" type="button" aria-label="다음 장면" title="다음 장면 (→)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.6 5H18v14h-2.4zM5 5.5v13L14.5 12z" fill="currentColor"/></svg></button>
+      <span id="time">0:00 / 0:00</span>
+      <span id="where"></span>
+      <button class="tb" id="vo" type="button" aria-pressed="true" title="나레이션 켜기/끄기 (M)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path class="w1" d="M15.5 9a4 4 0 0 1 0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="w2" d="M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="lb">나레이션</span></button>
+      <button class="tb" id="speed" type="button" title="재생 속도">1×</button>
+      <button class="tb" id="cc" type="button" aria-pressed="true" title="자막 켜기/끄기 (C)">자막</button>
+      <button class="cb" id="fs" type="button" aria-label="전체 화면" title="전체 화면 (F)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+</div>
+<script id="narr-audio">
+/* 나레이션 녹음 음성 자리
+   형식: window.__NARR_AUDIO = { 장면id: [ {src:"data:audio/mpeg;base64,...", ms:재생 길이(밀리초)}, ... ], ... }
+   장면 id: sIntro, sA, sB, sB2, sC1, sC2, sC3, sD, sE, sF, sZ (단계 순서대로, 원고 NARR와 같은 개수)
+   비어 있거나 빠진 단계는 기기 음성(TTS)이 원고를 읽는다. */
+window.__NARR_AUDIO = {
+  sIntro:[{src:"../assets/audio/500bea8e5263.mp3",ms:11468},{src:"../assets/audio/c4862d38a91b.mp3",ms:5799}],
+  sA:[{src:"../assets/audio/5fb991c8b0a5.mp3",ms:12774},{src:"../assets/audio/b9470783c180.mp3",ms:15177}],
+  sB:[{src:"../assets/audio/c14ec2a6352a.mp3",ms:12826},{src:"../assets/audio/69949d864042.mp3",ms:29727}],
+  sB2:[{src:"../assets/audio/2c9fb33ff427.mp3",ms:11624}],
+  sC1:[{src:"../assets/audio/686a9b9620cd.mp3",ms:9822},{src:"../assets/audio/3305a08e026f.mp3",ms:10893}],
+  sC2:[{src:"../assets/audio/31eb930e20eb.mp3",ms:14576},{src:"../assets/audio/ec484f5399c2.mp3",ms:9509}],
+  sC3:[{src:"../assets/audio/2153da3f38db.mp3",ms:12826}],
+  sD:[{src:"../assets/audio/a217d86ab0a9.mp3",ms:16849},{src:"../assets/audio/db353a950864.mp3",ms:14158}],
+  sE:[{src:"../assets/audio/493eb652858c.mp3",ms:15464},{src:"../assets/audio/16fc22919a53.mp3",ms:16327}],
+  sF:[{src:"../assets/audio/de1af80d6767.mp3",ms:7184},{src:"../assets/audio/e4687c606bab.mp3",ms:4493},{src:"../assets/audio/63dc5157572d.mp3",ms:4284},{src:"../assets/audio/02e21196de2a.mp3",ms:4310},{src:"../assets/audio/4660c23d5503.mp3",ms:3814}],
+  sZ:[{src:"../assets/audio/b6dfe549d80c.mp3",ms:23406},{src:"../assets/audio/c910de978fd1.mp3",ms:9613},{src:"../assets/audio/ae75c1ccbecb.mp3",ms:6374}]
+};
+</script>
+<script>
+/* ── 나레이션 원고 ──
+   [[독일어|한국어 발음]] : 독일어 음성으로 읽고, 독일어 음성이 없으면 한국어 발음 표기를 읽는다 */
+var NARR = {
+  sIntro:[
+    "이번 과에서는 비교급하고 최상급을 배웁니다. '더 빠르다', '가장 빠르다'를 독일어는 형용사의 끝을 바꿔서 말해요.",
+    "빠르다는 이렇게 바뀌어요. [[schnell, schneller, am schnellsten.|schnell, schneller, am schnellsten.]]"
+  ],
+  sA:[
+    "먼저 한국어부터 볼게요. 한국어는 형용사를 그대로 두고, 앞에 '더'나 '가장'을 붙이죠. '빠르다'의 모양은 바뀌지 않아요.",
+    "독일어는 형용사의 끝이 바뀌어요. 기차는 버스보다 더 빠르고, 기차가 가장 빠르다는 이렇게 말해요. [[Der Zug ist schneller als der Bus.|Der Zug ist schneller als der Bus.]] [[Der Zug ist am schnellsten.|Der Zug ist am schnellsten.]]"
+  ],
+  sB:[
+    "비교급은 형용사에 비교급 어미를 붙여서 만들어요. '보다'에 해당하는 말은 이 한 단어뿐이에요. [[als.|als.]] [[Anna ist größer als Tom.|Anna ist größer als Tom.]]",
+    "짧은 형용사는 비교급에서 모음 위에 점 두 개가 붙어요. 아는 애, 오는 외, 우는 위 소리로 바뀌죠. 이중모음이 있거나 긴 형용사는 그대로예요. [[alt, älter, groß, größer, jung, jünger.|alt, älter, groß, größer, jung, jünger.]] [[laut, lauter, langsam, langsamer.|laut, lauter, langsam, langsamer.]]"
+  ],
+  sB2:[
+    "서로 다르면 비교급을 쓰고, 정도가 같으면 원급을 써서 이렇게 말해요. [[Tom ist größer als Anna.|Tom ist größer als Anna.]] [[Tom ist so groß wie Anna.|Tom ist so groß wie Anna.]]"
+  ],
+  sC1:[
+    "최상급은 쓰는 자리에 따라 두 가지예요. 동사 뒤에서 설명할 때는 이렇게 말해요. [[Anna ist am größten.|Anna ist am größten.]]",
+    "명사 앞에서 꾸밀 때는 정관사하고 함께 이렇게 써요. 명사 앞에는 동사 뒤의 형태를 쓰지 않아요. [[Der größte Mann heißt Tom.|Der größte Mann heißt Tom.]]"
+  ],
+  sC2:[
+    "명사 앞에서는 지난 과에서 배운 형용사 어미를 그대로 붙여요. 어간만 바뀌고, 남성 1격의 어미는 셋 다 같아요. [[der schnelle Mann, der schnellere Mann, der schnellste Mann.|der schnelle Mann, der schnellere Mann, der schnellste Mann.]]",
+    "표로 보면 약변화하고 똑같아요. 남성 4격하고 복수만 '엔'이에요. [[Ich sehe den größten Mann.|Ich sehe den größten Mann.]]"
+  ],
+  sC3:[
+    "어간이 이런 글자로 끝나면 발음하기 쉽게 모음을 하나 더 넣어요. [[am ältesten, am kürzesten.|am ältesten, am kürzesten.]] 크다는 예외라서 그대로예요. [[am größten.|am größten.]]"
+  ],
+  sD:[
+    "가장 많이 하는 실수예요. 한국어의 '더'를 그대로 옮겨서 형용사 앞에 낱말을 하나 더 붙이는 거예요. '더'라는 뜻은 비교급 어미가 이미 담고 있어요. [[Anna ist größer als Tom.|Anna ist größer als Tom.]]",
+    "명사 앞에서 어미를 빼먹는 실수도 많아요. 비교급이든 최상급이든 명사 앞이면 어미를 붙여요. [[Der größere Mann heißt Tom.|Der größere Mann heißt Tom.]] [[Der größte Mann heißt Tom.|Der größte Mann heißt Tom.]]"
+  ],
+  sE:[
+    "다섯 개는 형태가 불규칙이라서 함께 외워요. [[gut, besser, am besten.|gut, besser, am besten.]] [[viel, mehr, am meisten.|viel, mehr, am meisten.]] [[gern, lieber, am liebsten.|gern, lieber, am liebsten.]]",
+    "발음도 볼게요. 점 두 개가 붙은 오는 '에' 소리를 내면서 입술을 동그랗게, 점 두 개가 붙은 우는 '이' 소리를 내면서 입술을 동그랗게 만들어요. [[größer, kürzer.|größer, kürzer.]]"
+  ],
+  sF:[
+    "바로 쓸 수 있는 문장이에요. '안나가 톰보다 커.' [[Anna ist größer als Tom.|Anna ist größer als Tom.]]",
+    "'우리 형이 나보다 나이 많아.' [[Mein Bruder ist älter als ich.|Mein Bruder ist älter als ich.]]",
+    "'나 너보다 더 배워.' [[Ich lerne mehr als du.|Ich lerne mehr als du.]]",
+    "'그게 제일 좋은 생각이야.' [[Das ist die beste Idee.|Das ist die beste Idee.]]",
+    "'베를린이 제일 예뻐.' [[Berlin ist am schönsten.|Berlin ist am schönsten.]]"
+  ],
+  sZ:[
+    "오늘 배운 걸 정리해 볼게요. 비교급은 형용사에 어미를 붙이고, '보다'는 한 단어로 말해요. 최상급은 동사 뒤에서 한 가지, 명사 앞에서는 정관사하고 함께 써요. 명사 앞에서는 지난 과의 어미를 그대로 붙이고, 형용사 앞에 낱말을 하나 더 붙이지 않아요.",
+    "다음 과에서는 한 문장에 동사가 둘인 경우를 배워요. 화법조동사하고 분리동사예요. [[Ich kann gut Deutsch sprechen.|Ich kann gut Deutsch sprechen.]]",
+    "이번 과는 여기까지입니다. 교재에 있는 '바로 확인' 문제로 꼭 복습해 보세요."
+  ]
+};
+
+(function(){
+'use strict';
+
+/* ── 자막 (장면 id 순서 = 화면 순서) ──
+   <k1>…</k1> 1격(남색) · <k4>…</k4> 4격(황토색) */
+var CAPS = {
+  sIntro:[
+    "이번 과는 비교급 · 최상급 — 형용사의 끝을 바꿔서 말해요.",
+    "schnell → schnell<b>er</b> → <b>am</b> schnell<b>sten</b>"
+  ],
+  sA:[
+    "한국어: 빠르다 · 더 빠르다 · 가장 빠르다 — 형용사는 그대로",
+    "Der Zug ist schnell<b>er</b> <b>als</b> der Bus. · Der Zug ist <b>am</b> schnell<b>sten</b>."
+  ],
+  sB:[
+    "비교급 = 형용사 + -er, '~보다' = als — Anna ist größ<b>er</b> <b>als</b> Tom.",
+    "짧은 형용사: a·o·u → ä·ö·ü (alt → älter) · laut · langsam은 그대로"
+  ],
+  sB2:[
+    "다를 때 비교급 + als · 같을 때 so + 원급 + wie"
+  ],
+  sC1:[
+    "동사 뒤 최상급: am -sten — Anna ist <b>am</b> größ<b>ten</b>.",
+    "명사 앞 최상급: der -ste — Der größ<b>te</b> Mann heißt Tom. (der am größte ✕)"
+  ],
+  sC2:[
+    "명사 앞: 어간만 바뀌고 어미는 7과 그대로 — der schnell<b>e</b> · schneller<b>e</b> · schnellst<b>e</b> Mann",
+    "약변화와 같아요: 남성 4격 · 복수만 -en (den größten Mann)"
+  ],
+  sC3:[
+    "-t · -d · -s · -ß · -z로 끝나면 -est: am ält<b>est</b>en · am kürz<b>est</b>en (groß는 am größten)"
+  ],
+  sD:[
+    "✕ mehr groß → ✓ größ<b>er</b> (mehr를 또 붙이지 않아요)",
+    "✕ der größer Mann → ✓ der größer<b>e</b> · größt<b>e</b> Mann"
+  ],
+  sE:[
+    "불규칙: gut – besser – am besten · viel – mehr – am meisten · gern – lieber – am liebsten",
+    "발음: ö = '에' + 입술 동그랗게 · ü = '이' + 입술 동그랗게 (größer · kürzer)"
+  ],
+  sF:[
+    "Anna ist größer als Tom. 안나가 톰보다 커.",
+    "Mein Bruder ist älter als ich. 우리 형이 나보다 나이 많아.",
+    "Ich lerne mehr als du. 나 너보다 더 배워.",
+    "Das ist die beste Idee. 그게 제일 좋은 생각이야.",
+    "Berlin ist am schönsten. 베를린이 제일 예뻐."
+  ],
+  sZ:[
+    "오늘 정리: 비교급 -er + als · 최상급 am -sten / der -ste · 명사 앞 어미 그대로",
+    "다음 과: 화법조동사 · 분리동사 — Ich kann gut Deutsch sprechen.",
+    "이번 과는 여기까지예요. 교재의 '바로 확인' 문제로 복습해 보세요."
+  ]
+};
+
+/* 나레이션이 켜져 있을 때 단계별 최소 화면 시간(ms): 움직임이 긴 단계만 따로 둔다 */
+var MINV = {'sA:1':2600};
+var GAP = 800;   // 나레이션이 끝난 뒤 다음 단계까지 쉬는 시간
+
+/* ── 요소 ── */
+var $ = function(s){ return document.querySelector(s); };
+var stage = $('#stage'), frame = $('#frame'), capEl = $('#cap'), capbox = $('#capbox');
+var chrome = $('#chrome'), tag = $('#tag'), tagL = $('#tagL'), tagT = $('#tagT');
+var scenes = Array.prototype.slice.call(stage.querySelectorAll('.scene'));
+var btnPlay = $('#play'), btnPrev = $('#prev'), btnNext = $('#next'), btnSpeed = $('#speed'), btnCap = $('#cc'), btnFs = $('#fs'), btnVo = $('#vo');
+var ov = $('#ov'), ovp = $('#ovp'), ovt = $('#ovt'), ovh = $('#ovh'), ovv = $('#ovv'), timeEl = $('#time'), whereEl = $('#where'), tl = $('#tl');
+
+var ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>';
+var ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>';
+var ICON_REPLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5a7 7 0 1 1-6.6 4.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M4 4.5v5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ── 기기 음성(나레이션) ── */
+var Voice = (function(){
+  var synth = window.speechSynthesis;
+  var supported = !!(synth && window.SpeechSynthesisUtterance);
+  var ko = null, de = null, bad = {}, onchange = null;
+  var KO = ['sunhi', 'yuna', 'google', 'heami', 'injoon', 'hyunsu'];
+  var DE = ['katja', 'amala', 'seraphina', 'anna', 'google', 'hedda', 'petra', 'helena', 'conrad', 'killian', 'stefan', 'markus'];
+  function norm(l){ return String(l || '').replace('_', '-').toLowerCase(); }
+  function key(v){ return v.voiceURI || v.name; }
+  function pick(lang, prefs){
+    if (!supported) return null;
+    var list = [];
+    try { list = synth.getVoices() || []; } catch (e) { list = []; }
+    var online = navigator.onLine !== false;
+    list = list.filter(function(v){ return norm(v.lang).indexOf(lang) === 0 && !bad[key(v)] && (online || v.localService); });
+    if (!list.length) return null;
+    function score(v){
+      var n = String(v.name || '').toLowerCase(), s = 0;
+      if (/natural|neural|premium|enhanced/.test(n)) s += 60;
+      for (var i = 0; i < prefs.length; i++){ if (n.indexOf(prefs[i]) >= 0){ s += 40 - i * 4; break; } }
+      if (norm(v.lang) === (lang === 'ko' ? 'ko-kr' : 'de-de')) s += 5;
+      if (v.localService) s += 2;
+      return s;
+    }
+    return list.slice().sort(function(a, b){ return score(b) - score(a); })[0];
+  }
+  function refresh(){
+    var k0 = ko && ko.name, d0 = de && de.name;
+    ko = pick('ko', KO); de = pick('de', DE);
+    if (onchange && ((ko && ko.name) !== k0 || (de && de.name) !== d0)) onchange();
+  }
+  if (supported){
+    refresh();
+    if (synth.addEventListener) synth.addEventListener('voiceschanged', refresh);
+    else synth.onvoiceschanged = refresh;
+    var tries = 0, poll = setInterval(function(){ tries++; refresh(); if (tries > 16) clearInterval(poll); }, 500);
+  }
+
+  /* [[독일어|한국어 발음]] 표기를 읽을 조각으로 나눈다 */
+  function parse(s){
+    var out = [], re = /\[\[([^\]|]+)\|([^\]]+)\]\]/g, last = 0, m;
+    while ((m = re.exec(s))){
+      if (m.index > last) out.push({l:'ko', t:s.slice(last, m.index)});
+      out.push({l:'de', t:m[1], fb:m[2]});
+      last = re.lastIndex;
+    }
+    if (last < s.length) out.push({l:'ko', t:s.slice(last)});
+    return out;
+  }
+  function build(s){
+    var q = [];
+    parse(s).forEach(function(g){
+      var seg = (g.l === 'de' && !de) ? {l:'ko', t:g.fb + '.'} : g;
+      var t = String(seg.t).replace(/^[\s.,]+/, '').replace(/\s+$/, '');
+      if (!t) return;
+      var p = q[q.length - 1];
+      if (p && p.l === 'ko' && seg.l === 'ko') p.t += ' ' + t;
+      else q.push({l:seg.l, t:t, fb:seg.fb});
+    });
+    var out = [];
+    q.forEach(function(g){
+      if (g.l === 'ko' && g.t.length > 70){
+        g.t.replace(/([.?!])\s+/g, '$1\u0001').split('\u0001').forEach(function(p){ if (p.trim()) out.push({l:'ko', t:p.trim()}); });
+      } else out.push(g);
+    });
+    return out;
+  }
+
+  var token = 0, queue = [], idx = 0, done = null, timer = null, keep = [], rate = 1, paused = false;
+  function finish(ok){ var d = done; done = null; if (d) d(ok); }
+  function step(t){
+    if (t !== token || paused) return;
+    if (idx >= queue.length){ finish(true); return; }
+    var g = queue[idx], v = (g.l === 'de') ? de : ko;
+    if (!v && g.l === 'de' && ko){ g = queue[idx] = {l:'ko', t:g.fb + '.', fb:g.fb}; v = ko; }
+    if (!v){ finish(false); return; }
+    var u = new SpeechSynthesisUtterance(g.t);
+    u.voice = v; u.lang = v.lang;
+    u.rate = Math.max(0.5, Math.min(2, rate * (g.l === 'de' ? 0.88 : 1)));
+    var started = false;
+    u.onstart = function(){ started = true; };
+    u.onend = function(){
+      if (t !== token) return;
+      clearTimeout(timer); idx++;
+      setTimeout(function(){ step(t); }, g.l === 'de' ? 260 : 90);
+    };
+    u.onerror = function(e){
+      if (t !== token) return;
+      clearTimeout(timer);
+      var er = e && e.error;
+      if (er === 'interrupted' || er === 'canceled') return;
+      fail(v, t, false);
+    };
+    keep.push(u); if (keep.length > 40) keep.shift();
+    clearTimeout(timer);
+    timer = setTimeout(function(){ if (t === token && !started && !paused) fail(v, t, true); }, 4500);
+    try { synth.resume(); } catch (e) {}
+    synth.speak(u);
+  }
+  function fail(v, t, byTimeout){
+    var g = queue[idx];
+    if (byTimeout && g && !g.retry){ g.retry = true; token++; var rt = token; try { synth.cancel(); } catch (e) {} setTimeout(function(){ step(rt); }, 120); return; }
+    bad[key(v)] = true;
+    token++; var nt = token;
+    try { synth.cancel(); } catch (e) {}
+    refresh();
+    queue = queue.slice(idx).map(function(x){ return (x.l === 'de' && !de) ? {l:'ko', t:x.fb + '.', fb:x.fb} : x; });
+    idx = 0;
+    if (!ko){ finish(false); return; }
+    setTimeout(function(){ step(nt); }, 120);
+  }
+  function stop(){
+    token++; clearTimeout(timer); paused = false; done = null; queue = []; idx = 0;
+    if (supported){ try { if (synth.speaking || synth.pending) synth.cancel(); } catch (e) {} }
+  }
+  function speak(script, cb, now){
+    stop();
+    if (!ko || !script){ if (cb) cb(false); return; }
+    queue = build(script); idx = 0; done = cb;
+    var t = ++token;
+    if (now) step(t); else setTimeout(function(){ step(t); }, 80);
+  }
+  function pause(){
+    if (!queue.length || idx >= queue.length) return;
+    paused = true; token++; clearTimeout(timer);
+    try { synth.cancel(); } catch (e) {}
+  }
+  function resume(){
+    if (!paused) return;
+    paused = false;
+    var t = ++token;
+    step(t);
+  }
+  function unlock(){
+    if (!supported) return;
+    try { var u = new SpeechSynthesisUtterance(' '); u.volume = 0; synth.speak(u); } catch (e) {}
+  }
+  return {
+    ok: function(){ return !!ko; },
+    speak: speak, stop: stop, pause: pause, resume: resume, unlock: unlock,
+    setRate: function(r){ rate = r; },
+    names: function(){ return {ko: ko ? ko.name : '', de: de ? de.name : ''}; },
+    onChange: function(f){ onchange = f; },
+    refresh: refresh
+  };
+})();
+
+/* ── 파일에 넣은 녹음 음성(있으면 우선 사용) ── */
+var AUD = (typeof window.__NARR_AUDIO === 'object' && window.__NARR_AUDIO) || {};
+function clipOf(sid, bi){
+  var a = AUD[sid] && AUD[sid][bi];
+  if (!a) return null;
+  if (typeof a === 'string') return {src:a, ms:0};
+  return (a && a.src) ? a : null;
+}
+var hasClips = Object.keys(AUD).some(function(k){ return (AUD[k] || []).some(Boolean); });
+var Clip = (function(){
+  /* 파일에 넣은 녹음 음성 재생: 1순위 오디오 요소(첫 터치·클릭 때 미리 풀어 둠), 막히면 2순위 Web Audio */
+  var a = new Audio(), rate = 1, token = 0, done = null, paused = false, mode = 'el', curSrc = null;
+  a.preload = 'auto';
+  try { a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true; } catch (e) {}
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  var SILENT = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAHAAADkQBQUFBQUFBQUFBQUFBQUG1tbW1tbW1tbW1tbW1tioqKioqKioqKioqKioqoqKioqKioqKioqKioqKjFxcXFxcXFxcXFxcXFxeLi4uLi4uLi4uLi4uLi//////////////////8AAAAATGF2YzYwLjMxAAAAAAAAAAAAAAAAJANpAAAAAAAAA5G5oLCCAAAAAAD/+xDEAAPAAAGkAAAAIAAANIAAAARMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVf/7EsQpg8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7EMRTg8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sSxH0DwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sQxKcDwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xLE0IPAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xDE1gPAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==';
+  var AC = window.AudioContext || window.webkitAudioContext, ctx = null, out = null, node = null, cache = {}, order = [], elOk = false;
+  function getCtx(){
+    if (!ctx && AC){ try { ctx = new AC(); out = ctx.createGain(); out.connect(ctx.destination); } catch (e) { ctx = null; } }
+    return ctx;
+  }
+  function unlock(){
+    var c = getCtx();
+    if (c && c.state !== 'running'){
+      try { c.resume(); var sb = c.createBuffer(1, 1, 22050), s = c.createBufferSource(); s.buffer = sb; s.connect(c.destination); s.start(0); } catch (e) {}
+    }
+    if (elOk || done) return;
+    var t = token;
+    try {
+      a.muted = true; a.src = SILENT;
+      var p = a.play();
+      var fin = function(ok){ if (t === token && !done){ try { a.pause(); } catch (e) {} } a.muted = false; if (ok) elOk = true; };
+      if (p && p.then) p.then(function(){ fin(true); }, function(){ fin(false); }); else fin(true);
+    } catch (e) { a.muted = false; }
+  }
+  function finish(ok){ var d = done; done = null; if (d) d(ok); }
+  a.addEventListener('ended', function(){ if (mode === 'el' && done) finish(true); });
+  a.addEventListener('error', function(){ if (mode === 'el' && done) viaWA(); });
+  function stopWA(){ if (node){ try { node.onended = null; node.stop(0); } catch (e) {} node = null; } }
+  function toBuf(s){
+    var b = atob(s.slice(s.indexOf(',') + 1)), n = b.length, u = new Uint8Array(n);
+    for (var i = 0; i < n; i++) u[i] = b.charCodeAt(i);
+    return u.buffer;
+  }
+  function decode(s, ok, bad){
+    if (cache[s]){ ok(cache[s]); return; }
+    var c = getCtx(); if (!c){ bad(); return; }
+    var fired = false;
+    function good(buf){ if (fired) return; fired = true; cache[s] = buf; order.push(s); if (order.length > 3) delete cache[order.shift()]; ok(buf); }
+    function fail(){ if (fired) return; fired = true; bad(); }
+    try {
+      if (s.indexOf('data:') === 0){ var p = c.decodeAudioData(toBuf(s), good, fail); if (p && p.then) p.then(good, fail); }
+      else { fetch(s).then(function(r){ return r.arrayBuffer(); }).then(function(ab){ var p = c.decodeAudioData(ab, good, fail); if (p && p.then) p.then(good, fail); }).catch(fail); }
+    } catch (e) { fail(); }
+  }
+  function viaWA(){
+    var t = token, s0 = curSrc; mode = 'wa';
+    try { a.pause(); } catch (e) {}
+    var c = getCtx(); if (!c || !s0){ finish(false); return; }
+    if (c.state === 'suspended' && !paused){ try { c.resume(); } catch (e) {} }
+    decode(s0, function(buf){
+      if (t !== token) return;
+      stopWA();
+      var s = c.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate; s.connect(out);
+      s.onended = function(){ if (t === token && node === s){ node = null; finish(true); } };
+      node = s; s.start(0);
+      if (paused){ try { c.suspend(); } catch (e) {} }
+    }, function(){ if (t === token) finish(false); });
+  }
+  function stop(){
+    token++; done = null; paused = false; stopWA();
+    try { a.pause(); } catch (e) {}
+    if (ctx && ctx.state === 'suspended' && mode === 'wa'){ try { ctx.resume(); } catch (e) {} }
+  }
+  function play(src, cb){
+    stop();
+    done = cb; curSrc = src; mode = 'el';
+    var t = token;
+    a.muted = false;
+    a.defaultPlaybackRate = rate;
+    a.src = src;
+    a.playbackRate = rate;
+    var p;
+    try { p = a.play(); } catch (e) { viaWA(); return; }
+    if (p && p.catch) p.catch(function(){ if (t === token && mode === 'el' && done) viaWA(); });
+  }
+  function pause(){
+    if (!done) return; paused = true;
+    if (mode === 'wa'){ try { if (ctx) ctx.suspend(); } catch (e) {} }
+    else { try { a.pause(); } catch (e) {} }
+  }
+  function resume(){
+    if (!paused) return; paused = false;
+    if (mode === 'wa'){ try { if (ctx) ctx.resume(); } catch (e) {} return; }
+    var p = a.play();
+    if (p && p.catch) p.catch(function(){ if (done) viaWA(); });
+  }
+  return {play:play, stop:stop, pause:pause, resume:resume, unlock:unlock, el:a,
+          mode:function(){ return mode; },
+          setRate:function(r){ rate = r; a.defaultPlaybackRate = r; a.playbackRate = r; if (node){ try { node.playbackRate.value = r; } catch (e) {} } }};
+})();
+['pointerdown', 'touchend', 'mousedown', 'keydown', 'click'].forEach(function(ev){
+  document.addEventListener(ev, function(){ Clip.unlock(); }, true);
+});
+
+/* ── 단계 목록 ── */
+function autoDur(h){
+  var n = h.replace(/<[^>]+>/g,'').replace(/\s+/g,'').length;
+  return Math.max(4300, 1500 + n * 92);
+}
+function narrEst(s){
+  var de = 0, ko = 0, p = 0;
+  var rest = String(s).replace(/\[\[([^\]|]+)\|[^\]]*\]\]/g, function(_, g){ de += g.length; p += 1; return ' '; });
+  ko = (rest.match(/[\uAC00-\uD7A3]/g) || []).length;
+  p += (rest.match(/[.,?!]/g) || []).length;
+  return 600 + ko * 160 + de * 85 + p * 230;
+}
+function capHTML(h){
+  return h.replace(/<k1>/g,'<b class="c1" lang="de">').replace(/<k3>/g,'<b class="c3" lang="de">').replace(/<k4>/g,'<b class="c4" lang="de">').replace(/<\/k[134]>/g,'</b>');
+}
+var FL = [];
+scenes.forEach(function(sc, si){
+  (CAPS[sc.id] || []).forEach(function(c, bi){
+    var cap = typeof c === 'string' ? c : c.c;
+    var d = (typeof c === 'object' && c.d) ? c.d : autoDur(cap);
+    var n = (typeof NARR !== 'undefined' && NARR[sc.id] && NARR[sc.id][bi]) || '';
+    FL.push({si:si, bi:bi, cap:cap, d:d, n:n, dn:narrEst(n), min:MINV[sc.id + ':' + bi] || 2200, t0:0, clip:clipOf(sc.id, bi)});
+  });
+});
+var TOTAL = 0, sStart = [], sEnd = [];
+
+/* ── 상태 ── */
+var cur = -1, playing = false, el = 0, speed = 1, gen = 0, curSi = -1, started = false, ended = false, capOn = true;
+var voiceOn = true, nState = 'off', nEndEl = 0, nMode = 'tts';
+var SPEEDS = [0.75, 1, 1.25, 1.5];
+
+function narrReady(){ return hasClips || Voice.ok(); }
+function narrActive(){ return voiceOn && narrReady(); }
+function beatCanSpeak(b){ return !!(b.clip || (Voice.ok() && b.n)); }
+function beatDur(b){
+  if (!narrActive()) return b.d;
+  if (b.clip) return Math.max(b.min, (b.clip.ms || b.dn) + GAP);
+  if (Voice.ok() && b.n) return Math.max(b.min, b.dn + GAP);
+  return b.d;
+}
+function computeTimes(){
+  TOTAL = 0; var si = -1;
+  FL.forEach(function(b){
+    if (b.si !== si){ si = b.si; sStart[si] = TOTAL; }
+    b.t0 = TOTAL; TOTAL += beatDur(b); sEnd[si] = TOTAL;
+  });
+  segs.forEach(function(seg, i){ seg.style.flexGrow = Math.max(1, sEnd[i] - sStart[i]); });
+}
+
+function setSteps(sc, k, anim){
+  var keepC = sc.className.split(/\s+/).filter(function(c){ return c && !/^[sa]\d+$/.test(c); });
+  for (var i = 0; i <= k; i++) keepC.push('s' + i);
+  if (anim && k >= 0) keepC.push('a' + k);
+  sc.className = keepC.join(' ');
+}
+function preState(sc, k){
+  sc.classList.add('instant');
+  setSteps(sc, k, false);
+  void sc.offsetWidth;
+}
+function play(sc, k){
+  sc.classList.remove('instant');
+  setSteps(sc, k, true);
+}
+
+function switchScene(si){
+  var prev = curSi >= 0 ? scenes[curSi] : null, next = scenes[si];
+  if (prev && prev !== next){
+    prev.classList.remove('on');
+    prev.classList.add('leaving');
+    clearTimeout(prev._t);
+    prev._t = setTimeout(function(){
+      prev.classList.remove('leaving');
+      if (!prev.classList.contains('on')) preState(prev, -1);
+    }, 520);
+  }
+  clearTimeout(next._t);
+  next.classList.remove('leaving');
+  next.classList.add('on');
+  curSi = si;
+}
+
+/* 나레이션 시작 */
+function startNarr(now){
+  var b = FL[cur];
+  if (!narrActive() || !b || !beatCanSpeak(b)){ nState = 'off'; return; }
+  var myGen = gen;
+  function onTts(ok){ if (myGen !== gen) return; if (ok){ nState = 'done'; nEndEl = el; } else nState = 'failed'; }
+  nState = 'speaking';
+  if (b.clip){
+    nMode = 'clip';
+    Clip.play(b.clip.src, function(ok){
+      if (myGen !== gen) return;
+      if (ok){ nState = 'done'; nEndEl = el; return; }
+      nState = 'failed';  /* 녹음 음성이 들어 있는 파일은 기기 음성(TTS)으로 바꿔 읽지 않는다 */
+    });
+    return;
+  }
+  nMode = 'tts';
+  Voice.speak(b.n, onTts, now);
+}
+
+function show(idx, mode){
+  if (idx < 0 || idx >= FL.length) return;
+  var g = ++gen;
+  var b = FL[idx], sc = scenes[b.si];
+  var pb = cur >= 0 ? FL[cur] : null;
+  var sceneChange = !pb || pb.si !== b.si;
+  cur = idx; el = 0; ended = false; nEndEl = 0;
+  Voice.stop(); Clip.stop();
+  nState = (narrActive() && beatCanSpeak(b)) ? 'idle' : 'off';
+  if (sceneChange){
+    preState(sc, b.bi - 1);
+    switchScene(b.si);
+    setTimeout(function(){ if (g === gen) play(sc, b.bi); }, 140);
+  } else if (mode === 'step' && pb.bi === b.bi - 1){
+    play(sc, b.bi);
+  } else {
+    preState(sc, b.bi - 1);
+    requestAnimationFrame(function(){ if (g === gen) play(sc, b.bi); });
+  }
+  if (playing && nState === 'idle'){
+    setTimeout(function(){ if (g === gen && playing && nState === 'idle') startNarr(false); }, sceneChange ? 380 : 160);
+  }
+  setCaption(b.cap);
+  setChrome(b);
+  paint(true);
+  hideOverlay();
+}
+
+function setCaption(h){
+  capEl.classList.remove('in');
+  capEl.innerHTML = capHTML(h);
+  void capEl.offsetWidth;
+  capEl.classList.add('in');
+}
+function setChrome(b){
+  var sc = scenes[b.si], L = sc.getAttribute('data-l'), T = sc.getAttribute('data-t');
+  var hide = !L || (sc.id === 'sZ' && b.bi === 2);
+  chrome.classList.toggle('hide', hide);
+  if (L && (tagL.textContent !== L || tagT.textContent !== T)){
+    tag.classList.remove('in');
+    tagL.textContent = L; tagT.textContent = T;
+    void tag.offsetWidth;
+    tag.classList.add('in');
+  }
+  (function(){ var d = document.getElementById('sdots'); if (!d){ d = document.createElement('span'); d.id = 'sdots'; tag.appendChild(d); }
+    var n = 0; FL.forEach(function(x){ if (x.si === b.si) n++; });
+    var s = ''; for (var i = 0; i < n; i++) s += '<i class="' + (i < b.bi ? 'p' : (i === b.bi ? 'c' : '')) + '"></i>';
+    d.innerHTML = n > 1 ? s : ''; })();
+  whereEl.textContent = (L ? L + ' · ' : '') + T;
+}
+
+/* ── 재생 제어 ── */
+function setPlaying(p){
+  playing = p;
+  btnPlay.innerHTML = p ? ICON_PAUSE : ICON_PLAY;
+  btnPlay.setAttribute('aria-label', p ? '일시정지' : '재생');
+  btnPlay.title = p ? '일시정지 (Space)' : '재생 (Space)';
+  if (p){
+    if (nState === 'paused'){ nState = 'speaking'; if (nMode === 'clip') Clip.resume(); else Voice.resume(); }
+    else if (nState === 'idle') startNarr(true);
+  } else if (nState === 'speaking'){
+    if (nMode === 'clip') Clip.pause(); else Voice.pause();
+    nState = 'paused';
+  }
+}
+function toggle(){
+  if (!started){ start(); return; }
+  if (ended){ show(0, 'jump'); setPlaying(true); return; }
+  setPlaying(!playing);
+}
+function start(){
+  started = true;
+  hideOverlay();
+  if (cur < 0) show(0, 'jump');
+  el = 0;
+  setPlaying(true);
+}
+function next(){ if (cur < FL.length - 1) show(cur + 1, 'step'); }
+function prev(){ show(Math.max(0, cur - 1), 'jump'); }
+function replay(){ show(Math.max(0, cur), 'jump'); }
+
+function hideOverlay(){
+  if (!started) return;
+  ov.classList.add('hide');
+  ov.classList.remove('end');
+  if (document.activeElement === ovp) ovp.blur();
+}
+function showEnd(){
+  ended = true;
+  ovp.innerHTML = ICON_REPLAY;
+  ovp.setAttribute('aria-label', '처음부터 다시 보기');
+  ovt.textContent = '처음부터 다시 보기';
+  ov.classList.add('end');
+  ov.classList.remove('hide');
+}
+
+function beatDone(){
+  var b = FL[cur];
+  if (nState === 'done') return el >= Math.max(b.min, nEndEl + GAP);
+  if (nState === 'off' || nState === 'failed') return el >= b.d;
+  return false;
+}
+var last = 0;
+function loop(ts){
+  var dt = last ? Math.min(80, ts - last) : 0;
+  last = ts;
+  if (playing && cur >= 0){
+    el += dt * speed;
+    if (beatDone()){
+      if (cur < FL.length - 1) show(cur + 1, 'step');
+      else { setPlaying(false); showEnd(); }
+    }
+  }
+  paint(false);
+  requestAnimationFrame(loop);
+}
+
+/* ── 진행 막대 ── */
+var segs = [];
+function fmt(ms){ var s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+function buildTimeline(){
+  var seen = {};
+  scenes.forEach(function(sc, si){
+    var seg = document.createElement('div');
+    seg.className = 'seg';
+    var L = sc.getAttribute('data-l'), T = sc.getAttribute('data-t');
+    seg.title = (L ? L + ' · ' : '') + T;
+    var chl = '', k = L || '표지';
+    if (!seen[k]){ seen[k] = 1; chl = '<b class="chl">' + (L || '▶') + '</b>'; }
+    seg.innerHTML = '<span class="sf"><i></i></span>' + chl;
+    seg.addEventListener('click', function(e){
+      e.stopPropagation();
+      var r = seg.getBoundingClientRect();
+      var f = Math.max(0, Math.min(0.999, (e.clientX - r.left) / r.width));
+      var t = sStart[si] + f * (sEnd[si] - sStart[si]), idx = -1;
+      for (var i = 0; i < FL.length; i++){ if (FL[i].si === si && FL[i].t0 <= t) idx = i; }
+      if (idx < 0){ for (var j = 0; j < FL.length; j++){ if (FL[j].si === si){ idx = j; break; } } }
+      started = true;
+      show(idx, 'jump');
+    });
+    tl.appendChild(seg);
+    segs.push(seg);
+  });
+}
+var lastPaint = -1;
+function paint(force){
+  if (cur < 0) return;
+  var b = FL[cur];
+  var t = b.t0 + Math.min(el, beatDur(b));
+  if (!force && Math.abs(t - lastPaint) < 40) return;
+  lastPaint = t;
+  for (var i = 0; i < segs.length; i++){
+    var f = (t - sStart[i]) / Math.max(1, sEnd[i] - sStart[i]);
+    f = Math.max(0, Math.min(1, f));
+    segs[i].firstChild.firstChild.style.width = (f * 100) + '%';
+    segs[i].classList.toggle('cur', i === b.si);
+  }
+  timeEl.textContent = fmt(t) + ' / ' + fmt(TOTAL);
+}
+
+/* ── 화면 크기 맞춤 ── */
+function layout(){
+  var W = window.innerWidth, H = window.innerHeight;
+  var small = W < 700 || H < 560;
+  var pad = small ? 6 : 16, gap = small ? 6 : 10, ctrlH = 82;
+  var s = (W - 2 * pad) / 1280, capH = 0, cf = 18, cw = 0;
+  for (var i = 0; i < 3; i++){
+    var fw = 1280 * s;
+    cw = Math.max(fw, Math.min(W - 2 * pad, 900));
+    cf = Math.max(15, Math.min(27, fw * 0.021));
+    var lines = capOn ? (cw < 520 ? 4 : (cw < 760 ? 3 : 2)) : 0;
+    capH = capOn ? Math.ceil(lines * cf * 1.55 + (small ? 6 : 12)) : 0;
+    var avail = H - 2 * pad - ctrlH - gap - (capOn ? capH + gap : 0);
+    s = Math.max(0.12, Math.min((W - 2 * pad) / 1280, avail / 720));
+  }
+  var r = document.documentElement.style;
+  r.setProperty('--s', s.toFixed(4));
+  r.setProperty('--fw', (1280 * s).toFixed(1) + 'px');
+  r.setProperty('--fh', (720 * s).toFixed(1) + 'px');
+  r.setProperty('--cw', cw.toFixed(1) + 'px');
+  r.setProperty('--cf', cf.toFixed(1) + 'px');
+  r.setProperty('--ch', capH + 'px');
+  r.setProperty('--pad', pad + 'px');
+  r.setProperty('--gap', gap + 'px');
+}
+
+/* ── 날아가는 칸·늘어나는 칸 위치 재기 ── */
+function pos(e0){
+  var x = 0, y = 0, e = e0;
+  while (e && e !== stage){ x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+  return {x: x + e0.offsetWidth / 2, y: y + e0.offsetHeight / 2};
+}
+function measure(){
+  Array.prototype.forEach.call(stage.querySelectorAll('[data-from]'), function(f){
+    var src = stage.querySelector(f.getAttribute('data-from'));
+    if (!src) return;
+    var a = pos(src), b = pos(f);
+    f.style.setProperty('--fx', (a.x - b.x).toFixed(1) + 'px');
+    f.style.setProperty('--fy', (a.y - b.y).toFixed(1) + 'px');
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.blank'), function(bl){
+    var f = bl.querySelector('.fly');
+    if (f) bl.style.setProperty('--bw', (f.offsetWidth + 6) + 'px');
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.grow'), function(g){
+    g.style.setProperty('--w', g.firstElementChild.offsetWidth + 'px');
+  });
+}
+
+/* ── 음성 표시 ── */
+function voiceInfo(){
+  if (hasClips) return '나레이션: 파일에 넣은 녹음 음성';
+  var n = Voice.names();
+  if (!n.ko) return '이 기기에서 한국어 음성을 찾지 못해 나레이션 없이 자막만 나와요.';
+  return '나레이션 음성: 한국어 ' + n.ko + ' · 독일어 ' + (n.de || '없음(한국어 발음으로 읽기)');
+}
+function updateVoiceUI(){
+  var ok = narrReady();
+  btnVo.disabled = !ok;
+  btnVo.setAttribute('aria-pressed', (ok && voiceOn) ? 'true' : 'false');
+  btnVo.title = ok ? '나레이션 켜기/끄기 (M)' : '이 기기에서 한국어 음성을 찾지 못했어요';
+  if (ovv) ovv.textContent = voiceInfo();
+  if (!started){
+    var mins = Math.max(1, Math.round(TOTAL / 60000));
+    ovh.innerHTML = '<span><b>' + FL.length + '</b> 장면</span><span>약 <b>' + mins + '</b>분</span>';
+  }
+}
+function toggleVoice(){
+  if (!narrReady()) return;
+  voiceOn = !voiceOn;
+  if (!voiceOn){ Voice.stop(); Clip.stop(); nState = 'off'; }
+  else { nState = 'idle'; if (playing) startNarr(true); }
+  computeTimes(); updateVoiceUI(); paint(true);
+}
+Voice.onChange(function(){ computeTimes(); updateVoiceUI(); paint(true); });
+
+/* ── 이벤트 ── */
+btnPlay.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+btnPrev.addEventListener('click', function(e){ e.stopPropagation(); started = true; prev(); });
+btnNext.addEventListener('click', function(e){ e.stopPropagation(); started = true; next(); });
+btnVo.addEventListener('click', function(e){ e.stopPropagation(); toggleVoice(); });
+btnSpeed.addEventListener('click', function(e){
+  e.stopPropagation();
+  var i = SPEEDS.indexOf(speed); speed = SPEEDS[(i + 1) % SPEEDS.length];
+  Voice.setRate(speed); Clip.setRate(speed);
+  btnSpeed.textContent = speed + '×';
+});
+btnCap.addEventListener('click', function(e){
+  e.stopPropagation();
+  capOn = !capOn;
+  capbox.classList.toggle('off', !capOn);
+  btnCap.setAttribute('aria-pressed', capOn ? 'true' : 'false');
+  layout();
+});
+function fsToggle(){
+  var d = document, de = d.documentElement;
+  if (d.fullscreenElement || d.webkitFullscreenElement){ (d.exitFullscreen || d.webkitExitFullscreen).call(d); }
+  else if (de.requestFullscreen){ de.requestFullscreen(); }
+  else if (de.webkitRequestFullscreen){ de.webkitRequestFullscreen(); }
+}
+btnFs.addEventListener('click', function(e){ e.stopPropagation(); fsToggle(); });
+ovp.addEventListener('click', function(e){
+  e.stopPropagation();
+  if (ended){ show(0, 'jump'); setPlaying(true); }
+  else start();
+  hideOverlay();
+});
+ov.addEventListener('click', function(e){ e.stopPropagation(); });
+$('#ovb').addEventListener('click', function(e){ e.stopPropagation(); if (ended) ovp.click(); });
+frame.addEventListener('click', function(){ toggle(); });
+document.addEventListener('keydown', function(e){
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  var k = e.key;
+  if ((k === ' ' || k === 'Enter') && e.target && e.target.closest && e.target.closest('button')) return;
+  if (k === ' ' || k === 'k' || k === 'K'){ e.preventDefault(); toggle(); }
+  else if (k === 'ArrowRight' || k === 'l' || k === 'L'){ e.preventDefault(); started = true; next(); }
+  else if (k === 'ArrowLeft' || k === 'j' || k === 'J'){ e.preventDefault(); started = true; prev(); }
+  else if (k === 'r' || k === 'R'){ replay(); }
+  else if (k === 'f' || k === 'F'){ fsToggle(); }
+  else if (k === 'c' || k === 'C'){ btnCap.click(); }
+  else if (k === 'm' || k === 'M'){ toggleVoice(); }
+  else if (k === 'Home'){ e.preventDefault(); show(0, 'jump'); }
+});
+window.addEventListener('resize', layout);
+document.addEventListener('fullscreenchange', layout);
+window.addEventListener('online', function(){ Voice.refresh(); });
+window.addEventListener('offline', function(){ Voice.refresh(); });
+
+/* ── 시작 ── */
+function init(){
+  layout();
+  measure();
+  buildTimeline();
+  computeTimes();
+  setPlaying(false);
+  ovt.textContent = '재생';
+  updateVoiceUI();
+  show(0, 'jump');
+  requestAnimationFrame(loop);
+  window.__anim = {FL:FL, show:show, get cur(){return cur;}, get TOTAL(){return TOTAL;}, setPlaying:setPlaying, measure:measure,
+    get nState(){return nState;}, get el(){return el;}, get nMode(){return nMode;}, Voice:Voice, Clip:Clip, hasClips:hasClips};
+}
+var inited = false;
+function once(){ if (!inited){ inited = true; init(); } }
+if (document.fonts && document.fonts.ready){
+  document.fonts.ready.then(once);
+  setTimeout(once, 1500);
+} else { once(); }
+})();
+
+</script>
+<script id="cv-js">(function(){var ov=document.getElementById('ov'),cv=ov&&ov.querySelector('.cv'),b=document.getElementById('ovp');
+if(cv&&b)cv.addEventListener('click',function(){if(!ov.classList.contains('end')&&!ov.classList.contains('hide'))b.click();});})();</script><a class="sd-home" href="../../lektion.html?n=08" aria-label="Lektion 08 선택으로 돌아가기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>선택</a>
+<style>.sd-home{position:fixed;left:16px;top:14px;z-index:100;display:flex;align-items:center;gap:6px;height:34px;padding:0 13px;border-radius:999px;background:#fff;color:#4A4A45;font:600 13px/1 'Pretendard Variable',system-ui,sans-serif;text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.12);transition:color .15s,box-shadow .15s}.sd-home:hover,.sd-home:focus-visible{color:#384568;box-shadow:0 0 0 2px #384568;outline:none}.sd-home svg{width:13px;height:13px;flex:none}:fullscreen .sd-home{display:none}@media print{.sd-home{display:none}}</style>
+</body>
+</html>

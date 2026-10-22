@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="../assets/logo.png">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lektion 02 · 인칭대명사 애니메이션</title>
+<style>@font-face{font-family:'Pretendard Variable';font-style:normal;font-display:block;font-weight:45 930;src:url(../assets/fonts/bb7c361536cb.woff2) format('woff2')}</style>
+<style>
+:root{
+  --paper:#FAFAF8;--ink:#1E1E1E;--ink2:#444;--mute:#6B6B66;--line:#E0E0DB;--line2:#ECEAE4;--beige:#F2F0EB;
+  --navy:#384568;--navy-e:#252E48;--navy-s:#ECEDF3;--navy-t:#CCD0E0;
+  --amb:#B87830;--amb-e:#87561A;--amb-i:#985A14;--amb-s:#FFF4E5;--amb-l:#E0C088;
+  --ok:#2D7A56;--ok-s:#E8F5EE;--no:#C44B3A;--no-s:#FBE8E5;
+  --grey:#8A877F;--grey-s:#EFEDE8;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --s:.8;--fw:1024px;--fh:576px;--cw:1024px;--cf:22px;--ch:80px;--pad:16px;--gap:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#E7E5DF;color:var(--ink);
+  font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
+button:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+
+/* ── 플레이어 ── */
+#app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);padding:var(--pad)}
+#frame{position:relative;flex:none;width:var(--fw);height:var(--fh);border-radius:calc(16px * var(--s));overflow:hidden;
+  background:var(--paper);box-shadow:0 1px 2px rgba(40,36,24,.06),0 14px 34px rgba(40,36,24,.12);cursor:pointer}
+#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform:scale(var(--s));transform-origin:0 0;overflow:hidden;background:var(--paper)}
+#capbox{flex:none;width:var(--cw);height:var(--ch);display:flex;align-items:center;justify-content:center;padding:0 10px}
+#capbox.off{display:none}
+#cap{margin:0;max-width:1120px;text-align:center;font-size:var(--cf);line-height:1.55;font-weight:500;color:var(--ink);word-break:keep-all;overflow-wrap:break-word}
+#cap b{font-weight:700}
+#cap .c1{color:var(--navy);font-weight:800}
+#cap .c4{color:var(--amb-i);font-weight:800}
+#cap.in{animation:capIn .45s var(--ease)}
+@keyframes capIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+#ctrl{flex:none;width:var(--cw);user-select:none;-webkit-user-select:none}
+#tlw{position:relative;height:34px}
+#tl{position:absolute;left:0;right:0;top:6px;height:22px;display:flex;gap:3px}
+.seg{position:relative;height:8px;flex-basis:0;cursor:pointer;border-radius:4px}
+.seg .sf{position:absolute;inset:0;border-radius:4px;background:#D5D1C7;overflow:hidden}
+.seg .sf i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--navy)}
+.seg:hover .sf{background:#C9C4B9}
+.seg .chl{position:absolute;left:0;top:12px;font-size:12px;font-weight:800;line-height:1;color:var(--mute);white-space:nowrap;pointer-events:none}
+.seg.cur .chl{color:var(--navy)}
+#bar{display:flex;align-items:center;gap:8px;height:48px}
+.cb{flex:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink2);display:grid;place-items:center;cursor:pointer;padding:0}
+.cb svg{width:20px;height:20px;display:block}
+.cb:hover{border-color:#C9C4B9}
+#play{width:48px;height:48px;border-radius:50%;background:var(--navy);border-color:var(--navy);color:#fff}
+#play svg{width:22px;height:22px}
+#time{flex:none;margin-left:6px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--mute)}
+#where{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.tb{flex:none;height:40px;min-width:48px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:700;color:var(--ink2);cursor:pointer}
+.tb[aria-pressed="false"]{background:var(--grey-s);color:var(--grey)}
+.tb svg{width:17px;height:17px;vertical-align:-3px;margin-right:5px}
+.tb[aria-pressed="false"] .w1,.tb[aria-pressed="false"] .w2{opacity:0}
+.tb:disabled{opacity:.45;cursor:not-allowed}
+@media (max-width:620px){.tb .lb{display:none}.tb svg{margin-right:0}#time{display:none}#where{font-size:13px}.cb{width:36px;height:36px}#play{width:44px;height:44px}.tb{min-width:40px;padding:0 8px;height:36px}}
+
+/* 시작·종료 오버레이 (무대 좌표) */
+#ov{position:absolute;inset:0;z-index:60;display:grid;place-items:center;background:rgba(250,250,248,.82);transition:opacity .35s ease;cursor:default}
+#ov.hide{opacity:0;pointer-events:none}
+#ovb{display:flex;flex-direction:column;align-items:center;gap:20px}
+#ovp{width:128px;height:128px;border-radius:50%;border:0;background:var(--navy);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 28px rgba(56,69,104,.35)}
+#ovp svg{width:54px;height:54px;margin-left:8px}
+#ovt{font-size:30px;font-weight:800;color:var(--ink)}
+#ovh{font-size:19px;color:var(--mute);text-align:center;line-height:1.6}
+#ov.end{background:transparent;align-items:end;padding-bottom:80px}
+#ov.end #ovb{flex-direction:row;gap:18px;padding:12px 30px 12px 12px;background:#fff;border:2px solid var(--line);border-radius:48px;box-shadow:0 8px 24px rgba(40,36,24,.12);cursor:pointer}
+#ov.end #ovp{width:68px;height:68px;box-shadow:none}
+#ov.end #ovp svg{width:32px;height:32px;margin:0}
+#ov.end #ovt{font-size:25px}
+#ov.end #ovh,#ov.end #ovv{display:none}
+#ovv{max-width:900px;font-size:16px;line-height:1.5;color:var(--mute);text-align:center}
+
+/* ── 무대 크롬 ── */
+#chrome{position:absolute;inset:0;z-index:20;pointer-events:none;transition:opacity .4s}
+#chrome.hide{opacity:0}
+#tag{position:absolute;left:56px;top:32px;display:flex;align-items:center;gap:14px}
+#tag.in{animation:tagIn .5s var(--ease)}
+@keyframes tagIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+#tagL{min-width:46px;height:46px;padding:0 10px;border-radius:12px;background:var(--navy);color:#fff;font-size:22px;font-weight:800;display:grid;place-items:center}
+#tagT{font-size:24px;font-weight:700;color:var(--ink)}
+#brand{position:absolute;right:56px;top:42px;display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;color:var(--mute)}
+#brand img{width:22px;height:25px;display:block}
+
+/* ── 장면 공통 ── */
+.scene{position:absolute;inset:0;background:var(--paper);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility 0s linear .45s}
+.scene.on{opacity:1;visibility:visible;z-index:2;transition:opacity .45s ease,visibility 0s}
+.scene.leaving{opacity:1;visibility:visible;z-index:1;transition:none}
+.scene *{transition-property:opacity,transform,background-color,border-color,color,box-shadow,width,left,top,text-decoration-color;transition-duration:.55s;transition-timing-function:var(--ease)}
+.scene.instant *{transition:none!important;animation:none!important}
+.ab{position:absolute}
+.scene [data-in]{opacity:0;transform:translateY(18px)}
+.scene [data-in].up{transform:translateY(-34px)}
+.scene [data-in].pop{transform:scale(.55)}
+.scene [data-in].fl{transform:translateX(-30px)}
+.scene [data-in].fr{transform:translateX(30px)}
+.scene [data-in].fd{transform:none}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}.d4{transition-delay:.48s}
+.d5{transition-delay:.6s}.d6{transition-delay:.72s}.d7{transition-delay:.84s}.d8{transition-delay:.96s}
+.d9{transition-delay:1.08s}.d10{transition-delay:1.2s}.d12{transition-delay:1.44s}.d14{transition-delay:1.68s}
+.d16{transition-delay:1.92s}.d18{transition-delay:2.16s}.d20{transition-delay:2.4s}
+
+/* 타일(명사) · 칩(관사/조사) */
+.tile,.chip{display:inline-grid;place-items:center;white-space:nowrap;border-style:solid;border-width:2px 2px 5px;border-radius:16px;line-height:1;vertical-align:middle;letter-spacing:-.005em}
+.tile{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-color:#E3E0D8 #E3E0D8 #D3CEC2;color:var(--ink);padding:0 .5em;font-weight:720}
+.chip{padding:0 .38em;font-weight:820}
+.k0{background:var(--beige);border-color:#E4E0D6 #E4E0D6 #D1CBBD;color:var(--ink2)}
+.k1{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.k4{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.kg{background:var(--grey-s);border-color:#E2DFD7 #E2DFD7 #CCC7BB;color:var(--grey)}
+.kd{background:#fff;border:3px dashed var(--navy);color:var(--navy)}
+.z132{height:132px;font-size:84px;border-radius:22px;border-bottom-width:7px}
+.z120{height:120px;font-size:76px;border-radius:20px;border-bottom-width:6px}
+.z96{height:96px;font-size:50px}
+.z84{height:84px;font-size:44px;border-radius:15px}
+.z80{height:80px;font-size:42px;border-radius:14px}
+.z72{height:72px;font-size:38px;border-radius:13px}
+.z64{height:64px;font-size:32px;border-radius:12px;border-bottom-width:4px}
+.z56{height:56px;font-size:28px;border-radius:11px;border-bottom-width:4px}
+.jr{border-top-right-radius:0!important;border-bottom-right-radius:0!important;border-right-width:0}
+.jl{border-top-left-radius:0!important;border-bottom-left-radius:0!important}
+.t1{color:var(--navy)}.t4{color:var(--amb-i)}.tg{color:var(--grey)}
+
+/* 글 속 관사 칩 */
+.ic{display:inline-grid;place-items:center;padding:.04em .26em .08em;border-radius:.2em;font-weight:820;line-height:1.1;vertical-align:baseline;border:0}
+.ic.k1{background:var(--navy);color:#fff}
+.ic.k4{background:var(--amb);color:#fff}
+.ic.kd{background:#fff;border:.07em dashed var(--navy);color:var(--navy)}
+
+/* 바뀌는 글자(교체) */
+.sw{display:inline-grid}
+.sw>.fa,.sw>.fb{grid-area:1/1;transition-property:opacity,transform;transition-duration:.5s;transition-timing-function:var(--ease)}
+.sw>.fb{opacity:0;transform:translateY(60%)}
+
+/* ✕ → ✓ 표시 */
+.mark{display:inline-grid;flex:none;width:60px;height:60px}
+.mark>span{grid-area:1/1;border-radius:50%;display:grid;place-items:center;color:#fff}
+.mark .no{background:var(--no)}
+.mark .ok{background:var(--ok)}
+.mark svg{width:58%;height:58%;display:block}
+.mark>.fb{transform:scale(.3) rotate(-90deg)}
+.mk-no,.mk-ok{display:inline-grid;place-items:center;flex:none;width:52px;height:52px;border-radius:50%;color:#fff}
+.mk-no{background:var(--no)}.mk-ok{background:var(--ok)}
+.mk-no svg,.mk-ok svg{width:58%;height:58%}
+
+@media (prefers-reduced-motion:reduce){
+  .scene *{transition-duration:.12s!important;animation:none!important}
+  #cap.in,#tag.in{animation:none}
+}
+
+/* ───── 표지 ───── */
+.ibrand{display:flex;align-items:center;gap:14px;font-size:21px;font-weight:700;color:var(--ink)}
+.ibrand img{width:36px;height:41px;display:block}
+.ilk{font-size:26px;font-weight:750;color:var(--navy)}
+.ititle{font-size:78px;font-weight:820;letter-spacing:-.02em;line-height:1.1;color:var(--ink);white-space:nowrap}
+.ide{font-size:26px;font-weight:500;color:var(--mute)}
+.ihero{display:flex;align-items:center;gap:16px}
+.igl{font-size:36px;font-weight:650;color:var(--ink2)}
+.iline{width:1px;height:330px;background:var(--line)}
+
+/* ───── A 한국어로 먼저 보기 ───── */
+.icw .ring{border-radius:50%;background:#fff;border:6px solid var(--line2);display:grid;place-items:center;color:var(--navy)}
+.icw.cat .ring{width:136px;height:136px}
+.icw.mouse .ring{width:116px;height:116px}
+.icw .ring svg{width:76%;height:76%;display:block}
+#sA.s1 .cat .ring{border-color:var(--navy)}
+#sA.s1 .mouse .ring{border-color:var(--amb)}
+#sA.s2 .cat .ring{border-color:var(--amb)}
+#sA.s2 .mouse .ring{border-color:var(--navy)}
+.chase{width:150px;height:40px;color:var(--navy)}
+.chase svg{width:100%;height:100%;display:block;overflow:visible;transition:transform .7s var(--ease)}
+.chase .dash{animation:march 1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-28}}
+#sA.s2 .chase svg{transform:scaleX(-1);transition-delay:.35s}
+.chase-lb{text-align:center;font-size:21px;font-weight:700;color:var(--mute)}
+.verb{display:inline-grid;place-items:center;height:96px;font-size:50px;font-weight:720;color:var(--ink)}
+#sA .pt{z-index:3;transition-property:left;transition-duration:.9s;transition-timing-function:cubic-bezier(.55,0,.25,1)}
+#sA .pA{left:478px;top:330px}
+#sA .pB{left:720px;top:330px}
+#sA.s2 .pA{left:720px}
+#sA.s2 .pB{left:478px}
+#sA.a2 .pA .hop{animation:hopU .9s cubic-bezier(.55,0,.25,1)}
+#sA.a2 .pB .hop{animation:hopD .9s cubic-bezier(.55,0,.25,1)}
+@keyframes hopU{50%{transform:translateY(-88px)}}
+@keyframes hopD{50%{transform:translateY(88px)}}
+#sA.a1 .pt .chip{animation:ringPulse 1.1s .45s 2}
+@keyframes ringPulse{0%,100%{box-shadow:0 0 0 0 rgba(56,69,104,0)}50%{box-shadow:0 0 0 10px rgba(56,69,104,.16)}}
+.role{position:absolute;left:50%;top:122px;width:200px;margin-left:-100px;text-align:center;font-size:23px;font-weight:800;white-space:nowrap}
+.role::before{content:'';display:block;width:3px;height:16px;margin:0 auto 8px;border-radius:2px;background:currentColor}
+.role.r1{color:var(--navy)}.role.r4{color:var(--amb-i)}
+
+/* ───── B 앞에서 표시 ───── */
+.rlab b{display:block;font-size:30px;font-weight:820;color:var(--ink)}
+.rlab span{display:block;margin-top:6px;font-size:19px;font-weight:600;color:var(--mute)}
+.wg{display:flex;align-items:center}
+.pos{display:flex;flex-direction:column;align-items:center}
+.pos i{display:block;width:100%;height:10px;border:3px solid var(--mute);border-top:0;border-radius:0 0 8px 8px}
+.pos span{margin-top:6px;font-size:24px;font-weight:820;color:var(--mute)}
+#sB.s4 .pos i{border-color:var(--navy)}
+#sB.s4 .pos span{color:var(--navy);transform:scale(1.35)}
+.dgl{font-size:32px;font-weight:650;color:var(--ink2)}
+.term{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:650;color:var(--ink2)}
+.term b{padding:8px 18px;border-radius:12px;background:var(--navy);color:#fff;font-weight:800}
+.capT{text-align:center;font-size:30px;font-weight:800;color:var(--ink)}
+.capR{display:flex;align-items:center;gap:40px}
+.cw{font-size:112px;font-weight:820;line-height:1;letter-spacing:-.01em;display:inline-flex;align-items:baseline}
+.cw .lead{display:inline-grid}
+.cw .lead>span{justify-self:end}
+.capR .sw>span{transition-delay:1.25s}
+.capR.late .sw>span{transition-delay:1.6s}
+.capN{text-align:center;font-size:21px;font-weight:600;color:var(--mute)}
+
+/* ───── C 공통 머리 ───── */
+.csent{display:flex;align-items:center;gap:14px;font-size:46px;font-weight:720;color:var(--ink);white-space:nowrap}
+.blank{position:relative;display:inline-grid;place-items:center;width:156px;height:78px}
+.blank .bx{grid-area:1/1;width:100%;height:100%;border:3px dashed #B6B1A5;border-radius:14px}
+.blank .fly{grid-area:1/1;z-index:4;opacity:0;transform:translate(var(--fx,0px),var(--fy,0px)) scale(.74);
+  transition:opacity .3s ease .7s,transform 1s cubic-bezier(.55,0,.25,1) 1.05s}
+#sC3.s3 .blank .bx{opacity:0;transition-delay:1.9s}
+#sC3 .blank{transition-property:width;transition-duration:.5s}
+#sC3.s3 .blank{width:var(--bw,156px);transition-delay:2s}
+.cgl{font-size:24px;font-weight:600;color:var(--mute)}
+.cgl b{font-weight:800}
+.pill{display:flex;align-items:center;gap:14px;width:440px;height:58px;padding:0 20px 0 10px;background:#fff;border:2px solid var(--line);border-radius:29px;font-size:22px;font-weight:700;color:var(--ink2)}
+.pill .pn{flex:none;width:38px;height:38px;border-radius:50%;background:var(--grey-s);color:var(--grey);display:grid;place-items:center;font-size:19px;font-weight:820}
+.pill .pa{margin-left:auto;font-weight:820;font-size:24px;color:var(--ink)}
+.pill .pa.t4{color:var(--amb-i)}
+
+/* C1 성 */
+.bin{width:330px;height:254px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;overflow:hidden}
+.bh{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--beige);border-bottom:2px solid var(--line2)}
+.bh span{font-size:25px;font-weight:820;color:var(--ink2)}
+.bh b{font-size:40px;font-weight:850;color:var(--navy)}
+.bb{display:flex;flex-wrap:wrap;align-content:flex-start;gap:12px;padding:20px 20px}
+.it{display:inline-flex;align-items:center;gap:9px;height:58px;padding:0 16px;background:var(--paper);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px}
+.it b{font-size:29px;font-weight:820;color:var(--ink)}
+.it i{font-style:normal;font-size:18px;font-weight:600;color:var(--mute)}
+.chen{border-radius:6px;padding:0 2px}
+#sC1.s4 .chen{background:var(--navy);color:#fff}
+.chen-note{text-align:center;font-size:22px;font-weight:800;color:var(--navy)}
+.dict{height:196px;display:flex;align-items:center;gap:30px;padding:0 44px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:22px}
+.dtag{position:absolute;left:28px;top:-17px;padding:4px 14px;border-radius:8px;background:var(--ink2);color:#fff;font-size:17px;font-weight:800}
+.dent{display:flex;align-items:baseline;gap:16px}
+.dent b{font-size:54px;font-weight:850}
+.gm{padding:4px 14px;border-radius:10px;background:var(--navy-s);color:var(--navy);font-size:34px;font-weight:850}
+.dko{font-size:28px;color:var(--mute);font-weight:600}
+.darr{width:64px;color:var(--mute)}
+.darr svg{width:100%;display:block}
+.dres{display:flex;align-items:center;gap:12px}
+.dleg{display:flex;justify-content:center;gap:18px}
+.dleg span{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border-radius:14px;background:#fff;border:2px solid var(--line);font-size:24px;font-weight:650;color:var(--ink2)}
+.dleg b{color:var(--navy);font-weight:850}
+
+/* C2 격 */
+.slot{width:256px;height:254px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;text-align:center}
+.slot .sn{margin-top:30px;font-size:40px;font-weight:850}
+.slot .sk{margin-top:20px;font-size:40px;font-weight:720;color:var(--ink)}
+.slot .sl{margin-top:26px;font-size:22px;font-weight:650;color:var(--mute)}
+.sx1 .sn{color:var(--navy)}.sx4 .sn{color:var(--amb-i)}.sx2 .sn,.sx3 .sn{color:var(--grey)}
+#sC2.s2 .sx4{border-color:var(--amb);box-shadow:0 0 0 7px rgba(184,120,48,.16);transform:translateY(-10px)}
+#sC2.a2 .gl4{animation:txtPulse 1.1s .2s 2}
+@keyframes txtPulse{50%{background:var(--amb-s);box-shadow:0 0 0 6px var(--amb-s)}}
+
+/* C3 표에서 칸 찾기 */
+.grid{width:642px;height:328px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px}
+.gc{position:absolute;display:grid;place-items:center}
+.gh{top:0;width:118px;height:56px;font-size:28px;font-weight:850;color:var(--ink);line-height:1;align-content:center;gap:4px}
+.gh small,.rh small{font-size:14px;font-weight:650;color:var(--mute)}
+.rh{left:0;width:170px;height:68px;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding-left:24px;font-size:24px;font-weight:850;border-top:1px solid var(--line2)}
+.gd{width:118px;height:68px;font-size:30px;font-weight:800;color:#CFCAC0;border-top:1px solid var(--line2)}
+.corner{left:0;top:0;width:170px;height:56px}
+.corner svg{position:absolute;inset:0;width:100%;height:100%}
+.corner .cs{position:absolute;right:16px;top:6px;font-size:16px;font-weight:800;color:var(--mute)}
+.corner .ck{position:absolute;left:18px;bottom:6px;font-size:16px;font-weight:800;color:var(--mute)}
+.band{position:absolute;border-radius:14px;pointer-events:none}
+.band.bc{left:166px;top:-8px;width:126px;height:342px;background:rgba(56,69,104,.07);border:3px solid var(--navy)}
+.band.br{left:-8px;top:256px;width:656px;height:76px;background:rgba(184,120,48,.10);border:3px solid var(--amb)}
+#sC3.s1 .ghm{color:var(--navy)}
+#sC3.s2 .rh4{color:var(--amb-i)}
+.form{display:flex;align-items:center;justify-content:center;gap:16px;font-size:30px;font-weight:820;color:var(--mute)}
+.form span{padding:8px 18px;border-radius:12px;background:#fff;border:2px solid var(--line);color:var(--ink)}
+.form span.fr{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* 알약 활성 상태 */
+.scene [data-act]{transition-property:background-color,border-color,color,opacity,transform}
+
+/* ───── D1 변화표 ───── */
+.ttl{display:flex;align-items:baseline;gap:14px}
+.ttl b{font-size:28px;font-weight:850;color:var(--ink)}
+.ttl span{font-size:20px;font-weight:600;color:var(--mute)}
+.atab{width:550px;height:325px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden}
+.atab .th{position:absolute;top:0;width:100px;height:58px;display:grid;place-items:center;align-content:center;gap:3px;font-size:25px;font-weight:850;line-height:1}
+.atab .th small{font-size:14px;font-weight:650;color:var(--mute)}
+.atab .crn{position:absolute;left:0;top:0;width:150px;height:58px}
+.atab .crn svg{position:absolute;inset:0;width:100%;height:100%}
+.atab .crn .cs{position:absolute;right:14px;top:6px;font-size:15px;font-weight:800;color:var(--mute)}
+.atab .crn .ck{position:absolute;left:16px;bottom:6px;font-size:15px;font-weight:800;color:var(--mute)}
+.tr{position:absolute;left:0;width:546px;height:66px;border-top:1px solid var(--line2);transition-property:top,opacity,background-color!important;transition-duration:.9s!important}
+.tr.r1{top:58px}.tr.r2{top:124px}.tr.r3{top:190px}.tr.r4{top:256px}
+.tr .rh2{position:absolute;left:0;top:0;width:150px;height:66px;display:flex;align-items:center;gap:8px;padding-left:20px;font-size:23px;font-weight:850;color:var(--ink)}
+.tr .rh2 small{font-size:15px;font-weight:650;color:var(--mute)}
+.td{position:absolute;top:0;width:100px;height:66px;display:grid;place-items:center}
+.cv{display:inline-block;padding:5px 11px;border-radius:10px;font-size:29px;font-weight:850;line-height:1.1;color:var(--ink)}
+#sD1.s2 .r4{top:124px}
+#sD1.s2 .r2{top:190px}
+#sD1.s2 .r3{top:256px}
+#sD1.s2 .r1{background:var(--navy-s)}
+#sD1.s2 .r1 .cv,#sD1.s2 .r1 .rh2{color:var(--navy)}
+#sD1.s2 .r4{background:var(--amb-s)}
+#sD1.s2 .r4 .cv,#sD1.s2 .r4 .rh2{color:var(--amb-i)}
+#sD1.s3 .r1 .cm .cv{background:var(--navy);color:#fff}
+#sD1.s3 .r4 .cm .cv{background:var(--amb);color:#fff}
+.bdg{position:absolute;top:112px;height:24px;border-radius:12px;padding:0 10px;display:grid;place-items:center;font-size:14px;font-weight:820;white-space:nowrap;z-index:3}
+.bdg.chg{background:var(--amb);color:#fff}
+.bdg.eq{background:var(--ok-s);color:var(--ok);border:2px solid #BFDFCD}
+.colhl{position:absolute;top:4px;width:94px;height:313px;border:3px dashed var(--amb);border-radius:12px;z-index:4}
+.nopl{padding:8px 16px;border-radius:12px;background:var(--amb-s);border:2px solid var(--amb-l);font-size:19px;font-weight:800;color:var(--amb-i);white-space:nowrap}
+.dban{text-align:center;font-size:31px;font-weight:820;color:var(--navy)}
+
+/* ───── D2 복수 ───── */
+.colh{text-align:center;font-size:25px;font-weight:820;color:var(--ink2)}
+.colh small{display:block;margin-top:4px;font-size:15px;font-weight:650;color:var(--mute)}
+.glab{font-size:23px;font-weight:720;color:var(--mute)}
+.pair{display:flex;align-items:center;gap:12px}
+.parr{width:80px;color:#B6B1A5}
+.parr svg{width:100%;display:block}
+.chg{border-radius:7px;padding:0 1px}
+#sD2.s2 .chg{background:var(--navy-s);color:var(--navy);box-shadow:inset 0 -5px 0 var(--navy)}
+#sD2.a1 .pdie{animation:ringPulse 1.1s 1.1s 2}
+.exrow{display:flex;align-items:center;gap:18px;font-size:36px;font-weight:720;color:var(--ink)}
+.exrow s{color:var(--no);text-decoration-thickness:4px}
+
+/* ───── D3 정관사 vs 부정관사 ───── */
+.panel{width:520px;height:504px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:22px}
+.shelf{position:absolute;left:80px;top:34px;width:360px;height:184px}
+.bk{position:absolute;bottom:14px;border-radius:6px;background:var(--beige);border:3px solid #CEC8BA}
+.bk::before,.bk::after{content:'';position:absolute;left:6px;right:6px;height:3px;border-radius:2px;background:#DAD4C7}
+.bk::before{top:14px}.bk::after{bottom:14px}
+.bk.tg{background:var(--navy);border-color:var(--navy-e)}
+.bk.tg::before,.bk.tg::after{background:rgba(255,255,255,.35)}
+.sline{position:absolute;left:0;right:0;bottom:6px;height:8px;border-radius:4px;background:#D6D1C5}
+.ptr{position:absolute;left:161px;top:-26px;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:18px solid var(--navy)}
+#sD3.s1 .ptr{animation:bob 1.1s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-9px)}}
+.pick{position:absolute;top:-8px;width:68px;height:190px;border:3px dashed var(--navy);border-radius:12px;left:84px}
+#sD3.s2 .pick{animation:pick 4s ease-in-out infinite}
+@keyframes pick{0%,16%{left:84px}25%,41%{left:190px}50%,66%{left:6px}75%,91%{left:250px}100%{left:84px}}
+.ph{position:absolute;left:0;right:0;top:246px;display:flex;justify-content:center;gap:12px}
+.plab{position:absolute;left:0;right:0;top:356px;text-align:center;font-size:21px;font-weight:800;color:var(--navy)}
+.pdes{position:absolute;left:0;right:0;top:392px;text-align:center;font-size:27px;font-weight:600;color:var(--ink2)}
+.pdes b{font-weight:820;color:var(--ink)}
+.pset{position:absolute;left:0;right:0;top:444px;text-align:center}
+.pset span{display:inline-block;padding:6px 16px;border-radius:20px;background:var(--navy-s);font-size:19px;font-weight:800;color:var(--navy)}
+#sD3.s1 .pd{border-color:var(--navy);box-shadow:0 0 0 7px rgba(56,69,104,.10)}
+#sD3.s1 .pi{opacity:.4}
+#sD3.s2 .pi{opacity:1;border-color:var(--navy);box-shadow:0 0 0 7px rgba(56,69,104,.10)}
+#sD3.s2 .pd{opacity:.4;border-color:var(--line);box-shadow:none}
+
+/* ───── D4 처음엔 ein, 다시 der ───── */
+.bub{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:22px;padding:24px 30px 22px 92px}
+.bn{position:absolute;left:28px;top:30px;width:42px;height:42px;border-radius:50%;background:var(--ink2);color:#fff;display:grid;place-items:center;font-size:21px;font-weight:820}
+.bs{font-size:46px;font-weight:720;color:var(--ink);line-height:1.2}
+.bko{margin-top:8px;font-size:23px;font-weight:600;color:var(--mute)}
+.bt{margin-top:14px;font-size:19px;font-weight:800;color:var(--navy)}
+.dog{width:190px;text-align:center}
+.dog .ring{width:170px;height:170px;margin:0 auto;border-radius:50%;background:#fff;border:5px dashed var(--navy);display:grid;place-items:center;color:var(--navy)}
+.dog .ring svg{width:74%;height:74%;display:block}
+#sD4.s1 .dog .ring{border-style:solid;box-shadow:0 0 0 8px rgba(56,69,104,.10)}
+.dq{position:absolute;right:6px;top:4px;width:48px;height:48px;border-radius:50%;background:var(--ink2);color:#fff;display:grid;place-items:center;font-size:28px;font-weight:850}
+.dlb{margin-top:10px;font-size:22px;font-weight:800;color:var(--navy)}
+.exc{display:flex;align-items:center;gap:30px;height:100px;padding:0 30px;background:var(--navy-s);border-radius:20px;font-size:25px;color:var(--ink)}
+.exc>b{font-size:20px;font-weight:820;color:var(--navy)}
+.exc>span{display:inline-flex;align-items:center;gap:10px;font-weight:720}
+.exc>span em{font-style:normal;font-weight:600;color:var(--mute);font-size:20px}
+.exc svg{width:40px;height:40px;color:var(--navy);display:block}
+
+/* ───── E 실수 ───── */
+.card{background:#fff;border:2px solid var(--line);border-left:10px solid var(--no);border-bottom-width:5px;border-radius:20px;padding:24px 34px}
+.eh{display:flex;align-items:center;gap:14px}
+.trap{padding:5px 12px;border-radius:8px;background:var(--no);color:#fff;font-size:17px;font-weight:820}
+.eh b{font-size:29px;font-weight:820}
+.ew{margin-top:8px;font-size:20px;font-weight:600;color:var(--mute)}
+.es{margin-top:26px;display:flex;align-items:center;gap:26px}
+.sent{display:flex;align-items:center;font-size:52px;font-weight:720;color:var(--ink);white-space:nowrap}
+.sent>.w{margin-right:.28em}
+.grow{display:inline-block;width:0;overflow:hidden;white-space:nowrap;transition-property:width!important;transition-duration:.7s!important}
+.grow .gi{display:inline-block;padding-right:.28em}
+.err{text-decoration:underline wavy var(--no);text-decoration-thickness:3px;text-underline-offset:12px}
+#sE.s1 .e1 .err{text-decoration-color:transparent}
+#sE.s1 .e1{border-left-color:var(--ok)}
+#sE.s3 .e2{border-left-color:var(--ok)}
+#sE .e2 .ic{box-shadow:0 0 0 4px #fff,0 0 0 8px var(--no)}
+#sE.s3 .e2 .ic{box-shadow:0 0 0 4px #fff,0 0 0 8px transparent;transition-delay:.3s}
+.eko{position:absolute;right:40px;bottom:34px;font-size:25px;font-weight:720;color:var(--ok)}
+#sE.s1 .e1 .grow{transition-delay:.25s}
+
+/* ───── F 참고 ───── */
+.gcard{width:340px;height:300px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;padding:20px 24px}
+.gch{display:flex;align-items:center;justify-content:space-between}
+.gch .gl{font-size:25px;font-weight:820;color:var(--ink2)}
+.ends{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 14px}
+.end{padding:5px 11px;border-radius:9px;background:var(--beige);font-size:22px;font-weight:820;color:var(--ink)}
+.end small{font-size:16px;font-weight:650;color:var(--mute);margin-left:4px}
+.gx{font-size:23px;font-weight:650;line-height:1.72;color:var(--ink)}
+.gx u{text-decoration:none;background:var(--navy-s);color:var(--navy);border-radius:5px;padding:0 2px;font-weight:820}
+.gx small{color:var(--mute);font-size:17px;font-weight:600;margin-left:8px}
+.fnote{font-size:21px;font-weight:650;color:var(--mute)}
+.cmp{display:flex;align-items:center;gap:12px}
+.plus{font-size:34px;font-weight:700;color:var(--mute);padding:0 2px}
+.cmp .parr{width:58px}
+.cko{margin-left:10px;font-size:23px;font-weight:650;color:var(--mute)}
+.cmp u{text-decoration:none;border-bottom:4px solid var(--navy)}
+.pc{width:420px;height:372px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:24px;text-align:center}
+.pc .pl{margin-top:36px;font-size:140px;font-weight:850;line-height:1;color:var(--navy);letter-spacing:.02em}
+.pc .ps{margin-top:18px;font-size:34px;font-weight:820;color:var(--ink)}
+.pc .pe{margin-top:24px;font-size:27px;font-weight:600;color:var(--ink2)}
+.pc .pe b{font-weight:820;color:var(--ink)}
+
+/* ───── G 바로 쓰는 문장 ───── */
+.srow{width:1088px;height:104px;border-bottom:1px solid var(--line2)}
+.gs{position:absolute;left:0;top:6px;font-size:42px;font-weight:720;color:var(--ink);white-space:nowrap}
+.gp{position:absolute;left:2px;top:64px;font-size:18px;font-weight:600;color:var(--mute)}
+.gk{position:absolute;right:0;top:18px;font-size:26px;font-weight:650;color:var(--ink2);text-align:right}
+.gfoot{font-size:18px;font-weight:600;color:var(--mute)}
+
+/* ───── 정리 ───── */
+.sum{width:532px;height:116px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px}
+.sum .sc{position:absolute;left:22px;top:24px;width:38px;height:38px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center}
+.sum .sc svg{width:60%;height:60%}
+.sum .st{position:absolute;left:78px;top:20px;font-size:24px;font-weight:820;color:var(--ink);white-space:nowrap}
+.sum .se{position:absolute;left:78px;top:62px;font-size:23px;font-weight:650;color:var(--ink2);white-space:nowrap}
+.sum .se .x{color:var(--no);text-decoration:line-through}
+.nx{display:flex;align-items:center;gap:22px;height:96px;padding:0 32px;background:var(--navy);border-radius:20px;color:#fff}
+.nx .nl{font-size:20px;font-weight:700;opacity:.8}
+.nx .nt{font-size:28px;font-weight:820}
+.nx .nseq{margin-left:auto;display:flex;align-items:center;gap:14px}
+.nx .nseq span{display:inline-grid;place-items:center;gap:2px;padding:6px 16px;border-radius:12px;background:#fff;color:var(--ink);font-size:28px;font-weight:850;line-height:1.05}
+.nx .nseq small{font-size:14px;font-weight:650;color:var(--mute)}
+.nx .nseq i{font-style:normal;font-size:26px;opacity:.7}
+.endc{inset:0;z-index:30;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.endc img{width:92px;height:106px;display:block;margin-bottom:10px}
+.endc .en{font-size:34px;font-weight:820;color:var(--ink)}
+.endc .et{font-size:21px;font-weight:600;font-style:italic;color:var(--navy)}
+.endc .el{margin-top:18px;font-size:19px;font-weight:600;color:var(--mute)}
+
+.scene.s0 [data-in="0"]{opacity:1;transform:none}
+.scene.s1 [data-in="1"]{opacity:1;transform:none}
+.scene.s2 [data-in="2"]{opacity:1;transform:none}
+.scene.s3 [data-in="3"]{opacity:1;transform:none}
+.scene.s4 [data-in="4"]{opacity:1;transform:none}
+.scene.s5 [data-in="5"]{opacity:1;transform:none}
+.scene.s6 [data-in="6"]{opacity:1;transform:none}
+.scene.s7 [data-in="7"]{opacity:1;transform:none}
+.scene.s8 [data-in="8"]{opacity:1;transform:none}
+.scene.s9 [data-in="9"]{opacity:1;transform:none}
+.scene.s0 [data-dim="0"]{opacity:.26}
+.scene.s1 [data-dim="1"]{opacity:.26}
+.scene.s2 [data-dim="2"]{opacity:.26}
+.scene.s3 [data-dim="3"]{opacity:.26}
+.scene.s4 [data-dim="4"]{opacity:.26}
+.scene.s5 [data-dim="5"]{opacity:.26}
+.scene.s6 [data-dim="6"]{opacity:.26}
+.scene.s7 [data-dim="7"]{opacity:.26}
+.scene.s8 [data-dim="8"]{opacity:.26}
+.scene.s9 [data-dim="9"]{opacity:.26}
+.scene.s0 [data-out="0"]{opacity:0;transform:translateY(-14px)}
+.scene.s1 [data-out="1"]{opacity:0;transform:translateY(-14px)}
+.scene.s2 [data-out="2"]{opacity:0;transform:translateY(-14px)}
+.scene.s3 [data-out="3"]{opacity:0;transform:translateY(-14px)}
+.scene.s4 [data-out="4"]{opacity:0;transform:translateY(-14px)}
+.scene.s5 [data-out="5"]{opacity:0;transform:translateY(-14px)}
+.scene.s6 [data-out="6"]{opacity:0;transform:translateY(-14px)}
+.scene.s7 [data-out="7"]{opacity:0;transform:translateY(-14px)}
+.scene.s8 [data-out="8"]{opacity:0;transform:translateY(-14px)}
+.scene.s9 [data-out="9"]{opacity:0;transform:translateY(-14px)}
+.scene.s0 [data-sw="0"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s0 [data-sw="0"]>.fb{opacity:1;transform:none}
+.scene.s0 .mark[data-sw="0"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s0 .mark[data-sw="0"]>.fb{transform:none}
+.scene.s0 [data-sw="0"][data-to="k4"],.scene.s0 [data-cs="0"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s0 [data-sw="0"][data-to="k1"],.scene.s0 [data-cs="0"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s0 .grow[data-grow="0"]{width:var(--w)}
+.scene.s0 .fly[data-fly="0"]{opacity:1;transform:none}
+.scene.s0 [data-act="0"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s0 [data-act="0"] .pn{background:var(--navy);color:#fff}
+.scene.s1 [data-sw="1"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s1 [data-sw="1"]>.fb{opacity:1;transform:none}
+.scene.s1 .mark[data-sw="1"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s1 .mark[data-sw="1"]>.fb{transform:none}
+.scene.s1 [data-sw="1"][data-to="k4"],.scene.s1 [data-cs="1"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s1 [data-sw="1"][data-to="k1"],.scene.s1 [data-cs="1"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s1 .grow[data-grow="1"]{width:var(--w)}
+.scene.s1 .fly[data-fly="1"]{opacity:1;transform:none}
+.scene.s1 [data-act="1"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s1 [data-act="1"] .pn{background:var(--navy);color:#fff}
+.scene.s2 [data-sw="2"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s2 [data-sw="2"]>.fb{opacity:1;transform:none}
+.scene.s2 .mark[data-sw="2"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s2 .mark[data-sw="2"]>.fb{transform:none}
+.scene.s2 [data-sw="2"][data-to="k4"],.scene.s2 [data-cs="2"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s2 [data-sw="2"][data-to="k1"],.scene.s2 [data-cs="2"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s2 .grow[data-grow="2"]{width:var(--w)}
+.scene.s2 .fly[data-fly="2"]{opacity:1;transform:none}
+.scene.s2 [data-act="2"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s2 [data-act="2"] .pn{background:var(--navy);color:#fff}
+.scene.s3 [data-sw="3"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s3 [data-sw="3"]>.fb{opacity:1;transform:none}
+.scene.s3 .mark[data-sw="3"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s3 .mark[data-sw="3"]>.fb{transform:none}
+.scene.s3 [data-sw="3"][data-to="k4"],.scene.s3 [data-cs="3"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s3 [data-sw="3"][data-to="k1"],.scene.s3 [data-cs="3"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s3 .grow[data-grow="3"]{width:var(--w)}
+.scene.s3 .fly[data-fly="3"]{opacity:1;transform:none}
+.scene.s3 [data-act="3"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s3 [data-act="3"] .pn{background:var(--navy);color:#fff}
+.scene.s4 [data-sw="4"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s4 [data-sw="4"]>.fb{opacity:1;transform:none}
+.scene.s4 .mark[data-sw="4"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s4 .mark[data-sw="4"]>.fb{transform:none}
+.scene.s4 [data-sw="4"][data-to="k4"],.scene.s4 [data-cs="4"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s4 [data-sw="4"][data-to="k1"],.scene.s4 [data-cs="4"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s4 .grow[data-grow="4"]{width:var(--w)}
+.scene.s4 .fly[data-fly="4"]{opacity:1;transform:none}
+.scene.s4 [data-act="4"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s4 [data-act="4"] .pn{background:var(--navy);color:#fff}
+.scene.s5 [data-sw="5"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s5 [data-sw="5"]>.fb{opacity:1;transform:none}
+.scene.s5 .mark[data-sw="5"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s5 .mark[data-sw="5"]>.fb{transform:none}
+.scene.s5 [data-sw="5"][data-to="k4"],.scene.s5 [data-cs="5"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s5 [data-sw="5"][data-to="k1"],.scene.s5 [data-cs="5"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s5 .grow[data-grow="5"]{width:var(--w)}
+.scene.s5 .fly[data-fly="5"]{opacity:1;transform:none}
+.scene.s5 [data-act="5"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s5 [data-act="5"] .pn{background:var(--navy);color:#fff}
+.scene.s6 [data-sw="6"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s6 [data-sw="6"]>.fb{opacity:1;transform:none}
+.scene.s6 .mark[data-sw="6"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s6 .mark[data-sw="6"]>.fb{transform:none}
+.scene.s6 [data-sw="6"][data-to="k4"],.scene.s6 [data-cs="6"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s6 [data-sw="6"][data-to="k1"],.scene.s6 [data-cs="6"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s6 .grow[data-grow="6"]{width:var(--w)}
+.scene.s6 .fly[data-fly="6"]{opacity:1;transform:none}
+.scene.s6 [data-act="6"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s6 [data-act="6"] .pn{background:var(--navy);color:#fff}
+.scene.s7 [data-sw="7"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s7 [data-sw="7"]>.fb{opacity:1;transform:none}
+.scene.s7 .mark[data-sw="7"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s7 .mark[data-sw="7"]>.fb{transform:none}
+.scene.s7 [data-sw="7"][data-to="k4"],.scene.s7 [data-cs="7"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s7 [data-sw="7"][data-to="k1"],.scene.s7 [data-cs="7"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s7 .grow[data-grow="7"]{width:var(--w)}
+.scene.s7 .fly[data-fly="7"]{opacity:1;transform:none}
+.scene.s7 [data-act="7"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s7 [data-act="7"] .pn{background:var(--navy);color:#fff}
+.scene.s8 [data-sw="8"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s8 [data-sw="8"]>.fb{opacity:1;transform:none}
+.scene.s8 .mark[data-sw="8"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s8 .mark[data-sw="8"]>.fb{transform:none}
+.scene.s8 [data-sw="8"][data-to="k4"],.scene.s8 [data-cs="8"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s8 [data-sw="8"][data-to="k1"],.scene.s8 [data-cs="8"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s8 .grow[data-grow="8"]{width:var(--w)}
+.scene.s8 .fly[data-fly="8"]{opacity:1;transform:none}
+.scene.s8 [data-act="8"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s8 [data-act="8"] .pn{background:var(--navy);color:#fff}
+.scene.s9 [data-sw="9"]>.fa{opacity:0;transform:translateY(-60%)}
+.scene.s9 [data-sw="9"]>.fb{opacity:1;transform:none}
+.scene.s9 .mark[data-sw="9"]>.fa{transform:scale(.3) rotate(90deg)}
+.scene.s9 .mark[data-sw="9"]>.fb{transform:none}
+.scene.s9 [data-sw="9"][data-to="k4"],.scene.s9 [data-cs="9"][data-to="k4"]{background:var(--amb);border-color:var(--amb) var(--amb) var(--amb-e);color:#fff}
+.scene.s9 [data-sw="9"][data-to="k1"],.scene.s9 [data-cs="9"][data-to="k1"]{background:var(--navy);border-color:var(--navy) var(--navy) var(--navy-e);color:#fff}
+.scene.s9 .grow[data-grow="9"]{width:var(--w)}
+.scene.s9 .fly[data-fly="9"]{opacity:1;transform:none}
+.scene.s9 [data-act="9"]{border-color:var(--navy);background:var(--navy-s);color:var(--ink)}
+.scene.s9 [data-act="9"] .pn{background:var(--navy);color:#fff}
+</style>
+<style id="l02css">
+:root{--tel:#2B7A72;--tel-e:#1C5751;--tel-s:#E4F2EF;--tel-i:#1F6D65}
+.k3{background:var(--tel);border-color:var(--tel) var(--tel) var(--tel-e);color:#fff}
+.t3{color:var(--tel-i)}
+#cap .c3{color:var(--tel-i);font-weight:800}
+.q-gl{font-size:28px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.q-grp{display:flex;justify-content:center}
+.q-role{text-align:center;font-size:25px;font-weight:820;white-space:nowrap}
+.q-role::before{content:'';display:block;width:3px;height:18px;margin:0 auto 10px;border-radius:2px;background:currentColor}
+.q-note{font-size:22px;font-weight:700;color:var(--mute);white-space:nowrap}
+.q-note2{font-size:21px;font-weight:650;color:var(--ink2);text-align:center;white-space:nowrap}
+.q-card{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px}
+.q-hd{position:absolute;left:0;right:0;top:0;height:62px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:25px;font-weight:820;color:var(--ink);border-bottom:2px solid var(--line2)}
+.q-hd small{font-size:18px;font-weight:650;color:var(--mute)}
+.q-rows{position:absolute;left:0;right:0;top:62px;bottom:0;display:flex;flex-direction:column;justify-content:space-evenly;padding:4px 30px}
+.q-r{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.q-lab{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;background:var(--grey-s);color:var(--ink2);font-size:21px;font-weight:750;white-space:nowrap}
+.q-big{font-size:44px;font-weight:820;color:var(--ink);line-height:1.1;white-space:nowrap}
+.q-mid{font-size:32px;font-weight:780;color:var(--ink);line-height:1.25;white-space:nowrap}
+.q-mid u{text-decoration:none;background:var(--grey-s);border-radius:8px;padding:0 6px}
+.q-txt{font-size:23px;font-weight:650;color:var(--ink2);white-space:nowrap}
+.q-ko{font-size:22px;font-weight:650;color:var(--mute);white-space:nowrap}
+.q-ko2{font-size:26px;font-weight:700;color:var(--ink2);white-space:nowrap;margin-right:auto}
+.q-pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 16px;border-radius:999px;font-size:21px;font-weight:800;white-space:nowrap;background:var(--grey-s);color:var(--ink2)}
+.q-pill.c1{background:var(--navy);color:#fff}.q-pill.c3{background:var(--tel);color:#fff}.q-pill.c4{background:var(--amb);color:#fff}
+.q-pill.q-off{background:transparent;border:2px dashed var(--line);color:var(--grey)}
+.q-ctr{display:flex;justify-content:center}
+.q-band{background:var(--navy-s);border-radius:18px;display:flex;align-items:center;gap:18px;padding:0 28px}
+.q-band.q-col{flex-direction:column;align-items:flex-start;justify-content:center;gap:14px}
+.q-bt{font-size:24px;font-weight:820;color:var(--navy);white-space:nowrap}
+.q-seq{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:26px;font-weight:800;color:var(--mute);white-space:nowrap}
+.q-seq b{color:var(--ink)}.q-seq b.t3{color:var(--tel-i)}.q-seq b.t4{color:var(--amb-i)}
+.q-seq i{display:inline-block;width:1px;height:28px;background:var(--navy-t);margin:0 8px}
+.q-box{display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:2px solid var(--line);border-radius:16px;font-size:24px;font-weight:780;color:var(--ink)}
+.q-box.hd{background:var(--beige)}
+.q-arr{display:grid;place-items:center;font-size:26px;font-weight:800;color:var(--mute)}
+.q-fl{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 24px}
+.q-bt2{font-size:26px;font-weight:820;color:var(--ink)}.q-bt2 small{font-size:18px;color:var(--mute);font-weight:700;margin-left:6px}
+.q-bt3{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:820;color:var(--ink)}
+.q-chips{display:flex;flex-wrap:wrap;gap:8px}
+.q-ex{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px}
+.q-exk{font-size:36px;font-weight:800;color:var(--ink)}
+.q-exr{display:flex;align-items:center;gap:12px}
+.q-op{font-size:28px;font-weight:800;color:var(--mute)}
+.q-strike{position:relative;display:inline-block}
+.q-strike::after{content:'';position:absolute;left:-6px;right:-6px;top:52%;height:4px;border-radius:2px;background:var(--no);transform:rotate(-7deg)}
+.q-cbody{position:absolute;left:0;right:0;top:62px;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.q-tab{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;overflow:hidden}
+.q-th,.q-td{position:absolute;display:grid;place-items:center;text-align:center}
+.q-th{font-size:23px;font-weight:850;line-height:1.1;background:var(--beige);align-content:center;gap:2px}
+.q-th small{display:block;font-size:15px;font-weight:650;color:var(--mute)}
+.q-crn{font-size:17px;font-weight:800;color:var(--mute)}
+.q-td{font-size:30px;font-weight:820}
+.q-td.sm{font-size:24px}
+.q-rl{font-size:23px;font-weight:780;color:var(--ink2)}
+.q-rb{position:absolute;left:0;right:0;border-top:1px solid var(--line2)}.q-rb.z{background:#FBFAF7}
+.q-vl{position:absolute;top:0;bottom:0;width:1px;background:var(--line2)}
+.q-hl{position:absolute;border:3px solid var(--tel);border-radius:12px}
+.q-tip{gap:10px}.q-tip>div{display:flex;align-items:center;gap:26px;font-size:50px;font-weight:840;color:var(--ink)}.q-tip i{font-style:normal;color:var(--mute);font-size:36px}
+.q-foot{position:absolute;left:0;right:0;bottom:22px;text-align:center;font-size:22px;font-weight:750;color:var(--ink2)}
+.q-vrow{background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;display:flex;align-items:center;gap:18px;padding:0 26px}
+.q-vrow.trap{border-color:#EFC4BC;background:#FFFBFA}
+.q-verb{display:flex;flex-direction:column;min-width:230px}.q-verb b{font-size:34px;font-weight:840;color:var(--ink)}.q-verb small{font-size:19px;font-weight:650;color:var(--mute)}
+.q-trap{margin-left:auto;padding:6px 14px;border-radius:9px;background:var(--no);color:#fff;font-size:21px;font-weight:820;white-space:nowrap}
+.q-oknote{margin-left:auto;padding:6px 14px;border-radius:9px;background:var(--ok-s);color:var(--ok);font-size:21px;font-weight:820;white-space:nowrap}
+.q-vl2{position:absolute;left:28px;right:28px;top:84px;display:grid;grid-template-columns:1fr 1fr;gap:14px 14px}
+.q-vl2 span,.q-vl3 span{display:flex;align-items:baseline;gap:8px;font-size:19px;font-weight:650;color:var(--mute);white-space:nowrap}
+.q-vl2 b,.q-vl3 b{font-size:28px;font-weight:820;color:var(--ink)}
+.q-vl3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 20px;margin-top:6px}
+.q-ord{display:flex;align-items:center;gap:12px;font-size:24px;font-weight:780;color:var(--ink);white-space:nowrap}
+.q-n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-size:18px;font-weight:800;margin-left:8px}
+.q-mk{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:30px;font-weight:900;flex:none}
+.q-mk.no{background:var(--no)}.q-mk.ok{background:var(--ok)}
+.q-line{display:flex;align-items:center;gap:22px;padding:0 30px}
+.q-ncol{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.q-arr2{font-size:26px;font-weight:800;color:var(--mute);line-height:1}
+.q-pad{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+.q-sp{flex:1}
+.q-pr{display:flex;gap:18px;margin-top:6px}.q-pr span{display:inline-flex;align-items:baseline;gap:8px;padding:6px 16px;border-radius:12px;background:var(--beige);font-size:30px;font-weight:820;color:var(--ink)}.q-pr small{font-size:19px;color:var(--mute);font-weight:700}
+
+/* ── 2과 도식 v2 부품 ── */
+.q-cb{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;font-size:19px;font-weight:800;color:#fff;white-space:nowrap;letter-spacing:-.01em}
+.q-cb.c1{background:var(--navy)}.q-cb.c3{background:var(--tel)}.q-cb.c4{background:var(--amb)}.q-cb.c2{background:#B3AFA6}
+.q-cb.lg{height:42px;padding:0 18px;font-size:22px}
+.q-cb small{font-size:15px;font-weight:700;opacity:.85}
+.lnk{pointer-events:none}
+.lnk svg{display:block;overflow:visible}
+.dr{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1)}
+.ah{opacity:0;transition:opacity .35s ease .65s}
+.q-colc{display:flex;flex-direction:column;align-items:center;gap:12px}
+.q-gl2{font-size:24px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.q-hd2{display:flex;align-items:baseline;gap:10px;font-size:25px;font-weight:820;color:var(--ink);white-space:nowrap}
+.q-hd2 small{font-size:18px;font-weight:700;color:var(--mute)}
+.q-sub{font-size:19px;font-weight:700;color:var(--mute);white-space:nowrap}
+.kp{transition:box-shadow .5s ease}
+.scene.s2 .kp.r1{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--navy)}
+.scene.s2 .kp.r3{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--tel)}
+.scene.s2 .kp.r4{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--amb)}
+.q-wt{display:inline-flex;align-items:center;justify-content:center;height:72px;padding:0 26px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:14px;font-size:40px;font-weight:840;transition:box-shadow .5s ease}
+.q-flag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:12px;font-size:20px;font-weight:800;white-space:nowrap}
+.q-flag.k{background:var(--beige);color:var(--ink2)}.q-flag.d{background:var(--navy);color:#fff}
+.q-node{display:flex;align-items:center;justify-content:center;gap:10px;border-radius:16px;font-size:23px;font-weight:800;white-space:nowrap}
+.q-node.st{background:var(--beige);color:var(--ink2);border:2px dashed #D3CEC3}
+.q-node.res{background:var(--navy);color:#fff;box-shadow:var(--sh1)}
+.q-dec{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:0 24px}
+.q-dh{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:820;color:var(--ink)}
+.q-dh small{font-size:17px;font-weight:700;color:var(--mute)}
+.q-num{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-size:17px;font-weight:800;flex:none}
+.q-mx{background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;overflow:hidden}
+.q-mx .h,.q-mx .c,.q-mx .r{position:absolute;display:grid;place-items:center;text-align:center}
+.q-mx .h{font-size:21px;font-weight:850;background:var(--beige)}
+.q-mx .h small{display:block;font-size:13px;font-weight:700;color:var(--mute)}
+.q-mx .r{font-size:22px;font-weight:780;color:var(--ink2)}
+.q-mx .c{font-size:20px;font-weight:800;color:#CFCAC0}
+.q-mx .ln{position:absolute;left:0;right:0;height:1px;background:var(--line2)}
+.q-mx .vl{position:absolute;top:0;bottom:0;width:1px;background:var(--line2)}
+.q-band2{position:absolute;border-radius:10px}
+.q-cross{position:absolute;display:grid;place-items:center;border-radius:12px;font-size:30px;font-weight:850;color:#fff}
+.q-ex2{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.q-ex2 b{font-weight:850;color:var(--ink)}
+.q-seg{display:flex;align-items:stretch;border-radius:14px;overflow:hidden;border:2px solid var(--line);background:#fff}
+.q-seg span{display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:62px;font-size:21px;font-weight:850;color:#fff;line-height:1.1}
+.q-seg span small{font-size:14px;font-weight:700;opacity:.85}
+.q-seg .s1{background:var(--navy)}.q-seg .s3{background:var(--tel)}.q-seg .s4{background:var(--amb)}
+.q-seg .s2{background:repeating-linear-gradient(135deg,#F3F1EC 0 8px,#E9E6DF 8px 16px);color:#8A857B;text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:var(--no)}
+.q-toks{display:flex;align-items:flex-end;gap:8px}
+.tok{display:inline-flex;flex-direction:column;align-items:center;gap:6px}
+.tok b{display:inline-flex;align-items:center;justify-content:center;height:54px;padding:0 14px;border-radius:12px;background:var(--beige);font-size:28px;font-weight:820;color:var(--ink)}
+.tok small{font-size:15px;font-weight:750;color:var(--mute);white-space:nowrap}
+.tok.p4 b{background:var(--amb);color:#fff}.tok.p3 b{background:var(--tel);color:#fff}.tok.ps b{background:var(--navy);color:#fff}
+.tok.nn b{background:#fff;border:2px solid var(--navy);color:var(--navy)}
+.tok.ey b{background:transparent;border:2px dashed #C9C4B9;color:#B3AEA4;min-width:92px}
+.tok.bl b{background:#fff;border:2px dashed var(--mute);color:var(--mute);min-width:84px}
+.q-grp2{position:absolute;display:flex;align-items:center;gap:10px}
+.q-brk{font-size:18px;font-weight:800;color:var(--mute);white-space:nowrap}
+.q-end{display:inline-flex;align-items:center;justify-content:center;height:62px;min-width:46px;padding:0 10px;border-radius:12px;color:#fff;margin-left:4px}
+.q-end.e3{background:var(--tel)}.q-end.e4{background:var(--amb)}
+.q-stem{font-size:52px;font-weight:840;color:var(--ink)}
+.q-wd{display:flex;align-items:center;font-size:52px;font-weight:840}
+.q-pipe{display:flex;align-items:center;gap:16px;padding:0 24px}
+.q-kh{display:inline-block;line-height:44px;height:44px;padding:0 14px;border-radius:10px;background:var(--beige);font-size:22px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.q-kh b{font-weight:850}
+.q-op2{font-size:26px;font-weight:800;color:var(--mute);width:28px;text-align:center}
+.q-op2.no{color:var(--no)}.q-op2.ok{color:var(--ok)}
+.q-diam{position:absolute}
+.q-box2{position:absolute;display:flex;align-items:center;gap:12px;padding:0 18px;border-radius:14px;background:#fff;border:2px solid var(--line);border-bottom-width:4px;font-size:21px;font-weight:780;color:var(--ink);white-space:nowrap;box-shadow:var(--sh1)}
+.q-dict{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:12px;background:#fff;border:2px solid var(--line);font-size:20px;font-weight:750;color:var(--ink2);white-space:nowrap}
+.q-dict b{color:var(--ink);font-weight:850}
+.q-noun{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.q-noun .g{font-size:16px;font-weight:800;color:var(--mute);letter-spacing:.02em}
+.q-noun .w{font-size:30px;font-weight:820;color:var(--ink)}
+.q-noun .k{font-size:18px;font-weight:650;color:var(--mute)}
+.mu{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:7px;text-decoration-color:#8FA0C8}
+.q-bub{position:relative;display:inline-block;line-height:56px;height:56px;padding:0 20px;border-radius:18px;font-size:27px;font-weight:800;white-space:nowrap}
+.q-bub.q{background:var(--beige);color:var(--ink)}.q-bub.a{background:var(--navy);color:#fff}
+.q-ph{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:14px;font-size:32px;font-weight:850;background:#fff;border:2px solid var(--line);border-bottom-width:4px;color:var(--ink)}
+.q-ph.z{background:var(--navy);color:#fff;border-color:var(--navy)}
+.q-rn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--beige);color:var(--ink2);font-size:17px;font-weight:800;flex:none}
+.q-uline{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:8px}
+.q-uline.t3{text-decoration-color:rgba(43,122,114,.45)}.q-uline.t4{text-decoration-color:rgba(184,120,48,.45)}
+.scene.s0 [data-in="0"] .dr{stroke-dashoffset:0}.scene.s0 [data-in="0"] .ah{opacity:1}
+.scene.s1 [data-in="1"] .dr{stroke-dashoffset:0}.scene.s1 [data-in="1"] .ah{opacity:1}
+.scene.s2 [data-in="2"] .dr{stroke-dashoffset:0}.scene.s2 [data-in="2"] .ah{opacity:1}
+.scene.s3 [data-in="3"] .dr{stroke-dashoffset:0}.scene.s3 [data-in="3"] .ah{opacity:1}
+.scene.s4 [data-in="4"] .dr{stroke-dashoffset:0}.scene.s4 [data-in="4"] .ah{opacity:1}
+.scene.s5 [data-in="5"] .dr{stroke-dashoffset:0}.scene.s5 [data-in="5"] .ah{opacity:1}
+.scene.s6 [data-in="6"] .dr{stroke-dashoffset:0}.scene.s6 [data-in="6"] .ah{opacity:1}
+.scene.s7 [data-in="7"] .dr{stroke-dashoffset:0}.scene.s7 [data-in="7"] .ah{opacity:1}
+.scene.s8 [data-in="8"] .dr{stroke-dashoffset:0}.scene.s8 [data-in="8"] .ah{opacity:1}
+.scene.s9 [data-in="9"] .dr{stroke-dashoffset:0}.scene.s9 [data-in="9"] .ah{opacity:1}
+.tokg{position:relative;display:inline-flex;align-items:flex-end;gap:8px;padding:12px 8px 6px;border:2px dashed #8E99B8;border-radius:16px}
+.tokg em{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#fff;padding:0 8px;font-style:normal;font-size:15px;font-weight:800;color:var(--navy);white-space:nowrap}
+.mu2{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:7px;text-decoration-color:rgba(255,255,255,.55)}
+
+</style>
+<style id="dsv2">
+/* ── 디자인 v2 공통 층: 1·2과 공통, 이후 과도 같은 규칙 ── */
+:root{--tel:#2B7A72;--tel-e:#1C5751;--tel-s:#E4F2EF;--tel-i:#1F6D65;--g2:#9A968D;--g2-s:#EFEDE8;
+  --cb:#E4E0D6;--cbb:#D5CFC2;--sh1:0 1px 2px rgba(37,46,72,.06),0 12px 28px -16px rgba(37,46,72,.30);
+  --sh2:0 2px 6px rgba(37,46,72,.07),0 20px 44px -20px rgba(37,46,72,.38)}
+#stage{background:radial-gradient(circle at 1px 1px,rgba(56,69,104,.085) 1.15px,transparent 1.45px) 0 0/28px 28px,var(--paper)}
+.bin,.dict,.slot,.grid,.atab,.panel,.bub,.card,.gcard,.pc,.sum,.pill,.q-card,.q-tab,.q-vrow,.q-box{border-top-color:var(--cb);border-right-color:var(--cb);border-bottom-color:var(--cbb);box-shadow:var(--sh1)}
+.bin,.dict,.slot,.grid,.pill,.q-box{border-left-color:var(--cb)}
+.atab,.panel,.gcard,.pc,.sum,.q-card,.q-tab,.q-vrow,.bub{border-left-color:var(--cb)}
+.tile{box-shadow:0 10px 18px -14px rgba(37,46,72,.55)}
+.chip.k1,.chip.k3,.chip.k4{box-shadow:0 12px 20px -12px rgba(37,46,72,.55)}
+#tagL{box-shadow:0 8px 16px -10px rgba(37,46,72,.7)}
+#tagT{letter-spacing:-.01em}
+#sdots{display:flex;align-items:center;gap:7px;margin-left:4px}
+#sdots i{display:block;width:8px;height:8px;border-radius:50%;background:#D9D5CC;transition:background .3s,transform .3s}
+#sdots i.p{background:#AEB4C6}
+#sdots i.c{background:var(--navy);transform:scale(1.3)}
+#cap{font-weight:550}
+#cap .c3{color:var(--tel-i);font-weight:800}
+/* 격 표시는 색 배지로 통일(1격 남색 · 3격 청록 · 4격 주황) */
+.role{width:184px;margin-left:-92px;padding:7px 0;border-radius:999px;color:#fff!important;font-size:20px;box-shadow:0 8px 16px -10px rgba(37,46,72,.6)}
+.role.r1{background:var(--navy)}.role.r4{background:var(--amb)}
+.role::before{position:absolute;left:50%;top:-26px;margin:0 0 0 -1.5px}
+.role.r1::before{background:var(--navy)}.role.r4::before{background:var(--amb)}
+</style>
+<style id="cv-css">
+/* ── 시작 화면(표지) ── */
+#ov .cv{display:none}
+#ov:not(.end){display:block;background:var(--paper)}
+#ov:not(.end) .cv{display:block;position:absolute;inset:0;cursor:pointer}
+.cv-brand{position:absolute;left:112px;top:62px;display:flex;align-items:center;gap:14px;font-size:16px;line-height:1;color:var(--ink)}
+.cv-brand svg{width:26px;height:30px;display:block}
+.cv-brand b{font-weight:650;letter-spacing:-.005em}
+.cv-brand span{color:#9A988F;font-weight:450}
+.cv-no{position:absolute;right:104px;top:50%;transform:translateY(-54%);font-size:420px;font-weight:160;line-height:1;letter-spacing:-.05em;color:#ECEBE5;font-variant-numeric:tabular-nums;pointer-events:none}
+.cv-art{position:absolute;right:150px;top:50%;width:250px;height:288px;transform:translateY(-50%)}
+.cv-r{position:absolute;left:112px;top:var(--cvt);width:var(--cvw)}
+.cv-lk{font-size:19px;font-weight:560;line-height:1.3;letter-spacing:.01em;color:#8E8C84}
+.cv-t{margin:18px 0 0;font-size:var(--cvf);font-weight:700;line-height:1.06;letter-spacing:-.04em;color:var(--ink)}
+.cv-t span{display:block}
+.cv-de{margin-top:24px;font-size:27px;font-weight:420;line-height:1.35;color:#77756D;letter-spacing:-.005em}
+#ov:not(.end) #ovb{position:absolute;left:112px;top:var(--cvb);flex-direction:row;align-items:center;gap:18px}
+#ov:not(.end) #ovp{width:64px;height:64px;background:var(--ink);box-shadow:none;transition:transform .2s var(--ease),background-color .2s}
+#ov:not(.end) #ovp:hover{background:var(--navy);transform:scale(1.04)}
+#ov:not(.end) #ovp svg{width:26px;height:26px;margin-left:4px}
+#ov:not(.end) #ovt{font-size:21px;font-weight:650;color:var(--ink)}
+#ov:not(.end) #ovh{display:flex;gap:16px;margin-left:14px;font-size:16px;line-height:1.3;color:#9A988F;text-align:left}
+#ov:not(.end) #ovh b{font-weight:600;color:#6B6B66}
+#ov:not(.end) #ovv{display:none}
+#ovp:focus-visible{outline:3px solid var(--navy);outline-offset:5px}
+.cv-foot{position:absolute;left:112px;right:112px;top:642px;padding-top:18px;border-top:1px solid #E7E5DF;display:flex;gap:34px;font-size:14px;line-height:1.4;color:#A3A198}
+.cv-foot kbd{font:inherit;font-weight:620;color:#77756D;margin-right:8px}
+@keyframes cvUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes cvFade{from{opacity:0}to{opacity:1}}
+#ov:not(.end) .cv-r{animation:cvUp .7s var(--ease) .1s both}
+#ov:not(.end) #ovb{animation:cvUp .7s var(--ease) .22s both}
+#ov:not(.end) .cv-no,#ov:not(.end) .cv-art{animation:cvFade 1.1s ease .05s both}
+@media (prefers-reduced-motion:reduce){#ov .cv *,#ov #ovb{animation:none!important}}
+</style></head>
+<body>
+<div id="app">
+  <div id="frame" role="region" aria-label="Lektion 02 애니메이션 화면">
+    <div id="stage">
+      <div id="chrome" class="hide"><div id="tag"><span id="tagL"></span><span id="tagT"></span></div>
+        <div id="brand"><img src="../assets/img/070733410e35.png" alt=""><span>Lektion 02 · 인칭대명사</span></div></div>
+
+<section class="scene" id="sIntro" data-l="" data-t="표지">
+<div class="ab ibrand" style="left:96px;top:190px" data-in="0"><img src="../assets/img/070733410e35.png" alt=""><span>Sophia Deutsch Akademie</span></div><div class="ab ilk d1" style="left:98px;top:306px" data-in="0">Lektion 02</div><div class="ab ititle d2" style="left:92px;top:350px" data-in="0">인칭대명사</div><div class="ab ide d3" style="left:98px;top:456px" lang="de" data-in="0">Personalpronomen</div><div class="ab iline fd d4" style="left:650px;top:196px" data-in="0"></div><div class="ab q-colc d5" style="left:680px;top:272px;width:140px" data-in="0"><span class="chip k1 z96" lang="de">ich</span><span class="q-cb c1">1격</span><span class="q-gl2">나는</span></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M818 320 L862 320" stroke="#384568" stroke-width="4"/><path class="ah" d="M862.0 320.0 L849.0 327.1 L849.0 312.9 Z" fill="#384568"/></svg></div><div class="ab q-colc d1" style="left:860px;top:272px;width:140px" data-in="1"><span class="chip k3 z96" lang="de">mir</span><span class="q-cb c3">3격</span><span class="q-gl2">나에게</span></div><div class="ab lnk fd d3" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr d3" pathLength="1" d="M999 320 L1043 320" stroke="#384568" stroke-width="4"/><path class="ah" d="M1043.0 320.0 L1030.0 327.1 L1030.0 312.9 Z" fill="#384568"/></svg></div><div class="ab q-colc d4" style="left:1040px;top:272px;width:170px" data-in="1"><span class="chip k4 z96" lang="de">mich</span><span class="q-cb c4">4격</span><span class="q-gl2">나를</span></div>
+</section>
+<section class="scene" id="sA" data-l="A" data-t="한국어로 먼저 보기">
+<div class="ab pop" style="left:580px;top:100px" data-in="0"><span class="tile z120" style="width:120px">나</span></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M640 226 C640 278 300 262 300 314" stroke="#C3BEB3" stroke-width="4"/><path class="ah" d="M300.0 318.0 L292.9 305.0 L307.1 305.0 Z" fill="#C3BEB3"/><path class="dr d2" pathLength="1" d="M640 226 C640 278 640 262 640 314" stroke="#C3BEB3" stroke-width="4"/><path class="ah" d="M640.0 318.0 L632.9 305.0 L647.1 305.0 Z" fill="#C3BEB3"/><path class="dr d4" pathLength="1" d="M640 226 C640 278 980 262 980 314" stroke="#C3BEB3" stroke-width="4"/><path class="ah" d="M980.0 318.0 L972.9 305.0 L987.1 305.0 Z" fill="#C3BEB3"/></svg></div><div class="ab q-grp d2" style="left:170px;top:326px;width:260px" data-in="1"><span class="tile z96 jr">나</span><span class="chip z96 jl k1">는</span></div><div class="ab q-grp d4" style="left:510px;top:326px;width:260px" data-in="1"><span class="tile z96 jr">나</span><span class="chip z96 jl k3">에게</span></div><div class="ab q-grp d6" style="left:850px;top:326px;width:260px" data-in="1"><span class="tile z96 jr">나</span><span class="chip z96 jl k4">를</span></div><div class="ab q-colc d1" style="left:170px;top:444px;width:260px" data-in="2"><span class="q-cb c1 lg">1격</span><span class="q-sub">주어 · ~는</span></div><div class="ab q-colc d3" style="left:510px;top:444px;width:260px" data-in="2"><span class="q-cb c3 lg">3격</span><span class="q-sub">~에게</span></div><div class="ab q-colc d5" style="left:850px;top:444px;width:260px" data-in="2"><span class="q-cb c4 lg">4격</span><span class="q-sub">목적어 · ~를</span></div><div class="ab lnk fd d7" style="left:0px;top:0px" data-in="2"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M200 540 Q200 560 222 560 L618 560 Q640 560 640 580 Q640 560 662 560 L1058 560 Q1080 560 1080 540" stroke="#A9B0C4" stroke-width="3"/></svg></div><div class="ab q-note d8" style="left:290px;top:594px;width:700px;text-align:center" data-in="2">모두 같은 '나' — 자리에 따라 모양만 달라져요</div>
+</section>
+<section class="scene" id="sB" data-l="B" data-t="독일어도 똑같다">
+<div class="ab q-ctr" style="left:150px;top:118px;width:320px" data-in="0"><span class="q-flag k">한국어 · 나</span></div><div class="ab q-ctr d1" style="left:580px;top:124px;width:120px" data-in="0"><span class="q-sub">격(자리)</span></div><div class="ab q-grp d1" style="left:150px;top:196px;width:326px;justify-content:flex-end" data-in="0"><span class="tile z72 jr">나</span><span class="chip z72 jl k1 kp r1">는</span></div><div class="ab q-ctr d2" style="left:580px;top:211px;width:120px" data-in="0"><span class="q-cb c1 lg">1격</span></div><div class="ab d1" style="left:810px;top:196px;width:320px" data-in="1"><span class="q-wt t1 kp r1" lang="de">ich</span></div><div class="ab q-grp d2" style="left:150px;top:296px;width:326px;justify-content:flex-end" data-in="0"><span class="tile z72 jr">나</span><span class="chip z72 jl k3 kp r3">에게</span></div><div class="ab q-ctr d3" style="left:580px;top:311px;width:120px" data-in="0"><span class="q-cb c3 lg">3격</span></div><div class="ab d2" style="left:810px;top:296px;width:320px" data-in="1"><span class="q-wt t3 kp r3" lang="de">mir</span></div><div class="ab q-grp d3" style="left:150px;top:396px;width:326px;justify-content:flex-end" data-in="0"><span class="tile z72 jr">나</span><span class="chip z72 jl k4 kp r4">를</span></div><div class="ab q-ctr d4" style="left:580px;top:411px;width:120px" data-in="0"><span class="q-cb c4 lg">4격</span></div><div class="ab d3" style="left:810px;top:396px;width:320px" data-in="1"><span class="q-wt t4 kp r4" lang="de">mich</span></div><div class="ab lnk fd d3" style="left:0px;top:0px" data-in="0"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M484 232 L574 232" stroke="#C3BEB3" stroke-width="3"/><path class="dr d1" pathLength="1" d="M484 332 L574 332" stroke="#C3BEB3" stroke-width="3"/><path class="dr d2" pathLength="1" d="M484 432 L574 432" stroke="#C3BEB3" stroke-width="3"/></svg></div><div class="ab" style="left:810px;top:118px;width:320px" data-in="1"><span class="q-flag d">독일어 · <span lang="de">ich</span></span></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M706 232 L800 232" stroke="#C3BEB3" stroke-width="3"/><path class="ah" d="M800.0 232.0 L787.0 239.2 L787.0 224.8 Z" fill="#C3BEB3"/><path class="dr d1" pathLength="1" d="M706 332 L800 332" stroke="#C3BEB3" stroke-width="3"/><path class="ah" d="M800.0 332.0 L787.0 339.1 L787.0 324.9 Z" fill="#C3BEB3"/><path class="dr d2" pathLength="1" d="M706 432 L800 432" stroke="#C3BEB3" stroke-width="3"/><path class="ah" d="M800.0 432.0 L787.0 439.1 L787.0 424.9 Z" fill="#C3BEB3"/></svg></div><div class="ab q-ctr" style="left:150px;top:500px;width:326px;justify-content:flex-end" data-in="2"><span class="q-sub">뒤에 붙는 조사만 바뀌어요</span></div><div class="ab d3" style="left:810px;top:496px;width:320px" data-in="2"><span class="q-cb c1">단어 전체가 바뀌어요</span></div><div class="ab q-band" style="left:120px;top:562px;width:1040px;height:100px" data-in="3"><span class="q-bt">'나'만이 아니에요</span><span class="q-seq" lang="de"><b>du</b>→<b class="t3">dir</b>→<b class="t4">dich</b><i></i><b>er</b>→<b class="t3">ihm</b>→<b class="t4">ihn</b><i></i><b>wir</b>→<b class="t3">uns</b>→<b class="t4">uns</b></span></div>
+</section>
+<section class="scene" id="sC" data-l="C" data-t="누구 + 자리 = 두 질문">
+<div class="ab q-node st" style="left:70px;top:96px;width:520px;height:58px" data-in="0">대명사가 필요해요</div><div class="ab lnk fd d1" style="left:0px;top:0px" data-in="0"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M330 158 L330 184" stroke="#C3BEB3" stroke-width="4"/><path class="ah" d="M330.0 184.0 L322.9 171.0 L337.1 171.0 Z" fill="#C3BEB3"/></svg></div><div class="ab q-card q-dec d2" style="left:70px;top:188px;width:520px;height:126px" data-in="0"><div class="q-dh"><span class="q-num">1</span>누구를 가리키나? <small>인칭</small></div><div class="q-chips"><span class="q-pill">나 <span lang="de">ich</span></span><span class="q-pill">너 <span lang="de">du</span></span><span class="q-pill">그 <span lang="de">er</span></span><span class="q-pill">그녀 <span lang="de">sie …</span></span></div></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M330 318 L330 344" stroke="#C3BEB3" stroke-width="4"/><path class="ah" d="M330.0 344.0 L322.9 331.0 L337.1 331.0 Z" fill="#C3BEB3"/></svg></div><div class="ab q-card q-dec d1" style="left:70px;top:348px;width:520px;height:126px" data-in="1"><div class="q-dh"><span class="q-num">2</span>어떤 자리인가? <small>격</small></div><div class="q-chips"><span class="q-cb c1">1격 ~가</span><span class="q-cb c3">3격 ~에게</span><span class="q-cb c4">4격 ~를</span></div></div><div class="ab lnk fd d3" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr d3" pathLength="1" d="M330 478 L330 504" stroke="#C3BEB3" stroke-width="4"/><path class="ah" d="M330.0 504.0 L322.9 491.0 L337.1 491.0 Z" fill="#C3BEB3"/></svg></div><div class="ab q-node res d4" style="left:70px;top:508px;width:520px;height:62px" data-in="1">두 답이 만나는 칸 → 쓸 대명사</div><div class="ab q-mx d5" style="left:660px;top:112px;width:544px;height:298px" data-in="1"><div class="h" style="left:0;top:0;width:132px;height:58px"><small>인칭 ╲ 격</small></div><div class="h t1" style="left:132px;top:0;width:136px;height:58px">1격<small>~가</small></div><div class="h t3" style="left:268px;top:0;width:136px;height:58px">3격<small>~에게</small></div><div class="h t4" style="left:404px;top:0;width:136px;height:58px">4격<small>~를</small></div><div class="ln" style="top:58px"></div><div class="r" style="left:0;top:58px;width:132px;height:78px">나&nbsp;<small class="q-sub" lang="de">ich</small></div><div class="c" style="left:132px;top:58px;width:136px;height:78px">·</div><div class="c" style="left:268px;top:58px;width:136px;height:78px">·</div><div class="c" style="left:404px;top:58px;width:136px;height:78px">·</div><div class="ln" style="top:136px"></div><div class="r" style="left:0;top:136px;width:132px;height:78px">너&nbsp;<small class="q-sub" lang="de">du</small></div><div class="c" style="left:132px;top:136px;width:136px;height:78px">·</div><div class="c" style="left:268px;top:136px;width:136px;height:78px">·</div><div class="c" style="left:404px;top:136px;width:136px;height:78px">·</div><div class="ln" style="top:214px"></div><div class="r" style="left:0;top:214px;width:132px;height:78px">그&nbsp;<small class="q-sub" lang="de">er</small></div><div class="c" style="left:132px;top:214px;width:136px;height:78px">·</div><div class="c" style="left:268px;top:214px;width:136px;height:78px">·</div><div class="c" style="left:404px;top:214px;width:136px;height:78px">·</div><div class="vl" style="left:132px"></div><div class="vl" style="left:268px"></div><div class="vl" style="left:404px"></div></div><div class="ab q-band2" style="left:662px;top:326px;width:536px;height:78px;background:rgba(56,69,104,.09)" data-in="2"></div><div class="ab q-band2 d1" style="left:928px;top:112px;width:136px;height:296px;background:rgba(43,122,114,.12)" data-in="2"></div><div class="ab q-cross pop d4" style="left:940px;top:336px;width:112px;height:58px;background:var(--tel)" data-in="2"><span lang="de">ihm</span></div><div class="ab d6" style="left:660px;top:432px;width:540px" data-in="2"><span class="q-ex2"><span>“그<b class="t3">에게</b> 준다”</span><span>→ 그 +</span><span class="q-cb c3">3격</span><span>→ <b class="t3" lang="de">ihm</b></span></span></div><div class="ab q-band2" style="left:1064px;top:112px;width:136px;height:296px;background:rgba(184,120,48,.14)" data-in="3"></div><div class="ab q-cross pop d3" style="left:1076px;top:336px;width:112px;height:58px;background:var(--amb)" data-in="3"><span lang="de">ihn</span></div><div class="ab d5" style="left:660px;top:486px;width:540px" data-in="3"><span class="q-ex2"><span>“그<b class="t4">를</b> 본다”</span><span>→ 그 +</span><span class="q-cb c4">4격</span><span>→ <b class="t4" lang="de">ihn</b></span></span></div>
+</section>
+<section class="scene" id="sC2" data-l="C" data-t="범위 · 헷갈림 주의">
+<div class="ab q-band" style="left:120px;top:96px;width:1040px;height:110px" data-in="0"><span class="q-bt">오늘 볼 자리</span><div class="q-seg" style="flex:none"><span class="s1" style="width:128px">1격<small>~가</small></span><span class="s2" style="width:128px">2격<small>~의</small></span><span class="s3" style="width:128px">3격<small>~에게</small></span><span class="s4" style="width:128px">4격<small>~를</small></span></div><span class="q-note" style="margin-left:auto">2격은 거의 안 써요</span></div><div class="ab q-card fl" style="left:120px;top:236px;width:500px;height:300px" data-in="1"><div class="q-hd">인칭대명사 <small>혼자 쓰여요</small></div><div class="q-cbody" style="gap:18px"><div class="q-toks" lang="de"><span class="tok "><b>Er</b><small>&nbsp;</small></span><span class="tok "><b>sieht</b><small>&nbsp;</small></span><span class="tok p4"><b>mich</b><small>4격</small></span><span class="tok ey"><b>∅</b><small>명사 없음</small></span></div><div class="q-txt" lang="de">Er hilft <b class="t3">mir</b>.</div></div></div><div class="ab q-card fr" style="left:660px;top:236px;width:500px;height:300px" data-in="2"><div class="q-hd">소유관사 <small>명사 앞에 붙어요</small></div><div class="q-cbody" style="gap:18px"><div class="q-toks" lang="de"><span class="tok "><b>Das</b><small>&nbsp;</small></span><span class="tok "><b>ist</b><small>&nbsp;</small></span><span class="tokg"><em>한 덩어리</em><span class="tok ps"><b>mein</b><small>소유관사</small></span><span class="tok nn"><b>Buch</b><small>명사</small></span></span></div><div class="q-txt" lang="de"><b>mein</b> Hund</div></div></div><div class="ab q-band" style="left:120px;top:564px;width:1040px;height:96px" data-in="3"><span class="q-bt">구별법</span><span class="q-sub">빈칸 바로 뒤에</span><span class="q-toks"><span class="tok nn"><b>명사</b><small>&nbsp;</small></span></span><span class="q-op">→</span><b lang="de" style="font-size:26px">mein</b><i class="q-sp"></i><span class="q-sub">명사가 없으면</span><span class="q-toks"><span class="tok ey"><b>∅</b><small>&nbsp;</small></span></span><span class="q-op">→</span><b lang="de" style="font-size:26px"><span class="t3">mir</span> · <span class="t4">mich</span></b></div>
+</section>
+<section class="scene" id="sD1" data-l="D" data-t="인칭대명사 변화표">
+<div class="ab q-tab" style="left:250px;top:92px;width:884px;height:477px" data-in="0"><div class="q-th " style="left:0px;top:0;width:200px;height:54px"><span class="q-crn">인칭 ╲ 격</span></div><div class="q-th t1" style="left:200px;top:0;width:226px;height:54px">1격<small>~가</small></div><div style="position:absolute;left:200px;top:0;width:226px;height:5px;background:#384568"></div><div class="q-th t3" style="left:426px;top:0;width:227px;height:54px">3격<small>~에게</small></div><div style="position:absolute;left:426px;top:0;width:227px;height:5px;background:#2B7A72"></div><div class="q-th t4" style="left:653px;top:0;width:227px;height:54px">4격<small>~를</small></div><div style="position:absolute;left:653px;top:0;width:227px;height:5px;background:#B87830"></div><div class="q-rb" style="top:54px;height:52px"></div><div class="q-td q-rl" style="left:0;top:54px;width:200px;height:52px">나</div><div class="q-td t1" lang="de" style="left:200px;top:54px;width:226px;height:52px">ich</div><div class="q-td t3" lang="de" style="left:426px;top:54px;width:227px;height:52px" data-in="1">mir</div><div class="q-td t4" lang="de" style="left:653px;top:54px;width:227px;height:52px" data-in="1">mich</div><div class="q-rb z" style="top:106px;height:52px"></div><div class="q-td q-rl" style="left:0;top:106px;width:200px;height:52px">너</div><div class="q-td t1" lang="de" style="left:200px;top:106px;width:226px;height:52px">du</div><div class="q-td t3" lang="de" style="left:426px;top:106px;width:227px;height:52px" data-in="1">dir</div><div class="q-td t4" lang="de" style="left:653px;top:106px;width:227px;height:52px" data-in="1">dich</div><div class="q-rb" style="top:158px;height:52px"></div><div class="q-td q-rl" style="left:0;top:158px;width:200px;height:52px">그</div><div class="q-td t1" lang="de" style="left:200px;top:158px;width:226px;height:52px">er</div><div class="q-td t3" lang="de" style="left:426px;top:158px;width:227px;height:52px" data-in="2">ihm</div><div class="q-td t4" lang="de" style="left:653px;top:158px;width:227px;height:52px" data-in="2">ihn</div><div class="q-rb z" style="top:210px;height:52px"></div><div class="q-td q-rl" style="left:0;top:210px;width:200px;height:52px">그녀</div><div class="q-td t1" lang="de" style="left:200px;top:210px;width:226px;height:52px">sie</div><div class="q-td t3" lang="de" style="left:426px;top:210px;width:227px;height:52px" data-in="2">ihr</div><div class="q-td t4" lang="de" style="left:653px;top:210px;width:227px;height:52px" data-in="2">sie</div><div class="q-rb" style="top:262px;height:52px"></div><div class="q-td q-rl" style="left:0;top:262px;width:200px;height:52px">그것</div><div class="q-td t1" lang="de" style="left:200px;top:262px;width:226px;height:52px">es</div><div class="q-td t3" lang="de" style="left:426px;top:262px;width:227px;height:52px" data-in="2">ihm</div><div class="q-td t4" lang="de" style="left:653px;top:262px;width:227px;height:52px" data-in="2">es</div><div class="q-rb z" style="top:314px;height:52px;border-top:2px solid #DDD8CE"></div><div class="q-td q-rl" style="left:0;top:314px;width:200px;height:52px">우리</div><div class="q-td t1" lang="de" style="left:200px;top:314px;width:226px;height:52px">wir</div><div class="q-td t3" lang="de" style="left:426px;top:314px;width:227px;height:52px" data-in="3">uns</div><div class="q-td t4" lang="de" style="left:653px;top:314px;width:227px;height:52px" data-in="3">uns</div><div class="q-rb" style="top:366px;height:52px"></div><div class="q-td q-rl" style="left:0;top:366px;width:200px;height:52px">너희</div><div class="q-td t1" lang="de" style="left:200px;top:366px;width:226px;height:52px">ihr</div><div class="q-td t3" lang="de" style="left:426px;top:366px;width:227px;height:52px" data-in="3">euch</div><div class="q-td t4" lang="de" style="left:653px;top:366px;width:227px;height:52px" data-in="3">euch</div><div class="q-rb z" style="top:418px;height:52px"></div><div class="q-td q-rl" style="left:0;top:418px;width:200px;height:52px">그들·당신</div><div class="q-td t1 sm" lang="de" style="left:200px;top:418px;width:226px;height:52px">sie/Sie</div><div class="q-td t3 sm" lang="de" style="left:426px;top:418px;width:227px;height:52px" data-in="4">ihnen/Ihnen</div><div class="q-td t4 sm" lang="de" style="left:653px;top:418px;width:227px;height:52px" data-in="4">sie/Sie</div><div class="q-hl d6" style="left:470px;top:163px;width:139px;height:42px;background:rgba(43,122,114,.10)" data-in="2"></div><div class="q-hl d6" style="left:470px;top:267px;width:139px;height:42px;background:rgba(43,122,114,.10)" data-in="2"></div><div class="q-vl" style="left:200px"></div><div class="q-vl" style="left:426px"></div><div class="q-vl" style="left:653px"></div></div><div class="ab lnk fd d3" style="left:0px;top:0px" data-in="0"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M242 152 Q232 152 232 162 L232 394 Q232 402 242 402" stroke="#A9B0C4" stroke-width="3"/><path class="dr d2" pathLength="1" d="M242 412 Q232 412 232 422 L232 550 Q232 558 242 558" stroke="#A9B0C4" stroke-width="3"/></svg></div><div class="ab q-brk d4" style="left:150px;top:262px;width:74px;text-align:right" data-in="0">단수</div><div class="ab q-brk d5" style="left:150px;top:458px;width:74px;text-align:right;line-height:1.3" data-in="0">복수<br>· 존칭</div><div class="ab q-note2 d8" style="left:250px;top:580px;width:430px;display:flex;align-items:center;gap:8px;justify-content:flex-start" data-in="2"><span class="q-cb c3">3격</span><span>그(<span lang="de">er</span>) · 그것(<span lang="de">es</span>)은 둘 다 <b class="t3" lang="de">ihm</b></span></div><div class="ab q-note2 d4" style="left:700px;top:580px;width:430px;text-align:right" data-in="4"><b lang="de">sie</b> 그들 · <b lang="de">Sie</b> 당신(높임) — 모양이 같아요</div>
+</section>
+<section class="scene" id="sD2" data-l="D" data-t="외우는 팁">
+<div class="ab q-card fl" style="left:120px;top:104px;width:500px;height:340px" data-in="0"><div class="q-hd">나 · 너 <small>끝만 달라요</small></div><div class="q-cbody" style="gap:16px;top:56px;bottom:62px"><div style="display:flex;gap:40px"><span class="q-wd" lang="de"><span class="q-stem">mi</span><span class="q-end e3">r</span></span><span class="q-wd" lang="de"><span class="q-stem">mi</span><span class="q-end e4">ch</span></span></div><div style="display:flex;gap:40px"><span class="q-wd" lang="de"><span class="q-stem">di</span><span class="q-end e3">r</span></span><span class="q-wd" lang="de"><span class="q-stem">di</span><span class="q-end e4">ch</span></span></div></div><div class="q-foot" style="display:flex;justify-content:center;gap:10px;align-items:center"><span class="q-cb c3">-r</span> 3격 <span class="q-sp" style="flex:none;width:18px"></span><span class="q-cb c4">-ch</span> 4격</div></div><div class="ab q-card fr" style="left:660px;top:104px;width:500px;height:340px" data-in="1"><div class="q-hd">우리 · 너희 <small>3격 = 4격</small></div><div class="q-cbody q-tip" lang="de" style="top:56px;bottom:62px"><div><span class="t3">uns</span><i>=</i><span class="t4">uns</span></div><div><span class="t3">euch</span><i>=</i><span class="t4">euch</span></div></div><div class="q-foot" style="display:flex;justify-content:center;gap:10px;align-items:center"><span class="q-cb c3">3격</span>=<span class="q-cb c4">4격</span> 모양이 같아요</div></div><div class="ab q-band" style="left:120px;top:480px;width:1040px;height:110px" data-in="2"><span class="q-bt">그녀 · 그들</span><span class="q-mid" lang="de">sie</span><span class="q-cb c1">1격</span><span class="q-op">=</span><span class="q-mid" lang="de">sie</span><span class="q-cb c4">4격</span><span class="q-mid" lang="de" style="margin-left:auto">Ich sehe <b class="t4">sie</b>.</span></div>
+</section>
+<section class="scene" id="sE1" data-l="E" data-t="동사가 격을 정한다">
+<div class="ab q-vrow q-pipe" style="left:90px;top:104px;width:1100px;height:100px" data-in="0"><div class="q-verb" style="min-width:196px"><b lang="de">sehen</b><small>보다</small></div><span class="q-kh">나<b class="t4">를</b> 보다</span><span class="q-op2 ok">=</span><span class="q-cb c4 lg">4격</span><span class="q-op2">→</span><span class="q-big t4" lang="de" style="min-width:140px">mich</span><span class="q-oknote">한국어 '를'과 일치</span></div><div class="ab q-vrow q-pipe" style="left:90px;top:224px;width:1100px;height:100px" data-in="1"><div class="q-verb" style="min-width:196px"><b lang="de">danken</b><small>감사하다</small></div><span class="q-kh">너<b class="t3">에게</b> 감사하다</span><span class="q-op2 ok">=</span><span class="q-cb c3 lg">3격</span><span class="q-op2">→</span><span class="q-big t3" lang="de" style="min-width:140px">dir</span><span class="q-oknote">한국어 '에게'와 일치</span></div><div class="ab q-vrow q-pipe trap" style="left:90px;top:344px;width:1100px;height:100px" data-in="2"><div class="q-verb" style="min-width:196px"><b lang="de">helfen</b><small>돕다</small></div><span class="q-kh">나<b class="t4">를</b> 돕다</span><span class="q-op2 no">≠</span><span class="q-cb c3 lg">3격</span><span class="q-op2">→</span><span class="q-big t3" lang="de" style="min-width:140px">mir</span><span class="q-trap">'를'인데 3격!</span></div><div class="ab q-vrow q-pipe trap" style="left:90px;top:464px;width:1100px;height:100px" data-in="3"><div class="q-verb" style="min-width:196px"><b lang="de">fragen</b><small>묻다</small></div><span class="q-kh">나<b class="t3">에게</b> 묻다</span><span class="q-op2 no">≠</span><span class="q-cb c4 lg">4격</span><span class="q-op2">→</span><span class="q-big t4" lang="de" style="min-width:140px">mich</span><span class="q-trap">'에게'인데 4격!</span></div>
+</section>
+<section class="scene" id="sE2" data-l="E" data-t="대부분 4격, 몇몇만 3격">
+<div class="ab q-card fl" style="left:90px;top:96px;width:520px;height:300px" data-in="0"><div class="q-hd"><span class="q-cb c4">4격</span> 동사 <small>대부분</small></div><div class="q-vl2"><span><b lang="de">sehen</b>보다</span><span><b lang="de">fragen</b>묻다</span><span><b lang="de">kennen</b>알다</span><span><b lang="de">besuchen</b>방문하다</span></div><div class="q-foot" lang="de">Er sieht <b class="t4">mich</b>. · Er fragt <b class="t4">mich</b>.</div></div><div class="ab q-card fr" style="left:670px;top:96px;width:520px;height:300px" data-in="1"><div class="q-hd"><span class="q-cb c3">3격</span> 동사 <small>따로 외우기</small></div><div class="q-vl2"><span><b lang="de">helfen</b>돕다</span><span><b lang="de">danken</b>감사하다</span><span><b lang="de">gehören</b>~의 것이다</span><span><b lang="de">gefallen</b>마음에 들다</span></div><div class="q-foot" lang="de">Er hilft <b class="t3">mir</b>. · Ich danke <b class="t3">dir</b>.</div></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="2"><svg width="1280" height="720" viewBox="0 0 1280 720"><polygon points="250,432 420,520 250,608 80,520" fill="#fff" stroke="#384568" stroke-width="3"/><path class="dr d2" pathLength="1" d="M420 520 L486 482" stroke="#384568" stroke-width="3"/><path class="ah" d="M486.0 482.0 L478.3 494.7 L471.2 482.3 Z" fill="#384568"/><path class="dr d4" pathLength="1" d="M420 520 L486 566" stroke="#384568" stroke-width="3"/><path class="ah" d="M486.0 566.0 L471.2 564.4 L479.4 552.7 Z" fill="#384568"/></svg></div><div class="ab d1" style="left:110px;top:492px;width:280px;text-align:center;font-size:22px;font-weight:820;line-height:1.3;color:var(--ink)" data-in="2">3격 동사<br>목록에 있나?</div><div class="ab q-sub d3" style="left:430px;top:458px;width:40px" data-in="2">예</div><div class="ab q-sub d5" style="left:426px;top:560px;width:70px" data-in="2">아니오</div><div class="ab q-box2 d3" style="left:492px;top:452px;width:270px;height:60px" data-in="2"><span class="q-cb c3">3격</span><span lang="de">helfen · danken …</span></div><div class="ab q-box2 d5" style="left:492px;top:536px;width:270px;height:60px" data-in="2"><span class="q-cb c4">4격</span>그 밖의 대부분</div><div class="ab d6" style="left:800px;top:452px;width:390px" data-in="2"><span class="q-dict">사전 표시 <b lang="de">helfen jm.</b> = 3격</span></div><div class="ab d7" style="left:800px;top:506px;width:390px" data-in="2"><span class="q-dict"><b lang="de">fragen jn.</b> = 4격</span></div><div class="ab q-sub d8" style="left:800px;top:566px;width:390px;white-space:normal;line-height:1.4" data-in="2">한국어 조사(~를 / ~에게)는 기준이 아니에요</div>
+</section>
+<section class="scene" id="sE3" data-l="E" data-t="자주 하는 실수">
+<div class="ab q-card q-line" style="left:190px;top:120px;width:900px;height:150px" data-in="0"><span class="q-mk no">✕</span><span class="q-big" lang="de">Ich helfe <span class="q-strike t4">dich</span>.</span><span class="q-note" style="margin-left:auto">'너를'이라서 4격?</span></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr" pathLength="1" d="M640 278 L640 330" stroke="#384568" stroke-width="4"/><path class="ah" d="M640.0 330.0 L632.9 317.0 L647.1 317.0 Z" fill="#384568"/></svg></div><div class="ab q-card q-line d2" style="left:190px;top:338px;width:900px;height:150px" data-in="1"><span class="q-mk ok">✓</span><span class="q-big" lang="de">Ich helfe <b class="t3 q-uline">dir</b>.</span><span class="q-oknote" style="margin-left:auto">helfen은 3격 동사</span></div><div class="ab d5" style="left:190px;top:518px;width:900px;display:flex;align-items:center;gap:14px;justify-content:center" data-in="1"><span class="q-dict"><b lang="de">helfen</b> + <span class="q-cb c3">3격</span></span><span class="q-sub">동사를 외울 때 격도 함께</span></div>
+</section>
+<section class="scene" id="sF" data-l="F" data-t="사물도 대명사로">
+<div class="ab q-band" style="left:110px;top:96px;width:1060px;height:70px" data-in="0"><span class="q-flag k">한국어</span><span class="q-txt">사물은 모두 <b>'그것'</b></span><span class="q-op">·</span><span class="q-flag d">독일어</span><span class="q-txt">명사의 <b>성</b>에 따라 <b lang="de">er · sie · es</b></span></div><div class="ab q-card q-noun" style="left:110px;top:186px;width:240px;height:118px" data-in="1"><span class="g">남성</span><span class="w" lang="de">d<span class="mu">er</span> Tisch</span><span class="k">책상</span></div><div class="ab q-ctr d3" style="left:110px;top:352px;width:240px" data-in="1"><span class="chip k1 z72" lang="de"><span><span class="mu2">er</span></span></span></div><div class="ab q-card q-noun d2" style="left:380px;top:186px;width:240px;height:118px" data-in="1"><span class="g">여성</span><span class="w" lang="de">d<span class="mu">ie</span> Lampe</span><span class="k">램프</span></div><div class="ab q-ctr d5" style="left:380px;top:352px;width:240px" data-in="1"><span class="chip k1 z72" lang="de"><span>s<span class="mu2">ie</span></span></span></div><div class="ab q-card q-noun d4" style="left:650px;top:186px;width:240px;height:118px" data-in="1"><span class="g">중성</span><span class="w" lang="de">da<span class="mu">s</span> Buch</span><span class="k">책</span></div><div class="ab q-ctr d7" style="left:650px;top:352px;width:240px" data-in="1"><span class="chip k1 z72" lang="de"><span>e<span class="mu2">s</span></span></span></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="1"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr d3" pathLength="1" d="M230 308 L230 346" stroke="#384568" stroke-width="3"/><path class="ah" d="M230.0 346.0 L222.8 333.0 L237.2 333.0 Z" fill="#384568"/><path class="dr d5" pathLength="1" d="M500 308 L500 346" stroke="#384568" stroke-width="3"/><path class="ah" d="M500.0 346.0 L492.9 333.0 L507.1 333.0 Z" fill="#384568"/><path class="dr d7" pathLength="1" d="M770 308 L770 346" stroke="#384568" stroke-width="3"/><path class="ah" d="M770.0 346.0 L762.9 333.0 L777.1 333.0 Z" fill="#384568"/></svg></div><div class="ab q-card q-noun" style="left:920px;top:186px;width:240px;height:118px" data-in="2"><span class="g">복수</span><span class="w" lang="de">d<span class="mu">ie</span> Schuhe</span><span class="k">신발들</span></div><div class="ab q-ctr d3" style="left:920px;top:352px;width:240px" data-in="2"><span class="chip k1 z72" lang="de"><span>s<span class="mu2">ie</span></span></span></div><div class="ab lnk fd" style="left:0px;top:0px" data-in="2"><svg width="1280" height="720" viewBox="0 0 1280 720"><path class="dr d3" pathLength="1" d="M1040 308 L1040 346" stroke="#384568" stroke-width="3"/><path class="ah" d="M1040.0 346.0 L1032.8 333.0 L1047.2 333.0 Z" fill="#384568"/></svg></div><div class="ab q-card q-pad" style="left:110px;top:448px;width:520px;height:196px;gap:12px" data-in="3"><span class="q-bub q" lang="de">Wo ist <b>der Tisch</b>?</span><span class="q-bub a" lang="de" style="align-self:flex-end"><b>Er</b>&nbsp;ist da.</span><span class="q-note">er = 책상(남성 명사) · 사람 '그'가 아니에요</span></div><div class="ab q-card q-pad" style="left:660px;top:448px;width:510px;height:196px;gap:8px" data-in="4"><div class="q-bt3">격도 그대로</div><div class="q-mid" lang="de">den Tisch → <b class="t4">ihn</b> <span class="q-cb c4">4격</span></div><div class="q-mid" lang="de">Ich sehe <b class="t4 q-uline">ihn</b>.</div><div class="q-note">사람이면 '그를' · 책상이면 '그걸' 본다</div></div>
+</section>
+<section class="scene" id="sG" data-l="G" data-t="참고">
+<div class="ab q-card q-pad" style="left:110px;top:96px;width:1060px;height:210px" data-in="0"><div class="q-bt3"><span class="q-cb c3">3격</span> 동사 한 묶음</div><div class="q-vl3"><span><b lang="de">helfen</b>돕다</span><span><b lang="de">danken</b>감사하다</span><span><b lang="de">gehören</b>~의 것이다</span><span><b lang="de">gefallen</b>마음에 들다</span><span><b lang="de">antworten</b>대답하다</span><span><b lang="de">folgen</b>따르다</span></div></div><div class="ab q-card q-line" style="left:110px;top:330px;width:1060px;height:110px" data-in="1"><span class="q-mid" lang="de">Die Jacke gefällt <b class="t3 q-uline">mir</b>.</span><span class="q-ko">그 재킷 마음에 들어</span><i class="q-sp"></i><span class="q-mid" lang="de">Das gehört <b class="t3 q-uline">mir</b>.</span><span class="q-ko">이건 내 거야</span></div><div class="ab q-card q-pad" style="left:110px;top:466px;width:1060px;height:170px" data-in="2"><div class="q-bt3">발음 규칙</div><div style="display:flex;align-items:center;gap:14px"><span class="q-ph">s</span><span class="q-op">+</span><span class="q-ph" style="width:auto;padding:0 14px;font-size:22px">모음</span><span class="q-op">→</span><span class="q-ph z">[z]</span><span class="q-sub" style="margin:0 10px">'스'가 아니라 '즈'</span><div class="q-pr" lang="de" style="margin:0 0 0 auto"><span>sie<small>지</small></span><span>sieben<small>지벤</small></span><span>sehen<small>제엔</small></span></div></div></div>
+</section>
+<section class="scene" id="sH" data-l="H" data-t="바로 쓰는 문장">
+<div class="ab q-card q-line" style="left:110px;top:96px;width:1060px;height:92px" data-in="0"><span class="q-rn">1</span><span class="q-mid" lang="de" style="min-width:400px">Ich sehe <b class="t4 q-uline">dich</b>.</span><span class="q-ko2">너 보여.</span><span class="q-cb c4">4격</span></div><div class="ab q-card q-line" style="left:110px;top:202px;width:1060px;height:92px" data-in="1"><span class="q-rn">2</span><span class="q-mid" lang="de" style="min-width:400px">Er hilft <b class="t3 q-uline">mir</b>.</span><span class="q-ko2">그가 날 도와줘.</span><span class="q-cb c3">3격</span></div><div class="ab q-card q-line" style="left:110px;top:308px;width:1060px;height:92px" data-in="2"><span class="q-rn">3</span><span class="q-mid" lang="de" style="min-width:400px">Ich danke <b class="t3 q-uline">dir</b>.</span><span class="q-ko2">고마워.</span><span class="q-cb c3">3격</span></div><div class="ab q-card q-line" style="left:110px;top:414px;width:1060px;height:92px" data-in="3"><span class="q-rn">4</span><span class="q-mid" lang="de" style="min-width:400px">Sie fragt <b class="t4 q-uline">mich</b>.</span><span class="q-ko2">그녀가 나한테 물어봐.</span><span class="q-cb c4">4격</span></div><div class="ab q-card q-line" style="left:110px;top:520px;width:1060px;height:92px" data-in="4"><span class="q-rn">5</span><span class="q-mid" lang="de" style="min-width:400px">Das gehört <b class="t3 q-uline">mir</b>.</span><span class="q-ko2">이건 내 거야.</span><span class="q-cb c3">3격</span></div>
+</section>
+<section class="scene" id="sZ" data-l="정리" data-t="오늘 배운 내용">
+<div class="ab sum" style="left:96px;top:104px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">대명사는 격에 따라 단어 자체가 바뀌어요</div><div class="se"><span lang="de"><b class="t1">ich</b> → <b class="t3">mir</b> → <b class="t4">mich</b></span></div></div><div class="ab sum d2" style="left:652px;top:104px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">오늘은 1격 · 3격 · 4격</div><div class="se">2격(~의) 대명사는 거의 안 써요</div></div><div class="ab sum d4" style="left:96px;top:238px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">나 · 너는 끝만 달라요</div><div class="se"><span lang="de">mi<b class="t3">r</b> · mi<b class="t4">ch</b> · di<b class="t3">r</b> · di<b class="t4">ch</b></span></div></div><div class="ab sum d6" style="left:652px;top:238px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">우리 · 너희는 3격 = 4격</div><div class="se"><span lang="de"><b class="t3">uns</b> = <b class="t4">uns</b> · <b class="t3">euch</b> = <b class="t4">euch</b></span></div></div><div class="ab sum d8" style="left:96px;top:372px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">격은 동사가 정해요</div><div class="se"><span lang="de">helfen → <b class="t3">mir</b> · fragen → <b class="t4">mich</b></span></div></div><div class="ab sum d10" style="left:652px;top:372px" data-in="0"><span class="sc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="st">사물도 성에 맞춰 대명사로</div><div class="se"><span lang="de">Tisch → er · Lampe → sie · Buch → es</span></div></div><div class="ab nx" style="left:96px;top:522px;width:1088px" data-in="1"><span class="nl">다음 · 3과</span><span class="nt">동사 현재형</span><span class="nseq" lang="de"><span>ich lerne<small>나는 배워</small></span><i>→</i><span>du lernst<small>너는 배워</small></span><i>→</i><span>er lernt<small>그는 배워</small></span></span></div><div class="ab endc fd" data-in="2"><img src="../assets/img/070733410e35.png" alt=""><div class="en">Sophia Deutsch Akademie</div><div class="et" lang="en">Innovative Learning Beyond the Traditional</div><div class="el">Lektion 02 · 인칭대명사</div></div>
+</section>
+      <div id="ov" style="--cvt:208px;--cvb:474px;--cvf:104px;--cvw:600px"><div class="cv"><div class="cv-no" aria-hidden="true">02</div><div class="cv-brand"><svg viewBox="0 0 160 184" aria-hidden="true"><path d="M0 47 94 1v93L0 140z" fill="#57585A"/><path d="M33 69 126 22v93L33 161z" fill="#ED1C24"/><path d="M65 90 159 43v93L65 182z" fill="#F3C811"/></svg><b lang="de">Sophia Deutsch Akademie</b><span>소피아 독일어학원</span></div><div class="cv-r"><div class="cv-lk" lang="de">Lektion 02</div><h1 class="cv-t"><span>인칭대명사</span></h1><div class="cv-de" lang="de">Personalpronomen</div></div><div class="cv-foot" aria-hidden="true"><span><kbd>Space</kbd>재생/일시정지</span><span><kbd>← →</kbd>장면 이동</span><span><kbd>M</kbd>나레이션</span><span><kbd>F</kbd>전체 화면</span></div></div><!--/cv--><div id="ovb"><button id="ovp" type="button" aria-label="재생"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></button><div id="ovt">재생</div><div id="ovh"></div><div id="ovv"></div></div></div>
+    </div>
+  </div>
+  <div id="capbox"><p id="cap" aria-live="polite"></p></div>
+  <div id="ctrl">
+    <div id="tlw"><div id="tl" aria-label="장면 이동"></div></div>
+    <div id="bar">
+      <button class="cb" id="prev" type="button" aria-label="이전 장면" title="이전 장면 (←)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2.4v14H6zM19 5.5v13L9.5 12z" fill="currentColor"/></svg></button>
+      <button class="cb" id="play" type="button" aria-label="재생"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></button>
+      <button class="cb" id="next" type="button" aria-label="다음 장면" title="다음 장면 (→)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.6 5H18v14h-2.4zM5 5.5v13L14.5 12z" fill="currentColor"/></svg></button>
+      <span id="time">0:00 / 0:00</span>
+      <span id="where"></span>
+      <button class="tb" id="vo" type="button" aria-pressed="true" title="나레이션 켜기/끄기 (M)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path class="w1" d="M15.5 9a4 4 0 0 1 0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="w2" d="M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="lb">나레이션</span></button>
+      <button class="tb" id="speed" type="button" title="재생 속도">1×</button>
+      <button class="tb" id="cc" type="button" aria-pressed="true" title="자막 켜기/끄기 (C)">자막</button>
+      <button class="cb" id="fs" type="button" aria-label="전체 화면" title="전체 화면 (F)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+</div>
+<script id="narr-audio">
+/* 나레이션 녹음 음성 자리
+   형식: window.__NARR_AUDIO = { 장면id: [ {src:"data:audio/mpeg;base64,...", ms:재생 길이(밀리초)}, ... ], ... }
+   장면 id: sIntro, sA, sB, sC, sC2, sD1, sD2, sE1, sE2, sE3, sF, sG, sH, sZ (단계 순서대로, 원고 NARR와 같은 개수)
+   비어 있거나 빠진 단계는 기기 음성(TTS)이 원고를 읽는다. */
+window.__NARR_AUDIO = {
+  sIntro:[{src:"../assets/audio/c48c25b0cd88.mp3",ms:9378},{src:"../assets/audio/6bc484bc625c.mp3",ms:11442}],
+  sA:[{src:"../assets/audio/f0f974706967.mp3",ms:4415},{src:"../assets/audio/23ec80d92e82.mp3",ms:9509},{src:"../assets/audio/2ff050e28e7d.mp3",ms:8150}],
+  sB:[{src:"../assets/audio/2857129ed32c.mp3",ms:4937},{src:"../assets/audio/280a53c6060e.mp3",ms:6896},{src:"../assets/audio/9e8acad9a67a.mp3",ms:7079},{src:"../assets/audio/f8a508625576.mp3",ms:11442}],
+  sC:[{src:"../assets/audio/bd1b054e9997.mp3",ms:9038},{src:"../assets/audio/3a1410d41466.mp3",ms:7340},{src:"../assets/audio/557c763676eb.mp3",ms:12121},{src:"../assets/audio/1f7e676617b0.mp3",ms:12069}],
+  sC2:[{src:"../assets/audio/d38b5789cbba.mp3",ms:12852},{src:"../assets/audio/fd50abfa02a1.mp3",ms:13558},{src:"../assets/audio/c8b684b8d6cb.mp3",ms:12121},{src:"../assets/audio/a80ea484ce96.mp3",ms:14028}],
+  sD1:[{src:"../assets/audio/d6e8f11ddf64.mp3",ms:9195},{src:"../assets/audio/0759cdf7875a.mp3",ms:7445},{src:"../assets/audio/28aaadfff7bb.mp3",ms:15804},{src:"../assets/audio/eb40f82373bc.mp3",ms:7549},{src:"../assets/audio/48eb19081637.mp3",ms:13636}],
+  sD2:[{src:"../assets/audio/df5fe41e3579.mp3",ms:14237},{src:"../assets/audio/091fb4f5cfc8.mp3",ms:10919},{src:"../assets/audio/d2ec3e6cdb57.mp3",ms:6139}],
+  sE1:[{src:"../assets/audio/c50d5e603281.mp3",ms:12408},{src:"../assets/audio/97a903caf98d.mp3",ms:7602},{src:"../assets/audio/14cf8906ab82.mp3",ms:11416},{src:"../assets/audio/825d6ce64e87.mp3",ms:9822}],
+  sE2:[{src:"../assets/audio/5a3486606bd4.mp3",ms:8882},{src:"../assets/audio/0fbd2a86c713.mp3",ms:11154},{src:"../assets/audio/b9ffa3776b54.mp3",ms:13845}],
+  sE3:[{src:"../assets/audio/2de49574776f.mp3",ms:8020},{src:"../assets/audio/da10bad1507e.mp3",ms:6687}],
+  sF:[{src:"../assets/audio/bd5d9353d61e.mp3",ms:9404},{src:"../assets/audio/7fbdc73d4a97.mp3",ms:14994},{src:"../assets/audio/7c5e9e382c6f.mp3",ms:6400},{src:"../assets/audio/cab478e6c40d.mp3",ms:10919},{src:"../assets/audio/b53007fa19f7.mp3",ms:13897}],
+  sG:[{src:"../assets/audio/7febc998a36e.mp3",ms:12330},{src:"../assets/audio/addc683859c0.mp3",ms:10501},{src:"../assets/audio/12e5695fc45c.mp3",ms:11729}],
+  sH:[{src:"../assets/audio/75e929d1129d.mp3",ms:5381},{src:"../assets/audio/bb1fe70c5e40.mp3",ms:4101},{src:"../assets/audio/99e430367ddf.mp3",ms:4467},{src:"../assets/audio/b2f558bd00f4.mp3",ms:5930},{src:"../assets/audio/949f9045ca35.mp3",ms:4310}],
+  sZ:[{src:"../assets/audio/5ec67d20eba7.mp3",ms:26279},{src:"../assets/audio/baf0a8928a37.mp3",ms:11259},{src:"../assets/audio/14f6c5bea54e.mp3",ms:6008}]
+};
+</script>
+<script>
+/* ── 나레이션 원고 ──
+   [[독일어|한국어 발음]] : 독일어 음성으로 읽고, 독일어 음성이 없으면 한국어 발음 표기를 읽는다 */
+var NARR = {
+  sIntro:[
+    "이번 과에서는 인칭대명사를 배웁니다. 나, 너, 그처럼 사람이나 물건을 대신 가리키는 말이에요.",
+    "한국어 '나'가 '나는, 나에게, 나를'로 바뀌듯이, 독일어도 자리에 따라 모양이 바뀌어요. [[ich, mir, mich.|이히, 미어, 미히]]"
+  ],
+  sA:[
+    "먼저 한국어부터 볼게요. '나'라는 말이 있죠.",
+    "문장 속에서는 '나는', '나에게', '나를'처럼 모양이 달라집니다. 모두 같은 '나'를 가리키는데도요.",
+    "'나는'은 주어 자리, 1격이에요. '나에게'는 3격이고, '나를'은 4격이에요."
+  ],
+  sB:[
+    "한국어는 '나' 뒤에 붙는 조사가 바뀌어서 역할을 알려 줍니다.",
+    "독일어도 똑같아요. 자리에 따라 이렇게 바뀝니다. [[ich, mir, mich.|이히, 미어, 미히]]",
+    "다만 한국어는 뒤에 붙는 조사가 바뀌고, 독일어는 단어 자체가 통째로 바뀌어요.",
+    "이건 '나'만 그런 게 아니에요. 너, 그, 우리처럼 누구를 가리키는지를 인칭이라고 하는데, 모든 인칭이 격에 따라 바뀝니다."
+  ],
+  sC:[
+    "대명사를 고를 때도 지난 과처럼 질문 두 개에 답하면 됩니다. 첫째, 누구를 가리키나요?",
+    "둘째, 문장에서 어떤 자리인가요? 두 답이 만나는 칸이 쓸 대명사예요.",
+    "'그에게 준다'라면, 누구는 '그'이고 자리는 '에게', 그러니까 3격이에요. 그래서 이렇게 바뀝니다. [[er, ihm.|에어, 임]]",
+    "'그를 본다'라면, 누구는 똑같이 '그'이고 자리는 '를', 그러니까 4격이에요. 그래서 이번엔 이렇게 바뀝니다. [[er, ihn.|에어, 인]]"
+  ],
+  sC2:[
+    "2격이라는 자리도 있지만, 대명사에서는 거의 쓰지 않아서 오늘은 빼요. 오늘 볼 자리는 세 개예요. 1격하고 3격하고 4격이에요.",
+    "여기서 헷갈리기 쉬운 게 하나 있어요. 인칭대명사는 명사를 대신해서 혼자 쓰여요. 그래서 바로 뒤에 명사가 오지 않아요. [[Er sieht mich.|에어 지트 미히]] [[Er hilft mir.|에어 힐프트 미어]]",
+    "반면에 소유관사는 '내 책', '내 개'처럼 명사 앞에 붙어서 누구 것인지 알려 줘요. 그래서 바로 뒤에 명사가 와요. [[Das ist mein Buch.|다스 이스트 마인 부흐]]",
+    "그러니까 빈칸을 채울 때는 빈칸 바로 뒤를 보세요. 명사가 있으면 소유관사, 명사가 없으면 인칭대명사예요. 소유관사는 나중에 따로 자세히 배워요."
+  ],
+  sD1:[
+    "이제 전체 표를 볼게요. 가로줄은 누구, 세로줄은 자리예요. 1격은 이미 아는 모양이죠.",
+    "나와 너부터 볼게요. [[ich, mir, mich.|이히, 미어, 미히]] [[du, dir, dich.|두, 디어, 디히]]",
+    "그, 그녀, 그것이에요. [[er, ihm, ihn.|에어, 임, 인]] [[sie, ihr, sie.|지, 이어, 지]] [[es, ihm, es.|에스, 임, 에스]] 그와 그것은 3격이 똑같다는 점, 눈여겨보세요.",
+    "우리와 너희예요. [[wir, uns, uns.|비어, 운스, 운스]] [[ihr, euch, euch.|이어, 오이히, 오이히]]",
+    "마지막 줄은 그들이에요. [[sie, ihnen, sie.|지, 이넨, 지]] 첫 글자를 대문자로 쓰면 높임말 '당신'이 됩니다. 모양이 같아서 한 줄로 묶었어요."
+  ],
+  sD2:[
+    "외우는 요령이 있어요. 나와 너는 끝만 달라요. 끝이 '어' 소리면 3격이고, '히' 소리면 4격이에요. [[mir, mich, dir, dich.|미어, 미히, 디어, 디히]]",
+    "우리와 너희는 더 쉬워요. 3격하고 4격이 모양이 똑같거든요. [[uns, uns, euch, euch.|운스, 운스, 오이히, 오이히]]",
+    "그리고 그녀와 그들은 1격하고 4격이 똑같습니다. [[Ich sehe sie.|이히 제에 지]]"
+  ],
+  sE1:[
+    "어떤 격을 쓸지는 한국어 해석이 아니라 동사가 정해요. '보다'는 4격을 써요. [[sehen, mich.|제엔, 미히]] 한국어 '를'하고 딱 맞죠.",
+    "'감사하다'는 3격이에요. [[danken, dir.|당켄, 디어]] 이것도 한국어 '에게'하고 맞아요.",
+    "그런데 '돕다'는 '나를 돕다'인데도 3격을 써요. [[helfen, mir.|헬펜, 미어]] '를'로 옮겨도 3격이라서, 여기서 많이 틀립니다.",
+    "반대로 '묻다'는 '나에게 묻다'인데도 4격이에요. [[fragen, mich.|프라겐, 미히]] '에게'로 옮겨도 4격입니다."
+  ],
+  sE2:[
+    "목적어가 하나인 동사는 대부분 4격을 써요. [[sehen, fragen, kennen, besuchen.|제엔, 프라겐, 케넨, 베주헨]]",
+    "3격을 쓰는 동사는 수가 적어요. 격하고 같이 따로 외워 두세요. [[helfen, danken, gehören, gefallen.|헬펜, 당켄, 게회렌, 게팔렌]]",
+    "판단하는 순서는 이래요. 먼저 3격을 쓰는 동사인지 봅니다. 맞으면 3격이고, 아니면 4격이에요. 한국어 조사는 기준이 아니에요."
+  ],
+  sE3:[
+    "이 문장, 어디가 틀렸을까요? '너를 도와'라서 4격을 썼어요. [[Ich helfe dich.|이히 헬페 디히]]",
+    "'돕다'는 3격을 쓰는 동사죠. 그래서 이렇게 말해야 합니다. [[Ich helfe dir.|이히 헬페 디어]]"
+  ],
+  sF:[
+    "한국어는 사물이면 무조건 '그것'이라고 하죠. 독일어는 그 명사의 성에 맞춰서 대명사를 골라요.",
+    "책상은 남성, 램프는 여성, 책은 중성이죠. 그래서 이렇게 받아요. [[der Tisch, er.|데어 티쉬, 에어]] [[die Lampe, sie.|디 람페, 지]] [[das Buch, es.|다스 부흐, 에스]]",
+    "복수는 성과 상관없이 모두 이렇게 받아요. [[die Schuhe, sie.|디 슈에, 지]]",
+    "책상이 어디 있냐고 물으면, 이렇게 답해요. [[Wo ist der Tisch?|보 이스트 데어 티쉬]] [[Er ist da.|에어 이스트 다]] 여기서 대명사는 사람이 아니라 책상을 가리켜요.",
+    "사물이어도 격에 따라 바뀌는 건 똑같아요. 책상을 목적어로 받으면 이렇게 되죠. [[Ich sehe ihn.|이히 제에 인]] 사람이면 '그를', 책상이면 '그걸' 본다는 뜻이에요."
+  ],
+  sG:[
+    "3격을 쓰는 동사는 한 묶음으로 외워 두면 편해요. [[helfen, danken, gehören, gefallen, antworten, folgen.|헬펜, 당켄, 게회렌, 게팔렌, 안트보르텐, 폴겐]]",
+    "실제로는 이렇게 써요. '그 재킷 마음에 들어', 그리고 '이건 내 거야'. [[Die Jacke gefällt mir.|디 야케 게펠트 미어]] [[Das gehört mir.|다스 게회르트 미어]]",
+    "발음도 하나 짚어 볼게요. 모음 앞의 에스는 '스'가 아니라 '즈' 소리예요. [[sie, Sie, sieben, sehen.|지, 지, 지벤, 제엔]]"
+  ],
+  sH:[
+    "바로 쓸 수 있는 문장이에요. '너 보여.' [[Ich sehe dich.|이히 제에 디히]]",
+    "'그가 날 도와줘.' 3격이에요. [[Er hilft mir.|에어 힐프트 미어]]",
+    "'고마워.' 이것도 3격이죠. [[Ich danke dir.|이히 당케 디어]]",
+    "'그녀가 나한테 물어봐.' 이건 4격이에요. [[Sie fragt mich.|지 프라크트 미히]]",
+    "'이건 내 거야.' 3격이에요. [[Das gehört mir.|다스 게회르트 미어]]"
+  ],
+  sZ:[
+    "오늘 배운 걸 정리해 볼게요. 대명사는 격에 따라 단어 자체가 바뀝니다. 오늘은 1격하고 3격하고 4격을 봤어요. 나와 너는 끝만 다르고, 우리와 너희는 3격하고 4격이 같아요. 격은 동사가 정하고, 사물도 성에 맞춰 대명사로 받습니다.",
+    "다음 과에서는 동사의 현재형을 배워요. 오늘 배운 인칭에 따라 동사 끝이 달라집니다. [[ich lerne, du lernst, er lernt.|이히 레르네, 두 레른스트, 에어 레른트]]",
+    "이번 과는 여기까지입니다. 교재에 있는 '바로 확인' 문제로 꼭 복습해 보세요."
+  ]
+};
+
+(function(){
+'use strict';
+
+/* ── 자막 (장면 id 순서 = 화면 순서) ──
+   <k1>…</k1> 1격(남색) · <k4>…</k4> 4격(황토색) */
+var CAPS = {
+  sIntro:[
+    "이번 과는 인칭대명사예요. '나·너·그'처럼 대신 가리키는 말이에요.",
+    "'나는·나에게·나를'처럼, 독일어도 <k1>ich</k1> · <k3>mir</k3> · <k4>mich</k4>로 모양이 바뀌어요."
+  ],
+  sA:[
+    "먼저 한국어부터 봐요. '나'.",
+    "문장에서는 '나는·나에게·나를'로 모양이 달라져요. 모두 같은 '나'예요.",
+    "'나는'은 1격(주어), '나에게'는 3격, '나를'은 4격이에요."
+  ],
+  sB:[
+    "한국어는 '나' 뒤에 붙는 조사가 바뀌어 역할을 알려 줘요.",
+    "독일어도 똑같아요. 1격 <k1>ich</k1> · 3격 <k3>mir</k3> · 4격 <k4>mich</k4>.",
+    "한국어는 조사가 바뀌고, 독일어는 단어 자체가 바뀌어요.",
+    "'나'만이 아니에요. '너·그·우리' 같은 모든 인칭이 격에 따라 바뀌어요."
+  ],
+  sC:[
+    "대명사도 두 질문으로 골라요. ① 누구를 가리키나?",
+    "② 어떤 자리(격)인가? 두 답이 만나는 칸이 쓸 대명사예요.",
+    "'그에게 준다' → 그(<k1>er</k1>) + 3격 → <k3>ihm</k3>",
+    "'그를 본다' → 그(<k1>er</k1>) + 4격 → <k4>ihn</k4>"
+  ],
+  sC2:[
+    "2격(~의) 대명사는 거의 안 써서 빼요. 오늘은 1격·3격·4격만 봐요.",
+    "인칭대명사는 명사 대신 혼자 쓰여서 바로 뒤에 명사가 없어요. Er sieht <k4>mich</k4>. · Er hilft <k3>mir</k3>.",
+    "소유관사는 명사 앞에 붙어 누구 것인지 알려 줘요. 바로 뒤에 명사가 와요. Das ist mein Buch.",
+    "빈칸 바로 뒤에 명사가 있으면 소유관사(mein), 없으면 인칭대명사(<k3>mir</k3>·<k4>mich</k4>). 소유관사는 나중에 배워요."
+  ],
+  sD1:[
+    "전체 표예요. 가로줄은 인칭(누구), 세로줄은 격(자리). 1격은 이미 아는 모양이에요.",
+    "나 <k1>ich</k1> · <k3>mir</k3> · <k4>mich</k4> / 너 <k1>du</k1> · <k3>dir</k3> · <k4>dich</k4>",
+    "그 <k3>ihm</k3>·<k4>ihn</k4> / 그녀 <k3>ihr</k3>·<k4>sie</k4> / 그것 <k3>ihm</k3>·<k4>es</k4> — 그와 그것의 3격은 둘 다 <k3>ihm</k3>이에요.",
+    "우리 <k3>uns</k3>·<k4>uns</k4> / 너희 <k3>euch</k3>·<k4>euch</k4>",
+    "그들 <k1>sie</k1>·<k3>ihnen</k3>·<k4>sie</k4>. 대문자로 쓰면 높임말 '당신'이에요."
+  ],
+  sD2:[
+    "나·너는 끝만 달라요. -r이면 3격(<k3>mir</k3>·<k3>dir</k3>), -ch면 4격(<k4>mich</k4>·<k4>dich</k4>).",
+    "우리·너희는 3격과 4격이 같아요. <k3>uns</k3> = <k4>uns</k4>, <k3>euch</k3> = <k4>euch</k4>",
+    "그녀·그들의 sie는 1격과 4격이 같아요. Ich sehe <k4>sie</k4>."
+  ],
+  sE1:[
+    "격은 동사가 정해요. sehen(보다) → 4격 <k4>mich</k4>. 한국어 '를'과 맞아요.",
+    "danken(감사하다) → 3격 <k3>dir</k3>. 한국어 '에게'와 맞아요.",
+    "helfen(돕다) → 3격 <k3>mir</k3>. '를'로 옮겨도 3격이에요!",
+    "fragen(묻다) → 4격 <k4>mich</k4>. '에게'로 옮겨도 4격이에요!"
+  ],
+  sE2:[
+    "목적어가 하나인 동사는 대부분 4격: sehen · fragen · kennen · besuchen",
+    "3격 동사는 몇 개뿐이라 따로 외워요: helfen · danken · gehören · gefallen",
+    "판단 순서: ① 3격 동사인가? → 3격 ② 아니면 4격. 한국어 조사는 기준이 아니에요."
+  ],
+  sE3:[
+    "틀린 문장: Ich helfe <k4>dich</k4>. '너를'이라서 4격을 썼어요.",
+    "helfen은 3격 동사 → Ich helfe <k3>dir</k3>."
+  ],
+  sF:[
+    "한국어는 사물이면 모두 '그것'. 독일어는 명사의 성에 맞춰 대명사를 골라요.",
+    "der Tisch → <k1>er</k1> · die Lampe → <k1>sie</k1> · das Buch → <k1>es</k1>",
+    "복수는 성과 상관없이 <k1>sie</k1>: die Schuhe → <k1>sie</k1>",
+    "Wo ist der Tisch? — <k1>Er</k1> ist da. 여기서 er는 책상이에요.",
+    "격도 그대로: den Tisch → <k4>ihn</k4>. Ich sehe <k4>ihn</k4>. (그를 / 그걸 본다)"
+  ],
+  sG:[
+    "3격 동사 한 묶음: helfen · danken · gehören · gefallen · antworten · folgen",
+    "Die Jacke gefällt <k3>mir</k3>. (그 재킷 마음에 들어) · Das gehört <k3>mir</k3>. (이건 내 거야)",
+    "모음 앞 s는 [z] 소리: sie '지' · sieben '지벤' · sehen '제엔'"
+  ],
+  sH:[
+    "Ich sehe <k4>dich</k4>. 너 보여.",
+    "Er hilft <k3>mir</k3>. 그가 날 도와줘. (3격)",
+    "Ich danke <k3>dir</k3>. 고마워. (3격)",
+    "Sie fragt <k4>mich</k4>. 그녀가 나한테 물어봐. (4격)",
+    "Das gehört <k3>mir</k3>. 이건 내 거야. (3격)"
+  ],
+  sZ:[
+    "오늘 정리: 대명사는 격에 따라 바뀌고, 격은 동사가 정해요.",
+    "다음 과: 인칭에 따라 동사 끝이 달라져요. ich lerne · du lernst · er lernt",
+    "이번 과는 여기까지예요. 교재의 '바로 확인' 문제로 복습해 보세요."
+  ]
+};
+
+/* 나레이션이 켜져 있을 때 단계별 최소 화면 시간(ms): 움직임이 긴 단계만 따로 둔다 */
+var MINV = {'sA:1':2400, 'sD1:0':2600};
+var GAP = 800;   // 나레이션이 끝난 뒤 다음 단계까지 쉬는 시간
+
+/* ── 요소 ── */
+var $ = function(s){ return document.querySelector(s); };
+var stage = $('#stage'), frame = $('#frame'), capEl = $('#cap'), capbox = $('#capbox');
+var chrome = $('#chrome'), tag = $('#tag'), tagL = $('#tagL'), tagT = $('#tagT');
+var scenes = Array.prototype.slice.call(stage.querySelectorAll('.scene'));
+var btnPlay = $('#play'), btnPrev = $('#prev'), btnNext = $('#next'), btnSpeed = $('#speed'), btnCap = $('#cc'), btnFs = $('#fs'), btnVo = $('#vo');
+var ov = $('#ov'), ovp = $('#ovp'), ovt = $('#ovt'), ovh = $('#ovh'), ovv = $('#ovv'), timeEl = $('#time'), whereEl = $('#where'), tl = $('#tl');
+
+var ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>';
+var ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>';
+var ICON_REPLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5a7 7 0 1 1-6.6 4.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M4 4.5v5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ── 기기 음성(나레이션) ── */
+var Voice = (function(){
+  var synth = window.speechSynthesis;
+  var supported = !!(synth && window.SpeechSynthesisUtterance);
+  var ko = null, de = null, bad = {}, onchange = null;
+  var KO = ['sunhi', 'yuna', 'google', 'heami', 'injoon', 'hyunsu'];
+  var DE = ['katja', 'amala', 'seraphina', 'anna', 'google', 'hedda', 'petra', 'helena', 'conrad', 'killian', 'stefan', 'markus'];
+  function norm(l){ return String(l || '').replace('_', '-').toLowerCase(); }
+  function key(v){ return v.voiceURI || v.name; }
+  function pick(lang, prefs){
+    if (!supported) return null;
+    var list = [];
+    try { list = synth.getVoices() || []; } catch (e) { list = []; }
+    var online = navigator.onLine !== false;
+    list = list.filter(function(v){ return norm(v.lang).indexOf(lang) === 0 && !bad[key(v)] && (online || v.localService); });
+    if (!list.length) return null;
+    function score(v){
+      var n = String(v.name || '').toLowerCase(), s = 0;
+      if (/natural|neural|premium|enhanced/.test(n)) s += 60;
+      for (var i = 0; i < prefs.length; i++){ if (n.indexOf(prefs[i]) >= 0){ s += 40 - i * 4; break; } }
+      if (norm(v.lang) === (lang === 'ko' ? 'ko-kr' : 'de-de')) s += 5;
+      if (v.localService) s += 2;
+      return s;
+    }
+    return list.slice().sort(function(a, b){ return score(b) - score(a); })[0];
+  }
+  function refresh(){
+    var k0 = ko && ko.name, d0 = de && de.name;
+    ko = pick('ko', KO); de = pick('de', DE);
+    if (onchange && ((ko && ko.name) !== k0 || (de && de.name) !== d0)) onchange();
+  }
+  if (supported){
+    refresh();
+    if (synth.addEventListener) synth.addEventListener('voiceschanged', refresh);
+    else synth.onvoiceschanged = refresh;
+    var tries = 0, poll = setInterval(function(){ tries++; refresh(); if (tries > 16) clearInterval(poll); }, 500);
+  }
+
+  /* [[독일어|한국어 발음]] 표기를 읽을 조각으로 나눈다 */
+  function parse(s){
+    var out = [], re = /\[\[([^\]|]+)\|([^\]]+)\]\]/g, last = 0, m;
+    while ((m = re.exec(s))){
+      if (m.index > last) out.push({l:'ko', t:s.slice(last, m.index)});
+      out.push({l:'de', t:m[1], fb:m[2]});
+      last = re.lastIndex;
+    }
+    if (last < s.length) out.push({l:'ko', t:s.slice(last)});
+    return out;
+  }
+  function build(s){
+    var q = [];
+    parse(s).forEach(function(g){
+      var seg = (g.l === 'de' && !de) ? {l:'ko', t:g.fb + '.'} : g;
+      var t = String(seg.t).replace(/^[\s.,]+/, '').replace(/\s+$/, '');
+      if (!t) return;
+      var p = q[q.length - 1];
+      if (p && p.l === 'ko' && seg.l === 'ko') p.t += ' ' + t;
+      else q.push({l:seg.l, t:t, fb:seg.fb});
+    });
+    var out = [];
+    q.forEach(function(g){
+      if (g.l === 'ko' && g.t.length > 70){
+        g.t.replace(/([.?!])\s+/g, '$1\u0001').split('\u0001').forEach(function(p){ if (p.trim()) out.push({l:'ko', t:p.trim()}); });
+      } else out.push(g);
+    });
+    return out;
+  }
+
+  var token = 0, queue = [], idx = 0, done = null, timer = null, keep = [], rate = 1, paused = false;
+  function finish(ok){ var d = done; done = null; if (d) d(ok); }
+  function step(t){
+    if (t !== token || paused) return;
+    if (idx >= queue.length){ finish(true); return; }
+    var g = queue[idx], v = (g.l === 'de') ? de : ko;
+    if (!v && g.l === 'de' && ko){ g = queue[idx] = {l:'ko', t:g.fb + '.', fb:g.fb}; v = ko; }
+    if (!v){ finish(false); return; }
+    var u = new SpeechSynthesisUtterance(g.t);
+    u.voice = v; u.lang = v.lang;
+    u.rate = Math.max(0.5, Math.min(2, rate * (g.l === 'de' ? 0.88 : 1)));
+    var started = false;
+    u.onstart = function(){ started = true; };
+    u.onend = function(){
+      if (t !== token) return;
+      clearTimeout(timer); idx++;
+      setTimeout(function(){ step(t); }, g.l === 'de' ? 260 : 90);
+    };
+    u.onerror = function(e){
+      if (t !== token) return;
+      clearTimeout(timer);
+      var er = e && e.error;
+      if (er === 'interrupted' || er === 'canceled') return;
+      fail(v, t, false);
+    };
+    keep.push(u); if (keep.length > 40) keep.shift();
+    clearTimeout(timer);
+    timer = setTimeout(function(){ if (t === token && !started && !paused) fail(v, t, true); }, 4500);
+    try { synth.resume(); } catch (e) {}
+    synth.speak(u);
+  }
+  function fail(v, t, byTimeout){
+    var g = queue[idx];
+    if (byTimeout && g && !g.retry){ g.retry = true; token++; var rt = token; try { synth.cancel(); } catch (e) {} setTimeout(function(){ step(rt); }, 120); return; }
+    bad[key(v)] = true;
+    token++; var nt = token;
+    try { synth.cancel(); } catch (e) {}
+    refresh();
+    queue = queue.slice(idx).map(function(x){ return (x.l === 'de' && !de) ? {l:'ko', t:x.fb + '.', fb:x.fb} : x; });
+    idx = 0;
+    if (!ko){ finish(false); return; }
+    setTimeout(function(){ step(nt); }, 120);
+  }
+  function stop(){
+    token++; clearTimeout(timer); paused = false; done = null; queue = []; idx = 0;
+    if (supported){ try { if (synth.speaking || synth.pending) synth.cancel(); } catch (e) {} }
+  }
+  function speak(script, cb, now){
+    stop();
+    if (!ko || !script){ if (cb) cb(false); return; }
+    queue = build(script); idx = 0; done = cb;
+    var t = ++token;
+    if (now) step(t); else setTimeout(function(){ step(t); }, 80);
+  }
+  function pause(){
+    if (!queue.length || idx >= queue.length) return;
+    paused = true; token++; clearTimeout(timer);
+    try { synth.cancel(); } catch (e) {}
+  }
+  function resume(){
+    if (!paused) return;
+    paused = false;
+    var t = ++token;
+    step(t);
+  }
+  function unlock(){
+    if (!supported) return;
+    try { var u = new SpeechSynthesisUtterance(' '); u.volume = 0; synth.speak(u); } catch (e) {}
+  }
+  return {
+    ok: function(){ return !!ko; },
+    speak: speak, stop: stop, pause: pause, resume: resume, unlock: unlock,
+    setRate: function(r){ rate = r; },
+    names: function(){ return {ko: ko ? ko.name : '', de: de ? de.name : ''}; },
+    onChange: function(f){ onchange = f; },
+    refresh: refresh
+  };
+})();
+
+/* ── 파일에 넣은 녹음 음성(있으면 우선 사용) ── */
+var AUD = (typeof window.__NARR_AUDIO === 'object' && window.__NARR_AUDIO) || {};
+function clipOf(sid, bi){
+  var a = AUD[sid] && AUD[sid][bi];
+  if (!a) return null;
+  if (typeof a === 'string') return {src:a, ms:0};
+  return (a && a.src) ? a : null;
+}
+var hasClips = Object.keys(AUD).some(function(k){ return (AUD[k] || []).some(Boolean); });
+var Clip = (function(){
+  /* 파일에 넣은 녹음 음성 재생: 1순위 오디오 요소(첫 터치·클릭 때 미리 풀어 둠), 막히면 2순위 Web Audio */
+  var a = new Audio(), rate = 1, token = 0, done = null, paused = false, mode = 'el', curSrc = null;
+  a.preload = 'auto';
+  try { a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true; } catch (e) {}
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  var SILENT = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAHAAADkQBQUFBQUFBQUFBQUFBQUG1tbW1tbW1tbW1tbW1tioqKioqKioqKioqKioqoqKioqKioqKioqKioqKjFxcXFxcXFxcXFxcXFxeLi4uLi4uLi4uLi4uLi//////////////////8AAAAATGF2YzYwLjMxAAAAAAAAAAAAAAAAJANpAAAAAAAAA5G5oLCCAAAAAAD/+xDEAAPAAAGkAAAAIAAANIAAAARMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVf/7EsQpg8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7EMRTg8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sSxH0DwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sQxKcDwAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xLE0IPAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xDE1gPAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==';
+  var AC = window.AudioContext || window.webkitAudioContext, ctx = null, out = null, node = null, cache = {}, order = [], elOk = false;
+  function getCtx(){
+    if (!ctx && AC){ try { ctx = new AC(); out = ctx.createGain(); out.connect(ctx.destination); } catch (e) { ctx = null; } }
+    return ctx;
+  }
+  function unlock(){
+    var c = getCtx();
+    if (c && c.state !== 'running'){
+      try { c.resume(); var sb = c.createBuffer(1, 1, 22050), s = c.createBufferSource(); s.buffer = sb; s.connect(c.destination); s.start(0); } catch (e) {}
+    }
+    if (elOk || done) return;
+    var t = token;
+    try {
+      a.muted = true; a.src = SILENT;
+      var p = a.play();
+      var fin = function(ok){ if (t === token && !done){ try { a.pause(); } catch (e) {} } a.muted = false; if (ok) elOk = true; };
+      if (p && p.then) p.then(function(){ fin(true); }, function(){ fin(false); }); else fin(true);
+    } catch (e) { a.muted = false; }
+  }
+  function finish(ok){ var d = done; done = null; if (d) d(ok); }
+  a.addEventListener('ended', function(){ if (mode === 'el' && done) finish(true); });
+  a.addEventListener('error', function(){ if (mode === 'el' && done) viaWA(); });
+  function stopWA(){ if (node){ try { node.onended = null; node.stop(0); } catch (e) {} node = null; } }
+  function toBuf(s){
+    var b = atob(s.slice(s.indexOf(',') + 1)), n = b.length, u = new Uint8Array(n);
+    for (var i = 0; i < n; i++) u[i] = b.charCodeAt(i);
+    return u.buffer;
+  }
+  function decode(s, ok, bad){
+    if (cache[s]){ ok(cache[s]); return; }
+    var c = getCtx(); if (!c){ bad(); return; }
+    var fired = false;
+    function good(buf){ if (fired) return; fired = true; cache[s] = buf; order.push(s); if (order.length > 3) delete cache[order.shift()]; ok(buf); }
+    function fail(){ if (fired) return; fired = true; bad(); }
+    try {
+      if (s.indexOf('data:') === 0){ var p = c.decodeAudioData(toBuf(s), good, fail); if (p && p.then) p.then(good, fail); }
+      else { fetch(s).then(function(r){ return r.arrayBuffer(); }).then(function(ab){ var p = c.decodeAudioData(ab, good, fail); if (p && p.then) p.then(good, fail); }).catch(fail); }
+    } catch (e) { fail(); }
+  }
+  function viaWA(){
+    var t = token, s0 = curSrc; mode = 'wa';
+    try { a.pause(); } catch (e) {}
+    var c = getCtx(); if (!c || !s0){ finish(false); return; }
+    if (c.state === 'suspended' && !paused){ try { c.resume(); } catch (e) {} }
+    decode(s0, function(buf){
+      if (t !== token) return;
+      stopWA();
+      var s = c.createBufferSource(); s.buffer = buf; s.playbackRate.value = rate; s.connect(out);
+      s.onended = function(){ if (t === token && node === s){ node = null; finish(true); } };
+      node = s; s.start(0);
+      if (paused){ try { c.suspend(); } catch (e) {} }
+    }, function(){ if (t === token) finish(false); });
+  }
+  function stop(){
+    token++; done = null; paused = false; stopWA();
+    try { a.pause(); } catch (e) {}
+    if (ctx && ctx.state === 'suspended' && mode === 'wa'){ try { ctx.resume(); } catch (e) {} }
+  }
+  function play(src, cb){
+    stop();
+    done = cb; curSrc = src; mode = 'el';
+    var t = token;
+    a.muted = false;
+    a.defaultPlaybackRate = rate;
+    a.src = src;
+    a.playbackRate = rate;
+    var p;
+    try { p = a.play(); } catch (e) { viaWA(); return; }
+    if (p && p.catch) p.catch(function(){ if (t === token && mode === 'el' && done) viaWA(); });
+  }
+  function pause(){
+    if (!done) return; paused = true;
+    if (mode === 'wa'){ try { if (ctx) ctx.suspend(); } catch (e) {} }
+    else { try { a.pause(); } catch (e) {} }
+  }
+  function resume(){
+    if (!paused) return; paused = false;
+    if (mode === 'wa'){ try { if (ctx) ctx.resume(); } catch (e) {} return; }
+    var p = a.play();
+    if (p && p.catch) p.catch(function(){ if (done) viaWA(); });
+  }
+  return {play:play, stop:stop, pause:pause, resume:resume, unlock:unlock, el:a,
+          mode:function(){ return mode; },
+          setRate:function(r){ rate = r; a.defaultPlaybackRate = r; a.playbackRate = r; if (node){ try { node.playbackRate.value = r; } catch (e) {} } }};
+})();
+['pointerdown', 'touchend', 'mousedown', 'keydown', 'click'].forEach(function(ev){
+  document.addEventListener(ev, function(){ Clip.unlock(); }, true);
+});
+
+/* ── 단계 목록 ── */
+function autoDur(h){
+  var n = h.replace(/<[^>]+>/g,'').replace(/\s+/g,'').length;
+  return Math.max(4300, 1500 + n * 92);
+}
+function narrEst(s){
+  var de = 0, ko = 0, p = 0;
+  var rest = String(s).replace(/\[\[([^\]|]+)\|[^\]]*\]\]/g, function(_, g){ de += g.length; p += 1; return ' '; });
+  ko = (rest.match(/[\uAC00-\uD7A3]/g) || []).length;
+  p += (rest.match(/[.,?!]/g) || []).length;
+  return 600 + ko * 160 + de * 85 + p * 230;
+}
+function capHTML(h){
+  return h.replace(/<k1>/g,'<b class="c1" lang="de">').replace(/<k3>/g,'<b class="c3" lang="de">').replace(/<k4>/g,'<b class="c4" lang="de">').replace(/<\/k[134]>/g,'</b>');
+}
+var FL = [];
+scenes.forEach(function(sc, si){
+  (CAPS[sc.id] || []).forEach(function(c, bi){
+    var cap = typeof c === 'string' ? c : c.c;
+    var d = (typeof c === 'object' && c.d) ? c.d : autoDur(cap);
+    var n = (typeof NARR !== 'undefined' && NARR[sc.id] && NARR[sc.id][bi]) || '';
+    FL.push({si:si, bi:bi, cap:cap, d:d, n:n, dn:narrEst(n), min:MINV[sc.id + ':' + bi] || 2200, t0:0, clip:clipOf(sc.id, bi)});
+  });
+});
+var TOTAL = 0, sStart = [], sEnd = [];
+
+/* ── 상태 ── */
+var cur = -1, playing = false, el = 0, speed = 1, gen = 0, curSi = -1, started = false, ended = false, capOn = true;
+var voiceOn = true, nState = 'off', nEndEl = 0, nMode = 'tts';
+var SPEEDS = [0.75, 1, 1.25, 1.5];
+
+function narrReady(){ return hasClips || Voice.ok(); }
+function narrActive(){ return voiceOn && narrReady(); }
+function beatCanSpeak(b){ return !!(b.clip || (Voice.ok() && b.n)); }
+function beatDur(b){
+  if (!narrActive()) return b.d;
+  if (b.clip) return Math.max(b.min, (b.clip.ms || b.dn) + GAP);
+  if (Voice.ok() && b.n) return Math.max(b.min, b.dn + GAP);
+  return b.d;
+}
+function computeTimes(){
+  TOTAL = 0; var si = -1;
+  FL.forEach(function(b){
+    if (b.si !== si){ si = b.si; sStart[si] = TOTAL; }
+    b.t0 = TOTAL; TOTAL += beatDur(b); sEnd[si] = TOTAL;
+  });
+  segs.forEach(function(seg, i){ seg.style.flexGrow = Math.max(1, sEnd[i] - sStart[i]); });
+}
+
+function setSteps(sc, k, anim){
+  var keepC = sc.className.split(/\s+/).filter(function(c){ return c && !/^[sa]\d+$/.test(c); });
+  for (var i = 0; i <= k; i++) keepC.push('s' + i);
+  if (anim && k >= 0) keepC.push('a' + k);
+  sc.className = keepC.join(' ');
+}
+function preState(sc, k){
+  sc.classList.add('instant');
+  setSteps(sc, k, false);
+  void sc.offsetWidth;
+}
+function play(sc, k){
+  sc.classList.remove('instant');
+  setSteps(sc, k, true);
+}
+
+function switchScene(si){
+  var prev = curSi >= 0 ? scenes[curSi] : null, next = scenes[si];
+  if (prev && prev !== next){
+    prev.classList.remove('on');
+    prev.classList.add('leaving');
+    clearTimeout(prev._t);
+    prev._t = setTimeout(function(){
+      prev.classList.remove('leaving');
+      if (!prev.classList.contains('on')) preState(prev, -1);
+    }, 520);
+  }
+  clearTimeout(next._t);
+  next.classList.remove('leaving');
+  next.classList.add('on');
+  curSi = si;
+}
+
+/* 나레이션 시작 */
+function startNarr(now){
+  var b = FL[cur];
+  if (!narrActive() || !b || !beatCanSpeak(b)){ nState = 'off'; return; }
+  var myGen = gen;
+  function onTts(ok){ if (myGen !== gen) return; if (ok){ nState = 'done'; nEndEl = el; } else nState = 'failed'; }
+  nState = 'speaking';
+  if (b.clip){
+    nMode = 'clip';
+    Clip.play(b.clip.src, function(ok){
+      if (myGen !== gen) return;
+      if (ok){ nState = 'done'; nEndEl = el; return; }
+      nState = 'failed';  /* 녹음 음성이 들어 있는 파일은 기기 음성(TTS)으로 바꿔 읽지 않는다 */
+    });
+    return;
+  }
+  nMode = 'tts';
+  Voice.speak(b.n, onTts, now);
+}
+
+function show(idx, mode){
+  if (idx < 0 || idx >= FL.length) return;
+  var g = ++gen;
+  var b = FL[idx], sc = scenes[b.si];
+  var pb = cur >= 0 ? FL[cur] : null;
+  var sceneChange = !pb || pb.si !== b.si;
+  cur = idx; el = 0; ended = false; nEndEl = 0;
+  Voice.stop(); Clip.stop();
+  nState = (narrActive() && beatCanSpeak(b)) ? 'idle' : 'off';
+  if (sceneChange){
+    preState(sc, b.bi - 1);
+    switchScene(b.si);
+    setTimeout(function(){ if (g === gen) play(sc, b.bi); }, 140);
+  } else if (mode === 'step' && pb.bi === b.bi - 1){
+    play(sc, b.bi);
+  } else {
+    preState(sc, b.bi - 1);
+    requestAnimationFrame(function(){ if (g === gen) play(sc, b.bi); });
+  }
+  if (playing && nState === 'idle'){
+    setTimeout(function(){ if (g === gen && playing && nState === 'idle') startNarr(false); }, sceneChange ? 380 : 160);
+  }
+  setCaption(b.cap);
+  setChrome(b);
+  paint(true);
+  hideOverlay();
+}
+
+function setCaption(h){
+  capEl.classList.remove('in');
+  capEl.innerHTML = capHTML(h);
+  void capEl.offsetWidth;
+  capEl.classList.add('in');
+}
+function setChrome(b){
+  var sc = scenes[b.si], L = sc.getAttribute('data-l'), T = sc.getAttribute('data-t');
+  var hide = !L || (sc.id === 'sZ' && b.bi === 2);
+  chrome.classList.toggle('hide', hide);
+  if (L && (tagL.textContent !== L || tagT.textContent !== T)){
+    tag.classList.remove('in');
+    tagL.textContent = L; tagT.textContent = T;
+    void tag.offsetWidth;
+    tag.classList.add('in');
+  }
+  (function(){ var d = document.getElementById('sdots'); if (!d){ d = document.createElement('span'); d.id = 'sdots'; tag.appendChild(d); }
+    var n = 0; FL.forEach(function(x){ if (x.si === b.si) n++; });
+    var s = ''; for (var i = 0; i < n; i++) s += '<i class="' + (i < b.bi ? 'p' : (i === b.bi ? 'c' : '')) + '"></i>';
+    d.innerHTML = n > 1 ? s : ''; })();
+  whereEl.textContent = (L ? L + ' · ' : '') + T;
+}
+
+/* ── 재생 제어 ── */
+function setPlaying(p){
+  playing = p;
+  btnPlay.innerHTML = p ? ICON_PAUSE : ICON_PLAY;
+  btnPlay.setAttribute('aria-label', p ? '일시정지' : '재생');
+  btnPlay.title = p ? '일시정지 (Space)' : '재생 (Space)';
+  if (p){
+    if (nState === 'paused'){ nState = 'speaking'; if (nMode === 'clip') Clip.resume(); else Voice.resume(); }
+    else if (nState === 'idle') startNarr(true);
+  } else if (nState === 'speaking'){
+    if (nMode === 'clip') Clip.pause(); else Voice.pause();
+    nState = 'paused';
+  }
+}
+function toggle(){
+  if (!started){ start(); return; }
+  if (ended){ show(0, 'jump'); setPlaying(true); return; }
+  setPlaying(!playing);
+}
+function start(){
+  started = true;
+  hideOverlay();
+  if (cur < 0) show(0, 'jump');
+  el = 0;
+  setPlaying(true);
+}
+function next(){ if (cur < FL.length - 1) show(cur + 1, 'step'); }
+function prev(){ show(Math.max(0, cur - 1), 'jump'); }
+function replay(){ show(Math.max(0, cur), 'jump'); }
+
+function hideOverlay(){
+  if (!started) return;
+  ov.classList.add('hide');
+  ov.classList.remove('end');
+  if (document.activeElement === ovp) ovp.blur();
+}
+function showEnd(){
+  ended = true;
+  ovp.innerHTML = ICON_REPLAY;
+  ovp.setAttribute('aria-label', '처음부터 다시 보기');
+  ovt.textContent = '처음부터 다시 보기';
+  ov.classList.add('end');
+  ov.classList.remove('hide');
+}
+
+function beatDone(){
+  var b = FL[cur];
+  if (nState === 'done') return el >= Math.max(b.min, nEndEl + GAP);
+  if (nState === 'off' || nState === 'failed') return el >= b.d;
+  return false;
+}
+var last = 0;
+function loop(ts){
+  var dt = last ? Math.min(80, ts - last) : 0;
+  last = ts;
+  if (playing && cur >= 0){
+    el += dt * speed;
+    if (beatDone()){
+      if (cur < FL.length - 1) show(cur + 1, 'step');
+      else { setPlaying(false); showEnd(); }
+    }
+  }
+  paint(false);
+  requestAnimationFrame(loop);
+}
+
+/* ── 진행 막대 ── */
+var segs = [];
+function fmt(ms){ var s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+function buildTimeline(){
+  var seen = {};
+  scenes.forEach(function(sc, si){
+    var seg = document.createElement('div');
+    seg.className = 'seg';
+    var L = sc.getAttribute('data-l'), T = sc.getAttribute('data-t');
+    seg.title = (L ? L + ' · ' : '') + T;
+    var chl = '', k = L || '표지';
+    if (!seen[k]){ seen[k] = 1; chl = '<b class="chl">' + (L || '▶') + '</b>'; }
+    seg.innerHTML = '<span class="sf"><i></i></span>' + chl;
+    seg.addEventListener('click', function(e){
+      e.stopPropagation();
+      var r = seg.getBoundingClientRect();
+      var f = Math.max(0, Math.min(0.999, (e.clientX - r.left) / r.width));
+      var t = sStart[si] + f * (sEnd[si] - sStart[si]), idx = -1;
+      for (var i = 0; i < FL.length; i++){ if (FL[i].si === si && FL[i].t0 <= t) idx = i; }
+      if (idx < 0){ for (var j = 0; j < FL.length; j++){ if (FL[j].si === si){ idx = j; break; } } }
+      started = true;
+      show(idx, 'jump');
+    });
+    tl.appendChild(seg);
+    segs.push(seg);
+  });
+}
+var lastPaint = -1;
+function paint(force){
+  if (cur < 0) return;
+  var b = FL[cur];
+  var t = b.t0 + Math.min(el, beatDur(b));
+  if (!force && Math.abs(t - lastPaint) < 40) return;
+  lastPaint = t;
+  for (var i = 0; i < segs.length; i++){
+    var f = (t - sStart[i]) / Math.max(1, sEnd[i] - sStart[i]);
+    f = Math.max(0, Math.min(1, f));
+    segs[i].firstChild.firstChild.style.width = (f * 100) + '%';
+    segs[i].classList.toggle('cur', i === b.si);
+  }
+  timeEl.textContent = fmt(t) + ' / ' + fmt(TOTAL);
+}
+
+/* ── 화면 크기 맞춤 ── */
+function layout(){
+  var W = window.innerWidth, H = window.innerHeight;
+  var small = W < 700 || H < 560;
+  var pad = small ? 6 : 16, gap = small ? 6 : 10, ctrlH = 82;
+  var s = (W - 2 * pad) / 1280, capH = 0, cf = 18, cw = 0;
+  for (var i = 0; i < 3; i++){
+    var fw = 1280 * s;
+    cw = Math.max(fw, Math.min(W - 2 * pad, 900));
+    cf = Math.max(15, Math.min(27, fw * 0.021));
+    var lines = capOn ? (cw < 520 ? 4 : (cw < 760 ? 3 : 2)) : 0;
+    capH = capOn ? Math.ceil(lines * cf * 1.55 + (small ? 6 : 12)) : 0;
+    var avail = H - 2 * pad - ctrlH - gap - (capOn ? capH + gap : 0);
+    s = Math.max(0.12, Math.min((W - 2 * pad) / 1280, avail / 720));
+  }
+  var r = document.documentElement.style;
+  r.setProperty('--s', s.toFixed(4));
+  r.setProperty('--fw', (1280 * s).toFixed(1) + 'px');
+  r.setProperty('--fh', (720 * s).toFixed(1) + 'px');
+  r.setProperty('--cw', cw.toFixed(1) + 'px');
+  r.setProperty('--cf', cf.toFixed(1) + 'px');
+  r.setProperty('--ch', capH + 'px');
+  r.setProperty('--pad', pad + 'px');
+  r.setProperty('--gap', gap + 'px');
+}
+
+/* ── 날아가는 칸·늘어나는 칸 위치 재기 ── */
+function pos(e0){
+  var x = 0, y = 0, e = e0;
+  while (e && e !== stage){ x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+  return {x: x + e0.offsetWidth / 2, y: y + e0.offsetHeight / 2};
+}
+function measure(){
+  Array.prototype.forEach.call(stage.querySelectorAll('[data-from]'), function(f){
+    var src = stage.querySelector(f.getAttribute('data-from'));
+    if (!src) return;
+    var a = pos(src), b = pos(f);
+    f.style.setProperty('--fx', (a.x - b.x).toFixed(1) + 'px');
+    f.style.setProperty('--fy', (a.y - b.y).toFixed(1) + 'px');
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.blank'), function(bl){
+    var f = bl.querySelector('.fly');
+    if (f) bl.style.setProperty('--bw', (f.offsetWidth + 6) + 'px');
+  });
+  Array.prototype.forEach.call(stage.querySelectorAll('.grow'), function(g){
+    g.style.setProperty('--w', g.firstElementChild.offsetWidth + 'px');
+  });
+}
+
+/* ── 음성 표시 ── */
+function voiceInfo(){
+  if (hasClips) return '나레이션: 파일에 넣은 녹음 음성';
+  var n = Voice.names();
+  if (!n.ko) return '이 기기에서 한국어 음성을 찾지 못해 나레이션 없이 자막만 나와요.';
+  return '나레이션 음성: 한국어 ' + n.ko + ' · 독일어 ' + (n.de || '없음(한국어 발음으로 읽기)');
+}
+function updateVoiceUI(){
+  var ok = narrReady();
+  btnVo.disabled = !ok;
+  btnVo.setAttribute('aria-pressed', (ok && voiceOn) ? 'true' : 'false');
+  btnVo.title = ok ? '나레이션 켜기/끄기 (M)' : '이 기기에서 한국어 음성을 찾지 못했어요';
+  if (ovv) ovv.textContent = voiceInfo();
+  if (!started){
+    var mins = Math.max(1, Math.round(TOTAL / 60000));
+    ovh.innerHTML = '<span><b>' + FL.length + '</b> 장면</span><span>약 <b>' + mins + '</b>분</span>';
+  }
+}
+function toggleVoice(){
+  if (!narrReady()) return;
+  voiceOn = !voiceOn;
+  if (!voiceOn){ Voice.stop(); Clip.stop(); nState = 'off'; }
+  else { nState = 'idle'; if (playing) startNarr(true); }
+  computeTimes(); updateVoiceUI(); paint(true);
+}
+Voice.onChange(function(){ computeTimes(); updateVoiceUI(); paint(true); });
+
+/* ── 이벤트 ── */
+btnPlay.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+btnPrev.addEventListener('click', function(e){ e.stopPropagation(); started = true; prev(); });
+btnNext.addEventListener('click', function(e){ e.stopPropagation(); started = true; next(); });
+btnVo.addEventListener('click', function(e){ e.stopPropagation(); toggleVoice(); });
+btnSpeed.addEventListener('click', function(e){
+  e.stopPropagation();
+  var i = SPEEDS.indexOf(speed); speed = SPEEDS[(i + 1) % SPEEDS.length];
+  Voice.setRate(speed); Clip.setRate(speed);
+  btnSpeed.textContent = speed + '×';
+});
+btnCap.addEventListener('click', function(e){
+  e.stopPropagation();
+  capOn = !capOn;
+  capbox.classList.toggle('off', !capOn);
+  btnCap.setAttribute('aria-pressed', capOn ? 'true' : 'false');
+  layout();
+});
+function fsToggle(){
+  var d = document, de = d.documentElement;
+  if (d.fullscreenElement || d.webkitFullscreenElement){ (d.exitFullscreen || d.webkitExitFullscreen).call(d); }
+  else if (de.requestFullscreen){ de.requestFullscreen(); }
+  else if (de.webkitRequestFullscreen){ de.webkitRequestFullscreen(); }
+}
+btnFs.addEventListener('click', function(e){ e.stopPropagation(); fsToggle(); });
+ovp.addEventListener('click', function(e){
+  e.stopPropagation();
+  if (ended){ show(0, 'jump'); setPlaying(true); }
+  else start();
+  hideOverlay();
+});
+ov.addEventListener('click', function(e){ e.stopPropagation(); });
+$('#ovb').addEventListener('click', function(e){ e.stopPropagation(); if (ended) ovp.click(); });
+frame.addEventListener('click', function(){ toggle(); });
+document.addEventListener('keydown', function(e){
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  var k = e.key;
+  if ((k === ' ' || k === 'Enter') && e.target && e.target.closest && e.target.closest('button')) return;
+  if (k === ' ' || k === 'k' || k === 'K'){ e.preventDefault(); toggle(); }
+  else if (k === 'ArrowRight' || k === 'l' || k === 'L'){ e.preventDefault(); started = true; next(); }
+  else if (k === 'ArrowLeft' || k === 'j' || k === 'J'){ e.preventDefault(); started = true; prev(); }
+  else if (k === 'r' || k === 'R'){ replay(); }
+  else if (k === 'f' || k === 'F'){ fsToggle(); }
+  else if (k === 'c' || k === 'C'){ btnCap.click(); }
+  else if (k === 'm' || k === 'M'){ toggleVoice(); }
+  else if (k === 'Home'){ e.preventDefault(); show(0, 'jump'); }
+});
+window.addEventListener('resize', layout);
+document.addEventListener('fullscreenchange', layout);
+window.addEventListener('online', function(){ Voice.refresh(); });
+window.addEventListener('offline', function(){ Voice.refresh(); });
+
+/* ── 시작 ── */
+function init(){
+  layout();
+  measure();
+  buildTimeline();
+  computeTimes();
+  setPlaying(false);
+  ovt.textContent = '재생';
+  updateVoiceUI();
+  show(0, 'jump');
+  requestAnimationFrame(loop);
+  window.__anim = {FL:FL, show:show, get cur(){return cur;}, get TOTAL(){return TOTAL;}, setPlaying:setPlaying, measure:measure,
+    get nState(){return nState;}, get el(){return el;}, get nMode(){return nMode;}, Voice:Voice, Clip:Clip, hasClips:hasClips};
+}
+var inited = false;
+function once(){ if (!inited){ inited = true; init(); } }
+if (document.fonts && document.fonts.ready){
+  document.fonts.ready.then(once);
+  setTimeout(once, 1500);
+} else { once(); }
+})();
+
+</script>
+<script id="cv-js">(function(){var ov=document.getElementById('ov'),cv=ov&&ov.querySelector('.cv'),b=document.getElementById('ovp');
+if(cv&&b)cv.addEventListener('click',function(){if(!ov.classList.contains('end')&&!ov.classList.contains('hide'))b.click();});})();</script><a class="sd-home" href="../../lektion.html?n=02" aria-label="Lektion 02 선택으로 돌아가기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>선택</a>
+<style>.sd-home{position:fixed;left:16px;top:14px;z-index:100;display:flex;align-items:center;gap:6px;height:34px;padding:0 13px;border-radius:999px;background:#fff;color:#4A4A45;font:600 13px/1 'Pretendard Variable',system-ui,sans-serif;text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.12);transition:color .15s,box-shadow .15s}.sd-home:hover,.sd-home:focus-visible{color:#384568;box-shadow:0 0 0 2px #384568;outline:none}.sd-home svg{width:13px;height:13px;flex:none}:fullscreen .sd-home{display:none}@media print{.sd-home{display:none}}</style>
+</body>
+</html>
