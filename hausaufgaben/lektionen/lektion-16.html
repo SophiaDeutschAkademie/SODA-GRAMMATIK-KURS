@@ -397,7 +397,7 @@
 
 <div class="toolbar"><div class="row">
   <button class="btn go" onclick="{{ submitNet }}">과제 제출하기</button>
-  <div class="tb-title">Übung · <span>L16</span></div>
+  <div class="tb-title">Hausaufgabe · <span>L16</span></div>
   <div class="tb-spacer"></div>
   <div class="prog"><span><b>{{ filled }}</b> / {{ total }}</span><span class="bar"><i style="{{ barStyle }}"></i></span></div>
   <button class="btn" onclick="{{ print }}">인쇄</button>
@@ -498,17 +498,17 @@
     <sc-raw-table class="g">
       <sc-raw-thead><sc-raw-tr><sc-raw-th>인칭</sc-raw-th><sc-raw-th>직설법</sc-raw-th><sc-raw-th>접속법 I</sc-raw-th><sc-raw-th>겹침?</sc-raw-th><sc-raw-th>실제로 쓰는 형태</sc-raw-th></sc-raw-tr></sc-raw-thead>
       <sc-raw-tbody>
-        <sc-raw-tr><sc-raw-td class="k">er (단수)</sc-raw-td><sc-raw-td>er hat</sc-raw-td><sc-raw-td>er habe</sc-raw-td><sc-raw-td>안 겹침</sc-raw-td><sc-raw-td>er <input class="bl md" data-key="v1g-1" data-answer="habe"> <span class="gen">(habe)</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">er (단수)</sc-raw-td><sc-raw-td>er hat</sc-raw-td><sc-raw-td>er habe</sc-raw-td><sc-raw-td>안 겹침</sc-raw-td><sc-raw-td>er <input class="bl md" data-key="v1g-1" data-answer="habe"> <span class="gen">(→ 접속법 I)</span></sc-raw-td></sc-raw-tr>
         <sc-raw-tr><sc-raw-td class="k">sie (복수)</sc-raw-td><sc-raw-td>sie haben</sc-raw-td><sc-raw-td>sie haben</sc-raw-td><sc-raw-td><strong>겹침</strong></sc-raw-td><sc-raw-td>sie <input class="bl md" data-key="v1g-3" data-answer="hätten"> <span class="gen">(→ 접속법 II)</span></sc-raw-td></sc-raw-tr>
-        <sc-raw-tr><sc-raw-td class="k">sie (복수) · sein</sc-raw-td><sc-raw-td>sie sind</sc-raw-td><sc-raw-td>sie seien</sc-raw-td><sc-raw-td>안 겹침</sc-raw-td><sc-raw-td>sie <input class="bl md" data-key="v1g-6" data-answer="seien"> <span class="gen">(seien)</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="k">sie (복수) · sein</sc-raw-td><sc-raw-td>sie sind</sc-raw-td><sc-raw-td>sie seien</sc-raw-td><sc-raw-td>안 겹침</sc-raw-td><sc-raw-td>sie <input class="bl md" data-key="v1g-6" data-answer="seien"> <span class="gen">(→ 접속법 I)</span></sc-raw-td></sc-raw-tr>
       </sc-raw-tbody>
     </sc-raw-table>
     <p class="mcq">→ 겹치면 접속법 <span class="mc" data-mc="v1g-2"><input type="hidden" data-key="v1g-2" data-answer="II"><button type="button" class="mct" aria-expanded="false"><span class="mctv">선택하기</span><i>▾</i></button><span class="mco"><button type="button" data-opt="II">II</button><button type="button" data-opt="I">I</button></span></span> 로 바꿉니다: Sie sagen, sie hätten keine Zeit.</p>
 
     <div class="sub2">겹치는 복수 sie를 접속법 II로</div>
     <ol class="ex">
-      <li><div><p class="de">sie sprechen → sie <input class="bl md" data-key="v1g-4" data-answer="sprächen"> <span class="gen">(sprächen)</span></p></div></li>
-      <li><div><p class="de">sie kommen → sie <input class="bl md" data-key="v1g-5" data-answer="kämen"> <span class="gen">(kämen)</span></p></div></li>
+      <li><div><p class="de">sie sprechen → sie <input class="bl md" data-key="v1g-4" data-answer="sprächen"> <span class="gen">(→ 접속법 II)</span></p></div></li>
+      <li><div><p class="de">sie kommen → sie <input class="bl md" data-key="v1g-5" data-answer="kämen"> <span class="gen">(→ 접속법 II)</span></p></div></li>
       <li><div><p class="de">sie lernen → sie <input class="bl md" data-key="v1g-r3" data-answer="würden"> lernen <span class="gen">(약변화 → würden + 원형)</span></p></div></li>
     </ol>
 
@@ -693,7 +693,7 @@
 
     <div class="hblock">
     <div class="sub"><span class="de">4D.</span> 이야기 듣기 — Lenas Wunsch</div>
-    <p>이야기를 <strong>두 번</strong> 듣습니다. 첫 번째에는 <strong>내용</strong>을, 두 번째에는 <strong>접속법 형태</strong>을 듣습니다. 대본은 모두 푼 뒤에 여세요.</p>
+    <p>이야기를 <strong>두 번</strong> 듣습니다. 첫 번째에는 <strong>내용</strong>을, 두 번째에는 <strong>접속법 형태</strong>를 듣습니다. 대본은 모두 푼 뒤에 여세요.</p>
     <div class="audio">
       <span class="audio-tag">♪ Lenas Wunsch</span>
       <audio controls="{{ true }}" preload="auto" data-aud="story" data-filename="Lektion_16_Lenas_Wunsch.mp3" src="../assets/audio/ebde85184e34.mp3"></audio>
@@ -784,35 +784,35 @@
     <div class="sub"><span class="de">5B.</span> 한→독 번역 <em>— 접속법으로</em></div>
     <p>한국어를 접속법으로 쓰세요. <strong>주어를 빠뜨리지 마세요.</strong></p>
     <ol class="ex">
-      <li><div><p class="de">돈이 있다면 차를 살 텐데. <span class="vb">haben · kaufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-1" data-answer="Wenn ich Geld hätte, würde ich ein Auto kaufen."></p></div></li>
+      <li><div><p class="de">돈이 있다면 차를 살 텐데. <span class="vb">haben · kaufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-1" data-answer="Wenn ich Geld hätte, würde ich ein Auto kaufen.|Hätte ich Geld, würde ich ein Auto kaufen."></p></div></li>
       <li><div><p class="de">문을 열어주시겠어요? <span class="vb">öffnen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-2" data-answer="Könnten Sie die Tür öffnen?|Würden Sie die Tür öffnen?"></p></div></li>
-      <li><div><p class="de">물 한 잔 주세요.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-3" data-answer="Ich hätte gern ein Glas Wasser."></p></div></li>
+      <li><div><p class="de">물 한 잔 주세요.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-3" data-answer="Ich hätte gern ein Glas Wasser.|Ich hätte gerne ein Glas Wasser."></p></div></li>
       <li><div><p class="de">나라면 더 공부하겠어. <span class="vb">lernen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-4" data-answer="An deiner Stelle würde ich mehr lernen.|Ich würde mehr lernen."></p></div></li>
-      <li><div><p class="de">그녀가 여기 있다면 좋을 텐데. <span class="vb">sein</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-5" data-answer="Wenn sie hier wäre, wäre es schön."></p></div></li>
-      <li><div><p class="de">그가 아프다고 한다. <span class="vb">간접화법</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-6" data-answer="Er sagt, er sei krank."></p></div></li>
-      <li><div><p class="de">그녀가 시간이 없다고 한다. <span class="vb">간접화법</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-7" data-answer="Sie sagt, sie habe keine Zeit."></p></div></li>
-      <li><div><p class="de">더 일찍 왔더라면 그를 만났을 텐데. <span class="vb">과거 가정</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-8" data-answer="Wenn ich früher gekommen wäre, hätte ich ihn getroffen."></p></div></li>
+      <li><div><p class="de">그녀가 여기 있다면 좋을 텐데. <span class="vb">sein</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-5" data-answer="Wenn sie hier wäre, wäre es schön.|Wäre sie hier, wäre es schön."></p></div></li>
+      <li><div><p class="de">그가 아프다고 한다. <span class="vb">간접화법</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-6" data-answer="Er sagt, er sei krank.|Er sagt, dass er krank sei."></p></div></li>
+      <li><div><p class="de">그녀가 시간이 없다고 한다. <span class="vb">간접화법</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-7" data-answer="Sie sagt, sie habe keine Zeit.|Sie sagt, dass sie keine Zeit habe."></p></div></li>
+      <li><div><p class="de">더 일찍 왔더라면 그를 만났을 텐데. <span class="vb">과거 가정</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5b-8" data-answer="Wenn ich früher gekommen wäre, hätte ich ihn getroffen.|Wäre ich früher gekommen, hätte ich ihn getroffen."></p></div></li>
     </ol>
 
     <div class="sub"><span class="de">5C.</span> 한→독 통합 <em>— 도움 없음</em></div>
     <p>가정·정중·간접화법·과거 가정을 모두 스스로 적용하세요.</p>
     <ol class="ex">
-      <li><div><p class="de">나라면 집에 갈 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-1" data-answer="Ich würde nach Hause gehen."></p></div></li>
-      <li><div><p class="de">그거 좋을 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-2" data-answer="Das wäre schön."></p></div></li>
-      <li><div><p class="de">그가 아프다고 한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-3" data-answer="Er sagt, er sei krank."></p></div></li>
-      <li><div><p class="de">돈이 있다면 차를 살 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-4" data-answer="Wenn ich Geld hätte, würde ich ein Auto kaufen."></p></div></li>
+      <li><div><p class="de">나라면 집에 갈 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-1" data-answer="Ich würde nach Hause gehen.|An deiner Stelle würde ich nach Hause gehen.|Ich ginge nach Hause."></p></div></li>
+      <li><div><p class="de">그거 좋을 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-2" data-answer="Das wäre schön.|Das wäre gut."></p></div></li>
+      <li><div><p class="de">그가 아프다고 한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-3" data-answer="Er sagt, er sei krank.|Er sagt, dass er krank sei."></p></div></li>
+      <li><div><p class="de">돈이 있다면 차를 살 텐데.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-4" data-answer="Wenn ich Geld hätte, würde ich ein Auto kaufen.|Hätte ich Geld, würde ich ein Auto kaufen."></p></div></li>
       <li><div><p class="de">나라면 기다리겠어.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-5" data-answer="An deiner Stelle würde ich warten.|Ich würde warten."></p></div></li>
-      <li><div><p class="de">그녀가 시간이 없다고 한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-6" data-answer="Sie sagt, sie habe keine Zeit."></p></div></li>
-      <li><div><p class="de">시간이 있었더라면 왔을 텐데. (과거 가정)</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-7" data-answer="Wenn ich Zeit gehabt hätte, wäre ich gekommen."></p></div></li>
+      <li><div><p class="de">그녀가 시간이 없다고 한다.</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-6" data-answer="Sie sagt, sie habe keine Zeit.|Sie sagt, dass sie keine Zeit habe."></p></div></li>
+      <li><div><p class="de">시간이 있었더라면 왔을 텐데. (과거 가정)</p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5c-7" data-answer="Wenn ich Zeit gehabt hätte, wäre ich gekommen.|Hätte ich Zeit gehabt, wäre ich gekommen."></p></div></li>
     </ol>
 
     <div class="sub"><span class="de">5D.</span> 복수 간접화법 — 접속법 I → II 적용</div>
     <p>주어가 <strong>복수 sie</strong>입니다. 접속법 I이 직설법과 겹치면 접속법 II로(단 sein은 seien 유지). 동사 원형만 제공됩니다.</p>
     <ol class="ex">
-      <li><div><p class="de">그들이 시간이 없다고 한다. <span class="vb">haben</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-1" data-answer="Sie sagen, sie hätten keine Zeit."></p></div></li>
-      <li><div><p class="de">그들이 독일어를 한다고 한다. <span class="vb">sprechen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-2" data-answer="Sie sagen, sie sprächen Deutsch."></p></div></li>
-      <li><div><p class="de">그들이 아프다고 한다. <span class="vb">sein</span> <span class="gen">(seien 유지)</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-3" data-answer="Sie sagen, sie seien krank."></p></div></li>
-      <li><div><p class="de">그 학생들이 베를린에 간다고 한다. <span class="vb">fahren</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-4" data-answer="Die Studenten sagen, sie führen nach Berlin.|Sie sagen, sie führen nach Berlin."></p></div></li>
+      <li><div><p class="de">그들이 시간이 없다고 한다. <span class="vb">haben</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-1" data-answer="Sie sagen, sie hätten keine Zeit.|Sie sagen, dass sie keine Zeit hätten."></p></div></li>
+      <li><div><p class="de">그들이 독일어를 한다고 한다. <span class="vb">sprechen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-2" data-answer="Sie sagen, sie sprächen Deutsch.|Sie sagen, dass sie Deutsch sprächen."></p></div></li>
+      <li><div><p class="de">그들이 아프다고 한다. <span class="vb">sein</span> <span class="gen">(seien 유지)</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-3" data-answer="Sie sagen, sie seien krank.|Sie sagen, dass sie krank seien."></p></div></li>
+      <li><div><p class="de">그 학생들이 베를린에 간다고 한다. <span class="vb">fahren</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="s5d-4" data-answer="Die Studenten sagen, sie führen nach Berlin.|Sie sagen, sie führen nach Berlin.|Die Studenten sagen, dass sie nach Berlin führen.|Sie sagen, dass sie nach Berlin führen."></p></div></li>
     </ol>
 
     </section>
@@ -865,7 +865,7 @@
         <sc-raw-tr><sc-raw-td class="ko">그녀가 시간 없대.</sc-raw-td><sc-raw-td class="de tog">Sie sagt, sie habe keine Zeit.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-11" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
         <sc-raw-tr><sc-raw-td class="ko">시간 있었더라면 갔을 텐데.</sc-raw-td><sc-raw-td class="de tog">Wenn ich Zeit gehabt hätte, wäre ich gekommen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-12" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
         <sc-raw-tr><sc-raw-td class="ko">네가 물었더라면 도왔을 텐데.</sc-raw-td><sc-raw-td class="de tog">Wenn du gefragt hättest, hätte ich geholfen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-13" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
-        <sc-raw-tr><sc-raw-td class="ko">마치 아픈 것처럼 굴어.</sc-raw-td><sc-raw-td class="de tog">Er tut, als ob er krank wäre.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-14" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
+        <sc-raw-tr><sc-raw-td class="ko">그는 마치 아픈 것처럼 굴어.</sc-raw-td><sc-raw-td class="de tog">Er tut, als ob er krank wäre.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-14" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
         <sc-raw-tr><sc-raw-td class="ko">시간 있다면 갈 텐데. (wenn 생략)</sc-raw-td><sc-raw-td class="de tog">Hätte ich Zeit, würde ich kommen.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-15" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
         <sc-raw-tr><sc-raw-td class="ko">그럴 수 있을 텐데.</sc-raw-td><sc-raw-td class="de tog">Das könnte sein.</sc-raw-td><sc-raw-td class="cnt"><input class="cnt" type="number" min="0" data-key="sp6-16" data-noprogress="" placeholder="0"><span class="cnt-u">회</span></sc-raw-td></sc-raw-tr>
       </sc-raw-tbody>
@@ -914,15 +914,15 @@
     </ol>
 
     <div class="sub"><span class="de">7B.</span> 새 동사 한→독 번역</div>
-    <p>접속법으로 종류를 맞춰 쓰세요. 주어를 빼뜨리지 마세요.</p>
+    <p>접속법으로 종류를 맞춰 쓰세요. 주어를 빠뜨리지 마세요.</p>
     <ol class="ex">
-      <li><div><p class="de">복권에 당첨되면 집을 살 텐데. <span class="vb">gewinnen · kaufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-1" data-answer="Wenn ich im Lotto gewinnen würde, würde ich ein Haus kaufen."></p></div></li>
-      <li><div><p class="de">베를린에 비행기로 가고 싶어. <span class="vb">fliegen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-2" data-answer="Ich würde gern nach Berlin fliegen."></p></div></li>
-      <li><div><p class="de">나라면 집에 머물겠어. <span class="vb">bleiben</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-3" data-answer="An deiner Stelle würde ich zu Hause bleiben."></p></div></li>
+      <li><div><p class="de">복권에 당첨되면 집을 살 텐데. <span class="vb">gewinnen · kaufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-1" data-answer="Wenn ich im Lotto gewinnen würde, würde ich ein Haus kaufen.|Wenn ich im Lotto gewönne, würde ich ein Haus kaufen.|Wenn ich im Lotto gewänne, würde ich ein Haus kaufen."></p></div></li>
+      <li><div><p class="de">베를린에 비행기로 가고 싶어. <span class="vb">fliegen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-2" data-answer="Ich würde gern nach Berlin fliegen.|Ich würde gerne nach Berlin fliegen."></p></div></li>
+      <li><div><p class="de">나라면 집에 머물겠어. <span class="vb">bleiben</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-3" data-answer="An deiner Stelle würde ich zu Hause bleiben.|Ich würde zu Hause bleiben."></p></div></li>
       <li><div><p class="de">시간이 있다면 너에게 전화할 텐데. <span class="vb">anrufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-4" data-answer="Ich würde dich anrufen, wenn ich Zeit hätte.|Wenn ich Zeit hätte, würde ich dich anrufen."></p></div></li>
-      <li><div><p class="de">그가 자주 이긴다고 한다. <span class="vb">간접화법 gewinnen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-5" data-answer="Er sagt, er gewinne oft."></p></div></li>
-      <li><div><p class="de">그녀가 내일 비행기로 간다고 한다. <span class="vb">간접화법 fliegen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-6" data-answer="Sie sagt, sie fliege morgen."></p></div></li>
-      <li><div><p class="de">네가 전화했더라면 내가 갔을 텐데. <span class="vb">과거 가정 anrufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-7" data-answer="Wenn du mich angerufen hättest, wäre ich gekommen."></p></div></li>
+      <li><div><p class="de">그가 자주 이긴다고 한다. <span class="vb">간접화법 gewinnen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-5" data-answer="Er sagt, er gewinne oft.|Er sagt, dass er oft gewinne."></p></div></li>
+      <li><div><p class="de">그녀가 내일 비행기로 간다고 한다. <span class="vb">간접화법 fliegen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-6" data-answer="Sie sagt, sie fliege morgen.|Sie sagt, dass sie morgen fliege."></p></div></li>
+      <li><div><p class="de">네가 전화했더라면 내가 왔을 텐데. <span class="vb">과거 가정 anrufen</span></p><p class="sol"><span class="ar">→</span><input class="bl lg" data-key="t7b-7" data-answer="Wenn du mich angerufen hättest, wäre ich gekommen.|Hättest du mich angerufen, wäre ich gekommen."></p></div></li>
     </ol>
 
     <div class="sub"><span class="de">7C.</span> 새 동사 오류 수정</div>
