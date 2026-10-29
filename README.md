@@ -21,6 +21,7 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 - `wiederholung/lektionen/lektion-01.html … lektion-16.html` : 복습(나레이션 애니메이션)
 - `wiederholung/assets/` : 복습 페이지용 글꼴, 이미지, 나레이션 음원 (이전 SODA-GRAMMATIK-WIEDERHOLUNG 저장소에서 옮겨 온 것)
 - `hausaufgaben/assets/` : 과제 페이지용 글꼴, 오디오, 스크립트 (이전 SODA-GRAMMATIK-HAUSAUFGABEN 저장소에서 옮겨 온 것)
+- `hausaufgaben/assets/wordtip.js` : 과제 페이지의 새 단어 뜻 팝업. 교재·연습문제에 나오지 않은 단어는 `<span class="wd" data-m="뜻">단어</span>` 로 감싸 두었고, 마우스를 올리면(터치 화면에서는 한 번 누르면) 뜻이 작게 나타나요. 밑줄이나 링크 표시는 없어요.
 - `hausaufgaben/index.html` : 이전 과제 웹앱의 표지·목차(진행률 포함). 목차에서는 연결하지 않고 따로 보관해요.
 - `anhang/grammatik-merkheft.html` : 부록 「독일어 문법 암기장」(Lektion 1–16 핵심 35항목, 가리기 모드·인쇄 지원). 목차 맨 끝 '부록' 카드로 연결돼요.
 - `assets/theme.js` : 다크 모드 스위치(모든 화면 오른쪽 위). 선택은 기기에 저장되고 기본값은 다크 모드예요. 인쇄는 언제나 밝은 화면으로 나와요.
