@@ -8,7 +8,7 @@
   window.__wdTip = true;
 
   var css = ''
-    + '.wd{cursor:inherit;-webkit-tap-highlight-color:transparent}'
+    + '.wd{cursor:inherit;color:inherit;font:inherit;letter-spacing:inherit;text-shadow:inherit;-webkit-text-fill-color:inherit;opacity:1;background:none;text-decoration:none;-webkit-tap-highlight-color:transparent}'
     + '#wd-tip{position:fixed;left:0;top:0;z-index:2147482000;max-width:min(260px,calc(100vw - 16px));padding:7px 11px;border-radius:9px;'
     + 'background:#1F2433;color:#fff;font:600 13px/1.45 "Pretendard Variable",Pretendard,"Noto Sans KR",Inter,system-ui,sans-serif;letter-spacing:0;text-transform:none;'
     + 'box-shadow:0 8px 24px rgba(15,18,28,.28);pointer-events:none;opacity:0;visibility:hidden;transform:translateY(3px);transition:opacity .12s ease,transform .12s ease,visibility 0s linear .12s;white-space:normal;word-break:keep-all;overflow-wrap:anywhere}'
