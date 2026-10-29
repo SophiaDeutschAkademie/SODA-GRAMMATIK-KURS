@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>독일어 문법 암기장</title><link rel="icon" type="image/png" href="../assets/logo.png"><link rel="stylesheet" href="../assets/pretendard.css"><meta name="theme-color" content="#ECEAE5"><script src="../assets/theme.js" data-mode="native"></script><style>:root{
+  --ink:#1D2130; --text:#2C303B; --muted:#646a7a; --faint:#9298a6;
+  --navy:#384568; --navy-2:#55628A; --navy-soft:#EDEFF5; --navy-tint:#F5F6FA; --line:#DCE0EA; --line-soft:#E9ECF2;
+  --paper:#FFFFFF; --desk:#ECEAE5;
+  --navy-fill:#384568; --navy-fill-2:#55628A; --card:#FFFFFF; --dim:#B9C0D2;
+  --ex:#B2463A; --ex-bg:#FBEDEA; --ex-line:#EFC9C2;
+  --add:#2E766E; --add-bg:#E4F1EF;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--desk);color:var(--text);font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:14.5px;line-height:1.7;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-feature-settings:"ss06";word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+b,strong{font-weight:700;color:var(--ink)}
+.sheet{max-width:860px;margin:28px auto 80px;background:var(--paper);box-shadow:0 1px 2px rgba(20,24,40,.06),0 10px 40px rgba(20,24,40,.08);border-radius:4px}
+.pg{padding:56px 64px}
+
+/* ---------- cover ---------- */
+.cover{min-height:1180px;display:flex;flex-direction:column;padding:64px 72px 56px;position:relative;overflow:hidden}
+.cover .brand{display:flex;align-items:center;gap:14px}
+.cover .brand img{width:46px;height:46px;object-fit:contain}
+.cover .brand span{font-size:12px;letter-spacing:.32em;font-weight:700;color:var(--ink)}
+.cover .hero{margin-top:auto;margin-bottom:auto;padding-top:40px}
+.cover .kicker{font-size:13px;letter-spacing:.18em;color:var(--navy-2);font-weight:600;text-transform:uppercase}
+.cover h1{margin:14px 0 0;font-size:64px;line-height:1.12;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.cover .lead{margin-top:18px;font-size:19px;color:var(--muted);font-weight:500}
+.cover .grid{margin-top:64px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:520px;border-top:1.5px solid var(--ink)}
+.cover .grid div{padding:12px 0 12px;border-bottom:1px solid var(--line);font-size:22px;font-weight:600;color:var(--navy);letter-spacing:-.01em}
+.cover .grid div.h{font-size:12px;letter-spacing:.08em;color:var(--faint);font-weight:600;padding:10px 0 8px}
+.cover .grid div.ex{color:var(--ex)}
+.cover .grid div.dim{color:var(--dim)}
+.cover .meta{display:flex;gap:28px;align-items:flex-end;justify-content:space-between;border-top:1px solid var(--line);padding-top:22px;font-size:13px;color:var(--muted)}
+.cover .meta dl{display:flex;gap:30px;margin:0}
+.cover .meta dt{font-size:10.5px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase;font-weight:600}
+.cover .meta dd{margin:2px 0 0;font-weight:600;color:var(--ink)}
+.cover .name{min-width:200px;border-bottom:1px solid var(--ink);padding-bottom:4px;font-size:11px;color:var(--faint);letter-spacing:.1em}
+
+/* ---------- toc ---------- */
+.ph{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:22px}
+.ph h2{margin:0;font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.ph span{margin-left:auto;font-size:12px;color:var(--faint);letter-spacing:.04em}
+.intro{font-size:14px;color:var(--muted);line-height:1.8;margin:0 0 6px}
+.toc{columns:2;column-gap:40px;margin-top:22px}
+.toc .grp{break-inside:avoid;margin-bottom:18px}
+.toc .gh{display:flex;align-items:center;gap:10px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.toc .gh .L{width:24px;height:24px;border-radius:6px;background:var(--navy-fill);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.toc .gh b{font-size:14px}
+.toc a.r{display:flex;gap:8px;align-items:baseline;padding:3px 0;font-size:13px;color:var(--text)}
+.toc a.r .n{font-weight:700;color:var(--navy);width:20px;flex:none;font-variant-numeric:tabular-nums}
+.toc a.r .t{flex:1}
+.toc a.r .s{font-size:10.5px;color:var(--navy-2);white-space:nowrap}
+.toc a.r .s.x{color:var(--add)}
+.toc a.r:hover .t{color:var(--navy);text-decoration:underline;text-underline-offset:3px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+/* ---------- guide ---------- */
+.steps{counter-reset:s;display:grid;gap:10px;margin-top:8px}
+.steps>div{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);break-inside:avoid}
+.steps>div::before{counter-increment:s;content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--navy-soft);color:var(--navy);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+.steps p{margin:0;font-size:13.5px;line-height:1.75}
+.steps p b:first-child{display:block;font-size:14.5px;margin-bottom:2px}
+.path{margin-top:18px;padding:14px 18px;border-radius:var(--radius);background:var(--navy-tint);font-size:13px;color:var(--muted);line-height:1.9}
+.path b{color:var(--navy)}
+
+/* ---------- parts ---------- */
+.part-h{display:grid;grid-template-columns:auto 1fr;gap:4px 20px;align-items:end;padding:0 0 18px;margin:0 0 26px;border-bottom:2px solid var(--ink)}
+.part-h .L{grid-row:span 2;font-size:72px;line-height:.8;font-weight:800;color:var(--navy);letter-spacing:-.04em}
+.part-h h2{margin:0;font-size:25px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.25}
+.part-h p{margin:0;font-size:13px;color:var(--muted)}
+
+/* ---------- item ---------- */
+.item{margin:0 0 44px;scroll-margin-top:20px}
+.item:last-child{margin-bottom:8px}
+.ih{display:flex;align-items:center;gap:12px;margin-bottom:14px;break-after:avoid}
+.ih .no{flex:none;min-width:38px;height:28px;padding:0 8px;border-radius:7px;background:var(--navy-fill);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.ih h3{margin:0;font-size:19px;font-weight:800;color:var(--ink);line-height:1.35;letter-spacing:-.01em}
+.ih h3 small{font-size:14.5px;font-weight:500;color:var(--muted);letter-spacing:0}
+.ih .meta{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
+.src{font-size:11px;font-weight:600;border-radius:99px;padding:2px 9px;background:var(--navy-soft);color:var(--navy);white-space:nowrap}
+.src.x,.x{background:var(--add-bg);color:var(--add)}
+.x{display:inline-block;font-size:10.5px;font-weight:700;border-radius:99px;padding:0 7px;line-height:18px;vertical-align:1px;margin-right:4px;white-space:nowrap;font-style:normal}
+.rv{display:flex;gap:3px;align-items:center;font-size:9.5px;color:var(--faint)}
+.rv label{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;line-height:1}
+.rv input{appearance:none;-webkit-appearance:none;width:13px;height:13px;border:1.2px solid #B9BFCD;border-radius:3px;margin:0;cursor:pointer;background:var(--card)}
+.rv input:checked{background:var(--navy-fill);border-color:var(--navy-fill);box-shadow:inset 0 0 0 2px var(--card)}
+.lead{margin:0 0 14px;font-size:14.5px;line-height:1.75;color:var(--text)}
+.sub{margin:22px 0 10px;font-size:14.5px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px;break-after:avoid}
+.sub::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--navy)}
+
+/* tables */
+.tw{overflow-x:auto;margin:0 0 12px;break-inside:avoid}
+table.t{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+table.t th,table.t td{padding:8px 10px;border-bottom:1px solid var(--line-soft);border-right:1px solid var(--line-soft);text-align:center;vertical-align:middle;line-height:1.5}
+table.t tr>*:last-child{border-right:0}
+table.t tr:last-child>*{border-bottom:0}
+table.t thead th{background:var(--navy-soft);color:var(--navy);font-weight:700;font-size:12.5px;white-space:nowrap}
+table.t tbody th{background:var(--navy-tint);color:var(--muted);font-weight:600;font-size:12.5px;white-space:nowrap}
+table.t tbody th small{display:block;font-weight:500;color:var(--faint);font-size:11px}
+table.t td{color:var(--ink);font-weight:600}
+table.t td.l,table.t th.l{text-align:left}
+table.t td.w{font-weight:500;color:var(--text)}
+table.t td small,table.t td .ko{font-weight:400;color:var(--muted);font-size:12px}
+table.t td.ex,table.t td .ex{color:var(--ex)}
+table.t td.ex{background:var(--ex-bg)}
+table.t td.hl{background:var(--navy-tint);color:var(--navy)}
+table.t tr.grp th{background:var(--card);color:var(--navy);text-align:left;font-size:12px;font-weight:800;letter-spacing:.02em;border-bottom:1px solid var(--line)}
+table.t.sm{font-size:13px}
+table.t.sm td,table.t.sm th{padding:6px 8px}
+table.t.dense td{font-weight:500}
+.e{color:var(--navy);font-weight:800}
+.ex,.r{color:var(--ex);font-weight:700}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.tri .tw{margin:0}
+.tri h4{margin:0 0 6px;font-size:12.5px;color:var(--navy);font-weight:800}
+.tri h4 small{font-weight:500;color:var(--muted)}
+
+/* notes */
+ul.n{margin:6px 0 14px;padding:0;list-style:none}
+ul.n li{position:relative;padding:3px 0 3px 16px;font-size:13.8px;line-height:1.75}
+ul.n li::before{content:"";position:absolute;left:2px;top:13px;width:6px;height:2px;border-radius:1px;background:var(--navy-2)}
+p.note{margin:4px 0 12px;font-size:13.5px;color:var(--muted);line-height:1.75}
+p.note b{color:var(--text)}
+
+/* example sentences */
+.egs{margin:4px 0 14px;padding:10px 16px;border-radius:var(--radius);background:var(--navy-tint);break-inside:avoid}
+.eg{margin:0;padding:4px 0;font-size:14px;line-height:1.6;display:flex;flex-wrap:wrap;gap:0 10px;align-items:baseline}
+.eg+.eg{border-top:1px dashed var(--line)}
+.eg .de{color:var(--ink);font-weight:500}
+.eg .de b{color:var(--navy)}
+.eg .ko{color:var(--muted);font-size:12.5px}
+
+/* chips / pairs */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}
+.chips span{border:1px solid var(--line);border-radius:8px;padding:3px 10px;font-size:13px;background:var(--card)}
+.chips span b{color:var(--navy)}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.cols.c2{grid-template-columns:repeat(2,1fr)}
+.box{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;break-inside:avoid;background:var(--card)}
+.box h5{margin:0 0 6px;font-size:12.5px;color:var(--navy);font-weight:800;display:flex;justify-content:space-between;gap:8px}
+.box h5 small{color:var(--muted);font-weight:500}
+.box p{margin:0;font-size:13.2px;line-height:1.75}
+.box ul{margin:0;padding-left:16px;font-size:13.2px;line-height:1.75}
+.prep{display:flex;flex-direction:column;gap:2px;font-size:13.5px}
+.prep b{color:var(--ink)}
+.prep span{color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px 12px;break-inside:avoid;background:var(--card)}
+.card h5{margin:0 0 6px;font-size:14px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px}
+.card h5 .src{margin-left:auto;font-size:10px}
+.card ul{margin:0;padding-left:15px;font-size:13px;line-height:1.75}
+.card li{margin:1px 0}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin:2px 0 12px}
+.pairs div{font-size:13.5px;padding:6px 10px;border-radius:8px;background:var(--navy-tint);break-inside:avoid}
+.pairs div b{color:var(--ink)}
+.pairs div span{color:var(--muted);font-size:12.5px}
+.pairs div i{font-style:normal;color:var(--navy);font-weight:700;font-size:12px}
+
+/* diagrams */
+.klam{border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 12px;margin-bottom:14px;break-inside:avoid}
+.klam .cap{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.klam .row{display:grid;grid-template-columns:.8fr 1fr 2fr 1.4fr;gap:6px}
+.klam .row div{border-radius:8px;padding:9px 6px;text-align:center;font-weight:700;font-size:16px}
+.klam .row .s1{background:var(--navy-tint);color:var(--ink)}
+.klam .row .s2{background:var(--navy-fill);color:#fff}
+.klam .row .s3{background:var(--card);border:1px dashed var(--line);color:var(--muted);font-weight:500}
+.klam .row .s4{background:var(--navy-fill-2);color:#fff}
+.klam .lab{display:grid;grid-template-columns:.8fr 1fr 2fr 1.4fr;gap:6px;margin-top:5px;font-size:11px;color:var(--muted);text-align:center}
+.klam .brace{display:grid;grid-template-columns:.8fr 1fr 2fr 1.4fr;gap:6px;margin-top:2px}
+.klam .brace span{grid-column:2/5;height:10px;border:2px solid var(--navy-2);border-top:0;border-radius:0 0 8px 8px;opacity:.55}
+.klam .ko{margin-top:8px;font-size:12.5px;color:var(--muted);text-align:center}
+.flow{display:flex;align-items:stretch;gap:6px;margin-bottom:12px;break-inside:avoid}
+.flow>div{flex:1;border-radius:var(--radius);padding:10px 8px;text-align:center;background:var(--navy-tint);border:1px solid var(--line)}
+.flow>div b{display:block;font-size:15px;color:var(--navy)}
+.flow>div span{font-size:12px;color:var(--muted)}
+.flow>i{align-self:center;font-style:normal;color:var(--faint);font-size:14px}
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:2px 0 12px;break-inside:avoid;position:relative}
+.tl::before{content:"";position:absolute;left:8%;right:8%;top:15px;height:2px;background:var(--line)}
+.tl div{text-align:center;position:relative}
+.tl div::before{content:"";display:block;width:12px;height:12px;border-radius:50%;margin:10px auto 8px;background:var(--navy-fill);box-shadow:0 0 0 4px var(--paper)}
+.tl div:nth-child(2)::before{background:var(--navy-fill-2)}
+.tl div:nth-child(3)::before{background:var(--dim)}
+.tl b{display:block;font-size:13px;color:var(--ink)}
+.tl span{font-size:12px;color:var(--muted)}
+.pass{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;break-inside:avoid}
+.pass>div{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.pass h6{margin:0 0 8px;font-size:12px;color:var(--navy);font-weight:800}
+.pass .ln{display:flex;flex-wrap:wrap;gap:5px}
+.pass .ln span{padding:5px 9px;border-radius:7px;background:var(--navy-tint);font-weight:700;font-size:14px;color:var(--ink)}
+.pass .ln span.v{background:var(--navy-fill);color:#fff}
+.pass .ln span.p{background:var(--navy-fill-2);color:#fff}
+.pass .ln span.o{background:var(--card);border:1px dashed var(--line);color:var(--muted);font-weight:500}
+.pass small{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+.end{margin-top:6px;padding:16px 18px;border-radius:var(--radius);border:1px solid var(--line);font-size:13px;color:var(--muted);line-height:1.9}
+.end b{color:var(--navy)}
+.foot{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:var(--faint);padding:26px 0 0}
+.foot img{width:14px;height:14px;object-fit:contain}
+
+/* ---------- toolbar + quiz ---------- */
+.bar{position:fixed;top:14px;right:14px;z-index:20;display:flex;gap:6px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:5px;border-radius:12px;box-shadow:0 2px 14px rgba(20,24,40,.12)}
+.bar a.btn,.bar button{font:inherit;font-size:12.5px;font-weight:700;border:0;border-radius:8px;padding:7px 12px;background:transparent;color:var(--navy);cursor:pointer;display:flex;align-items:center;gap:6px}
+.bar a.btn:hover,.bar button:hover{background:var(--navy-soft)}
+.bar button[aria-pressed="true"]{background:var(--navy-fill);color:#fff}
+.bar svg{width:15px;height:15px}
+.qhint{display:none;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:20;background:var(--ink);color:#fff;font-size:12.5px;padding:8px 14px;border-radius:99px;box-shadow:0 4px 18px rgba(0,0,0,.2)}
+body.quiz .qhint{display:block}
+body.quiz table.t td:not(.shown),body.quiz .eg .de:not(.shown){cursor:pointer}
+body.quiz table.t td:not(.shown),body.quiz table.t td:not(.shown) *,body.quiz .eg .de:not(.shown),body.quiz .eg .de:not(.shown) *{color:transparent!important}
+body.quiz table.t td:not(.shown){background-image:linear-gradient(transparent calc(100% - 9px),var(--line) calc(100% - 9px),var(--line) calc(100% - 8px),transparent calc(100% - 8px))}
+body.quiz .eg .de:not(.shown){border-bottom:1px solid var(--line);min-width:40%}
+@media (hover:hover){body.quiz table.t td:not(.shown):hover,body.quiz .eg .de:not(.shown):hover{background-color:var(--navy-soft)}}
+
+/* ---------- responsive ---------- */
+@media (max-width:760px){
+  body{font-size:14px}
+  .sheet{margin:0;border-radius:0;box-shadow:none}
+  .pg{padding:36px 16px}
+  .cover{min-height:auto;padding:28px 16px 32px}
+  .cover .hero{padding:72px 0 56px}
+  .cover h1{font-size:40px}
+  .cover .lead{font-size:16px}
+  .cover .grid{margin-top:40px}
+  .cover .grid div{font-size:17px}
+  .cover .meta{flex-direction:column;align-items:flex-start}
+  .cover .meta dl{flex-wrap:wrap;gap:16px 24px}
+  .toc{columns:1}
+  .part-h .L{font-size:52px}
+  .part-h h2{font-size:20px}
+  .ih{flex-wrap:wrap;gap:8px 10px}
+  .ih h3{font-size:17px;flex:1 1 60%}
+  .ih .meta{margin-left:48px}
+  .tri,.cols,.cols.c2,.cards,.pass,.pairs{grid-template-columns:1fr}
+  .klam .row div{font-size:13px;padding:8px 3px}
+  table.t{font-size:13px}
+  table.t th,table.t td{padding:7px 6px}
+  .flow{flex-wrap:wrap}
+  .flow>div{flex:1 1 40%}
+  .flow>i{display:none}
+  .bar{top:auto;bottom:14px;right:14px}
+  .qhint{bottom:70px}
+}
+
+/* ---------- print ---------- */
+@page{size:A4;margin:13mm 13mm 15mm;
+  @bottom-center{content:"독일어 문법 암기장  ·  " counter(page);font-family:'Pretendard Variable',sans-serif;font-size:8pt;color:#9298a6}}
+@page:first{@bottom-center{content:none}}
+@media print{
+  body{background:var(--card);font-size:9.6pt;line-height:1.6}
+  .bar,.qhint{display:none!important}
+  .sheet{max-width:none;margin:0;box-shadow:none;border-radius:0}
+  .pg{padding:0}
+  .cover{min-height:268mm;padding:4mm 6mm 2mm;break-after:page}
+  .cover h1{font-size:44pt}
+  .toc-pg,.guide-pg{break-after:page}
+  .part{break-before:page}
+  .item{margin-bottom:22pt}
+  .ih{margin-bottom:9pt}
+  .ih h3{font-size:13.5pt}
+  .part-h{margin-bottom:16pt}
+  .part-h .L{font-size:48pt}
+  .part-h h2{font-size:17pt}
+  table.t{font-size:9.6pt}
+  table.t th,table.t td{padding:4.5pt 6pt}
+  table.t thead th,table.t tbody th{font-size:8.6pt}
+  .egs{padding:6pt 10pt}
+  .eg{font-size:9.6pt}
+  .eg .ko{font-size:8.6pt}
+  ul.n li{font-size:9.3pt;padding:1.5pt 0 1.5pt 12pt}
+  ul.n li::before{top:9pt}
+  .lead{font-size:9.8pt}
+  .card ul,.box p,.box ul{font-size:9pt}
+  .toc a.r{font-size:9pt;padding:1.6pt 0}
+  .steps p{font-size:9.4pt}
+  .foot{display:none}
+  .tw,.egs,.klam,.flow,.tl,.pass,.box,.card,.cols,.tri,.pairs div,.steps>div{break-inside:avoid}
+  .ih,.sub{break-after:avoid;page-break-after:avoid;break-inside:avoid;page-break-inside:avoid}
+  .tw{overflow:visible}
+  table.t{overflow:visible}
+  .tw.long{break-inside:auto}
+  table.t tr{break-inside:avoid}
+  table.t thead{display:table-header-group}
+  ul.n li{break-inside:avoid}
+  a{color:inherit}
+}
+
+/* ---------- dark mode (SODA GRAMMATIK KURS 스위치) ---------- */
+@media screen{
+html[data-theme="dark"]{color-scheme:dark;
+  --ink:#EEF0F5; --text:#D3D6DE; --muted:#A0A6B4; --faint:#7C8292;
+  --navy:#AEBBE6; --navy-2:#93A0CC; --navy-soft:#262C40; --navy-tint:#1E2231; --line:#323746; --line-soft:#2A2E3A;
+  --paper:#181B22; --desk:#0F1115; --card:#1D2029; --dim:#4A5165;
+  --navy-fill:#4D5C90; --navy-fill-2:#64739F;
+  --ex:#F08A7C; --ex-bg:#3A2226; --ex-line:#5A3238;
+  --add:#6CC5B8; --add-bg:#1D3532}
+html[data-theme="dark"] .sheet{box-shadow:0 10px 40px rgba(0,0,0,.45)}
+html[data-theme="dark"] .bar{background:rgba(29,32,41,.92)}
+html[data-theme="dark"] .qhint{background:#2A3042}
+html[data-theme="dark"] .rv input{border-color:#5A6175}
+html[data-theme="dark"] .cover .brand img,html[data-theme="dark"] .foot img{filter:none}
+html.sd-theme-on .bar{right:124px}
+}
+@media screen and (max-width:760px){html.sd-theme-on .bar{right:14px}}
+</style></head><body><div class="bar" role="toolbar" aria-label="도구"><a class="btn" href="../index.html#toc" title="SODA GRAMMATIK KURS 목차로"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>목차</a><button id="bq" type="button" aria-pressed="false" title="표와 예문의 독일어를 가립니다. 칸을 누르면 하나씩 보입니다. 이 상태로 인쇄하면 빈칸 연습지가 됩니다."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.5 10.5 0 0 1 12 5c5 0 9 4.5 10 7-.4 1-1.2 2.3-2.4 3.5M6.3 6.3C4.3 7.6 2.8 9.6 2 12c1 2.5 5 7 10 7 1.8 0 3.4-.5 4.8-1.3"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>가리기</button><button id="bp" type="button" title="인쇄"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>인쇄</button></div><div class="qhint">가린 칸을 누르면 하나씩 보입니다 · 이 상태로 인쇄하면 빈칸 연습지</div><main class="sheet"><section class="cover">
+  <div class="brand"><img src="../assets/logo.png" alt="Sophia Deutsch Akademie 로고"><span>SOPHIA DEUTSCH AKADEMIE</span></div>
+  <div class="hero">
+    <div class="kicker">Grammatik-Merkheft · Lektion 1–16</div>
+    <h1>독일어 문법<br>암기장</h1>
+    <div class="lead">반드시 외울 것만, 외우기 좋은 순서로</div>
+    <div class="grid" aria-hidden="true">
+      <div class="h">m</div><div class="h">f</div><div class="h">n</div><div class="h">pl</div>
+      <div>der</div><div>die</div><div>das</div><div>die</div>
+      <div class="dim">des</div><div class="dim">der</div><div class="dim">des</div><div class="dim">der</div>
+      <div class="dim">dem</div><div class="dim">der</div><div class="dim">dem</div><div class="dim">den</div>
+      <div class="ex">den</div><div>die</div><div>das</div><div>die</div>
+    </div>
+  </div>
+  <div class="meta">
+    <dl><div><dt>범위</dt><dd>A1 – B1 · Lektion 1–16</dd></div><div><dt>구성</dt><dd>7파트 · 35항목</dd></div><div><dt>교재</dt><dd>SODA Grammatik Kurs</dd></div></dl>
+    <div class="name">NAME</div>
+  </div>
+</section>
+
+<section class="pg toc-pg" id="toc">
+  <div class="ph"><h2>목차</h2><span>독일어 문법 암기장 · Lektion 1–16</span></div>
+  <p class="intro">이 자료는 교재 순서가 아니라 <b>외우기 좋은 순서</b>로 배열했습니다. 앞에서 외운 표가 뒤에서 계속 재활용되므로, A부터 순서대로 외우면 실제 암기량이 절반으로 줄어듭니다. 항목 오른쪽의 배지는 SODA Grammatik Kurs 교재의 출처 과입니다. <span class="x">교재 외</span> 표시는 16과에 없지만 시험·회화에 꼭 필요한 내용으로, 앞 규칙을 재활용하는 자리에 끼워 넣었습니다.</p>
+  <div class="toc">
+<div class="grp"><a class="gh" href="#partA"><span class="L">A</span><b>원본 표 세 개 — 모든 변화의 기본</b></a>
+<a class="r" href="#i01"><span class="n">01</span><span class="t">정관사</span><span class="s">1과</span></a>
+<a class="r" href="#i02"><span class="n">02</span><span class="t">ein-패턴 = 어간 + 끝</span><span class="s">1·5과</span></a>
+<a class="r" href="#i03"><span class="n">03</span><span class="t">인칭대명사</span><span class="s">2·12과</span></a>
+<a class="r" href="#i04"><span class="n">04</span><span class="t">명사 없이 쓰는 ein · kein · mein</span><span class="s">5과 · 교재 외</span></a>
+</div>
+<div class="grp"><a class="gh" href="#partB"><span class="L">B</span><b>동사 활용 — 어미 여섯 개와 예외들</b></a>
+<a class="r" href="#i05"><span class="n">05</span><span class="t">현재 인칭어미</span><span class="s">3과</span></a>
+<a class="r" href="#i06"><span class="n">06</span><span class="t">sein · haben · werden · wissen</span><span class="s">3·11·15과</span></a>
+<a class="r" href="#i07"><span class="n">07</span><span class="t">화법조동사 여섯</span><span class="s">9과</span></a>
+<a class="r" href="#i08"><span class="n">08</span><span class="t">모음변화 동사</span><span class="s">3과</span></a>
+<a class="r" href="#i09"><span class="n">09</span><span class="t">명령형</span><span class="s">4과</span></a>
+</div>
+<div class="grp"><a class="gh" href="#partC"><span class="L">C</span><b>문장 공식 — 자리 규칙 두 개가 전부</b></a>
+<a class="r" href="#i10"><span class="n">10</span><span class="t">동사는 두 번째 (V2)</span><span class="s">4과</span></a>
+<a class="r" href="#i11"><span class="n">11</span><span class="t">의문사 확장</span><span class="s">4·12과</span></a>
+<a class="r" href="#i12"><span class="n">12</span><span class="t">괄호 공식 (Satzklammer)</span><span class="s">9·10·11·15·16과</span></a>
+<a class="r" href="#i13"><span class="n">13</span><span class="t">접속사 세 부류</span><span class="s">11·13과</span></a>
+<a class="r" href="#i14"><span class="n">14</span><span class="t">짝 접속사 · zu 부정형</span><span class="s">13과 · 교재 외</span></a>
+<a class="r" href="#i15"><span class="n">15</span><span class="t">가운데 칸 순서</span><span class="s">2·4·11과</span></a>
+<a class="r" href="#i16"><span class="n">16</span><span class="t">부정 — nicht · kein · Doch</span><span class="s">4·5·9·11·13과</span></a>
+<a class="r" href="#i17"><span class="n">17</span><span class="t">관계대명사 · 분사</span><span class="s">14과</span></a>
+</div>
+<div class="grp"><a class="gh" href="#partD"><span class="L">D</span><b>전치사 — 격을 결정하는 말</b></a>
+<a class="r" href="#i18"><span class="n">18</span><span class="t">격 고정 전치사</span><span class="s">6과</span></a>
+<a class="r" href="#i19"><span class="n">19</span><span class="t">양방향 전치사 9</span><span class="s">6과</span></a>
+<a class="r" href="#i20"><span class="n">20</span><span class="t">전치사 + 관사 축약형 8</span><span class="s">6과</span></a>
+<a class="r" href="#i21"><span class="n">21</span><span class="t">시간 표현</span><span class="s">6과 · 교재 외</span></a>
+<a class="r" href="#i22"><span class="n">22</span><span class="t">장소 세 질문</span><span class="s">6과 · 교재 외</span></a>
+<a class="r" href="#i23"><span class="n">23</span><span class="t">동사 + 전치사 짝</span><span class="s">12과</span></a>
+</div>
+<div class="grp"><a class="gh" href="#partE"><span class="L">E</span><b>형용사 — 어미와 비교</b></a>
+<a class="r" href="#i24"><span class="n">24</span><span class="t">형용사 어미</span><span class="s">7과</span></a>
+<a class="r" href="#i25"><span class="n">25</span><span class="t">비교급 · 최상급</span><span class="s">8과</span></a>
+</div>
+<div class="grp"><a class="gh" href="#partF"><span class="L">F</span><b>시제 · 태 — 전부 괄호(12번)의 재활용</b></a>
+<a class="r" href="#i26"><span class="n">26</span><span class="t">현재완료</span><span class="s">10과</span></a>
+<a class="r" href="#i27"><span class="n">27</span><span class="t">과거분사 만들기</span><span class="s">10과</span></a>
+<a class="r" href="#i28"><span class="n">28</span><span class="t">과거형 · 과거완료 · 미래</span><span class="s">11과</span></a>
+<a class="r" href="#i29"><span class="n">29</span><span class="t">수동태</span><span class="s">15과</span></a>
+<a class="r" href="#i30"><span class="n">30</span><span class="t">접속법</span><span class="s">16과</span></a>
+</div>
+<div class="grp"><a class="gh" href="#partG"><span class="L">G</span><b>불규칙 일람 · 숫자 · 마지막 암기 카드</b></a>
+<a class="r" href="#i31"><span class="n">31</span><span class="t">불규칙동사 일람</span><span class="s">3·10·11·15과</span></a>
+<a class="r" href="#i32"><span class="n">32</span><span class="t">복수 패턴 5</span><span class="s">1과 · 교재 외</span></a>
+<a class="r" href="#i33"><span class="n">33</span><span class="t">숫자</span><span class="s">4과</span></a>
+<a class="r" href="#i34"><span class="n">34</span><span class="t">시각</span><span class="s">4과</span></a>
+<a class="r" href="#i35"><span class="n">35</span><span class="t">마지막 암기 카드</span><span class="s">1·2·4·6·9·12과</span></a>
+</div>
+</div>
+  <div class="legend">
+    <span><b class="r">붉은 글자·칸</b> 예외 자리 — 따로 모아 외울 곳</span>
+    <span><b class="e">남색 굵은 글자</b> 어미·핵심 형태</span>
+    <span><span class="x">교재 외</span> 16과 밖 보충</span>
+  </div>
+</section>
+
+<section class="pg guide-pg" id="guide">
+  <div class="ph"><h2>이렇게 외우세요</h2><span>5단계 사용법</span></div>
+  <div class="steps">
+    <div><p><b>순서대로 간다.</b>A부터 차례로 외웁니다. 앞의 표가 뒤 항목의 기본입니다. 특히 01–03(정관사 · ein-패턴 · 인칭대명사)을 완전히 외우기 전에는 다음으로 넘어가지 않습니다.</p></div>
+    <div><p><b>표는 백지에 재현한다.</b>눈으로 읽으면 아는 것처럼 느껴질 뿐입니다. 빈 종이에 표의 틀(격 × 성)을 그리고 채운 뒤, 못 채운 칸만 표시해서 그 칸부터 다시 외웁니다. 화면 오른쪽 위 <b>가리기</b>를 켜면 표와 예문의 독일어가 가려지고, 칸을 누르면 하나씩 보입니다. 가린 상태로 인쇄하면 그대로 빈칸 연습지가 됩니다.</p></div>
+    <div><p><b>붉은 칸만 따로 모은다.</b>이 자료의 붉은 표시는 전부 예외 자리입니다(남성 4격 den · meinen, 완료수동 worden, dessen · denen …). 표 전체가 아니라 붉은 칸만 모아 복습하면 헷갈림이 빨리 사라집니다.</p></div>
+    <div><p><b>1일 · 3일 · 7일 뒤 반복한다.</b>외운 표는 다음 날, 3일 뒤, 7일 뒤에 같은 방식(백지 재현)으로 확인합니다. 항목 제목 오른쪽의 작은 칸 <b>1 · 3 · 7</b>에 표시하며 진행하세요. 하루 한 파트씩이면 1회독에 일주일입니다.</p></div>
+    <div><p><b>문장으로 마무리한다.</b>표를 외웠으면 각 항목 예문의 독일어를 가리고 한국어만 보고 직접 만들어 봅니다. 특히 12번 괄호 공식과 묶어서 문장 단위로 말해 봐야 시험과 회화에서 바로 나옵니다.</p></div>
+  </div>
+  <div class="path">암기 경로 — <b>A</b> 표 3개 → <b>B</b> 동사 → <b>C</b> 자리 규칙 → <b>D</b> 전치사 → <b>E</b> 형용사 → <b>F</b> 시제·태 → <b>G</b> 불규칙·숫자·마지막 카드. 앞 항목이 뒤 항목의 기초입니다. 본문 속 "17번"처럼 적힌 번호는 함께 볼 항목입니다.</div>
+</section>
+<section class="part pg" id="partA" data-l="A" data-t="원본 표 세 개 — 모든 변화의 기본" data-p="소유관사 · 형용사 · 관계대명사 · 재귀대명사가 전부 이 세 표의 재활용입니다"><header class="part-h"><span class="L">A</span><h2>원본 표 세 개 — 모든 변화의 기본</h2><p>소유관사 · 형용사 · 관계대명사 · 재귀대명사가 전부 이 세 표의 재활용입니다</p></header>
+
+<article class="item" id="i01" data-t="정관사" data-st="모든 변화의 원본" data-src="1과"><header class="ih"><span class="no">01</span><h3>정관사 <small>— 모든 변화의 원본</small></h3><div class="meta"><span class="src">1과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="01-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="01-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="01-7" aria-label="7일 복습">7</label></span></div></header>
+  <p class="lead">관사는 두 질문으로 고릅니다. ① 명사의 <b>성</b>(단어마다 정해져 있어 관사와 함께 외움) ② 문장 속 <b>격</b>(동사·전치사가 정함). 표에서 두 답이 만나는 칸이 관사입니다.</p>
+  <div class="tw"><table class="t">
+    <thead><tr><th>격＼성</th><th>남성 m</th><th>여성 f</th><th>중성 n</th><th>복수 pl</th></tr></thead>
+    <tbody>
+      <tr><th>1격 ~이/가<small>Nominativ</small></th><td>der</td><td>die</td><td>das</td><td>die</td></tr>
+      <tr><th>2격 ~의<small>Genitiv</small></th><td>des <small>+명사 -(e)s</small></td><td>der</td><td>des <small>+명사 -(e)s</small></td><td>der</td></tr>
+      <tr><th>3격 ~에게<small>Dativ</small></th><td>dem</td><td>der</td><td>dem</td><td>den <small>+명사 -n</small></td></tr>
+      <tr><th>4격 ~을/를<small>Akkusativ</small></th><td class="ex">den</td><td>die</td><td>das</td><td>die</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>4격에서 모양이 바뀌는 성은 <b>남성뿐</b>(der → den). 여성·중성·복수는 1격 = 4격.</li>
+    <li>복수는 성과 관계없이 die. 복수 3격은 명사에도 -n: mit den Kinder<b>n</b> — 이미 -n·-s로 끝나면 그대로(den Frauen · den Autos).</li>
+    <li>sein 뒤의 명사는 주어와 같은 <b>1격</b>: Das ist ein Kuli. (einen ×) · Das ist der Lehrer.</li>
+    <li>재활용처 — 이 표의 끝글자(-r · -e · -s · -m · -n)가 그대로: dies<b>er</b> · dies<b>en</b> · dies<b>em</b> 이(1과) · welch<b>er</b> 어느(4과) · <span class="x">교재 외</span>jed<b>er</b> 각(jeden Tag) · we<b>r</b>–we<b>m</b>–we<b>n</b>(10번) · 관계대명사(17번) · 무관사 형용사 어미(24번).</li>
+  </ul>
+  <div class="sub">언제 정관사, 언제 부정관사, 언제 관사 없이</div>
+  <div class="cols">
+    <div class="box"><h5>정관사 der · die · das <small>'그 ~'</small></h5><p>서로 아는 그것 · 다시 가리킬 때 · 하나뿐인 것(die Sonne) · 늘 가는 곳(die Bibliothek)<br><b>Der Hund ist süß.</b></p></div>
+    <div class="box"><h5>부정관사 ein · eine <small>'어떤 ~ 하나'</small></h5><p>처음 말하는 막연한 하나. 복수형이 없음.<br><b>Da ist ein Hund.</b></p></div>
+    <div class="box"><h5>관사 없음</h5><p>직업 · 셀 수 없는 것 · 막연한 여러 개<br><b>Ich bin Lehrer. · Ich habe Hunger. · Ich habe Bücher.</b></p></div>
+  </div>
+  <p class="note">셀 수 있는 명사가 하나면 관사가 꼭 필요합니다: Ich habe einen Hund. (Ich habe Hund ×) · 명사는 언제나 대문자로 쓰고, <b>관사 + 단수 + 복수</b>를 한 묶음으로 외웁니다: das Buch, die Bücher.</p>
+</article>
+
+<article class="item" id="i02" data-t="ein-패턴 = 어간 + 끝" data-st="부정관사 · 소유관사 · kein" data-src="1·5과"><header class="ih"><span class="no">02</span><h3>ein-패턴 = 어간 + 끝 <small>— 부정관사 · 소유관사 · kein</small></h3><div class="meta"><span class="src">1·5과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="02-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="02-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="02-7" aria-label="7일 복습">7</label></span></div></header>
+  <p class="lead">ein · kein · mein · dein · sein · ihr · unser · euer · Ihr는 모두 <b>어간 + 끝</b>입니다. 끝은 새로 외우지 않습니다 — <b>그 자리에 올 정관사(01번)의 끝을 옮겨 옵니다.</b></p>
+  <div class="chips"><span>die → <b>-e</b></span><span>den → <b>-en</b></span><span>dem → <b>-em</b></span><span>der(여 2·3격 · 복 2격) → <b>-er</b></span><span>des → <b>-es</b></span><span>der · das(1·4격) → <b>끝 없음</b></span></div>
+  <div class="tw"><table class="t">
+    <thead><tr><th>격＼성</th><th>남성 m</th><th>여성 f</th><th>중성 n</th><th>복수 pl</th></tr></thead>
+    <tbody>
+      <tr><th>1격 ~이/가</th><td class="hl">mein</td><td>mein<span class="e">e</span></td><td class="hl">mein</td><td>mein<span class="e">e</span></td></tr>
+      <tr><th>2격 ~의</th><td>mein<span class="e">es</span></td><td>mein<span class="e">er</span></td><td>mein<span class="e">es</span></td><td>mein<span class="e">er</span></td></tr>
+      <tr><th>3격 ~에게</th><td>mein<span class="e">em</span></td><td>mein<span class="e">er</span></td><td>mein<span class="e">em</span></td><td>mein<span class="e">en</span></td></tr>
+      <tr><th>4격 ~을/를</th><td class="ex">meinen</td><td>mein<span class="e">e</span></td><td class="hl">mein</td><td>mein<span class="e">e</span></td></tr>
+    </tbody></table></div>
+  <p class="note">끝이 비는 칸은 정관사가 der · das인 <b>남성 1격 · 중성 1·4격</b> 세 칸뿐. 1격과 4격이 달라지는 곳은 <b class="r">남성 4격 -en</b> 하나. 부정관사 ein은 복수가 없고, kein은 복수에도 씁니다(keine Bücher).</p>
+  <div class="egs">
+    <p class="eg"><span class="de">Ich sehe <b>meinen</b> Vater.</span><span class="ko">den Vater → -en</span></p>
+    <p class="eg"><span class="de">Ich habe <b>keinen</b> Hund.</span><span class="ko">den Hund → -en</span></p>
+    <p class="eg"><span class="de">Wir helfen <b>unserer</b> Mutter.</span><span class="ko">der Mutter(3격) → -er</span></p>
+    <p class="eg"><span class="de">Das ist <b>ihre</b> Tasche.</span><span class="ko">die Tasche → -e</span></p>
+  </div>
+  <div class="tw"><table class="t sm">
+    <thead><tr><th>주인</th><th>어간</th><th>주인</th><th>어간</th></tr></thead>
+    <tbody>
+      <tr><th>나 ich</th><td>mein-</td><th>우리 wir</th><td>unser-</td></tr>
+      <tr><th>너 du</th><td>dein-</td><th>너희 ihr</th><td>euer-</td></tr>
+      <tr><th>그 er · 그것 es</th><td>sein-</td><th>그들 sie</th><td>ihr-</td></tr>
+      <tr><th>그녀 sie</th><td>ihr-</td><th>당신 Sie</th><td>Ihr-</td></tr>
+      <tr><th>부정 "없다"</th><td colspan="3">kein-</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>어간은 주인, <b>끝은 뒤 명사</b>가 정한다: sein<b>e</b> Mutter(그의 어머니 — -e는 die Mutter에서) · ihr Vater(그녀의 아버지 — der Vater라 끝 없음).</li>
+    <li>관사 자리는 하나: das mein Buch × · ein mein Buch × → mein Buch.</li>
+    <li>euer에 끝이 붙으면 가운데 e가 빠진다: <b>eure · euren · eurem</b> (unser는 그대로 unsere). '너희의'는 ihr × → euer.</li>
+    <li>뒤에 명사가 있으면 소유관사(ihr Hund 그녀의 개), 없으면 인칭대명사(Ich helfe ihr. 그녀에게).</li>
+    <li>이름의 소유는 이름 + s: Annas Buch — 아포스트로피 없는 쪽이 표준(Anna's는 허용되지만 권장 아님). s로 끝나는 이름은 ' 만: Klaus' Auto.</li>
+  </ul>
+</article>
+
+<article class="item" id="i03" data-t="인칭대명사" data-st="재귀대명사까지 한 표로" data-src="2·12과"><header class="ih"><span class="no">03</span><h3>인칭대명사 <small>— 재귀대명사까지 한 표로</small></h3><div class="meta"><span class="src">2·12과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="03-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="03-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="03-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>인칭</th><th>1격 ~가</th><th>3격 ~에게</th><th>4격 ~를</th><th>재귀 4격 / 3격</th></tr></thead>
+    <tbody>
+      <tr><th>나</th><td>ich</td><td>mir</td><td>mich</td><td>mich / mir</td></tr>
+      <tr><th>너</th><td>du</td><td>dir</td><td>dich</td><td>dich / dir</td></tr>
+      <tr><th>그</th><td>er</td><td>ihm</td><td>ihn</td><td class="ex">sich</td></tr>
+      <tr><th>그녀</th><td>sie</td><td>ihr</td><td>sie</td><td class="ex">sich</td></tr>
+      <tr><th>그것</th><td>es</td><td>ihm</td><td>es</td><td class="ex">sich</td></tr>
+      <tr><th>우리</th><td>wir</td><td>uns</td><td>uns</td><td>uns</td></tr>
+      <tr><th>너희</th><td>ihr</td><td>euch</td><td>euch</td><td>euch</td></tr>
+      <tr><th>그들 · 당신</th><td>sie / Sie</td><td>ihnen / Ihnen</td><td>sie / Sie</td><td class="ex">sich</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>나·너는 끝만 다름: 3격 <b>-r</b>(mir · dir) · 4격 <b>-ch</b>(mich · dich). 우리·너희는 3격 = 4격. er·es의 3격은 둘 다 ihm(정관사 dem과 같은 원리).</li>
+    <li>재귀는 표의 3·4격 그대로 — <b>3인칭과 Sie만 sich</b>. 새로 외울 건 sich 하나(쓰임은 35번 카드).</li>
+    <li>사물도 성에 맞춰 받는다: der Tisch → er · die Lampe → sie · das Buch → es · 복수 → sie. Wo ist der Tisch? — Er ist da.</li>
+    <li>존칭 Sie: 처음 만난 어른, Herr·Frau + 성으로 부르는 사람에게. 한 사람이어도 동사는 복수형 -en: Kommen Sie aus Korea? · Haben Sie Zeit? 친구·가족·아이에게는 du.</li>
+  </ul>
+  <div class="sub">격은 한국어 조사가 아니라 동사가 정한다</div>
+  <ul class="n">
+    <li>'~를'로 들려도 <b class="r">3격</b>: helfen 돕다 · danken 감사하다 · gehören ~의 것이다 · gefallen 마음에 들다 · antworten 답하다 · folgen 따르다. 반대로 fragen(묻다)은 '에게'로 들려도 4격.</li>
+    <li>사전 표기: <b>jm.</b> = 3격(누구에게) · <b>jn.</b> = 4격(누구를) — helfen jm. · fragen jn.</li>
+    <li>'주는' 동사는 사람 3격 + 사물 4격: geben · schenken · zeigen · schicken · bringen · erklären · empfehlen. Ich gebe <b>ihm</b> das Buch. schreiben도 받는 사람이 3격: Schreib <b>mir</b>! (mich ×) · vorstellen은 소개받는 사람 3격: Stell <b>mir</b> die zwei vor!</li>
+    <li>느낌은 느끼는 사람을 3격으로, 주어 없이: <b>Mir ist kalt.</b> · Mir ist schlecht. · Das ist mir peinlich. · Es ist mir egal. (Ich bin kalt × — '나는 차가운 사람')</li>
+    <li><span class="x">교재 외</span>3격 동사 더 — gratulieren 축하하다 · passen 맞다·어울리다 · schmecken 맛있다(Es schmeckt mir.) · fehlen 없다·그립다(Du fehlst mir.) · wehtun 아프다(Der Kopf tut mir weh.) · vertrauen 믿다 · Wie geht es dir?</li>
+  </ul>
+</article>
+
+<article class="item" id="i04" data-t="명사 없이 쓰는 ein · kein · mein" data-st="정관사 끝글자를 되찾는다 · 부정대명사" data-src="5과|교재 외"><header class="ih"><span class="no">04</span><h3>명사 없이 쓰는 ein · kein · mein <small>— 정관사 끝글자를 되찾는다 · 부정대명사</small></h3><div class="meta"><span class="src">5과</span><span class="src x">교재 외</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="04-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="04-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="04-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>격＼성</th><th>남성 m</th><th>여성 f</th><th>중성 n</th><th>복수 pl</th></tr></thead>
+    <tbody>
+      <tr><th>1격</th><td class="ex">einer · keiner · meiner</td><td>eine · keine · meine</td><td class="ex">eins · keins · meins</td><td>welche · keine · meine</td></tr>
+      <tr><th>4격</th><td>einen · keinen · meinen</td><td>eine · keine · meine</td><td class="ex">eins · keins · meins</td><td>welche · keine · meine</td></tr>
+    </tbody></table></div>
+  <p class="note">명사를 빼면 02번 표에서 끝이 없던 세 칸(남 1격 · 중 1·4격)에 정관사 끝글자 <b>-er · -s</b>가 붙습니다 — 24번 혼합변화와 같은 원리. 복수 긍정은 welche("몇 개 · 좀").</p>
+  <div class="egs">
+    <p class="eg"><span class="de">Hast du einen Stift? — Ja, ich habe <b>einen</b>. / Nein, ich habe <b>keinen</b>.</span></p>
+    <p class="eg"><span class="de">Hast du ein Auto? — Ja, ich habe <b>eins</b>. / Nein, ich habe <b>keins</b>.</span></p>
+    <p class="eg"><span class="de">Hast du Geschwister? — Ja, ich habe <b>welche</b>. / Nein, ich habe <b>keine</b>.</span></p>
+    <p class="eg"><span class="de">Ist das dein Handy? — Ja, das ist <b>meins</b>.</span><span class="ko">5과 부록</span></p>
+    <p class="eg"><span class="de">Ist das deine Jacke? — Nein, die ist nicht <b>meine</b>.</span></p>
+  </div>
+  <ul class="n">
+    <li><span class="x">교재 외</span>부정대명사 — 사람: <b>jemand</b> 누군가 ↔ <b>niemand</b> 아무도 · 사물: <b>etwas</b> 무언가 ↔ <b>nichts</b> 아무것도 · alles 모든 것 · alle 모두(복수) · jeder 각자·모든(단수, 정관사 끝: jeden Tag) · viel/wenig(셀 수 없는 것) ↔ viele/wenige(셀 수 있는 것) · einige 몇몇 · man(35번).</li>
+    <li>nichts · niemand · nie가 있으면 nicht를 또 쓰지 않는다(이중 부정 ×): Ich habe nichts gesagt. · etwas/nichts + 형용사는 명사화(etwas Neues, 24번).</li>
+  </ul>
+</article>
+
+</section>
+<section class="part pg" id="partB" data-l="B" data-t="동사 활용 — 어미 여섯 개와 예외들" data-p="규칙 어미 → sein · haben · werden → 화법조동사 → 모음변화 → 명령형"><header class="part-h"><span class="L">B</span><h2>동사 활용 — 어미 여섯 개와 예외들</h2><p>규칙 어미 → sein · haben · werden → 화법조동사 → 모음변화 → 명령형</p></header>
+
+<article class="item" id="i05" data-t="현재 인칭어미" data-st="여섯 칸, 실제 네 모양" data-src="3과"><header class="ih"><span class="no">05</span><h3>현재 인칭어미 <small>— 여섯 칸, 실제 네 모양</small></h3><div class="meta"><span class="src">3과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="05-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="05-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="05-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th></th><th>ich</th><th>du</th><th>er · sie · es</th><th>wir</th><th>ihr</th><th>sie · Sie</th></tr></thead>
+    <tbody>
+      <tr><th>어미</th><td class="hl">-e</td><td class="hl">-st</td><td class="hl">-t</td><td class="hl">-en</td><td class="hl">-t</td><td class="hl">-en</td></tr>
+      <tr><th>lernen</th><td>lern<span class="e">e</span></td><td>lern<span class="e">st</span></td><td>lern<span class="e">t</span></td><td>lern<span class="e">en</span></td><td>lern<span class="e">t</span></td><td>lern<span class="e">en</span></td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>동사 = <b>어간</b>(원형에서 -en을 뗀 것) + <b>어미</b>. er = ihr(-t), wir = sie(-en)라 실제 모양은 <b>-e · -st · -t · -en</b> 넷.</li>
+    <li><b>-e- 삽입</b>: 어간이 -t·-d로 끝나면 du·er·ihr에서 arbeit<b>e</b>st · find<b>e</b>t. 자음 + m·n으로 끝날 때도: du öffn<b>e</b>st · es regn<b>e</b>t. 단 l·r 뒤의 n은 그대로: du lernst.</li>
+    <li><b>s 하나로</b>: 어간이 -s·-ß·-z로 끝나면 du는 -t만 붙여 du = er: du heißt · du tanzt · du reist.</li>
+    <li>존칭 Sie는 언제나 -en: Kommen Sie aus Korea?</li>
+  </ul>
+</article>
+
+<article class="item" id="i06" data-t="sein · haben · werden · wissen" data-st="통째로 암기" data-src="3·11·15과"><header class="ih"><span class="no">06</span><h3>sein · haben · werden · wissen <small>— 통째로 암기</small></h3><div class="meta"><span class="src">3·11·15과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="06-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="06-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="06-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>인칭</th><th>sein 이다·있다</th><th>haben 가지다</th><th>werden 되다</th><th>wissen 알다</th></tr></thead>
+    <tbody>
+      <tr><th>ich</th><td>bin</td><td>habe</td><td>werde</td><td class="ex">weiß</td></tr>
+      <tr><th>du</th><td>bist</td><td>hast</td><td>wirst</td><td>weißt</td></tr>
+      <tr><th>er · sie · es</th><td>ist</td><td>hat</td><td>wird</td><td class="ex">weiß</td></tr>
+      <tr><th>wir · sie · Sie</th><td>sind</td><td>haben</td><td>werden</td><td>wissen</td></tr>
+      <tr><th>ihr</th><td>seid</td><td>habt</td><td>werdet</td><td>wisst</td></tr>
+      <tr><th>과거 (ich = er)</th><td>war</td><td>hatte</td><td>wurde</td><td>wusste</td></tr>
+      <tr><th>완료 (er)</th><td>ist gewesen</td><td>hat gehabt</td><td>ist geworden</td><td>hat gewusst</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>세 동사는 이후 모든 시제의 기초: haben / sein → 완료(26번) · werden → 미래(28번) · 수동(29번) · war / hatte / wurde → 과거(28번).</li>
+    <li>wissen은 화법조동사처럼 <b>ich = er</b>, 어미 없음: ich weiß · er weiß. 사실을 알 때 wissen, 사람·장소를 알 때 kennen.</li>
+    <li>werden의 세 얼굴 — 문장 끝을 본다: 명사·형용사 → <b>되다</b>(Er wird Arzt.) · 원형 → <b>미래</b>(Er wird kommen.) · 과거분사 → <b>수동</b>(Das Haus wird gebaut.)</li>
+  </ul>
+</article>
+
+<article class="item" id="i07" data-t="화법조동사 여섯" data-st="ich = er, 복수 = 원형" data-src="9과"><header class="ih"><span class="no">07</span><h3>화법조동사 여섯 <small>— ich = er, 복수 = 원형</small></h3><div class="meta"><span class="src">9과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="07-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="07-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="07-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>원형 · 뜻</th><th>ich = er</th><th>du</th><th>ihr</th><th>과거 (ich = er)</th></tr></thead>
+    <tbody>
+      <tr><th class="l">können 할 수 있다 <small>능력</small></th><td>kann</td><td>kannst</td><td>könnt</td><td>konnte</td></tr>
+      <tr><th class="l">müssen 해야 한다 <small>내 사정·필요</small></th><td>muss</td><td>musst</td><td>müsst</td><td>musste</td></tr>
+      <tr><th class="l">dürfen 해도 된다 <small>허가</small></th><td>darf</td><td>darfst</td><td>dürft</td><td>durfte</td></tr>
+      <tr><th class="l">wollen 하려 한다 <small>강한 의지</small></th><td>will</td><td>willst</td><td>wollt</td><td>wollte</td></tr>
+      <tr><th class="l">sollen 해야 한다 <small>남이 시킴</small></th><td class="ex">soll</td><td>sollst</td><td>sollt</td><td>sollte</td></tr>
+      <tr><th class="l">mögen 좋아한다 <small>평소 취향</small></th><td>mag</td><td>magst</td><td>mögt</td><td>mochte</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>wir · sie · Sie는 원형 그대로(können · müssen …). 단수는 모음이 바뀌고(<b class="r">sollen만 그대로</b>) ich와 er는 어미 없이 같다.</li>
+    <li>과거는 움라우트를 빼고 -te: konnte · musste · durfte · mochte — 말할 때도 과거형(28번).</li>
+    <li>müssen ↔ sollen: Ich muss arbeiten.(사정상) · Ich soll arbeiten.(누가 하라고 했다)</li>
+    <li>mögen ↔ möchten: Ich mag Kaffee.(취향) · Ich möchte einen Kaffee.(지금의 바람·정중) — möchte도 ich = er, 정체는 mögen의 접속법 II(30번).</li>
+    <li><b>muss nicht</b> = 안 해도 된다 ↔ <b>darf nicht</b> = 하면 안 된다. 금지는 언제나 darf nicht.</li>
+    <li>Ich will gehen. = 갈래(의지). 영어 will(미래)과 다름 — 미래는 werden(28번).</li>
+    <li>원형은 맨 끝, zu 없이(12번): Ich kann schwimmen. (zu schwimmen ×) · lassen(시키다·놔두다)도 같은 자리: Ich lasse das Auto reparieren.</li>
+  </ul>
+</article>
+
+<article class="item" id="i08" data-t="모음변화 동사" data-st="du · er에서만 바뀐다" data-src="3과"><header class="ih"><span class="no">08</span><h3>모음변화 동사 <small>— du · er에서만 바뀐다</small></h3><div class="meta"><span class="src">3과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="08-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="08-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="08-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>패턴</th><th class="l">동사 (원형 → er)</th></tr></thead>
+    <tbody>
+      <tr><th>e → i</th><td class="l">sprechen → spr<b>i</b>cht 말하다 · essen → <b>i</b>sst 먹다 · geben → g<b>i</b>bt 주다 · helfen → h<b>i</b>lft 돕다 · nehmen → n<b>i</b>mmt 잡다·타다 · treffen → tr<b>i</b>fft 만나다 · vergessen → verg<b>i</b>sst 잊다</td></tr>
+      <tr><th>e → ie</th><td class="l">sehen → s<b>ie</b>ht 보다 · lesen → l<b>ie</b>st 읽다 · empfehlen → empf<b>ie</b>hlt 추천하다</td></tr>
+      <tr><th>a → ä</th><td class="l">fahren → f<b>ä</b>hrt 타고 가다 · schlafen → schl<b>ä</b>ft 자다 · tragen → tr<b>ä</b>gt 나르다·입다 · waschen → w<b>ä</b>scht 씻다 · anfangen → f<b>ä</b>ngt … an 시작하다</td></tr>
+      <tr><th>au → äu</th><td class="l">laufen → l<b>äu</b>ft 달리다·걷다</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>어미는 규칙 그대로, <b>du·er에서만</b> 어간 모음이 바뀐다 — ich spreche · wir sprechen은 그대로.</li>
+    <li>철자 주의: du ni<b>mm</b>st · er ni<b>mm</b>t (h가 빠지고 m이 둘). essen · vergessen은 어간이 -ss라 du도 -t만: du isst · du vergisst.</li>
+    <li>명령형 du에서 e → i · ie는 남고(Sprich! · Lies!), a → ä는 돌아간다(Fahr!) — 09번.</li>
+    <li>현재형이 규칙처럼 보여도 과거·분사에서 모음이 바뀌는 동사가 많다(kommen → kam → gekommen) — 31번 일람.</li>
+  </ul>
+</article>
+
+<article class="item" id="i09" data-t="명령형" data-st="du · ihr · Sie 세 틀" data-src="4과"><header class="ih"><span class="no">09</span><h3>명령형 <small>— du · ihr · Sie 세 틀</small></h3><div class="meta"><span class="src">4과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="09-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="09-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="09-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>원형 · 뜻</th><th>du (한 명에게)</th><th>ihr (여럿에게)</th><th>Sie (존댓말)</th></tr></thead>
+    <tbody>
+      <tr><th class="l">kommen 오다</th><td>Komm!</td><td>Kommt!</td><td>Kommen Sie!</td></tr>
+      <tr><th class="l">sprechen 말하다 <small>e → i 유지</small></th><td>Sprich!</td><td>Sprecht!</td><td>Sprechen Sie!</td></tr>
+      <tr><th class="l">lesen 읽다 <small>e → ie 유지</small></th><td>Lies!</td><td>Lest!</td><td>Lesen Sie!</td></tr>
+      <tr><th class="l">nehmen 잡다</th><td>Nimm!</td><td>Nehmt!</td><td>Nehmen Sie!</td></tr>
+      <tr><th class="l">fahren 타고 가다 <small>움라우트 ×</small></th><td class="ex">Fahr!</td><td>Fahrt!</td><td>Fahren Sie!</td></tr>
+      <tr><th class="l">arbeiten 일하다 <small>-t·-d 어간 +e</small></th><td class="ex">Arbeite!</td><td>Arbeitet!</td><td>Arbeiten Sie!</td></tr>
+      <tr><th class="l">aufstehen 일어나다 <small>분리</small></th><td>Steh auf!</td><td>Steht auf!</td><td>Stehen Sie auf!</td></tr>
+      <tr><th class="l">sein 이다</th><td class="ex">Sei ruhig!</td><td class="ex">Seid ruhig!</td><td class="ex">Seien Sie ruhig!</td></tr>
+      <tr><th class="l">haben 가지다</th><td>Hab keine Angst!</td><td>Habt keine Angst!</td><td>Haben Sie keine Angst!</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>du형 = 현재 du형에서 주어와 -st를 뗀 것: du kommst → Komm! · du sprichst → Sprich! · du fährst → Fahr!(ä는 a로 되돌림). 끝의 -e는 보통 생략, 단 -t·-d·-ig 어간은 유지(Warte! · Arbeite! · Entschuldige!).</li>
+    <li>ihr형 = ihr 현재형에서 주어만 뺌: Kommt! · Sie형 = 원형 + Sie, 동사가 맨 앞: Kommen Sie bitte! · 우리: Gehen wir! / Lass uns gehen!</li>
+    <li>분리동사는 접두어가 맨 끝(12번): Steh auf! · Mach die Tür zu! · Machen Sie bitte den Mund auf!</li>
+    <li>부드럽게: bitte · mal · doch — Komm doch mit! · Kannst du mir mal helfen? 더 정중하게는 접속법 II(30번): Könnten Sie …?</li>
+  </ul>
+</article>
+
+</section>
+<section class="part pg" id="partC" data-l="C" data-t="문장 공식 — 자리 규칙 두 개가 전부" data-p="동사는 두 번째(V2) + 나머지 동사는 맨 끝(괄호) — 이 둘이 4 · 9 · 10 · 11 · 13 · 15 · 16과를 관통합니다"><header class="part-h"><span class="L">C</span><h2>문장 공식 — 자리 규칙 두 개가 전부</h2><p>동사는 두 번째(V2) + 나머지 동사는 맨 끝(괄호) — 이 둘이 4 · 9 · 10 · 11 · 13 · 15 · 16과를 관통합니다</p></header>
+
+<article class="item" id="i10" data-t="동사는 두 번째 (V2)" data-st="덩어리로 센다" data-src="4과"><header class="ih"><span class="no">10</span><h3>동사는 두 번째 (V2) <small>— 덩어리로 센다</small></h3><div class="meta"><span class="src">4과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="10-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="10-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="10-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>문장 종류</th><th>① 첫 자리</th><th>② 동사</th><th class="l">나머지</th></tr></thead>
+    <tbody>
+      <tr><th>평서문</th><td>Ich</td><td class="hl">lerne</td><td class="l w">heute Deutsch.</td></tr>
+      <tr><th>도치 <small>시간이 앞으로</small></th><td>Heute</td><td class="hl">lerne</td><td class="l w">ich Deutsch. <small>주어가 동사 뒤로</small></td></tr>
+      <tr><th>Ja / Nein 의문문</th><td class="hl">Kommst</td><td>du</td><td class="l w">heute? <small>동사가 ①</small></td></tr>
+      <tr><th>W-의문문</th><td>Was</td><td class="hl">lernst</td><td class="l w">du? <small>W-말 + 동사 ②</small></td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>자리는 단어가 아니라 <b>덩어리</b>로 센다 — Der Mann(2단어) = 한 자리, Morgen früh = 한 자리. Morgen früh kommt er. (Morgen früh er kommt ×)</li>
+    <li>W-말: wer 누가 · was 무엇 · wo 어디 · wann 언제 · wie 어떻게 · warum 왜 — 확장은 11번.</li>
+    <li>wer는 격 변화: <b>wer – wem – wen</b> (der – dem – den의 끝글자). was는 1격·4격 모두 was. Wer kommt? · <b>Wem</b> hilfst du? · <b>Wen</b> siehst du?</li>
+    <li>이름은 wie로 묻는다: Wie ist Ihr Name? · Wie heißt du? (Was ist Ihr Name?는 덜 자연스러움)</li>
+    <li>말투를 부드럽게 하는 denn · mal · doch · eigentlich는 동사와 주어 대명사 바로 뒤: Was machst du <b>denn</b>? · Warum lernst du <b>eigentlich</b> Deutsch?</li>
+    <li>질문의 기본형은 동사가 앞: Kommst du heute? 평서문 어순에 끝만 올리는 Du kommst heute?는 확인할 때만 쓴다.</li>
+  </ul>
+</article>
+
+<article class="item" id="i11" data-t="의문사 확장" data-st="wohin · woher · welch- · wie viel" data-src="4·12과"><header class="ih"><span class="no">11</span><h3>의문사 확장 <small>— wohin · woher · welch- · wie viel</small></h3><div class="meta"><span class="src">4·12과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="11-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="11-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="11-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>의문사</th><th class="l">뜻</th><th class="l">예</th></tr></thead>
+    <tbody>
+      <tr><th>wo · wohin · woher</th><td class="l">어디에(위치) · 어디로(이동) · 어디서(출신)</td><td class="l">Wo wohnst du? · Wohin fährst du? · Woher kommst du?</td></tr>
+      <tr><th>wann · seit wann · bis wann<br>wie lange · wie oft</th><td class="l">언제 · 언제부터 · 언제까지 · 얼마나 오래(기간) · 얼마나 자주</td><td class="l">Seit wann lernst du Deutsch? · Wie lange bleibst du?</td></tr>
+      <tr><th>wie + 형용사</th><td class="l">wie alt 몇 살 · wie spät 몇 시 · wie viel(셀 수 없는 것·가격) · wie viele(셀 수 있는 것)</td><td class="l">Wie alt bist du? · Wie viel kostet das? · Wie viele Kinder hast du?</td></tr>
+      <tr><th>welch- 어느</th><td class="l">정관사 끝글자(01번)</td><td class="l">Welcher Bus fährt nach Seoul? · Welches Buch liest du? · Welchen Film siehst du?(남성 4격)</td></tr>
+      <tr><th>was für (ein) 어떤 종류</th><td class="l">ein 끝(02번) · 복수·불가산은 was für</td><td class="l">Was für ein Auto hast du? · Was für Kuchen habt ihr?</td></tr>
+      <tr><th>전치사 + 의문사</th><td class="l">사람: 전치사 + wem/wen · 사물: wo(r) + 전치사(23번)</td><td class="l">Mit wem gehst du? · Für wen ist das? · Worauf wartest du? · Wofür interessierst du dich?</td></tr>
+    </tbody></table></div>
+  <p class="note">의문사 뒤엔 동사 ②(10번), 간접의문문이면 동사 끝(13번): Weißt du, wo er wohnt? · Ich weiß nicht, wie viel das kostet.</p>
+</article>
+
+<article class="item" id="i12" data-t="괄호 공식 (Satzklammer)" data-st="여러 문법이 같은 모양" data-src="9·10·11·15·16과"><header class="ih"><span class="no">12</span><h3>괄호 공식 (Satzklammer) <small>— 여러 문법이 같은 모양</small></h3><div class="meta"><span class="src">9·10·11·15·16과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="12-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="12-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="12-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="klam">
+    <div class="cap">Satzklammer — 괄호가 문장 가운데를 감싼다</div>
+    <div class="row"><div class="s1">Ich</div><div class="s2">kann</div><div class="s3">gut Deutsch</div><div class="s4">sprechen</div></div>
+    <div class="brace"><span></span></div>
+    <div class="lab"><span>① 주어</span><span>② 활용동사</span><span>가운데</span><span>맨 끝 (원형 · 분사 · 접두어)</span></div>
+    <div class="ko">"나는 독일어를 잘 할 수 있다" — 활용동사는 ②, 나머지 동사는 맨 끝</div>
+  </div>
+  <div class="tw"><table class="t">
+    <thead><tr><th>문법</th><th>①</th><th>② 활용동사</th><th>가운데</th><th>맨 끝</th></tr></thead>
+    <tbody>
+      <tr><th>화법조동사 <small>9과</small></th><td>Ich</td><td class="hl">kann</td><td class="w">gut Deutsch</td><td class="hl">sprechen <small>원형</small></td></tr>
+      <tr><th>lassen <small>9과</small></th><td>Ich</td><td class="hl">lasse</td><td class="w">das Auto</td><td class="hl">reparieren <small>원형</small></td></tr>
+      <tr><th>분리동사 <small>9과</small></th><td>Ich</td><td class="hl">stehe</td><td class="w">um 7 Uhr</td><td class="hl">auf <small>접두어</small></td></tr>
+      <tr><th>현재완료 <small>10과</small></th><td>Ich</td><td class="hl">habe</td><td class="w">Deutsch</td><td class="hl">gelernt <small>분사</small></td></tr>
+      <tr><th>완료 (이동) <small>10과</small></th><td>Ich</td><td class="hl">bin</td><td class="w">nach Berlin</td><td class="hl">gefahren</td></tr>
+      <tr><th>과거완료 <small>11과</small></th><td>Ich</td><td class="hl">hatte</td><td class="w">schon</td><td class="hl">gegessen</td></tr>
+      <tr><th>미래 <small>11과</small></th><td>Ich</td><td class="hl">werde</td><td class="w">Deutsch</td><td class="hl">lernen <small>원형</small></td></tr>
+      <tr><th>수동태 <small>15과</small></th><td>Das Haus</td><td class="hl">wird</td><td class="w">jetzt</td><td class="hl">gebaut</td></tr>
+      <tr><th>조동사 + 수동 <small>15과</small></th><td>Das Haus</td><td class="hl">muss</td><td class="w">bis Mai</td><td class="hl">gebaut werden</td></tr>
+      <tr><th>접속법 II <small>16과</small></th><td>Ich</td><td class="hl">würde</td><td class="w">nach Hause</td><td class="hl">gehen <small>원형</small></td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>의문문이면 ②의 활용동사가 ①로 나올 뿐, 끝은 그대로: <b>Kannst</b> du gut Deutsch <b>sprechen</b>?</li>
+    <li>화법조동사 뒤의 분리동사는 다시 붙어 원형: Ich muss früh <b>aufstehen</b>. 분리·비분리 구별은 35번.</li>
+    <li>원형·분사·접두어 사이에 목적어·시간 표현이 들어간다: Ich kann sprechen Deutsch × · Ich aufstehe ×.</li>
+    <li>종속절에선 활용동사가 진짜 맨 끝으로 → 13번: …, weil das Haus gebaut werden <b>muss</b>.</li>
+  </ul>
+</article>
+
+<article class="item" id="i13" data-t="접속사 세 부류" data-st="어순이 갈린다" data-src="11·13과"><header class="ih"><span class="no">13</span><h3>접속사 세 부류 <small>— 어순이 갈린다</small></h3><div class="meta"><span class="src">11·13과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="13-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="13-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="13-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>부류</th><th>어순</th><th class="l">외울 단어</th></tr></thead>
+    <tbody>
+      <tr><th>등위접속사</th><td>그대로 · 동사 ②</td><td class="l">und 그리고 · oder 또는 · aber 하지만 · sondern ~이 아니라(앞에 부정) · denn 왜냐하면 — <b>딱 5개</b></td></tr>
+      <tr><th>종속접속사</th><td class="hl">동사 맨 끝</td><td class="l">weil ~해서 · dass ~라고 · wenn ~하면 · als ~했을 때 · ob ~인지 · obwohl ~인데도 · nachdem ~한 후 · bevor ~하기 전 · während ~하는 동안 · sobald ~하자마자 · bis ~까지 · falls ~라면 · damit ~하도록 · solange ~하는 한 · so … dass / sodass 너무 ~해서</td></tr>
+      <tr><th>접속부사</th><td>① 차지 → 도치</td><td class="l">deshalb · deswegen 그래서 · trotzdem · dennoch 그런데도 · dann 그다음 · sonst 안 그러면 · außerdem 게다가</td></tr>
+    </tbody></table></div>
+  <div class="sub">같은 뜻, 세 모양 — 어순과 품사가 다르다</div>
+  <div class="tw"><table class="t sm">
+    <thead><tr><th>뜻</th><th>종속접속사 <small>(동사 끝)</small></th><th>접속부사 <small>(도치)</small></th><th>전치사 <small>(+ 2격)</small></th></tr></thead>
+    <tbody>
+      <tr><th>이유 ~때문에</th><td>weil</td><td>deshalb · deswegen <small>(결과 앞)</small></td><td>wegen</td></tr>
+      <tr><th>양보 ~인데도</th><td>obwohl</td><td>trotzdem · dennoch</td><td>trotz</td></tr>
+    </tbody></table></div>
+  <div class="egs">
+    <p class="eg"><span class="de">Obwohl es regnet, gehen wir spazieren.</span><span class="ko">종속절 → 콤마 뒤 주절은 동사부터</span></p>
+    <p class="eg"><span class="de">Es regnet, trotzdem gehen wir spazieren.</span><span class="ko">접속부사 → 도치</span></p>
+    <p class="eg"><span class="de">Trotz des Regens gehen wir spazieren.</span><span class="ko">전치사 + 2격</span></p>
+  </div>
+  <ul class="n">
+    <li>같은 "왜냐하면": denn은 동사 ② · weil은 동사 끝 — Ich bleibe zu Hause, weil es heute <b>regnet</b>. (weil es regnet heute ×)</li>
+    <li>wenn(반복·현재·조건) vs als(과거의 단 한 번): Als ich jung war, … · 과거에 여러 번이면 (immer) wenn: Immer wenn es regnete, blieben wir zu Hause.</li>
+    <li>dass(확실한 내용) vs ob(~인지 아닌지). 간접의문문도 종속절: Ich weiß nicht, <b>ob</b> er kommt. · Ich weiß nicht, <b>wann</b> er kommt.</li>
+    <li>종속절에 동사가 둘이면 활용동사가 진짜 맨 끝: …, weil ich Deutsch gelernt <b>habe</b>. · …, dass er nicht kommen <b>kann</b>.</li>
+    <li>종속절을 앞에 두면 콤마 뒤 주절은 동사부터: Weil es regnet, <b>bleibe</b> ich zu Hause.</li>
+    <li>nachdem 절은 한 시제 앞: 주절 현재 → 현재완료(Nachdem ich gegessen <b>habe</b>, gehe ich spazieren.) · 주절 과거 → 과거완료(…gegessen <b>hatte</b>, ging ich …).</li>
+    <li>결과 so … dass · 목적 damit: Er war so müde, dass er sofort einschlief. · Ich koche Suppe, damit die Kinder warm essen. 주어가 같으면 um … zu(14번).</li>
+  </ul>
+</article>
+
+<article class="item" id="i14" data-t="짝 접속사 · zu 부정형" data-st="B1 쓰기의 접착제" data-src="13과|교재 외"><header class="ih"><span class="no">14</span><h3>짝 접속사 · zu 부정형 <small>— B1 쓰기의 접착제</small></h3><div class="meta"><span class="src">13과</span><span class="src x">교재 외</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="14-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="14-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="14-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>짝</th><th class="l">뜻</th><th class="l">예</th></tr></thead>
+    <tbody>
+      <tr><th>nicht nur … sondern auch</th><td class="l">~뿐 아니라 …도</td><td class="l">Er ist nicht nur nett, sondern auch klug.</td></tr>
+      <tr><th>sowohl … als auch</th><td class="l">~도 …도 (둘 다)</td><td class="l">Sie spricht sowohl Deutsch als auch Englisch.</td></tr>
+      <tr><th>entweder … oder</th><td class="l">~이거나 …이거나</td><td class="l">Wir fahren entweder nach Berlin oder nach Hamburg.</td></tr>
+      <tr><th>weder … noch</th><td class="l">~도 …도 아닌 (nicht 없이)</td><td class="l">Ich trinke weder Kaffee noch Tee.</td></tr>
+      <tr><th>zwar … aber</th><td class="l">~이긴 하지만</td><td class="l">Das Hotel ist zwar teuer, aber sehr schön.</td></tr>
+      <tr><th>je + 비교급 …, desto + 비교급</th><td class="l">~할수록 …</td><td class="l">Je mehr ich lerne, desto besser spreche ich. <small>je 쪽은 동사 끝, desto 뒤는 동사 바로</small></td></tr>
+    </tbody></table></div>
+  <div class="sub">zu 부정형 — 동사를 명사처럼, 동사는 끝으로</div>
+  <div class="egs">
+    <p class="eg"><span class="de">Deutsch zu lernen ist interessant. = Es ist interessant, Deutsch zu lernen.</span><span class="ko">Es는 뒤의 진짜 주어 자리를 미리 맡는 말</span></p>
+    <p class="eg"><span class="de">Ich versuche, pünktlich zu kommen. · Ich hoffe, dich bald zu sehen.</span><span class="ko">동사 + zu</span></p>
+    <p class="eg"><span class="de">Ich habe viel zu tun.</span><span class="ko">haben + zu</span></p>
+    <p class="eg"><span class="de">Es ist schwer, früh aufzustehen.</span><span class="ko">분리동사는 zu가 가운데</span></p>
+  </div>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>zu 부정형 짝</th><th class="l">뜻</th><th class="l">예</th></tr></thead>
+    <tbody>
+      <tr><th>um … zu</th><td class="l">~하기 위해</td><td class="l">Ich lerne Deutsch, um in Deutschland zu studieren.</td></tr>
+      <tr><th>ohne … zu <span class="x">교재 외</span></th><td class="l">~하지 않고</td><td class="l">Er geht, ohne zu bezahlen.</td></tr>
+      <tr><th>(an)statt … zu <span class="x">교재 외</span></th><td class="l">~하는 대신</td><td class="l">Statt zu lernen, spielt er.</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>zu 부정형은 주어가 주절과 같을 때만. 주어가 다르면 종속절: damit · ohne dass · (an)statt dass + 동사 끝.</li>
+    <li><b>zu 없음</b>: 화법조동사 · lassen · sehen · hören 뒤 — Ich kann schwimmen. · Ich lasse das Auto reparieren.</li>
+  </ul>
+</article>
+
+<article class="item" id="i15" data-t="가운데 칸 순서" data-st="Te · Ka · Mo · Lo" data-src="2·4·11과"><header class="ih"><span class="no">15</span><h3>가운데 칸 순서 <small>— Te · Ka · Mo · Lo</small></h3><div class="meta"><span class="src">2·4·11과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="15-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="15-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="15-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="flow">
+    <div><b>Te</b><span>시간 · 언제<br>morgen</span></div><i>→</i>
+    <div><b>Ka</b><span>이유 · 왜<br>wegen der Arbeit</span></div><i>→</i>
+    <div><b>Mo</b><span>방법 · 어떻게<br>mit dem Zug</span></div><i>→</i>
+    <div><b>Lo</b><span>장소 · 어디로<br>nach Berlin</span></div>
+  </div>
+  <div class="egs">
+    <p class="eg"><span class="de">Ich fahre <b>morgen</b> wegen der Arbeit mit dem Zug nach Berlin.</span><span class="ko">언제 · 왜 · 어떻게 · 어디로</span></p>
+    <p class="eg"><span class="de">Morgen fahre ich wegen der Arbeit mit dem Zug nach Berlin.</span><span class="ko">하나를 앞으로 옮겨도 나머지 순서는 그대로</span></p>
+  </div>
+  <div class="sub">목적어 둘 — 4격이 대명사면 앞으로</div>
+  <div class="tw"><table class="t sm">
+    <thead><tr><th>경우</th><th class="l">예</th><th>순서</th></tr></thead>
+    <tbody>
+      <tr><th>명사 둘</th><td class="l">Ich gebe dem Kind einen Ball.</td><td class="w">3격 → 4격</td></tr>
+      <tr><th>3격만 대명사</th><td class="l">Ich gebe ihm einen Ball.</td><td class="w">3격 → 4격 (그대로)</td></tr>
+      <tr><th>4격이 대명사</th><td class="l">Ich gebe ihn dem Kind.</td><td class="ex">4격 → 3격</td></tr>
+      <tr><th>둘 다 대명사</th><td class="l">Ich gebe es dir.</td><td class="ex">4격 → 3격</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>목적어까지 넣은 기본 순서: 동사 → Te → 3격 → Ka → 4격 → Mo → Lo. Ich gebe morgen dem Mann aus Dank das Buch persönlich im Büro. 꼭 지킬 것은 '명사 둘이면 3격 먼저' 하나.</li>
+    <li>대명사(재귀대명사 포함)는 동사 바로 뒤, 주어 대명사 다음에 온다 — noch · heute보다 앞: Kannst du <b>dich</b> noch an ihn erinnern? · Wir haben <b>uns</b> im Park getroffen.</li>
+    <li>nicht의 자리는 16번.</li>
+  </ul>
+</article>
+
+<article class="item" id="i16" data-t="부정 — nicht · kein · Doch" data-st="무엇을, 어디서 부정하나" data-src="4·5·9·11·13과"><header class="ih"><span class="no">16</span><h3>부정 — nicht · kein · Doch <small>— 무엇을, 어디서 부정하나</small></h3><div class="meta"><span class="src">4·5·9·11·13과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="16-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="16-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="16-7" aria-label="7일 복습">7</label></span></div></header>
+  <p class="lead">부정할 자리에 <b>ein이 있거나 올 수 있으면 kein</b>, 그 밖은 전부 <b>nicht</b>.</p>
+  <div class="cols c2">
+    <div class="box"><h5>kein <small>명사를 부정 · 02번 표 그대로</small></h5><ul>
+      <li>ein 자리: Ich habe <b>kein</b> Auto.</li>
+      <li>관사 없는 명사: Ich trinke <b>keinen</b> Kaffee. · Ich habe <b>keine</b> Zeit.</li>
+      <li>'~이 아니다'(직업): Er ist <b>kein</b> Arzt.</li>
+      <li>복수도: <b>keine</b> Bücher(한 권도 없다)</li>
+      <li>nicht ein × — 영어 not a 직역 금지</li></ul></div>
+    <div class="box"><h5>nicht <small>그 밖의 전부</small></h5><ul>
+      <li>동사: Ich komme <b>nicht</b>.</li>
+      <li>형용사·부사: Das ist <b>nicht</b> gut. · Er wohnt <b>nicht</b> hier.</li>
+      <li>정관사 붙은 명사: Ich mag den Kaffee <b>nicht</b>.</li>
+      <li>소유관사 붙은 명사: Das ist <b>nicht</b> mein Auto. (kein mein ×)</li></ul></div>
+  </div>
+  <div class="sub">nicht의 자리 — 문장 끝을 차지하는 말 바로 앞, 없으면 맨 끝</div>
+  <div class="tw"><table class="t sm">
+    <thead><tr><th>끝에 남는 말</th><th class="l">예</th></tr></thead>
+    <tbody>
+      <tr><th>없음 → 맨 끝</th><td class="l">Ich komme <span class="r">nicht</span>. · Er kam gestern <span class="r">nicht</span>.</td></tr>
+      <tr><th>과거분사 · 원형</th><td class="l">Ich habe gestern <span class="r">nicht</span> gelernt. · Er kann heute <span class="r">nicht</span> mitkommen.</td></tr>
+      <tr><th>분리 접두어</th><td class="l">Er rief mich <span class="r">nicht</span> an.</td></tr>
+      <tr><th>술어 (형용사 · 명사)</th><td class="l">Er war <span class="r">nicht</span> krank.</td></tr>
+      <tr><th>방향 · 장소 · gern</th><td class="l">Er fuhr <span class="r">nicht</span> nach Berlin. · Ich gehe heute <span class="r">nicht</span> ins Kino. · Er spielt <span class="r">nicht</span> gern Fußball.</td></tr>
+      <tr><th>부분 부정</th><td class="l">Ich komme <span class="r">nicht</span> heute, sondern morgen. <small>그 말 바로 앞</small></td></tr>
+      <tr><th>종속절</th><td class="l">…, dass er heute <span class="r">nicht</span> kommt. · …, dass er <span class="r">nicht</span> kommen kann.</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>시간 표현 · 대명사 목적어는 nicht보다 앞: Ich will morgen nicht ins Kino gehen. · Ich kenne ihn nicht.</li>
+    <li>부정 질문에 반대로 답하면 <b>Doch</b>(Ja ×): Kommst du nicht? — Doch, ich komme! · Hast du keinen Hund? — Nein, ich habe keinen.(정말 없음) / <b>Doch</b>, ich habe einen!(사실 있음)</li>
+    <li>더 이상 없음: kein … mehr(Wir haben keine Milch mehr.) · nicht mehr(Ich wohne nicht mehr in Seoul.) — 35번 schon · noch 카드.</li>
+    <li>nichts · niemand · nie 와 nicht를 겹치지 않는다(이중 부정 ×).</li>
+  </ul>
+</article>
+
+<article class="item" id="i17" data-t="관계대명사 · 분사" data-st="정관사 표 재활용" data-src="14과"><header class="ih"><span class="no">17</span><h3>관계대명사 · 분사 <small>— 정관사 표 재활용</small></h3><div class="meta"><span class="src">14과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="17-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="17-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="17-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>격＼성</th><th>남성 m</th><th>여성 f</th><th>중성 n</th><th>복수 pl</th></tr></thead>
+    <tbody>
+      <tr><th>1격 ~이/가</th><td>der</td><td>die</td><td>das</td><td>die</td></tr>
+      <tr><th>2격 ~의</th><td class="ex">dessen</td><td class="ex">deren</td><td class="ex">dessen</td><td class="ex">deren</td></tr>
+      <tr><th>3격 ~에게</th><td>dem</td><td>der</td><td>dem</td><td class="ex">denen</td></tr>
+      <tr><th>4격 ~을/를</th><td>den</td><td>die</td><td>das</td><td>die</td></tr>
+    </tbody></table></div>
+  <p class="note">정관사 표(01번)와 같고, 붉은 다섯 칸만 다릅니다 — 2격 dessen(남·중) · deren(여·복), 복수 3격 denen.</p>
+  <ul class="n">
+    <li>결정 두 번 — ① 성·수는 <b>선행사</b>(꾸밈받는 명사)가 정하고, ② 격은 <b>관계절 안에서의 역할</b>(주어 1격 · 목적어 4격 · ~에게 3격)이 정한다. 주절의 격과는 무관: Das ist der Mann, <b>dem</b> ich helfe. (der × — helfen은 3격)</li>
+    <li>관계절은 종속절 — 콤마 필수, 동사는 맨 끝(13번). 문장 가운데 끼면 콤마 두 개로 감싼다. 관계절은 명사 <b>뒤</b>(der dort steht Mann ×).</li>
+    <li>전치사가 붙으면 전치사 + 관계대명사가 맨 앞, 격은 전치사가 정함: der Mann, <b>mit dem</b> ich spreche · der Bus, <b>auf den</b> ich warte (warten auf + 4격, 23번).</li>
+    <li>2격 dessen · deren = '~의': der Mann, dessen Auto hier steht. 뒤 명사에 관사를 또 쓰지 않는다.</li>
+    <li>선행사가 alles · etwas · nichts · das · 문장 전체 · 최상급 명사면 <b>was</b>, 장소면 <b>wo</b>: alles, was ich habe · Das ist das Beste, was ich je gegessen habe! · die Stadt, wo ich wohne (= in der ich wohne).</li>
+  </ul>
+  <div class="egs">
+    <p class="eg"><span class="de">Der Mann, <b>der</b> dort steht, ist mein Lehrer.</span><span class="ko">남성 1격 · 콤마 두 개</span></p>
+    <p class="eg"><span class="de">Der Mann, <b>den</b> ich sehe, …</span><span class="ko">남성 4격</span></p>
+    <p class="eg"><span class="de">Das Buch, <b>das</b> ich lese, …</span><span class="ko">중성 4격</span></p>
+    <p class="eg"><span class="de">Die Leute, <b>denen</b> ich danke, …</span><span class="ko">복수 3격</span></p>
+    <p class="eg"><span class="de">Der Mann, <b>dessen</b> Auto dort steht, …</span><span class="ko">2격 — 차가 저기 서 있는 남자</span></p>
+  </div>
+  <div class="sub">분사 → 형용사 — 관계절을 한 단어로 줄인 꼴, 어미는 24번 그대로</div>
+  <div class="tw"><table class="t">
+    <thead><tr><th>종류</th><th>만들기</th><th class="l">예 = 관계절</th></tr></thead>
+    <tbody>
+      <tr><th>현재분사<small>~하고 있는 (능동·진행)</small></th><td>원형 + d + 어미</td><td class="l">das lachen<span class="e">de</span> Kind = das Kind, das lacht · der fahrende Zug</td></tr>
+      <tr><th>과거분사<small>~된 (수동·완료)</small></th><td>과거분사(27번) + 어미</td><td class="l">das gekocht<span class="e">e</span> Ei = das Ei, das gekocht wurde · die gekochten Kartoffeln</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>명사가 그 동작을 하고 있으면 현재분사, 당했거나 끝났으면 과거분사. 단 sein과 쓰는 동사(이동·변화, 26번)의 과거분사는 '~한': der angekommene Zug 도착한 기차 · das eingeschlafene Kind 잠든 아이.</li>
+    <li>분사는 명사 앞, 관계절은 명사 뒤 — 자리가 반대. -et 분사도 같은 어미: ein geöffnetes Produkt.</li>
+  </ul>
+</article>
+
+</section>
+<section class="part pg" id="partD" data-l="D" data-t="전치사 — 격을 결정하는 말" data-p="전치사 → 격 대응만 새로 외우면, 관사는 01번 표 그대로"><header class="part-h"><span class="L">D</span><h2>전치사 — 격을 결정하는 말</h2><p>전치사 → 격 대응만 새로 외우면, 관사는 01번 표 그대로</p></header>
+
+<article class="item" id="i18" data-t="격 고정 전치사" data-st="세 묶음 + 뜻 더 보기" data-src="6과"><header class="ih"><span class="no">18</span><h3>격 고정 전치사 <small>— 세 묶음 + 뜻 더 보기</small></h3><div class="meta"><span class="src">6과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="18-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="18-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="18-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="cols">
+    <div class="box"><h5>+ 4격 <small>5개</small></h5><div class="prep">
+      <div><b>durch</b> <span>~을 통해 · 가로질러</span></div><div><b>für</b> <span>~을 위해</span></div><div><b>gegen</b> <span>~에 부딪혀 · 맞서</span></div><div><b>ohne</b> <span>~없이</span></div><div><b>um</b> <span>~둘레에 · 정각 ~시에</span></div></div></div>
+    <div class="box"><h5>+ 3격 <small>7개</small></h5><div class="prep">
+      <div><b>aus</b> <span>~안에서 밖으로 · 출신</span></div><div><b>bei</b> <span>~곁에 · ~네 집에 · 직장</span></div><div><b>mit</b> <span>~와 함께 · ~로(수단)</span></div><div><b>nach</b> <span>~로(지명) · ~후에</span></div><div><b>seit</b> <span>~이래로</span></div><div><b>von</b> <span>~로부터</span></div><div><b>zu</b> <span>~에게 · ~로(사람·건물)</span></div></div></div>
+    <div class="box"><h5>+ 2격 <small>4개</small></h5><div class="prep">
+      <div><b>wegen</b> <span>~때문에</span></div><div><b>während</b> <span>~동안</span></div><div><b>trotz</b> <span>~에도 불구하고</span></div><div><b>statt</b> <span>~대신</span></div></div></div>
+  </div>
+  <p class="note">외우는 소리: 4격 <b>durch · für · gegen · ohne · um</b> / 3격 <b>aus · bei · mit · nach · seit · von · zu</b>. 격은 뜻이 아니라 전치사가 정한다 — mit은 언제나 3격(mit den Mann ×).</p>
+  <div class="sub">뜻 더 보기 — 같은 전치사의 시간 · 대상 뜻</div>
+  <div class="tw"><table class="t sm dense">
+    <thead><tr><th>전치사</th><th class="l">공간</th><th class="l">시간</th><th class="l">대상 · 그 밖</th></tr></thead>
+    <tbody>
+      <tr><th>durch +4</th><td class="l">durch den Park</td><td class="l">durch den Winter ~내내</td><td class="l"></td></tr>
+      <tr><th>für +4</th><td class="l"></td><td class="l">für drei Tage ~동안</td><td class="l">für meinen Freund ~을 위해</td></tr>
+      <tr><th>gegen +4</th><td class="l">gegen die Wand</td><td class="l">gegen 8 Uhr ~쯤</td><td class="l">gegen den Krieg ~에 반대</td></tr>
+      <tr><th>um +4</th><td class="l">um den Tisch</td><td class="l">um 8 Uhr 정각</td><td class="l"></td></tr>
+      <tr><th>aus +3</th><td class="l">aus der Stadt · aus Korea</td><td class="l"></td><td class="l">aus Holz ~로 만든(재료)</td></tr>
+      <tr><th>bei +3</th><td class="l">bei meinen Eltern</td><td class="l">beim Essen ~할 때</td><td class="l">bei Siemens ~에서(직장)</td></tr>
+      <tr><th>mit +3</th><td class="l">mit dem Auto(수단)</td><td class="l">mit 20 Jahren ~살에</td><td class="l">mit dem Freund ~와 함께</td></tr>
+      <tr><th>nach +3</th><td class="l">nach Berlin</td><td class="l">nach der Schule ~후에</td><td class="l">nach meiner Meinung ~에 따르면</td></tr>
+      <tr><th>seit +3</th><td class="l"></td><td class="l">seit einem Jahr ~이래로</td><td class="l"></td></tr>
+      <tr><th>von +3</th><td class="l">vom Lehrer ~에게서</td><td class="l">von Montag bis Freitag ~부터</td><td class="l">von dem Buch ~에 대해</td></tr>
+      <tr><th>zu +3</th><td class="l">zum Arzt</td><td class="l">zu Weihnachten ~에(시점)</td><td class="l">zum Geburtstag ~으로(목적)</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>'~로' 구분: 지명은 nach Berlin, 사람·건물은 zum Arzt. '~에서' 구분: 속에서 나오면 aus dem Haus, 지점에서 떠나면 von der Schule. 한 표 정리는 22번.</li>
+    <li>2격 전치사 뒤에 회화에선 3격도 흔함(wegen dem Regen) — 글·시험은 2격(wegen des Regens). 2격 대신 von + 3격: das Auto von meinem Vater.</li>
+    <li>길 안내 두 개: <b>gegenüber von</b> + 3격(Gegenüber vom Bahnhof ist eine Bank.) · <b>bis zu</b> + 3격(Gehen Sie geradeaus bis zur Ampel.)</li>
+    <li>Kommst du mit?의 mit는 전치사가 아니라 분리동사 mitkommen의 앞부분(35번).</li>
+    <li><span class="x">교재 외</span>시험에 더 나오는 격 고정 전치사 — 3격: ab ~부터(ab morgen) · außer ~외에 · gegenüber ~맞은편(명사 뒤에도: dem Bahnhof gegenüber) · 4격: bis ~까지(bis nächsten Montag) · entlang ~을 따라(die Straße entlang) · 2격: innerhalb ~이내 · außerhalb ~밖.</li>
+  </ul>
+</article>
+
+<article class="item" id="i19" data-t="양방향 전치사 9" data-st="위치는 3격, 이동은 4격" data-src="6과"><header class="ih"><span class="no">19</span><h3>양방향 전치사 9 <small>— 위치는 3격, 이동은 4격</small></h3><div class="meta"><span class="src">6과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="19-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="19-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="19-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="chips"><span><b>in</b> 안</span><span><b>an</b> 옆면에 붙어</span><span><b>auf</b> 위(닿음)</span><span><b>über</b> 위(떠 있음)</span><span><b>unter</b> 아래</span><span><b>vor</b> 앞</span><span><b>hinter</b> 뒤</span><span><b>neben</b> 옆</span><span><b>zwischen</b> 사이</span></div>
+  <p class="note">짝으로 외우면 절반: über ↔ unter · vor ↔ hinter · auf ↔ in, 남는 셋 an · neben · zwischen. 격은 질문으로 — <b>wo?</b> 머무는 위치 = <b>3격</b> / <b>wohin?</b> 경계를 넘는 이동 = <b>4격</b>.</p>
+  <div class="tw"><table class="t">
+    <thead><tr><th>이동 — 놓는 동작 → 4격 <small>wohin?</small></th><th>위치 — 놓인 상태 → 3격 <small>wo?</small></th></tr></thead>
+    <tbody>
+      <tr><td class="w">stellen 세워 놓다 — die Vase auf <b>den</b> Tisch</td><td class="w">stehen 서 있다 — auf <b>dem</b> Tisch</td></tr>
+      <tr><td class="w">legen 눕혀 놓다 — das Buch auf <b>den</b> Tisch</td><td class="w">liegen 놓여 있다 — auf <b>dem</b> Tisch</td></tr>
+      <tr><td class="w">setzen 앉히다 — das Kind auf <b>den</b> Stuhl</td><td class="w">sitzen 앉아 있다 — auf <b>dem</b> Stuhl</td></tr>
+      <tr><td class="w">hängen 걸다 — das Bild an <b>die</b> Wand</td><td class="w">hängen 걸려 있다 — an <b>der</b> Wand</td></tr>
+      <tr><td class="w">Ich gehe in <b>die</b> Küche. 부엌으로 간다</td><td class="w">Ich bin in <b>der</b> Küche. 부엌에 있다</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>한국어 '~에'는 둘 다라서 조사가 아니라 <b>동사</b>를 보고 판단. hängen은 두 뜻이 같은 모양 — 4격이면 '걸다', 3격이면 '걸려 있다'.</li>
+    <li>길 안내: <b>über</b> + 4격 ~을 건너(Gehen Sie über die Straße.) · <b>an … vorbei</b> + 3격 ~옆을 지나(Gehen Sie an der Kirche vorbei.) · 바다·호수로 가면 <b>an</b> + 4격(Wir fahren an die Ostsee.)</li>
+    <li>시간 뜻일 땐 격이 굳어진다: vor ~전 · in ~후 · an(요일·날) · zwischen = 3격 / über ~내내 = 4격. Ich komme in zwei Tagen. · Er arbeitet übers Wochenende. 시간 표현 전체는 21번.</li>
+  </ul>
+</article>
+
+<article class="item" id="i20" data-t="전치사 + 관사 축약형 8" data-src="6과"><header class="ih"><span class="no">20</span><h3>전치사 + 관사 축약형 8</h3><div class="meta"><span class="src">6과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="20-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="20-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="20-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <tbody>
+      <tr><th>an + dem</th><td class="hl">am</td><th>an + das</th><td class="hl">ans</td><th>in + dem</th><td class="hl">im</td><th>in + das</th><td class="hl">ins</td></tr>
+      <tr><th>bei + dem</th><td class="hl">beim</td><th>von + dem</th><td class="hl">vom</td><th>zu + dem</th><td class="hl">zum</td><th>zu + der</th><td class="ex">zur</td></tr>
+    </tbody></table></div>
+  <p class="note">계산하지 말고 청크로: <b>zur Schule</b> 학교에 · <b>zum Arzt</b> 병원에 · <b>im Kino</b> 영화관에서 · <b>am Montag</b> 월요일에 · <b>ins Kino</b> 영화관으로 · <b>beim Essen</b> 식사 중에 · <b>vom Bahnhof</b> 역에서.</p>
+</article>
+
+<article class="item" id="i21" data-t="시간 표현" data-st="am · im · um, seit · vor · in, 전치사 없는 4격" data-src="6과|교재 외"><header class="ih"><span class="no">21</span><h3>시간 표현 <small>— am · im · um, seit · vor · in, 전치사 없는 4격</small></h3><div class="meta"><span class="src">6과</span><span class="src x">교재 외</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="21-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="21-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="21-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>범주</th><th class="l">표현</th><th class="l">예</th></tr></thead>
+    <tbody>
+      <tr><th>시점</th><td class="l">am 요일·날짜·하루 부분 · im 월·계절 · um 시각 · gegen ~쯤 · zu 명절</td><td class="l">am Montag · am 3. Mai · am Abend · am Wochenende · im Mai · im Winter · um 8 Uhr · gegen 8 Uhr · zu Weihnachten · <span class="r">예외 in der Nacht</span></td></tr>
+      <tr><th>기간</th><td class="l">von … bis · bis · ab · seit + 3격 · für + 4격 · über + 4격</td><td class="l">von 9 bis 17 Uhr · bis Freitag · ab morgen(앞으로 시작) · seit zwei Jahren(이미 시작 → 지금까지) · für zwei Wochen(예정 기간) · übers Wochenende(내내)</td></tr>
+      <tr><th>앞 · 뒤</th><td class="l">vor + 3격 · in + 3격 · nach + 3격 · zwischen + 3격</td><td class="l">vor zwei Jahren 2년 전에 · in zwei Wochen 2주 후에 · nach dem Essen 식사 후에 · zwischen 8 und 9 Uhr</td></tr>
+      <tr><th>전치사 없이 = 4격 <span class="x">교재 외</span></th><td class="l">jed- · letzt- · nächst- · dies- · ganz- + 시간 명사</td><td class="l">jeden Tag · letzte Woche · nächstes Jahr · diesen Monat · den ganzen Tag · jeden Monat</td></tr>
+      <tr><th>빈도부사 <span class="x">교재 외</span></th><td class="l" colspan="2">immer 항상 · meistens 대개 · oft 자주 · manchmal 가끔 · selten 드물게 · nie 결코 (가운데 칸 Te 자리, 15번)</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>seit는 <b>현재형</b>과 — 한국어 "~해 왔다"에 끌려 완료형을 쓰지 않는다: Ich lerne seit zwei Jahren Deutsch. · vor는 과거와: Ich habe vor zwei Jahren angefangen.</li>
+    <li>ab(앞으로 시작) ↔ seit(이미 시작): ab morgen · seit gestern. in(지금부터 ~후) ↔ nach(어떤 일 뒤): in einer Stunde · nach der Arbeit.</li>
+    <li>시간 표현은 가운데 칸 첫째(Te, 15번)에 두거나 ①에 두고 도치(10번): Morgen fahre ich nach Berlin.</li>
+  </ul>
+</article>
+
+<article class="item" id="i22" data-t="장소 세 질문" data-st="wohin · wo · woher 한 표로" data-src="6과|교재 외"><header class="ih"><span class="no">22</span><h3>장소 세 질문 <small>— wohin · wo · woher 한 표로</small></h3><div class="meta"><span class="src">6과</span><span class="src x">교재 외</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="22-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="22-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="22-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t sm">
+    <thead><tr><th>대상</th><th>wohin? 어디로 (이동)</th><th>wo? 어디에 (위치)</th><th>woher? 어디서 (출발)</th></tr></thead>
+    <tbody>
+      <tr><th>도시 · 나라 (무관사)</th><td>nach Berlin · nach Korea</td><td>in Berlin · in Korea</td><td>aus Berlin · aus Korea</td></tr>
+      <tr><th>관사 있는 나라<small>die Schweiz · die Türkei · die USA</small></th><td>in die Schweiz · in die USA</td><td>in der Schweiz · in den USA</td><td>aus der Schweiz · aus den USA</td></tr>
+      <tr><th>집</th><td class="ex">nach Hause</td><td class="ex">zu Hause</td><td>von zu Hause</td></tr>
+      <tr><th>사람 · 직업</th><td>zum Arzt · zu Anna</td><td>beim Arzt · bei Anna</td><td>vom Arzt · von Anna</td></tr>
+      <tr><th>건물 안</th><td>in die Schule · ins Kino</td><td>in der Schule · im Kino</td><td>aus der Schule · aus dem Kino</td></tr>
+      <tr><th>행사 · 지점</th><td>zur Party · zum Bahnhof</td><td>auf der Party · am Bahnhof</td><td>von der Party · vom Bahnhof</td></tr>
+      <tr><th>바다 · 호수 <span class="x">교재 외</span></th><td>an die Ostsee · ans Meer</td><td>an der Ostsee · am Meer</td><td>von der Ostsee</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>이동: nach(무관사 지명 · Hause) / zu(사람 · 건물 · 행사, 3격) / in(안으로, 4격) — 위치: in · an · auf + 3격 / bei(사람) — 출발: aus(안에서) / von(지점 · 사람).</li>
+    <li>in · an · auf는 양방향(19번)이라 격이 바뀐다: in die Schweiz(4격) ↔ in der Schweiz(3격). nach · zu · bei · von · aus는 격 고정(18번). zu Hause(집에) ↔ nach Hause(집으로)는 통째로.</li>
+    <li><span class="x">교재 외</span>방향 부사: links 왼쪽 · rechts 오른쪽 · geradeaus 직진 · oben 위 · unten 아래 · hier 여기 ↔ dort/da 저기 · nach links / nach oben(이동은 nach + 부사).</li>
+  </ul>
+</article>
+
+<article class="item" id="i23" data-t="동사 + 전치사 짝" data-st="한 묶음으로" data-src="12과"><header class="ih"><span class="no">23</span><h3>동사 + 전치사 짝 <small>— 한 묶음으로</small></h3><div class="meta"><span class="src">12과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="23-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="23-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="23-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="pairs">
+    <div><b>warten auf</b> <i>+4</i> <span>~을 기다리다</span></div>
+    <div><b>hoffen auf</b> <i>+4</i> <span>~을 바라다</span></div>
+    <div><b>sich freuen auf</b> <i>+4</i> <span>~을 기대하다 (앞일)</span></div>
+    <div><b>sich freuen über</b> <i>+4</i> <span>~에 기뻐하다 (지난 일)</span></div>
+    <div><b>sprechen über</b> <i>+4</i> <span>~에 대해 말하다</span></div>
+    <div><b>nachdenken über</b> <i>+4</i> <span>~에 대해 곰곰이 생각하다</span></div>
+    <div><b>sich ärgern über</b> <i>+4</i> <span>~에 화내다</span></div>
+    <div><b>denken an</b> <i>+4</i> <span>~을 생각하다</span></div>
+    <div><b>sich erinnern an</b> <i>+4</i> <span>~을 기억하다</span></div>
+    <div><b>teilnehmen an</b> <i class="r">+3</i> <span>~에 참가하다</span></div>
+    <div><b>sich interessieren für</b> <i>+4</i> <span>~에 관심 있다</span></div>
+    <div><b>sich treffen mit</b> <i>+3</i> <span>~와 만나다</span></div>
+    <div><b>gehören zu</b> <i>+3</i> <span>~에 속하다</span></div>
+    <div><b>abhängen von</b> <i>+3</i> <span>~에 달려 있다</span></div>
+  </div>
+  <ul class="n">
+    <li>전치사는 동사가 정한다 — 영어식 금지: wait for × → warten <b>auf</b>. Ich warte den Bus × · Ich warte für den Bus ×.</li>
+    <li>대상이 사물이면 <b>da(r)</b> + 전치사(darauf · darüber · damit), 질문은 <b>wo(r)</b> + 전치사(Worauf wartest du? · Womit fährst du?), 사람이면 전치사 + 대명사 그대로(auf ihn). r은 모음으로 시작하는 전치사 앞에만: darauf · darin · worüber ↔ damit · dafür · womit.</li>
+    <li>뒤에 절이 오면 da-로 미리 받는다: Ich freue mich <b>darauf</b>, dass du kommst.</li>
+    <li>전치사 뒤 명사는 '다른 4격 목적어'로 세지 않는다 → 재귀는 4격: Ich freue <b>mich</b> auf die Ferien.</li>
+  </ul>
+  <div class="sub"><span>B1까지 자주 나오는 짝 더</span> <span class="x">교재 외</span></div>
+  <div class="pairs">
+    <div><b>sich kümmern um</b> <i>+4</i> <span>~을 돌보다 · 처리하다</span></div>
+    <div><b>sich bewerben um</b> <i>+4</i> <span>~에 지원하다</span></div>
+    <div><b>bitten um</b> <i>+4</i> <span>~을 부탁하다</span></div>
+    <div><b>sich beschweren über</b> <i>+4</i> <span>~에 불평하다</span></div>
+    <div><b>sich unterhalten mit / über</b> <i>+3 / +4</i> <span>~와 / ~에 대해 대화하다</span></div>
+    <div><b>sich bedanken für</b> <i>+4</i> <span>~에 감사하다</span></div>
+    <div><b>sich vorbereiten auf</b> <i>+4</i> <span>~을 준비하다</span></div>
+    <div><b>sich gewöhnen an</b> <i>+4</i> <span>~에 익숙해지다</span></div>
+    <div><b>sich verlassen auf</b> <i>+4</i> <span>~을 믿고 의지하다</span></div>
+    <div><b>aufpassen auf</b> <i>+4</i> <span>~을 돌보다 · 조심하다</span></div>
+    <div><b>glauben an</b> <i>+4</i> <span>~을 믿다</span></div>
+    <div><b>Angst haben vor</b> <i>+3</i> <span>~을 두려워하다</span></div>
+    <div><b>träumen von</b> <i>+3</i> <span>~을 꿈꾸다</span></div>
+    <div><b>erzählen von</b> <i>+3</i> <span>~에 대해 이야기하다</span></div>
+    <div><b>fragen nach</b> <i>+3</i> <span>~에 대해 묻다</span></div>
+    <div><b>suchen nach</b> <i>+3</i> <span>~을 찾다</span></div>
+  </div>
+  <p class="note">형용사 + 전치사도 같은 방식: zufrieden mit +3 만족하는 · stolz auf +4 자랑스러운 · interessiert an +3 관심 있는 · verliebt in +4 사랑에 빠진 · böse auf +4 화난 · verantwortlich für +4 책임 있는 · begeistert von +3 열광하는. 경향: auf · über · für · um은 4격, mit · von · vor · nach · zu · bei는 3격, an · in은 동사마다 다름(denken an +4 · teilnehmen an +3).</p>
+</article>
+
+</section>
+<section class="part pg" id="partE" data-l="E" data-t="형용사 — 어미와 비교" data-p="원리 하나: 관사가 성·격을 보여 주지 못하면 형용사 어미가 대신 보여 준다"><header class="part-h"><span class="L">E</span><h2>형용사 — 어미와 비교</h2><p>원리 하나: 관사가 성·격을 보여 주지 못하면 형용사 어미가 대신 보여 준다</p></header>
+
+<article class="item" id="i24" data-t="형용사 어미" data-st="세 규칙, 원리는 하나" data-src="7과"><header class="ih"><span class="no">24</span><h3>형용사 어미 <small>— 세 규칙, 원리는 하나</small></h3><div class="meta"><span class="src">7과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="24-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="24-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="24-7" aria-label="7일 복습">7</label></span></div></header>
+  <p class="lead">서술 자리(sein · werden · bleiben 뒤)는 <b>어미 없음</b>: Das Buch ist gut. (gutes ×) — 어미는 <b>명사 앞</b>에서만 붙고, 앞의 관사가 무엇이냐로 세 가지로 갈립니다.</p>
+  <div class="tri">
+    <div><h4>① 약변화 <small>정관사 der · die · das 뒤</small></h4><div class="tw"><table class="t sm">
+      <thead><tr><th></th><th>m</th><th>f</th><th>n</th><th>pl</th></tr></thead>
+      <tbody>
+        <tr><th>1</th><td>-e</td><td>-e</td><td>-e</td><td>-en</td></tr>
+        <tr><th>2</th><td>-en</td><td>-en</td><td>-en</td><td>-en</td></tr>
+        <tr><th>3</th><td>-en</td><td>-en</td><td>-en</td><td>-en</td></tr>
+        <tr><th>4</th><td class="ex">-en</td><td>-e</td><td>-e</td><td>-en</td></tr>
+      </tbody></table></div></div>
+    <div><h4>② 혼합변화 <small>ein · kein · mein 뒤</small></h4><div class="tw"><table class="t sm">
+      <thead><tr><th></th><th>m</th><th>f</th><th>n</th><th>pl</th></tr></thead>
+      <tbody>
+        <tr><th>1</th><td class="hl">-er</td><td>-e</td><td class="hl">-es</td><td>-en</td></tr>
+        <tr><th>2</th><td>-en</td><td>-en</td><td>-en</td><td>-en</td></tr>
+        <tr><th>3</th><td>-en</td><td>-en</td><td>-en</td><td>-en</td></tr>
+        <tr><th>4</th><td class="ex">-en</td><td>-e</td><td class="hl">-es</td><td>-en</td></tr>
+      </tbody></table></div></div>
+    <div><h4>③ 강변화 <small>관사 없음 = 정관사 끝글자</small></h4><div class="tw"><table class="t sm">
+      <thead><tr><th></th><th>m</th><th>f</th><th>n</th><th>pl</th></tr></thead>
+      <tbody>
+        <tr><th>1</th><td>-er</td><td>-e</td><td>-es</td><td>-e</td></tr>
+        <tr><th>2</th><td class="ex">-en</td><td>-er</td><td class="ex">-en</td><td>-er</td></tr>
+        <tr><th>3</th><td>-em</td><td>-er</td><td>-em</td><td>-en</td></tr>
+        <tr><th>4</th><td>-en</td><td>-e</td><td>-es</td><td>-e</td></tr>
+      </tbody></table></div></div>
+  </div>
+  <ul class="n">
+    <li>① 약변화: 1격 단수 전부와 4격 여·중 = <b>-e</b>, 나머지 전부 = <b>-en</b>. 1·4격에서 바뀌는 칸은 여기서도 남성 4격(der → den과 같은 자리).</li>
+    <li>② 혼합변화: ein이 끝 없는 세 칸(남 1격 · 중 1·4격)만 형용사가 정관사 끝글자를 대신 — ein gut<b>er</b> Mann · ein gut<b>es</b> Buch. 나머지는 약변화와 같다.</li>
+    <li>③ 강변화: 관사 자리가 비면 형용사가 정관사 끝글자를 통째로 — gut<b>er</b> Wein · kalt<b>es</b> Wasser · mit gut<b>em</b> Wein · gut<b>e</b> Freunde. <b class="r">예외</b>: 남·중 2격은 명사에 이미 -s가 있어 -en: trotz schlechten Wetters.</li>
+    <li>관사가 있으면 3격은 언제나 -en: mit dem guten Mann · mit einem netten Mann.</li>
+  </ul>
+  <div class="egs">
+    <p class="eg"><span class="de">der gute Mann → den guten Mann</span><span class="ko">약변화 · 남성 4격</span></p>
+    <p class="eg"><span class="de">ein guter Mann · ein gutes Buch · eine gute Frau · keine guten Bücher</span><span class="ko">혼합변화</span></p>
+    <p class="eg"><span class="de">Guter Wein ist teuer. · Ich trinke kaltes Wasser.</span><span class="ko">강변화</span></p>
+  </div>
+  <div class="sub">편지 · 인사말은 강변화 — 통째로</div>
+  <div class="chips"><span><b>Lieber</b> Peter,</span><span><b>Liebe</b> Anna,</span><span><b>Sehr geehrte</b> Damen und Herren,</span><span>Mit <b>freundlichen</b> Grüßen</span><span><b>Guten</b> Tag! · <b>Guten</b> Morgen!</span><span><b>Gute</b> Nacht!</span><span><b>Herzlichen</b> Glückwunsch!</span></div>
+  <ul class="n">
+    <li>형용사가 둘 이상이면 모두 같은 어미: das große, schöne Haus. sehr에는 어미 없음: ein sehr gemütliches Café.</li>
+    <li>철자: -el은 늘 e 탈락 — dunkel → das dunkle Zimmer · au · eu 뒤의 -er도 탈락 — teuer → der teure Mantel · sauer → die saure Milch (그 밖의 -er는 그대로: das saubere Zimmer) · hoch → der hohe Berg (hoche ×).</li>
+    <li>서수(der erste Tag, 33번) · 분사(das lachende Kind, 17번) · 비교급·최상급(25번)도 같은 어미.</li>
+  </ul>
+  <div class="sub"><span>형용사의 명사화 — 대문자, 어미는 그대로</span> <span class="x">교재 외</span></div>
+  <ul class="n">
+    <li>etwas · nichts · viel · wenig + 형용사 → 대문자 + -es(무관사 중성): etwas Neues 새로운 것 · nichts Besonderes 특별한 것 없음 · viel Interessantes. alles 뒤에는 -e: alles Gute!</li>
+    <li>사람은 형용사 어미 그대로: der Deutsche · ein Deutscher · die Deutsche · die Deutschen · der Kranke 환자 · der Erwachsene 성인 · der Angestellte 직원 · die Bekannte 아는 여자.</li>
+  </ul>
+</article>
+
+<article class="item" id="i25" data-t="비교급 · 최상급" data-src="8과"><header class="ih"><span class="no">25</span><h3>비교급 · 최상급</h3><div class="meta"><span class="src">8과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="25-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="25-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="25-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="cols">
+    <div class="box"><h5>비교급 <small>-er + als</small></h5><p><b>größer als</b> Tom<br><small>mehr groß ×</small></p></div>
+    <div class="box"><h5>서술 최상급 <small>am -sten</small></h5><p>Anna ist <b>am größten</b>.<br><small>동사 수식도: Wer kocht am besten?</small></p></div>
+    <div class="box"><h5>명사 앞 <small>der -ste + 24번 어미</small></h5><p><b>der größte</b> Mann<br><small>der am größte ×</small></p></div>
+  </div>
+  <div class="tw"><table class="t">
+    <thead><tr><th>원급</th><th>비교급</th><th>최상급</th></tr></thead>
+    <tbody>
+      <tr><th>gut 좋은</th><td class="ex">besser</td><td class="ex">am besten</td></tr>
+      <tr><th>viel 많은</th><td class="ex">mehr</td><td class="ex">am meisten</td></tr>
+      <tr><th>gern 즐겨</th><td class="ex">lieber</td><td class="ex">am liebsten</td></tr>
+      <tr><th>hoch 높은</th><td>höher</td><td>am höchsten</td></tr>
+      <tr><th>nah 가까운</th><td>näher</td><td class="ex">am nächsten</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>움라우트가 붙는 짧은 형용사 — 목록으로 외운다: alt → älter · lang → länger · stark → stärker · kalt → kälter · warm → wärmer · groß → größer · jung → jünger · kurz → kürzer · dumm → dümmer · gesund → gesünder · klug → klüger. 안 붙는 것: klar · voll · froh · rund · falsch · laut · langsam.</li>
+    <li>-t · -d · -s · -ß · -z로 끝나면 최상급 -est: am ältesten · am kürzesten — 단 groß는 am größten(größesten ×).</li>
+    <li>teuer → teurer(e 탈락) · am teuersten(e 유지) · dunkel → dunkler.</li>
+    <li>같으면 <b>so … wie</b>: so groß wie · genauso groß wie(똑같이) · nicht so groß wie(만큼 ~하지 않다). 다르면 비교급 + <b>als</b>.</li>
+    <li>'훨씬 더'는 viel · noch + 비교급: Im Sommer ist es viel heißer. · Das ist noch besser.</li>
+    <li>명사 앞이면 비교급 · 최상급 뒤에 24번 어미를 한 번 더: der größer<b>e</b> Mann · der größt<b>e</b> Mann (der größer Mann ×) · ein·소유관사 뒤는 혼합변화: unser beliebtestes Modell.</li>
+    <li>mehr는 viel의 비교급일 때만: Ich lerne mehr als du. · Ich trinke lieber Tee als Kaffee.</li>
+    <li><span class="x">교재 외</span>immer + 비교급 = 점점 더: immer besser · immer mehr · immer kälter. '~할수록 …'(je … desto)는 14번.</li>
+  </ul>
+</article>
+
+</section>
+<section class="part pg" id="partF" data-l="F" data-t="시제 · 태 — 전부 괄호(12번)의 재활용" data-p="완료 → 과거 → 수동 → 접속법 — 모두 같은 괄호 구조"><header class="part-h"><span class="L">F</span><h2>시제 · 태 — 전부 괄호(12번)의 재활용</h2><p>완료 → 과거 → 수동 → 접속법 — 모두 같은 괄호 구조</p></header>
+
+<article class="item" id="i26" data-t="현재완료" data-st="haben이냐 sein이냐" data-src="10과"><header class="ih"><span class="no">26</span><h3>현재완료 <small>— haben이냐 sein이냐</small></h3><div class="meta"><span class="src">10과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="26-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="26-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="26-7" aria-label="7일 복습">7</label></span></div></header>
+  <p class="lead">공식: <b>habe / bin(②) + 과거분사(끝)</b>. 말할 때의 과거는 이 완료형이 기본입니다. 뜻은 과거분사가, 인칭과 자리는 haben / sein이 맡습니다.</p>
+  <div class="cols">
+    <div class="box"><h5>sein ① 이동 <small>장소가 바뀜</small></h5><p>gehen 가다 · kommen 오다 · fahren 타고 가다 · fliegen 날다 · laufen 뛰다 · reisen 여행하다 · ankommen 도착하다 · umziehen 이사하다 · <b class="r">schwimmen</b> 수영하다</p></div>
+    <div class="box"><h5>sein ② 상태 변화</h5><p>aufstehen 일어나다 · aufwachen 잠에서 깨다 · einschlafen 잠들다 · werden 되다 · sterben 죽다 · wachsen 자라다 · passieren 일어나다 · ausfallen 취소되다</p></div>
+    <div class="box"><h5>sein ③ 따로 외우는 둘</h5><p>sein 이다·있다 (bin gewesen) · bleiben 머물다 (bin geblieben)</p></div>
+  </div>
+  <ul class="n">
+    <li>움직이거나 변하면 sein, 나머지 전부(목적어 있는 동사 포함) haben. Ich habe nach Berlin gefahren × → Ich <b>bin</b> nach Berlin gefahren.</li>
+    <li>헷갈리는 셋: schwimmen은 장소가 안 바뀌어도 보통 sein(Wir sind im See geschwommen.) · ausfallen은 변화라 sein(Die Stunde ist ausgefallen.) · anfangen은 <b>haben</b>(Der Film hat schon angefangen.)</li>
+    <li>과거분사는 언제나 맨 끝: Ich habe gelernt Deutsch × → Ich habe Deutsch <b>gelernt</b>.</li>
+  </ul>
+  <div class="egs">
+    <p class="eg"><span class="de">Was ist passiert?</span><span class="ko">무슨 일이 있었어?</span></p>
+    <p class="eg"><span class="de">Hast du schon gegessen?</span><span class="ko">밥 먹었어?</span></p>
+    <p class="eg"><span class="de">Wir sind am Wochenende zu Hause geblieben.</span><span class="ko">주말에 집에 있었어.</span></p>
+  </div>
+</article>
+
+<article class="item" id="i27" data-t="과거분사 만들기" data-st="여섯 갈래" data-src="10과"><header class="ih"><span class="no">27</span><h3>과거분사 만들기 <small>— 여섯 갈래</small></h3><div class="meta"><span class="src">10과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="27-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="27-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="27-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>종류</th><th>틀</th><th class="l">예</th></tr></thead>
+    <tbody>
+      <tr><th>규칙</th><td>ge-어간-t</td><td class="l">gelernt · gemacht · gespielt · gehabt</td></tr>
+      <tr><th>-t · -d · 자음+m/n 어간</th><td>ge-어간-et</td><td class="l">gewartet · gearbeitet · geredet · geöffnet · geregnet</td></tr>
+      <tr><th>불규칙</th><td>ge-어간′-en</td><td class="l">gesprochen · gegangen · gelesen — 모음까지 바뀜, 31번 일람으로 통째 암기</td></tr>
+      <tr><th>혼합</th><td>ge-어간′-t</td><td class="l">gebracht · gedacht · gekannt · gewusst · gerannt — 모음은 바뀌고 끝은 -t</td></tr>
+      <tr><th>ge- 없음</th><td class="ex">어간-t / -en</td><td class="l">-ieren 동사(studiert · repariert) · 비분리동사(besucht · verstanden · vergessen — 접두어 8개는 35번)</td></tr>
+      <tr><th>분리동사</th><td>접두어-ge-어간</td><td class="l">aufgestanden · eingekauft · angerufen · eingeladen · ferngesehen</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>강세 없는 첫 음절 앞에는 ge-를 붙이지 않는다 — 그래서 studIEren · verSTEHen은 ge- 없음, ANkommen은 ge-가 가운데(angekommen).</li>
+    <li>frühstücken은 분리동사가 아니다: Hast du schon <b>gefrühstückt</b>? (frühgestückt ×)</li>
+    <li>규칙·불규칙은 현재형이 아니라 과거분사 모양으로 나눈다: kommen → gekommen이라 불규칙.</li>
+  </ul>
+</article>
+
+<article class="item" id="i28" data-t="과거형 · 과거완료 · 미래" data-st="글의 과거, 더 먼저의 과거" data-src="11과"><header class="ih"><span class="no">28</span><h3>과거형 · 과거완료 · 미래 <small>— 글의 과거, 더 먼저의 과거</small></h3><div class="meta"><span class="src">11과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="28-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="28-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="28-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tl">
+    <div><b>war gegangen</b><span>과거완료 · 더 먼저</span></div>
+    <div><b>kam</b><span>과거 · 그다음</span></div>
+    <div><b>jetzt</b><span>현재 · 말하는 지금</span></div>
+  </div>
+  <div class="tw"><table class="t">
+    <thead><tr><th>과거 어미</th><th>ich</th><th>du</th><th>er · sie · es</th><th>wir</th><th>ihr</th><th>sie · Sie</th></tr></thead>
+    <tbody>
+      <tr><th>규칙 lernen</th><td class="hl">lernte</td><td>lerntest</td><td class="hl">lernte</td><td>lernten</td><td>lerntet</td><td>lernten</td></tr>
+      <tr><th>불규칙 gehen</th><td class="hl">ging</td><td>gingst</td><td class="hl">ging</td><td>gingen</td><td>gingt</td><td>gingen</td></tr>
+    </tbody></table></div>
+  <p class="note">남색 칸 <b>ich = er</b>는 어미 없음. 규칙은 어간 + -te(-te · -test · -te · -ten · -tet · -ten), 불규칙은 바뀐 어간에 – · -st · – · -en · -t · -en — 현재 어미(05번)에서 ich · er의 어미만 떨어진 꼴.</p>
+  <ul class="n">
+    <li>과거형은 <b>글</b>(책 · 뉴스 · 이야기), 현재완료는 <b>말</b>. 뜻은 같다. 단 sein · haben · werden · 화법조동사는 말할 때도 과거형: Ich war krank. · Ich hatte keine Zeit. · Ich konnte nicht kommen.</li>
+    <li>-t · -d 어간, 자음 + m · n 어간은 -ete: arbeitete · regnete · öffnete. 불규칙은 -te 없이 모음만(ging · kam · sprach — gehte ×), 31번.</li>
+    <li>분리동사는 과거형에서도 접두어가 맨 끝: Er stand auf, trank Kaffee und ging zur Arbeit. · Nach dem Essen sah sie fern.</li>
+    <li>과거완료 = <b>hatte / war + 과거분사</b> — 과거보다 더 먼저 끝난 일. 이동·변화는 war(26번 그대로).</li>
+    <li>시간 접속사 als(~했을 때) · nachdem(~한 뒤) · bevor(~하기 전): Als ich ankam, war er schon gegangen. · Nachdem ich gegessen <b>hatte</b>, ging ich schlafen.(habe ×) · Bevor der Zug kam, hatten wir lange gewartet.</li>
+    <li>미래 = <b>werden + 원형</b>(맨 끝): Ich werde Deutsch lernen. 일상에선 현재형 + 시간 표현으로 충분: Morgen lerne ich Deutsch.</li>
+  </ul>
+</article>
+
+<article class="item" id="i29" data-t="수동태" data-st="werden의 시제만 바꾼다" data-src="15과"><header class="ih"><span class="no">29</span><h3>수동태 <small>— werden의 시제만 바꾼다</small></h3><div class="meta"><span class="src">15과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="29-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="29-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="29-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="pass">
+    <div><h6>능동 — 행위자가 주어</h6><div class="ln"><span>Der Architekt</span><span class="v">baut</span><span>das Haus</span></div><small>4격 목적어 das Haus가 수동의 1격 주어로 올라간다</small></div>
+    <div><h6>수동 — 받는 쪽이 주어</h6><div class="ln"><span>Das Haus</span><span class="v">wird</span><span class="p">gebaut</span><span class="o">(vom Architekten)</span></div><small>② werden · 과거분사 맨 끝 · 행위자는 생략 가능</small></div>
+  </div>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>시제</th><th class="l">문장</th><th class="l">뜻</th></tr></thead>
+    <tbody>
+      <tr><th>현재</th><td class="l">Das Haus <b>wird</b> gebaut.</td><td class="l w">지어진다</td></tr>
+      <tr><th>과거</th><td class="l">Das Haus <b>wurde</b> gebaut.</td><td class="l w">지어졌다 — 주로 글 · 보도</td></tr>
+      <tr><th>완료</th><td class="l">Das Haus <b>ist</b> gebaut <span class="r">worden</span>.</td><td class="l w">지어졌다 — 주로 말 · geworden ×</td></tr>
+      <tr><th>조동사 결합</th><td class="l">Das Haus <b>muss</b> bis Mai gebaut <b>werden</b>.</td><td class="l w">werden은 원형으로 맨 끝 · 과거는 조동사만: musste … gebaut werden</td></tr>
+      <tr><th>상태수동</th><td class="l">Die Tür <b>ist</b> geöffnet.</td><td class="l w">열려 있다(상태) ↔ wird geöffnet 열리는 중(동작)</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>쓰는 때: 행위자를 모를 때(Das Auto wurde gestohlen.) · 중요하지 않을 때(Hier wird Deutsch gesprochen.) · 과정 · 설명서(Das Medikament wird zweimal täglich eingenommen.) — 뜻은 man 능동과 같다: Man baut das Haus. = Das Haus wird gebaut.</li>
+    <li>행위자: 사람 = <b>von</b> + 3격(vom Architekten), 수단 · 원인 = <b>durch</b> + 4격(durch das Feuer). man · jemand 주어는 수동에서 사라진다(von man ×): Man renovierte die Schule. → Die Schule wurde renoviert.</li>
+    <li><b class="r">worden ≠ geworden</b>: ist gebaut worden(수동 완료) · ist Arzt geworden('되다').</li>
+    <li>ist geöffnet <b>worden</b> = 여는 일이 있었다(지금 닫혔을 수도) ↔ ist geöffnet = 지금 열려 있다. 지난 상태는 war geöffnet.</li>
+    <li>4격 목적어가 없어도 수동이 된다 — 주어 없이 wird · wurde, 맨 앞이 비면 es: Am Sonntag wird kaum gearbeitet. · Es wird getanzt. 3격 동사의 3격은 그대로: <b>Dem Mann</b> wird geholfen. · <b>Mir</b> wird geholfen.</li>
+    <li>종속절에선 과거분사 → werden → 조동사: …, weil das Haus gebaut werden muss.</li>
+    <li>'~될 수 있다'는 sich lassen + 원형으로도: Das lässt sich machen. = Das kann gemacht werden.</li>
+  </ul>
+</article>
+
+<article class="item" id="i30" data-t="접속법" data-st="가정 · 정중 · 전달의 형태" data-src="16과"><header class="ih"><span class="no">30</span><h3>접속법 <small>— 가정 · 정중 · 전달의 형태</small></h3><div class="meta"><span class="src">16과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="30-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="30-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="30-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>원형 → 접속법 II</th><th>ich = er</th><th>du</th><th>wir · sie · Sie</th><th>ihr</th></tr></thead>
+    <tbody>
+      <tr><th class="l">werden → würde <small>대부분 동사 + 원형</small></th><td>würde</td><td>würdest</td><td>würden</td><td>würdet</td></tr>
+      <tr><th class="l">sein → wäre</th><td>wäre</td><td>wär(e)st</td><td>wären</td><td>wär(e)t</td></tr>
+      <tr><th class="l">haben → hätte</th><td>hätte</td><td>hättest</td><td>hätten</td><td>hättet</td></tr>
+      <tr><th class="l">können → könnte</th><td>könnte</td><td>könntest</td><td>könnten</td><td>könntet</td></tr>
+    </tbody></table></div>
+  <p class="note">만드는 법 = <b>과거형(28번) + 움라우트 + -e</b>: wurde → würde · war → wäre · hatte → hätte · konnte → könnte · musste → müsste · durfte → dürfte. 단 sollte · wollte는 과거형 그대로(움라우트 없음), mögen은 möchte. 어미는 과거형과 같고 ich = er.</p>
+  <div class="tl">
+    <div><b>ist · hat · kommt</b><span>직설법 — 사실</span></div>
+    <div><b>wäre · hätte · würde</b><span>접속법 II — 가정 · 정중</span></div>
+    <div><b>sei · habe · komme</b><span>접속법 I — 남의 말 전달</span></div>
+  </div>
+  <ul class="n">
+    <li>대부분 동사는 <b>würde + 원형</b>. 단 sein · haben · 화법조동사는 고유형을 바로: wäre · hätte · könnte · müsste (würde sein ×). 일반 동사는 wenn절에서도 würde 가능: Wenn ich im Lotto gewinnen würde, …</li>
+    <li>비현실 가정: Wenn ich Zeit <b>hätte</b>, <b>würde</b> ich kommen. wenn을 빼면 동사가 맨 앞: Hätte ich Zeit, würde ich kommen.</li>
+    <li>과거의 가정: hätte / wäre + 과거분사(선택은 26번 그대로) — Wenn ich Zeit gehabt hätte, wäre ich gekommen.</li>
+    <li>als ob + 접속법 II(동사 끝) = 마치 ~처럼: Er tut, als ob er krank wäre. ob를 빼면 als 바로 뒤에 동사: Er tut, als wäre er krank.</li>
+    <li>정중함의 계단: Kannst du …? → Können Sie …? → <b>Könnten Sie mir helfen?</b> · Würden Sie bitte das Fenster öffnen? · <b>Ich hätte gern</b> einen Kaffee. · Dürfte ich das Fenster öffnen?</li>
+    <li>충고는 sollte: Du solltest mehr schlafen. · Sie sollten zum Arzt gehen. · An deiner Stelle würde ich warten.</li>
+    <li>이루지 못한 바람: Wenn ich das nur früher gewusst hätte! · Ich wünschte, ich könnte gut singen.</li>
+    <li><b>접속법 I</b>(남의 말 전달 · 뉴스): er 기준으로 외운다 — sein → <b>sei</b> · haben → <b>habe</b> · 일반 동사 원형 어간 + e(er komme · er fahre · er sehe — 현재형 모음변화 없음). Er sagt, er sei krank. 지난 일은 habe / sei + 과거분사: Der Minister sagte, er habe nichts davon gewusst.</li>
+    <li>복수에서 접속법 I이 직설법과 같아지면 접속법 II로: Die Kinder sagen, sie <b>hätten</b> Hunger. (haben ×)</li>
+  </ul>
+</article>
+
+</section>
+<section class="part pg" id="partG" data-l="G" data-t="불규칙 일람 · 숫자 · 마지막 암기 카드" data-p="불규칙동사 · 복수 · 숫자 · 시각 — 표째로 외우는 일람"><header class="part-h"><span class="L">G</span><h2>불규칙 일람 · 숫자 · 마지막 암기 카드</h2><p>불규칙동사 · 복수 · 숫자 · 시각 — 표째로 외우는 일람</p></header>
+
+<article class="item" id="i31" data-t="불규칙동사 일람" data-st="모음 패턴으로 묶어 외운다" data-src="3·10·11·15과"><header class="ih"><span class="no">31</span><h3>불규칙동사 일람 <small>— 모음 패턴으로 묶어 외운다</small></h3><div class="meta"><span class="src">3·10·11·15과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="31-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="31-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="31-7" aria-label="7일 복습">7</label></span></div></header>
+  <p class="lead">과거 · 완료의 모음이 같은 동사끼리 묶었습니다. 한 줄을 외우면 같은 묶음은 소리로 따라옵니다. <b class="r">ist</b> 표시는 sein과 짝(26번).</p>
+  <div class="tw long"><table class="t sm">
+    <thead><tr><th class="l">원형 · 뜻</th><th>현재 (er)</th><th>과거 (er)</th><th>완료 (er)</th></tr></thead>
+    <tbody>
+      <tr class="grp"><th colspan="4">① ei → ie → ie</th></tr>
+      <tr><th class="l">bleiben 머물다</th><td>bleibt</td><td>blieb</td><td><span class="r">ist</span> geblieben</td></tr>
+      <tr><th class="l">schreiben 쓰다</th><td>schreibt</td><td>schrieb</td><td>hat geschrieben</td></tr>
+      <tr class="grp"><th colspan="4">② i → a → u / o</th></tr>
+      <tr><th class="l">finden 찾다</th><td>findet</td><td>fand</td><td>hat gefunden</td></tr>
+      <tr><th class="l">trinken 마시다</th><td>trinkt</td><td>trank</td><td>hat getrunken</td></tr>
+      <tr><th class="l">schwimmen 수영하다</th><td>schwimmt</td><td>schwamm</td><td><span class="r">ist</span> geschwommen</td></tr>
+      <tr class="grp"><th colspan="4">③ e → a → o</th></tr>
+      <tr><th class="l">sprechen 말하다</th><td>spricht</td><td>sprach</td><td>hat gesprochen</td></tr>
+      <tr><th class="l">helfen 돕다 (+3격)</th><td>hilft</td><td>half</td><td>hat geholfen</td></tr>
+      <tr><th class="l">nehmen 잡다·타다</th><td>nimmt</td><td>nahm</td><td>hat genommen</td></tr>
+      <tr><th class="l">treffen 만나다</th><td>trifft</td><td>traf</td><td>hat getroffen</td></tr>
+      <tr class="grp"><th colspan="4">④ e → a → e</th></tr>
+      <tr><th class="l">geben 주다</th><td>gibt</td><td>gab</td><td>hat gegeben</td></tr>
+      <tr><th class="l">essen 먹다</th><td>isst</td><td class="ex">aß</td><td>hat gegessen</td></tr>
+      <tr><th class="l">lesen 읽다</th><td>liest</td><td>las</td><td>hat gelesen</td></tr>
+      <tr><th class="l">sehen 보다</th><td>sieht</td><td>sah</td><td>hat gesehen</td></tr>
+      <tr><th class="l">vergessen 잊다</th><td>vergisst</td><td>vergaß</td><td>hat vergessen</td></tr>
+      <tr class="grp"><th colspan="4">⑤ a → u → a</th></tr>
+      <tr><th class="l">fahren 타고 가다</th><td>fährt</td><td>fuhr</td><td><span class="r">ist</span> gefahren</td></tr>
+      <tr><th class="l">tragen 나르다·입다</th><td>trägt</td><td>trug</td><td>hat getragen</td></tr>
+      <tr><th class="l">waschen 씻다</th><td>wäscht</td><td>wusch</td><td>hat gewaschen</td></tr>
+      <tr><th class="l">einladen 초대하다</th><td>lädt … ein</td><td>lud … ein</td><td>hat eingeladen</td></tr>
+      <tr class="grp"><th colspan="4">⑥ 과거만 ie(i) — 완료는 원형 모음으로 돌아감</th></tr>
+      <tr><th class="l">schlafen 자다</th><td>schläft</td><td>schlief</td><td>hat geschlafen</td></tr>
+      <tr><th class="l">lassen 두다·시키다</th><td>lässt</td><td>ließ</td><td>hat gelassen</td></tr>
+      <tr><th class="l">fallen 떨어지다</th><td>fällt</td><td>fiel</td><td><span class="r">ist</span> gefallen</td></tr>
+      <tr><th class="l">laufen 달리다·걷다</th><td>läuft</td><td>lief</td><td><span class="r">ist</span> gelaufen</td></tr>
+      <tr><th class="l">rufen 부르다 (anrufen)</th><td>ruft</td><td>rief</td><td>hat gerufen</td></tr>
+      <tr><th class="l">heißen 이름이 ~이다</th><td>heißt</td><td>hieß</td><td>hat geheißen</td></tr>
+      <tr><th class="l">anfangen 시작하다</th><td>fängt … an</td><td>fing … an</td><td>hat angefangen</td></tr>
+      <tr class="grp"><th colspan="4">⑦ 따로 — 통째로</th></tr>
+      <tr><th class="l">sein 이다·있다</th><td>ist</td><td>war</td><td><span class="r">ist</span> gewesen</td></tr>
+      <tr><th class="l">haben 가지다</th><td>hat</td><td>hatte</td><td>hat gehabt</td></tr>
+      <tr><th class="l">werden 되다</th><td>wird</td><td>wurde</td><td><span class="r">ist</span> geworden</td></tr>
+      <tr><th class="l">gehen 가다</th><td>geht</td><td class="ex">ging</td><td><span class="r">ist</span> gegangen</td></tr>
+      <tr><th class="l">kommen 오다</th><td>kommt</td><td>kam</td><td><span class="r">ist</span> gekommen</td></tr>
+      <tr><th class="l">stehen 서 있다 (aufstehen)</th><td>steht</td><td class="ex">stand</td><td>hat gestanden</td></tr>
+      <tr><th class="l">liegen 누워 있다</th><td>liegt</td><td>lag</td><td>hat gelegen</td></tr>
+      <tr><th class="l">sitzen 앉아 있다</th><td>sitzt</td><td>saß</td><td>hat gesessen</td></tr>
+      <tr><th class="l">fliegen 날다</th><td>fliegt</td><td>flog</td><td><span class="r">ist</span> geflogen</td></tr>
+      <tr><th class="l">schneiden 자르다</th><td>schneidet</td><td>schnitt</td><td>hat geschnitten</td></tr>
+      <tr class="grp"><th colspan="4">⑧ 혼합동사 — 모음은 바뀌고 어미는 규칙(-te · -t)</th></tr>
+      <tr><th class="l">bringen 가져오다</th><td>bringt</td><td>brachte</td><td>hat gebracht</td></tr>
+      <tr><th class="l">denken 생각하다</th><td>denkt</td><td>dachte</td><td>hat gedacht</td></tr>
+      <tr><th class="l">kennen 알다 (사람·장소)</th><td>kennt</td><td>kannte</td><td>hat gekannt</td></tr>
+      <tr><th class="l">wissen 알다 (사실)</th><td>weiß</td><td>wusste</td><td>hat gewusst</td></tr>
+      <tr><th class="l">rennen 달리다</th><td>rennt</td><td>rannte</td><td><span class="r">ist</span> gerannt</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>분리동사는 같은 모양에 접두어만 붙인다: aufstehen → stand … auf → ist aufgestanden · anrufen → rief … an → hat angerufen. 비분리는 ge- 없이: verstehen → verstand → verstanden · bekommen → bekam → bekommen.</li>
+    <li>stehen · liegen · sitzen의 완료는 표준어에서 haben(남부 독일 · 오스트리아 · 스위스에선 ist). 과거형 du는 -st: du gingst · du trafst. kennen(사람 · 장소를 알다) ↔ wissen(사실을 알다).</li>
+  </ul>
+</article>
+
+<article class="item" id="i32" data-t="복수 패턴 5" data-st="추측은 패턴으로, 확정은 단어장으로" data-src="1과|교재 외"><header class="ih"><span class="no">32</span><h3>복수 패턴 5 <small>— 추측은 패턴으로, 확정은 단어장으로</small></h3><div class="meta"><span class="src">1과</span><span class="src x">교재 외</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="32-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="32-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="32-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t dense">
+    <thead><tr><th>어미</th><th class="l">주로 어떤 명사</th><th class="l">예</th></tr></thead>
+    <tbody>
+      <tr><th>-e (±움라우트)</th><td class="l">남성 대다수 · 여성 단음절 일부(움라우트)</td><td class="l">der Tisch → die Tische · der Stuhl → die Stühle · die Stadt → die Städte</td></tr>
+      <tr><th>-(e)n</th><td class="l">여성 대다수 · -e로 끝나는 명사 · -ung · -heit · -keit · n-변화 남성(35번)</td><td class="l">die Frau → die Frauen · die Lampe → die Lampen · die Wohnung → die Wohnungen · die Lehrerin → die Lehrerinnen</td></tr>
+      <tr><th>-er (+움라우트)</th><td class="l">중성 단음절 다수 · 남성 일부</td><td class="l">das Kind → die Kinder · das Buch → die Bücher · der Mann → die Männer</td></tr>
+      <tr><th>– (±움라우트)</th><td class="l">-er · -el · -en · -chen · -lein으로 끝나는 남성 · 중성</td><td class="l">der Lehrer → die Lehrer · der Vater → die Väter · der Apfel → die Äpfel · das Mädchen → die Mädchen</td></tr>
+      <tr><th>-s</th><td class="l">외래어 · -a / -o / -i / -y로 끝나는 말 · 줄임말</td><td class="l">das Auto → die Autos · das Handy → die Handys · das Café → die Cafés · die Oma → die Omas</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>복수 관사는 전부 die(01번). 복수 3격엔 명사에 -n 하나 더: mit den Kindern · den Äpfeln — 이미 -n · -s로 끝나면 그대로(den Frauen · den Autos). 1 · 4격 복수에 -n을 붙이지 않는다(die Äpfeln ×).</li>
+    <li>단어장엔 der Tisch, -e / das Kind, -er처럼 복수형을 같이 적어 외운다. 복수로만 쓰는 말: die Eltern 부모 · die Leute 사람들 · die Ferien 방학 · die Geschwister 형제자매.</li>
+  </ul>
+</article>
+
+<article class="item" id="i33" data-t="숫자" data-st="기수 · 서수 · 날짜 · 연도 · 가격" data-src="4과"><header class="ih"><span class="no">33</span><h3>숫자 <small>— 기수 · 서수 · 날짜 · 연도 · 가격</small></h3><div class="meta"><span class="src">4과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="33-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="33-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="33-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t sm">
+    <tbody>
+      <tr><th>0–12 통암기</th><td class="l w" colspan="4">null · eins · zwei · drei · vier · fünf · sechs · sieben · acht · neun · zehn · elf · zwölf</td></tr>
+      <tr><th>13–19</th><td class="l w" colspan="4">수 + zehn: dreizehn · vierzehn … · <span class="r">sechzehn · siebzehn</span>(s · en 탈락)</td></tr>
+      <tr><th>20–90</th><td class="l w" colspan="4"><span class="r">zwanzig</span> · <span class="r">dreißig</span> · vierzig · fünfzig · <span class="r">sechzig</span> · <span class="r">siebzig</span> · achtzig · neunzig</td></tr>
+      <tr><th>21 이상</th><td class="l w" colspan="4">일 + und + 십, 붙여서 한 단어: 21 = <b>ein</b>undzwanzig(einsundzwanzig ×) · 47 = siebenundvierzig · 99 = neunundneunzig</td></tr>
+      <tr><th>100 이상</th><td class="l w" colspan="4">(ein)hundert · tausend · 115 = hundertfünfzehn · 350 = dreihundertfünfzig · 999 = neunhundertneunundneunzig</td></tr>
+    </tbody></table></div>
+  <div class="tw"><table class="t">
+    <thead><tr><th>서수 범위</th><th class="l">형태 — 그 뒤에 형용사 어미(24번)</th></tr></thead>
+    <tbody>
+      <tr><th>1.–19. = 수 + t</th><td class="l"><span class="r">erste</span> · zweite · <span class="r">dritte</span> · vierte · fünfte · sechste · <span class="r">siebte</span> · <span class="r">achte</span> · neunte · zehnte · elfte · zwölfte · … · neunzehnte</td></tr>
+      <tr><th>20.– = 수 + st</th><td class="l">zwanzigste · einundzwanzigste · dreißigste · hundertste · tausendste</td></tr>
+    </tbody></table></div>
+  <p class="note">붉은 넷(erste · dritte · siebte · achte)만 불규칙. 숫자 뒤의 점(.)이 서수 표시: am 3. Mai = am dritten Mai. 서수는 형용사라 어미가 붙는다: der erste Tag · am ersten Mai · den dritten Platz.</p>
+  <ul class="n">
+    <li>날짜: Der Wievielte ist heute? — Heute ist der 3. (dritte) Oktober. · Wann? — Am 3. (dritten) Mai. · Ich habe am ersten Mai Geburtstag. <span class="x">교재 외</span>편지 머리는 4격: Berlin, den 3.5.2026</li>
+    <li>월은 im, 요일은 am, 연도는 전치사 없이: im Mai · am Montag · 2026 또는 im Jahr 2026 (in 2026 × — 영어식)</li>
+    <li>연도 읽기: 1100–1999년은 두 자리 + hundert + 두 자리 — 1980 = neunzehnhundertachtzig · 2000년부터는 그대로 — 2026 = zweitausendsechsundzwanzig</li>
+    <li>가격: 3,80 € = drei Euro achtzig · 8,10 € = acht Euro zehn · <span class="x">교재 외</span>소수점은 Komma(3,5 = drei Komma fünf), 천 단위는 점(1.000)</li>
+    <li>나이: Ich bin einundzwanzig Jahre alt. · Wie alt bist du?</li>
+  </ul>
+</article>
+
+<article class="item" id="i34" data-t="시각" data-st="halb drei는 2시 30분" data-src="4과"><header class="ih"><span class="no">34</span><h3>시각 <small>— halb drei는 2시 30분</small></h3><div class="meta"><span class="src">4과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="34-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="34-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="34-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="tw"><table class="t">
+    <thead><tr><th>시각</th><th>일상 (12시간)</th><th>공식 (24시간 + Uhr)</th></tr></thead>
+    <tbody>
+      <tr><th>2:00</th><td>zwei (Uhr) · Punkt zwei</td><td>vierzehn Uhr</td></tr>
+      <tr><th>2:05</th><td>fünf nach zwei</td><td>vierzehn Uhr fünf</td></tr>
+      <tr><th>2:15</th><td>Viertel nach zwei</td><td>vierzehn Uhr fünfzehn</td></tr>
+      <tr><th>2:20</th><td>zwanzig nach zwei · zehn vor halb drei</td><td>vierzehn Uhr zwanzig</td></tr>
+      <tr><th>2:30</th><td class="ex">halb drei <small>3시 반 ×</small></td><td>vierzehn Uhr dreißig</td></tr>
+      <tr><th>2:40</th><td>zwanzig vor drei · zehn nach halb drei</td><td>vierzehn Uhr vierzig</td></tr>
+      <tr><th>2:45</th><td>Viertel vor drei</td><td>vierzehn Uhr fünfundvierzig</td></tr>
+      <tr><th>2:55</th><td>fünf vor drei</td><td>vierzehn Uhr fünfundfünfzig</td></tr>
+    </tbody></table></div>
+  <ul class="n">
+    <li>시계 오른쪽 반(1–29분)은 [분] <b>nach</b> [지난 시], 왼쪽 반(31–59분)은 [남은 분] <b>vor</b> [다음 시], 30분은 <b>halb</b> [다음 시] — '다음 시까지 반 남았다'. Viertel = 15분.</li>
+    <li>공식 표현은 숫자 그대로, Uhr를 가운데: 15.30 Uhr = fünfzehn Uhr dreißig. 일상에선 16 Uhr도 vier라고 자주 말한다: So um vier.</li>
+    <li>묻기: Wie spät ist es? / Wie viel Uhr ist es? — Es ist halb drei. · 약속: Um wie viel Uhr? — Um halb drei. (시각엔 um, 21번)</li>
+    <li><span class="x">교재 외</span>하루 구분은 소문자 부사: morgens · vormittags · mittags · nachmittags · abends · nachts · 매주 반복은 요일 + s: montags 월요일마다.</li>
+    <li><span class="x">교재 외</span>die Stunde(시간의 길이) ↔ die Uhr(시각 · 시계): zwei Stunden 두 시간 · um zwei Uhr 두 시에 · eine halbe Stunde 30분.</li>
+  </ul>
+</article>
+
+<article class="item" id="i35" data-t="마지막 암기 카드" data-st="작지만 필수" data-src="1·2·4·6·9·12과"><header class="ih"><span class="no">35</span><h3>마지막 암기 카드 <small>— 작지만 필수</small></h3><div class="meta"><span class="src">1·2·4·6·9·12과</span><span class="rv" title="1일 · 3일 · 7일 복습"><label><input type="checkbox" data-k="35-1" aria-label="1일 복습">1</label><label><input type="checkbox" data-k="35-3" aria-label="3일 복습">3</label><label><input type="checkbox" data-k="35-7" aria-label="7일 복습">7</label></span></div></header>
+  <div class="cards">
+    <div class="card"><h5>비인칭 es · man <span class="src">2·12과</span></h5><ul>
+      <li>독일어 문장엔 주어 필수 — 날씨 · 시간 · 상황은 뜻 없는 es: Es regnet. · Es schneit. · Es ist kalt. · Es ist 3 Uhr. · Wie geht es dir? · Es klingelt.</li>
+      <li>존재는 <b>es gibt + 4격</b>: Es gibt einen Park.</li>
+      <li>es는 자리를 옮겨도 남는다: Heute regnet es. (Heute regnet ×) · Gibt es hier eine Apotheke?</li>
+      <li>느낌은 3격 + 주어 없이: Mir ist kalt. · Es ist mir egal.(es gibt ×)</li>
+      <li>일반 주어 man(사람들은 · 누구나) — er처럼 활용, 소문자 · n 하나: Hier spricht man Deutsch. · Hier darf man nicht rauchen. = 수동(29번).</li></ul></div>
+    <div class="card"><h5>재귀동사 <span class="src">12과</span></h5><ul>
+      <li>대상이 주어 자신이면 재귀대명사 필수(해석은 안 함): Ich freue mich. (Ich freue ×)</li>
+      <li>다른 4격 목적어가 없으면 4격: Ich wasche mich. · 있으면 3격: Ich wasche <b>mir</b> die Hände. · putze mir die Zähne · kämme mir die Haare — mir가 있으면 몸 부위엔 정관사(mir meine Hände ×).</li>
+      <li>격에 따라 뜻이 갈림: Ich stelle mich vor. 자기소개 · Ich stelle mir die Reise vor. 상상하다</li>
+      <li>늘 재귀로 쓰는 동사: sich beeilen 서두르다 · sich ausruhen 쉬다 · 재귀로 자주 쓰는 동사: sich setzen 앉다 · sich fühlen (기분이) ~하다 · sich entschuldigen 사과하다 — 전치사 짝은 23번.</li></ul></div>
+    <div class="card"><h5>분리 vs 비분리 <span class="src">9·10과</span></h5><ul>
+      <li>비분리 접두어 8개 = <b>be · ge · er · ver · zer · ent · emp · miss</b> — 안 떨어지고, 강세 없고, 과거분사에 ge- 없음: besuchen → besucht · verstehen → verstanden</li>
+      <li>그 밖(an · auf · aus · ein · mit · zu · ab · vor · nach · fern · zurück · los · weg …)은 분리 — 강세 있고, 문장 끝으로(12번), 분사는 ge-가 가운데(27번): ankommen → Er kommt an. · angekommen</li>
+      <li>판별은 강세: ANkommen(분리) · beSUchen(비분리)</li>
+      <li>Kommst du mit?의 mit = mitkommen의 앞부분.</li></ul></div>
+    <div class="card"><h5>명사 성 단서 <span class="src">1과</span></h5><ul>
+      <li>-chen · -lein → 중성 · -ment · -um → 중성 (das Mädchen · das Dokument · das Datum)</li>
+      <li>-ung · -heit · -keit · -tion → 여성</li>
+      <li>-er(사람) → 남성 (der Lehrer)</li>
+      <li>합성어는 맨 뒤 명사의 성: die Handynummer · das Krankenhaus</li>
+      <li><span class="x">교재 외</span>남성: 요일 · 월 · 계절 · 방위 · 날씨(der Montag · der Mai · der Winter · der Norden · der Regen), -ling · -ismus · -ant · -or · 여성: -e 대부분(die Lampe — 예외 der Name · der Junge · das Auge · das Ende), -ei · -ie · -ik · -ur · -schaft · 중성: Ge-(das Gebäude), 동사 원형 명사(das Essen), 언어 · 색(das Deutsch · das Blau)</li></ul></div>
+    <div class="card"><h5>n-변화 남성명사 <span class="src">6과</span></h5><ul>
+      <li>1격 단수만 빼고 전부 -(e)n: der Student → den / dem / des Studenten · der Herr → den Herrn · der Junge → den Jungen</li>
+      <li>표식: -e로 끝나는 남성(Junge · Kollege · Kunde · Name) + -ent · -ist · -at(Student · Polizist · Soldat) + Herr · Mensch · Nachbar</li>
+      <li>사전 판별: 2격이 -en이면 n-변화(des Studenten). 복수 -en만 보고 판단 × — der Staat는 des Staates라 아님.</li>
+      <li>Ich spreche mit dem Studenten. · Name는 2격만 des Namens.</li></ul></div>
+    <div class="card"><h5>2격 어순 · 명사 변화 <span class="src">6과</span></h5><ul>
+      <li>꾸밈말이 뒤로: das Auto <b>meines Vaters</b> (아버지의 차)</li>
+      <li>남 · 중 명사에 -(e)s: 단음절은 -es(des Mannes · des Kindes), 두 음절 이상은 -s(des Lehrers · des Vaters)</li>
+      <li>이름은 이름 + s: Annas Buch (02번)</li>
+      <li>회화에선 von + 3격: das Auto von meinem Vater</li></ul></div>
+    <div class="card"><h5>존칭 Sie · du <span class="src">2과</span></h5><ul>
+      <li>Sie: 처음 만난 어른 · Herr / Frau + 성으로 부르는 사람 · 가게 · 관공서 — 동사는 -en, 대명사 Ihnen · Ihr- 모두 대문자.</li>
+      <li>du: 친구 · 가족 · 아이.</li>
+      <li>Kommst du aus Korea? → Kommen Sie aus Korea? · Setz dich! → Setzen Sie sich, bitte!</li></ul></div>
+    <div class="card"><h5>kommen vs gehen <span class="src">4과</span></h5><ul>
+      <li>kommen = 듣는 사람 쪽 · 약속한 곳으로: 엄마가 부를 때 "가요!" = <b>Ich komme!</b></li>
+      <li>함께 제3의 장소로: Komm mit! 같이 가자</li>
+      <li>gehen = 지금 있는 곳을 떠남: Ich gehe nach Hause.</li></ul></div>
+    <div class="card"><h5>schon · noch · nicht mehr <span class="x">교재 외</span></h5><ul>
+      <li>schon 이미 ↔ noch nicht 아직 안: Bist du schon fertig? — Nein, noch nicht.</li>
+      <li>noch 아직 · 여전히 ↔ nicht mehr 더 이상 안: Wohnst du noch in Seoul? — Nein, nicht mehr. 명사는 kein … mehr(keine Zeit mehr) · noch kein(아직 없음)</li>
+      <li>erst 이제야 · 겨우(아직 이르다) ↔ nur 오직(양 · 한계): Es ist erst 8 Uhr. · Ich habe nur 5 Euro.</li></ul></div>
+    <div class="card"><h5>사전 읽기 <span class="src">1·2·6과</span></h5><ul>
+      <li>명사 성: m. = der · f. = die · n. = das</li>
+      <li>동사 격: jm. = 3격(helfen jm.) · jn. = 4격(fragen jn.)</li>
+      <li>격 이름: Nom. 1격 · Gen. 2격 · Dat. 3격 · Akk. 4격</li>
+      <li>der Student, -en, -en = 2격 · 복수 (n-변화 표시)</li></ul></div>
+  </div>
+  <div class="end">암기 경로: <b>A</b> 표 3개 → <b>B</b> 동사 → <b>C</b> 자리 규칙 → <b>D</b> 전치사 → <b>E</b> 형용사 → <b>F</b> 시제 · 태 → <b>G</b> 불규칙 · 숫자. 앞 항목이 뒤 항목의 기초입니다. 막히면 배지에 적힌 과의 교재(SODA Grammatik Kurs)로 돌아가 표를 다시 확인하세요.</div>
+  <div class="foot"><img src="../assets/logo.png" alt=""><span>독일어 문법 암기장 · Lektion 1–16 · Sophia Deutsch Akademie</span></div>
+</article>
+
+</section>
+</main><script>
+(function(){
+  var KEY='soda-merkheft-';
+  function get(k){try{return localStorage.getItem(KEY+k)}catch(e){return null}}
+  function set(k,v){try{localStorage.setItem(KEY+k,v)}catch(e){}}
+  document.querySelectorAll('.rv input').forEach(function(c){
+    if(get(c.dataset.k)==='1')c.checked=true;
+    c.addEventListener('change',function(){set(c.dataset.k,c.checked?'1':'0')});
+  });
+  var q=document.getElementById('bq'), b=document.body;
+  function quiz(on){b.classList.toggle('quiz',on);q.setAttribute('aria-pressed',on?'true':'false');
+    if(!on)document.querySelectorAll('.shown').forEach(function(x){x.classList.remove('shown')});}
+  q.addEventListener('click',function(){quiz(!b.classList.contains('quiz'))});
+  document.getElementById('bp').addEventListener('click',function(){window.print()});
+  document.addEventListener('click',function(e){
+    if(!b.classList.contains('quiz'))return;
+    var el=e.target.closest('table.t td, .eg .de'); if(!el)return;
+    e.preventDefault(); el.classList.toggle('shown');
+  });
+})();
+</script></body></html>
