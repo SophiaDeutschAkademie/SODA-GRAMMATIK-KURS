@@ -976,7 +976,7 @@
 <script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:960,&quot;height&quot;:760},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#384568&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#384568&quot;,&quot;#2563a8&quot;,&quot;#1a7a5c&quot;,&quot;#1c1e24&quot;]},&quot;mono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;디자인&quot;}}">
 class Component extends DCLogic {
   state = { filled: 0, total: 0 };
-  get KEY() { return 'uebung-lektion-15-v4'; }
+  get KEY() { return 'uebung-lektion-15-v5'; }
   componentDidMount() {
     try { this.store = JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch (e) { this.store = {}; }
     if (!this.rootEl) return;

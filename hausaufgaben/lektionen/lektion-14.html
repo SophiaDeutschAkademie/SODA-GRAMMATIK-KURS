@@ -581,7 +581,7 @@
       <li><div><p class="de">Das ist die Lehrerin, <strong>die</strong> alle mögen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-5"></p></div></li>
       <li><div><p class="de">Das ist das Restaurant, <strong>wo</strong> wir oft essen.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-6"></p></div></li>
       <li><div><p class="de">Das ist der Onkel, bei <strong>dem</strong> ich in Berlin wohne.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-7"></p></div></li>
-      <li><div><p class="de">Das gestern <strong>gekaufte</strong> Brot ist schon <span class="wd" data-m="딱딱한">hart</span>.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-8"></p></div></li>
+      <li><div><p class="de">Das <strong><span class="wd" data-m="주문한 (bestellen)">bestellte</span></strong> Essen ist schon kalt.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-8"></p></div></li>
       <li><div><p class="de">Das <strong>gekochte</strong> Ei ist lecker.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-9"></p></div></li>
       <li><div><p class="de">Nicht alles, <strong>was</strong> teuer ist, ist gut.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-10"></p></div></li>
       <li><div><p class="de">Die Kinder, <strong>denen</strong> ich helfe, sind nett.</p><p class="sol"><span class="ar">→</span><input class="bl ko" data-key="r3a-11"></p></div></li>
@@ -985,7 +985,7 @@
 <script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:960,&quot;height&quot;:760},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#384568&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#384568&quot;,&quot;#2563a8&quot;,&quot;#1a7a5c&quot;,&quot;#1c1e24&quot;]},&quot;mono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;디자인&quot;}}">
 class Component extends DCLogic {
   state = { filled: 0, total: 0 };
-  get KEY() { return 'uebung-lektion-14-v4'; }
+  get KEY() { return 'uebung-lektion-14-v5'; }
   componentDidMount() {
     try { this.store = JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch (e) { this.store = {}; }
     if (!this.rootEl) return;
