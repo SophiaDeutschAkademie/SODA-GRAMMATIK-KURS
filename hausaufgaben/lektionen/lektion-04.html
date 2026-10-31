@@ -13,6 +13,7 @@
 <style id="sd-theme-room">@media (max-width:1240px){html.sd-theme-on .toolbar{padding-right:104px}}@media (max-width:560px){html.sd-theme-on .toolbar{padding-right:62px}}</style>
 <script src="../../assets/theme.js" data-mode="native"></script>
 <script src="../assets/wordtip.js" defer></script>
+<script src="../../assets/sprechen-card.js" defer></script>
 </head>
 <body>
 <x-dc>
@@ -1205,6 +1206,12 @@ class Component extends DCLogic {
       sec.querySelectorAll('table.g tbody tr').forEach((tr) => { if (tr.querySelector('input[data-key]')) out.push('  · ' + serialize(tr)); });
     });
     const assess = r.querySelector('.assess'); if (assess) { out.push(''); out.push('==== 자기 평가 ===='); assess.querySelectorAll('.check').forEach((ch) => { const stmt = ch.querySelector('p'); const sel = ch.querySelector('button[aria-pressed="true"]'); out.push('  [' + (sel ? sel.dataset.val : ' ') + '] ' + (stmt ? stmt.textContent.trim() : '')); }); }
+    try {
+      const sp = JSON.parse(localStorage.getItem('soda-sprechen:ueb:ueb-a1-04') || 'null');
+      out.push('');
+      out.push('Sprechen · 말하기 연습 기록');
+      out.push(sp && sp.text ? sp.text : '(연습 기록이 없습니다)');
+    } catch (e) { }
     return out.join('\n');
   }
   submitTxt = () => { const text = this.buildText(); const name = this.studentName() || '학생'; const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Lektion04_' + name + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); };
