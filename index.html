@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+<head><script src="assets/portal-gate.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>SODA GRAMMATIK KURS · Sophia Deutsch Akademie</title>
@@ -63,6 +63,8 @@ h1.title .t2{font-weight:300;color:var(--text);letter-spacing:-.04em}
 .back{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid var(--bd);border-radius:999px;background:var(--bg-c);font-size:13px;font-weight:600;color:var(--text-s);transition:border-color .15s,color .15s}
 .back:hover{border-color:var(--accent);color:var(--accent)}
 .back svg{width:14px;height:14px}
+.back.home{width:36px;padding:0;justify-content:center}
+.back.home svg{width:18px;height:18px}
 
 /* 필터 + 카드 */
 .bar-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:44px 0 18px}
@@ -86,6 +88,28 @@ h1.title .t2{font-weight:300;color:var(--text);letter-spacing:-.04em}
 
 @media(max-width:720px){
   .top-brand span{display:none}
+}
+/* 핸드폰: 목차 카드를 작게(두 줄 배치, 설명 생략) */
+@media(max-width:560px){
+  .top{padding:14px 0;min-height:64px}
+  .top-brand{gap:9px;flex:1}
+  .top-brand img{height:28px}
+  .top-brand b{font-size:12.5px;letter-spacing:.08em;overflow:hidden;text-overflow:ellipsis;display:block}
+  .top-brand>div{min-width:0}
+  .back{flex:none;white-space:nowrap}
+  .bar-h{margin:20px 0 12px}
+  .bar-h h2{font-size:19px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card{padding:12px 13px 13px;border-radius:14px}
+  .card:hover{transform:none}
+  .card-top{margin-bottom:8px;align-items:center}
+  .num{font-size:26px}
+  .ico{width:30px;height:30px;border-radius:9px}
+  .ico svg{width:17px;height:17px}
+  .ko{font-size:15px;line-height:1.35}
+  .de{font-size:12px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .desc{display:none}
+  .card.appx .num{font-size:20px;padding-top:0}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0ms!important;transition-duration:.001ms!important}
@@ -131,9 +155,7 @@ html[data-theme="dark"] .back{background:var(--bg-c)}
       <img src="assets/logo.png" alt="">
       <div><b>SODA GRAMMATIK KURS</b><span>Sophia Deutsch Akademie</span></div>
     </div>
-    <a class="back" href="#" id="to-cover">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>표지
-    </a>
+    <a class="back home" href="#" id="to-cover" aria-label="표지로" title="표지로"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
   </div>
 
     <div class="bar-h">

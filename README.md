@@ -4,6 +4,16 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 
 목차에서 Lektion을 누르면 교재, 연습문제, 복습, 과제 중 하나를 고르는 페이지(`lektion.html?n=01`)가 열려요.
 
+## 학습 포탈 로그인
+
+이 앱은 소피아 독일어학원 수강생 전용입니다. 모든 페이지가 `<head>` 맨 앞에서 `assets/portal-gate.js`를 불러와, 학습 포탈(SODA-LERNPORTAL)에 로그인했는지 확인합니다.
+
+- 로그인하지 않았으면 학습 포탈 로그인 화면으로 가고, 로그인하면 보던 페이지로 돌아옵니다.
+- 한 번의 로그인에서 처음 한 번만 포탈의 학생 파일로 로그인을 확인하고, 그다음 페이지부터는 바로 열립니다.
+- 학생이 저장한 답안(localStorage)은 건드리지 않습니다.
+- 새 페이지를 추가할 때는 `<head>` 바로 뒤에 `<script src="(상대 경로)assets/portal-gate.js"></script>`를 넣어야 합니다.
+- 저장소가 공개라서 파일 자체는 주소를 알면 받을 수 있습니다. 이 확인은 화면에서 막는 장치입니다.
+
 ## GitHub Pages로 배포하기
 
 1. Settings → Pages에서 Source를 `Deploy from a branch`, Branch를 `main` / `/ (root)`로 지정하고 Save를 누릅니다.
