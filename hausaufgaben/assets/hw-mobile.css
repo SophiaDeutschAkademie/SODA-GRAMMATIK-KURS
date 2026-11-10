@@ -1,0 +1,112 @@
+/* SODA GRAMMATIK KURS · 과제 화면 핸드폰 배치
+   - 화면 폭 640px 이하(핸드폰)에서만 적용됩니다. 컴퓨터 화면은 그대로입니다.
+   - 과제 페이지의 스타일은 본문 안에서 나중에 적용되므로, 여기서는 선택자 앞에 html body를 붙여 우선합니다.
+   - 인쇄에는 적용하지 않습니다. 학생이 입력한 답안(localStorage)과는 관계가 없습니다. */
+
+/* 공통: 답안 백업 버튼이 글씨 크기 버튼을 가리지 않도록 그 위에 둡니다 */
+@media screen {
+  html body .sdbk-btn { bottom: 76px; }
+  html body .sdbk-pn { bottom: 122px; max-height: calc(100vh - 150px); }
+}
+
+@media screen and (max-width: 640px) {
+  html body .sheet { overflow-x: clip; }
+  html body .wrap { padding: 0 16px; }
+
+  /* 상단 막대: 한 줄로 */
+  html body .toolbar .row { flex-wrap: nowrap; gap: 8px; padding: 14px 12px; min-height: 64px; }
+  html body .toolbar .tb-title { display: none; }
+  html body .toolbar .btn { padding: 0 12px; height: 36px; font-size: 12.5px; }
+  html body .toolbar .row > .prog + .btn { display: none; } /* 인쇄 (맨 아래 인쇄 / PDF 버튼은 그대로) */
+  html body .toolbar .prog { gap: 7px; font-size: 11.5px; min-width: 0; }
+  html body .toolbar .prog b { font-size: 12.5px; }
+  html body .toolbar .prog > span:first-child { white-space: nowrap; }
+  html body .toolbar .prog .bar { width: 44px; flex: none; }
+
+  /* 제목 영역 */
+  html body .head { padding-top: 28px; }
+  html body .brand { margin-bottom: 22px; }
+  html body .brand img { height: 36px; }
+  html body .head h1 { font-size: 28px; line-height: 1.15; word-break: keep-all; }
+  html body .head .lead { font-size: 16px; }
+  html body .meta { flex-wrap: wrap; gap: 12px 18px; margin-top: 22px; padding-top: 16px; }
+  html body .meta .f.grow { flex: 1 1 200px; min-width: 0; }
+  html body .meta input.name { min-width: 0; width: 100%; padding: 8px 14px; }
+
+  /* 목차 */
+  html body .toc { margin-top: 26px; }
+  html body .toc .toc-day { flex-wrap: wrap; gap: 2px 8px; margin: 18px 0 6px; }
+  html body .toc .toc-day:first-child { margin-top: 0; }
+  html body .toc .toc-day b { white-space: nowrap; flex: none; }
+  html body .toc .toc-day em { font-size: 12.5px; line-height: 1.5; }
+  html body .toc a.toc-row { grid-template-columns: 72px 1fr auto; gap: 10px; padding: 11px 12px; }
+  html body .toc .tn { font-size: 13.5px; white-space: nowrap; }
+  html body .toc .td { font-size: 13.5px; line-height: 1.45; word-break: keep-all; }
+  html body .planbox { padding: 14px 16px; font-size: 14px; }
+
+  /* 일차 표시 막대 */
+  html body .daybar { flex-direction: column; align-items: flex-start; gap: 2px; margin-top: 52px; padding: 12px 18px; border-radius: 16px; }
+  html body .daybar span { font-size: 13px; line-height: 1.5; }
+
+  /* 문제 목록 */
+  html body ol.ex > li { grid-template-columns: 26px 1fr; gap: 4px 10px; }
+  html body ol.ex > li > * { min-width: 0; }
+  html body ol.ex .de { font-size: 16px; overflow-wrap: anywhere; }
+  html body ol.ex .sol { gap: 6px 8px; }
+  html body ol.ex .sol .bl.lg { flex: 1 1 150px; min-width: 0; }
+  html body ol.ex .lrow > input.bl.lg,
+  html body ol.ex .lrow > p.de { flex: 1 1 160px; }
+  html body input.bl { min-width: 56px; max-width: 100%; }
+  html body input.bl.ko { min-width: 0; width: 100%; }
+  html body input.bl.rsn { min-width: 0; width: 100%; }
+  html body input.bl.lg { min-width: 0; }
+  html body .chx { max-width: 100%; }
+  html body .mct { max-width: 100%; }
+
+  /* 표 */
+  html body table.g { font-size: 14.5px; }
+  html body table.g th { padding: 8px 6px; font-size: 11.5px; white-space: normal; }
+  html body table.g td { padding: 9px 6px; }
+  html body table.g td input.bl { min-width: 0 !important; width: 100%; max-width: 74px; padding: 4px 4px; }
+  html body table.g td input.bl.sm { max-width: 58px; }
+  html body table.g td input.bl.ko,
+  html body table.g td input.bl.lg,
+  html body table.g td input.bl.rsn { max-width: none; }
+  html body table.g td.k { white-space: normal; word-break: keep-all; }
+  html body table.g td .mc,
+  html body table.g td .chx { max-width: 100%; }
+  html body table.g td .mct { max-width: 100%; min-width: 0; gap: 4px; padding-left: 10px; padding-right: 8px; font-size: 13px; }
+  /* 열이 여섯 개 이상인 넓은 표는 표 안에서 옆으로 밀어 봅니다 */
+  html body table.g:has(tr > :nth-child(6)) { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  html body table.g:has(tr > :nth-child(6)) th,
+  html body table.g:has(tr > :nth-child(6)) td { white-space: nowrap; }
+
+  /* 말하기 표: 한 문장씩 카드처럼 위아래로 */
+  html body table.sp,
+  html body table.sp tbody,
+  html body table.sp tr { display: block; width: 100%; }
+  html body table.sp thead { display: none; }
+  html body table.sp tr { padding: 12px 0 14px; border-bottom: 1px solid var(--line); }
+  html body table.sp td,
+  html body table.sp td.ko,
+  html body table.sp td.de,
+  html body table.sp td.cnt { display: block; width: auto; border-bottom: none; text-align: left; }
+  html body table.sp td.ko { padding: 0 2px 8px; font-size: 15.5px; }
+  html body table.sp td.de { padding: 12px 14px; min-height: 46px; }
+  html body table.sp td.de.show { padding-left: 2px; padding-right: 2px; }
+  html body table.sp td.cnt { padding: 10px 2px 0; }
+
+  /* 자기 평가 */
+  html body .check { gap: 10px; }
+  html body .check p { min-width: 0; overflow-wrap: anywhere; }
+  html body .assess { padding: 20px 16px 24px; }
+
+  /* 떠 있는 버튼: 내용을 덜 가리게 작게 */
+  html body .fontctl { right: 12px; bottom: 14px; padding: 3px; }
+  html body .fontctl button[data-fs="dec"],
+  html body .fontctl button[data-fs="inc"] { width: 32px; height: 32px; font-size: 13px; }
+  html body .fontctl .fs-val { min-width: 40px; height: 32px; font-size: 10.5px; }
+  html body .sdbk-btn { right: 12px; bottom: 62px; height: 34px; padding: 0 12px; font-size: 12.5px; }
+  html body .sdbk-pn { right: 12px; bottom: 104px; max-height: calc(100vh - 130px); }
+  html body .footer { margin-bottom: 96px; }
+}
