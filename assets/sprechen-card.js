@@ -24,7 +24,7 @@
     '#sprechen-card .sc-eb{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted)}' +
     '#sprechen-card h3{margin:2px 0 0;font-size:18px;letter-spacing:-.01em}' +
     '#sprechen-card .sc-info{margin:10px 0 0;padding:0 0 0 16px;font-size:13.5px;line-height:1.6;color:var(--muted)}' +
-    '#sprechen-card .sc-info li+li{margin-top:2px}' +
+    '#sprechen-card .sc-info li+li{margin-top:2px}#sprechen-card .sc-info b{color:var(--err,#c4392e);font-weight:700}' +
     '#sprechen-card .sc-help{margin:12px 0 0;border-top:1px solid var(--line2);padding-top:10px}' +
     '#sprechen-card .sc-help>p{margin:0 0 6px;font-size:14px;font-weight:700}' +
     '#sprechen-card .sc-g{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;align-items:start;padding:6px 0}' +
@@ -61,7 +61,7 @@
       '<ul class="sc-info">' +
       '<li>배운 문법으로 말하기 에이전트와 약 2분 대화합니다. 에이전트는 천천히, 쉬운 문장으로 말합니다. 아래 표현에서 단어만 바꿔 말해도 됩니다.</li>' +
       '<li>학습 포탈에 로그인했으면 바로 열립니다(아니면 받은 아이디·비밀번호로 로그인). 마이크가 있는 기기에서 하십시오. Lektion마다 2회까지 연습할 수 있고, 더 필요하면 선생님께 말씀해 주십시오.</li>' +
-      '<li>대화는 녹음됩니다. 연습이 끝난 화면에서 다시 듣고 WAV 파일로 내려받을 수 있습니다. 녹음은 이 기기에만 60일 동안 남고 자동으로 제출되지 않습니다.</li>' +
+      '<li>대화는 녹음됩니다. 연습이 끝난 화면에서 다시 듣고 WAV 파일로 내려받을 수 있습니다. <b>내려받지 않으면 그 화면을 나가거나 창을 닫을 때 녹음이 자동으로 지워집니다.</b> 녹음은 서버에 저장되지 않고 선생님께 제출되지도 않습니다.</li>' +
       '<li>연습 기록과 평가 결과는 이 과제의 「과제 제출하기」를 누를 때 답안과 함께 제출됩니다.</li>' +
       '</ul>' +
       '<div class="sc-help"><p>도움이 되는 표현</p>' + help + '</div>' +
