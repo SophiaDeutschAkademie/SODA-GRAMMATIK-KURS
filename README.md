@@ -52,8 +52,11 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 - 한 화면보다 큰 덩어리가 있는 페이지만 그 안에서 위아래로 밀어 봅니다(아래쪽에 화살표가 나타납니다).
 - 보던 자리는 과마다 기기에 저장되고, 다시 열면 그 페이지부터 이어집니다. 끝까지 본 과는 처음부터 열립니다.
 - 교재 HTML은 고치지 않습니다. 스크롤 보기로 돌아가거나 인쇄할 때는 원래 모양으로 되돌립니다.
-- 기기에 저장하는 값(localStorage): `soda-gk-view`(보기 방식, `page` 또는 `scroll`), `soda-gk-pos:lektion-NN`(보던 자리), `soda-gk-pg-hint`(처음 안내를 보여 줬는지).
+- 기기에 저장하는 값(localStorage): `soda-gk-view`(보기 방식, `page` 또는 `scroll`), `soda-gk-pos:lektion-NN`(보던 자리), `soda-gk-pg-hint`(처음 안내를 보여 줬는지), `soda-gk-pg-err`(페이지 보기를 열지 못했을 때의 오류 기록).
 - 주소 끝에 `?view=page`, `?view=scroll`, `?view=auto`를 붙여 열면 그 기기의 보기 방식을 바꿉니다(예: `lektionen/lektion-01.html?view=scroll`). `auto`는 저장해 둔 선택을 지우고 화면 크기에 따라 정하게 합니다. 학생이 페이지 보기에서 문제를 겪을 때 `?view=scroll` 주소를 보내 주면 됩니다.
+- 어떤 기기에서 페이지 보기가 안 열린다고 하면, 그 기기에서 주소 끝에 `?view=info`를 붙여 열게 하세요(예: `lektionen/lektion-01.html?view=info`). 화면 크기, 고른 보기 방식, 최근 오류와 함께 왜 스크롤로 열렸는지를 적은 확인 화면이 뜹니다. 그 화면을 캡처해 받으면 원인을 알 수 있습니다. 확인 화면의 버튼으로 그 기기의 보기 방식을 바로 바꿀 수도 있습니다.
+- 페이지로 나누다가 오류가 나면 스크롤 보기로 되돌리고 "페이지 보기를 열지 못해 스크롤로 보여 드립니다"라는 알림을 잠깐 띄웁니다. 오류 내용은 그 기기에 기록되어 확인 화면에 나옵니다.
+- 확인 화면의 "스크립트" 번호는 `assets/pager.js`의 `BUILD` 값입니다. 파일을 고쳐 올릴 때마다 바꿔 두면 기기가 새 파일을 받았는지 알 수 있습니다.
 - 시험 운영 스위치: `assets/pager.js` 맨 위의 `var TRIAL`은 평소 `false`입니다. `true`로 바꿔 올리면 `?view=page` 주소로 한 번 연 기기에서만 켜지고 다른 기기에서는 아무 변화가 없습니다(그 기기에서 끌 때는 `?view=auto`). 큰 수정을 학생에게 보이기 전에 먼저 확인할 때 씁니다.
 
 교재를 쓸 때 나누는 자리를 정하고 싶으면 요소에 아래 표시를 붙입니다.
@@ -69,4 +72,6 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 
 새 Lektion을 추가하려면 `lektionen`, `hausaufgaben/lektionen`, `uebungen/lektionen`, `wiederholung/lektionen` 폴더에 파일을 넣고 `assets/lessons.js`의 목록에 항목(번호, 제목, 독일어 부제, 설명, 아이콘)을 추가하세요.
 
-교재 파일(`lektionen/lektion-NN.html`)에는 `<head>`의 `theme.js` 다음 줄에 `<script src="../assets/pager.js"></script>`를 넣으세요. 이 줄이 없으면 그 과는 예전처럼 스크롤로만 보입니다.
+교재 파일(`lektionen/lektion-NN.html`)에는 `<head>`의 `theme.js` 다음 줄에 `<script src="../assets/pager.js?v=3"></script>`를 넣으세요(다른 과와 같은 `?v=` 숫자로). 이 줄이 없으면 그 과는 예전처럼 스크롤로만 보입니다.
+
+`assets/pager.js`를 고쳐 올릴 때는 16개 교재 파일의 `?v=` 숫자와 파일 안의 `BUILD` 값을 함께 올리세요. 숫자를 올리면 기기가 바로 새 파일을 받고, 올리지 않으면 브라우저가 예전 파일을 10분쯤 더 쓸 수 있습니다.

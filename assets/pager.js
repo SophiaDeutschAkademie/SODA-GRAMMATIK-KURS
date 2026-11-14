@@ -7,7 +7,9 @@
    - 보던 자리는 기기에 기억해 두었다가 다시 열면 이어서 보여 줍니다(끝까지 본 과는 처음부터).
    - 교재의 내용(HTML)은 바꾸지 않습니다. 인쇄하거나 스크롤 보기로 돌아가면 원래 모양 그대로 되돌립니다.
    - 주소 끝에 ?view=page / ?view=scroll / ?view=auto 를 붙여 열면 그 기기의 보기 방식을 바꿉니다(auto: 화면 크기에 따라 저절로).
-   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js"></script>를 넣습니다.
+     ?view=info 를 붙여 열면 그 기기에서 페이지 보기가 어떤 상태인지, 안 열렸다면 왜 그런지 화면에 보여 줍니다.
+   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=3"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
+     이 파일을 고쳐 올릴 때는 그 숫자와 아래 BUILD 값을 함께 올립니다(기기가 예전 파일을 붙들고 있지 않게).
    - 교재를 쓸 때 줄 수 있는 표시: data-pg-keep(절대 나누지 않음), data-pg-avoid(되도록 나누지 않음),
      data-pg-head(다음 덩어리와 같은 페이지에), data-pg-break(이 앞에서 새 페이지),
      data-pg-fit(자리가 조금 모자라면 살짝 줄여서 넣음), data-pg-tap(누르는 것을 페이지 넘김으로 쓰지 않음). */
@@ -35,9 +37,28 @@
   function getView() { return canStore ? lsGet(KEY_VIEW) : PREF; }
   function setView(v) { PREF = v; if (v) lsSet(KEY_VIEW, v); else lsDel(KEY_VIEW); }
   /* 주소 끝에 ?view=page / ?view=scroll 을 붙여 열면 그 기기의 보기 방식을 그렇게 정해 둡니다. ?view=auto는 정해 둔 것을 지웁니다. */
-  var QV = /[?&]view=(page|scroll|auto)(?:&|$)/.exec(location.search || '');
-  if (QV) setView(QV[1] === 'auto' ? null : QV[1]);
-  if (TRIAL && getView() === null) return;
+  var QV = /[?&]view=(page|scroll|auto|info)(?:&|$)/.exec(location.search || '');
+  /* ?view=info: 이 기기에서 페이지 보기가 어떤 상태인지, 안 열렸다면 그 까닭이 무엇인지 화면에 보여 줍니다(보기 방식은 바꾸지 않음). */
+  var INFO = !!QV && QV[1] === 'info';
+  if (QV && !INFO) setView(QV[1] === 'auto' ? null : QV[1]);
+  if (TRIAL && !INFO && getView() === null) return;
+
+  /* 확인 화면에 보여 줄 스크립트 번호(올릴 때마다 바꿉니다)와 실패 기록 */
+  var BUILD = '2026-11-14.3', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
+  function note(where, err) {
+    try {
+      var m = err && (err.message || err.name) ? (err.name || 'Error') + ': ' + (err.message || '') : String(err);
+      var st = err && err.stack ? String(err.stack).split('\n').slice(0, 6).join(' | ') : '';
+      lastErr = { t: new Date().toISOString(), w: where, m: String(m).slice(0, 300), s: st.slice(0, 800),
+        v: (window.innerWidth || 0) + 'x' + (window.innerHeight || 0), b: BUILD, p: location.pathname.replace(/^.*\//, '') };
+      lsSet(KEY_ERR, JSON.stringify(lastErr));
+    } catch (e) {}
+  }
+  window.addEventListener('error', function (e) {
+    try {
+      if (e && e.filename && /\/pager\.js(\?|$)/.test(e.filename)) note('error', { name: 'Error', message: e.message + ' @' + e.lineno + ':' + e.colno, stack: e.error && e.error.stack });
+    } catch (x) {}
+  });
 
   var mq = window.matchMedia ? window.matchMedia('(max-width: 820px) and (min-height: 440px)') : null;
   function wantPage() {
@@ -331,7 +352,7 @@
     if (fg && hasText(el)) return null;
     var inl = !fg && hasInline(el);
     var once = function (lm) { return inl ? cutInline(el, lm, minFirst, s) : cutRows(el, lm, minFirst); };
-    var mark = S.undo.length, rem = once(inner), good = inner, tries = 0, over;
+    var mark = S.undo.length, rem = once(inner), good = inner, first = inner, tries = 0, over;
     /* 잘라 낸 뒤에도 남은 조각이 넘칠 수 있습니다(상자 안에 갇힌 아래 여백 등). 넘친 만큼 한도를 낮춰 다시 자릅니다. */
     while (rem && tries++ < 3) {
       over = el.getBoundingClientRect().bottom - lim;
@@ -346,7 +367,24 @@
       }
       good = inner;
     }
+    /* 빈 페이지라서 꼭 나눠야 하는데, 한도를 낮추다 보니 제목이나 표 머리줄만 남는 일이 있습니다(한 줄이 페이지보다 큰 표).
+       그러면 다음 페이지에서도 똑같이 되어 끝없이 빈 페이지가 생기므로, 조금 넘치더라도 처음 자른 대로 둡니다. */
+    if (rem && minFirst === 0 && inner !== first && onlyHeads(el)) { undoTo(mark); rem = once(first); }
     return rem;
+  }
+  /* 제목·표 머리줄 말고는 아무 내용도 남지 않았는가 */
+  function onlyHeads(el) {
+    var any = false, c, d;
+    for (c = el.firstChild; c; c = c.nextSibling) {
+      if (c.nodeType === 3) { if (/\S/.test(c.data)) return false; continue; }
+      if (c.nodeType !== 1) continue;
+      d = cs(c).display;
+      if (d === 'none' || d === 'table-column-group' || d === 'table-column') continue;
+      any = true;
+      if (isHead(c) || c.hasAttribute('data-pg-rep')) continue;
+      if (!c.firstChild || !onlyHeads(c)) return false;
+    }
+    return any;
   }
 
   function cutRows(el, inner, minFirst) {
@@ -573,6 +611,7 @@
   }
   /* 채우는 중인 페이지(pg-m)에서는 퀴즈 풀이를 펼친 높이로 잽니다. 그래야 답을 누른 뒤에도 그 페이지에 다 들어갑니다. */
   function newLeaf() {
+    if (S.leaves.length >= 1500) throw new Error('too many pages: ' + S.leaves.length);
     var prev = S.leaves[S.leaves.length - 1];
     if (prev) prev.leaf.classList.remove('pg-m');
     var leaf = mk('div', 'pg-leaf pg-m'), page = mk('div', 'pg-page'), body = mk('div', 'pg-body'), more = mk('div', 'pg-more');
@@ -785,8 +824,10 @@
   }
   function fail(err) {
     if (window.console && console.error) console.error('[pager]', err);
+    note('fail', err);
     S.failed = true; S.on = true;
     exitPage();
+    try { toast('페이지 보기를 열지 못해 스크롤로 보여 드립니다', 4200); } catch (e) {}
   }
 
   function secInfo(sec, kids) {
@@ -1550,5 +1591,75 @@
     exit: function () { setView('scroll'); exitPage(true); }
   };
 
-  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', boot); else boot();
+  /* ───────────── 확인 화면(?view=info) ───────────── */
+  function infoLines() {
+    var w = window.innerWidth || root.clientWidth || 0, h = window.innerHeight || root.clientHeight || 0;
+    var v = getView(), auto = !!(mq && mq.matches), on = S.on && S.ready, why, err = lastErr, L = [];
+    if (!err) { try { err = JSON.parse(lsGet(KEY_ERR) || 'null'); } catch (e) { err = null; } }
+    if (on) why = '페이지 보기가 켜져 있습니다.';
+    else if (S.failed) why = '페이지로 나누다가 오류가 나서 스크롤 보기로 돌아왔습니다.';
+    else if (!S.main) why = '이 화면에는 교재 본문이 없어 페이지 보기를 쓰지 않습니다.';
+    else if (TRIAL && v === null) why = '시험 운영 중이라 이 기기에서는 꺼져 있습니다.';
+    else if (v === 'scroll') why = '이 기기에서 "스크롤"을 골라 두어 스크롤 보기로 열립니다.';
+    else if (v !== 'page' && !auto) why = w > 820 ? '화면 폭이 ' + w + 'px라서 스크롤 보기로 열립니다(자동 기준: 820px 이하).' : '화면 높이가 ' + h + 'px라서 스크롤 보기로 열립니다(자동 기준: 440px 이상).';
+    else why = '페이지 보기를 여는 중이거나 아직 열리지 않았습니다.';
+    var vv = window.visualViewport, sc = window.screen || {}, fs = '', T0, r, tw;
+    try {
+      if (S.main) {
+        tw = doc.createTreeWalker(on && S.leaves[S.cur] ? S.leaves[S.cur].body : S.main, 4, null, false);
+        while ((T0 = tw.nextNode())) if (T0.length > 30 && /\S/.test(T0.data)) break;
+        if (T0) { r = probe(T0, 0, Math.min(T0.length - 1, 30)); fs = cs(T0.parentNode).fontSize + ', 글자 상자 ' + (r ? Math.round((r.r.bottom - r.r.top) * 10) / 10 : '?') + 'px'; }
+      }
+    } catch (e) {}
+    L.push(['상태', why]);
+    L.push(['화면', w + '×' + h + ' · 기기 ' + (sc.width || '?') + '×' + (sc.height || '?') + ' · 배율 ' + (Math.round((window.devicePixelRatio || 1) * 1000) / 1000) + (vv && vv.scale ? ' · 확대 ' + Math.round(vv.scale * 100) / 100 : '') + ' · ' + (h >= w ? '세로' : '가로')]);
+    L.push(['자동 기준', '폭 820px 이하 ' + (w <= 820 ? '맞음' : '아님') + ' · 높이 440px 이상 ' + (h >= 440 ? '맞음' : '아님')]);
+    L.push(['고른 방식', (v === 'page' ? '페이지' : v === 'scroll' ? '스크롤' : v ? v : '없음(자동)') + (canStore ? '' : ' · 저장소를 쓸 수 없음')]);
+    L.push(['페이지', on ? (S.cur + 1) + ' / ' + avail() + (S.done ? '' : '…') : '-']);
+    L.push(['글자', fs || '-']);
+    L.push(['최근 오류', err ? [err.t, err.w, err.m, '화면 ' + err.v, err.p, err.b, err.s].join(' · ') : '없음']);
+    L.push(['스크립트', BUILD + (TRIAL ? ' · 시험 운영' : '')]);
+    L.push(['주소', location.pathname + location.search]);
+    L.push(['브라우저', navigator.userAgent]);
+    return L;
+  }
+  function showInfo() {
+    try {
+      var box = doc.getElementById('pg-info'), L = infoLines(), h, i;
+      if (!box) {
+        box = mk('div'); box.id = 'pg-info';
+        box.style.cssText = 'position:fixed;left:8px;right:8px;top:8px;z-index:2147483000;max-width:560px;max-height:88%;margin:0 auto;overflow:auto;box-sizing:border-box;padding:14px 16px;border-radius:14px;'
+          + 'background:#fff;color:#15171c;font:13px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;text-align:left;word-break:break-all;'
+          + 'box-shadow:0 10px 44px rgba(0,0,0,.5);-webkit-user-select:text;user-select:text;visibility:visible';
+        (doc.body || root).appendChild(box);
+        box.addEventListener('click', onInfoClick);
+      }
+      var bt = function (a, t) { return '<button type="button" data-i="' + a + '" style="min-height:38px;padding:0 12px;border:1px solid #c9ccd6;border-radius:9px;background:#f4f5f8;color:#15171c;font:600 13px/1 inherit;font-family:inherit">' + t + '</button>'; };
+      h = '<div style="font-size:15px;font-weight:800;margin-bottom:6px">페이지 보기 확인 화면</div>';
+      for (i = 0; i < L.length; i++) h += '<div style="margin:3px 0"><b style="color:#384568">' + esc(L[i][0]) + '</b> · ' + esc(L[i][1]) + '</div>';
+      h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">' + bt('page', '페이지 보기로 열기') + bt('scroll', '스크롤 보기로') + bt('auto', '자동으로') + bt('copy', '내용 복사') + bt('close', '닫기') + '</div>';
+      box.innerHTML = h;
+    } catch (e) {}
+  }
+  function onInfoClick(e) {
+    var b = e.target && e.target.closest ? e.target.closest('[data-i]') : null, a = b ? b.getAttribute('data-i') : '';
+    if (!a) return;
+    if (a === 'close') { var box = doc.getElementById('pg-info'); if (box && box.parentNode) box.parentNode.removeChild(box); return; }
+    if (a === 'copy') {
+      var L = infoLines(), t = [], i;
+      for (i = 0; i < L.length; i++) t.push(L[i][0] + ': ' + L[i][1]);
+      try { navigator.clipboard.writeText(t.join('\n')).then(function () { b.textContent = '복사했습니다'; }, function () { b.textContent = '복사하지 못했습니다'; }); } catch (x) { b.textContent = '복사하지 못했습니다'; }
+      return;
+    }
+    if (a === 'page') { setView('page'); S.failed = false; if (!S.on) enterPage('user'); }
+    else if (a === 'scroll') { setView('scroll'); if (S.on) exitPage(true); }
+    else if (a === 'auto') { setView(null); S.failed = false; onResize(); }
+    setTimeout(showInfo, 500);
+  }
+
+  function safeBoot() {
+    try { boot(); } catch (err) { note('boot', err); root.classList.remove('pg-wait'); }
+    if (INFO) { showInfo(); setTimeout(showInfo, 1500); setTimeout(showInfo, 4500); }
+  }
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', safeBoot); else safeBoot();
 })();
