@@ -27,7 +27,7 @@
 
   /* 시험 운영 스위치. true로 두면 주소 끝에 ?view=page를 붙여 한 번 연 기기에서만 켜지고,
      그 밖의 기기에서는 이 파일이 아무 일도 하지 않습니다(학생 화면은 예전 그대로). 모두에게 켤 때 false로 둡니다. */
-  var TRIAL = true;
+  var TRIAL = false;
 
   /* 저장소를 쓸 수 없는 브라우저(앱 안의 미리보기 창 등)에서는, 고른 보기 방식을 페이지를 열어 둔 동안만 기억합니다. */
   var canStore = (function () { try { localStorage.setItem('soda-gk-t', '1'); localStorage.removeItem('soda-gk-t'); return true; } catch (e) { return false; } })();
