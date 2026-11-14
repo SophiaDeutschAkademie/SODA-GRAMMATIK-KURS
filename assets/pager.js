@@ -10,7 +10,7 @@
    - 교재의 내용(HTML)은 바꾸지 않습니다. 인쇄하거나 스크롤 보기로 돌아가면 원래 모양 그대로 되돌립니다.
    - 주소 끝에 ?view=page / ?view=scroll / ?view=auto 를 붙여 열면 그 기기의 보기 방식을 바꿉니다(auto: 화면 크기에 따라 저절로).
      ?view=info 를 붙여 열면 그 기기에서 페이지 보기가 어떤 상태인지, 안 열렸다면 왜 그런지 화면에 보여 줍니다.
-   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=4"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
+   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=6"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
      이 파일을 고쳐 올릴 때는 그 숫자와 아래 BUILD 값을 함께 올립니다(기기가 예전 파일을 붙들고 있지 않게).
    - 교재를 쓸 때 줄 수 있는 표시: data-pg-keep(절대 나누지 않음), data-pg-avoid(되도록 나누지 않음),
      data-pg-head(다음 덩어리와 같은 페이지에), data-pg-break(이 앞에서 새 페이지),
@@ -46,7 +46,7 @@
   if (TRIAL && !INFO && getView() === null) return;
 
   /* 확인 화면에 보여 줄 스크립트 번호(올릴 때마다 바꿉니다)와 실패 기록 */
-  var BUILD = '2026-11-14.4', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
+  var BUILD = '2026-11-15.6', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
   function note(where, err) {
     try {
       var m = err && (err.message || err.name) ? (err.name || 'Error') + ': ' + (err.message || '') : String(err);
@@ -109,9 +109,10 @@
     + '.pg-body .gt .gt-tip.pg-below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--k2a3350,#2A3350)}'
     + '.pg-body>.sd-nav{margin-top:28px}'
     + '.pg-leaf.pg-m .qe,.pg-body .qi.pg-x .qe{display:block!important}'
+    + '@media(max-width:640px){html:not(.pg-on) .qg[data-sq="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}html:not(.pg-on) .qg[data-sq="1"]{grid-template-columns:minmax(0,1fr)}}'
     /* 문제(바로 확인·복습): 한 페이지에 여러 문제가 들어가도록 촘촘하게. 선지는 길이에 따라 한 줄에 4개·2개·1개로 놓습니다(quizFit이 정함). */
     + '.pg-body .quiz-block{margin-bottom:16px}'
-    + '.pg-body .qi{padding:10px 0}'
+    + '.pg-body .qi{padding:16px 0}'
     + '.pg-body .qq{font-size:1em;line-height:1.5;margin-bottom:6px}'
     + '.pg-body .qq .qh{margin-top:2px}'
     + '.pg-body .qg{gap:6px;grid-template-columns:minmax(0,1fr)}'
@@ -1634,12 +1635,63 @@
   }
   /* how — 없음: 처음 열 때(지난번 자리에서), 'user': 책 버튼을 눌렀을 때, 'auto': 화면을 돌리거나 창 크기가 바뀌었을 때.
      스크롤로 보던 중이었다면 화면에 보이던 자리에서 시작합니다. */
+  /* ───────────── 스크롤 보기의 문제 선지 ─────────────
+     핸드폰 폭(640px 이하)의 스크롤 보기에서도 선지를 2×2로 놓습니다. 다만 선지 하나라도 반 폭에서 세 줄 이상이 되면
+     (문장처럼 긴 선지) 그 문제는 전처럼 한 줄에 하나씩 놓습니다. 넓은 화면은 교재의 원래 배치 그대로입니다.
+     페이지 보기에 들어갈 때는 표시(data-sq)를 지우고, 나올 때 다시 정합니다. */
+  var SQ = { key: '', t: 0, ro: null };
+  function clearSQ() {
+    if (!S.main) return;
+    var l = S.main.querySelectorAll('.qg[data-sq]');
+    for (var i = 0; i < l.length; i++) l[i].removeAttribute('data-sq');
+    SQ.key = '';
+  }
+  function scrollQuiz(force) {
+    if (S.on || !S.main) return;
+    var list = S.main.querySelectorAll('.qg'), i, j;
+    if (!list.length) { SQ.key = ''; return; }
+    var q0 = list[0].children[0], narrow = (window.innerWidth || root.clientWidth) <= 640;
+    var key = S.main.clientWidth + '|' + (q0 ? cs(q0).fontSize : '') + '|' + narrow + '|' + list.length;
+    if (!force && key === SQ.key) return;
+    SQ.key = key;
+    for (i = 0; i < list.length; i++) {
+      var g = list[i], bs = g.children, n = bs.length, ok = narrow && n >= 2 && !g.classList.contains('qg1');
+      if (!ok) { g.removeAttribute('data-sq'); continue; }
+      /* 답을 고른 뒤의 모양(굵은 글자·테두리)과 상관없이 같은 배치가 나오도록, 답하기 전 모양으로 잽니다. */
+      var qi = g.parentNode, qc = qi.className, bc = [];
+      qi.className = qc.replace(/\bdone\b/g, '');
+      for (j = 0; j < n; j++) { bc.push(bs[j].className); bs[j].className = 'qo'; }
+      g.setAttribute('data-sq', '2');
+      for (j = 0; j < n && ok; j++) {
+        var b = bs[j], st = cs(b);
+        var lim = lineH(st) * 2 + px(st.paddingTop) + px(st.paddingBottom) + px(st.borderTopWidth) + px(st.borderBottomWidth) + 2;
+        if (b.getBoundingClientRect().height > lim || b.scrollWidth > b.clientWidth + 1) ok = false;
+      }
+      if (!ok) g.setAttribute('data-sq', '1');
+      qi.className = qc;
+      for (j = 0; j < n; j++) bs[j].className = bc[j];
+    }
+  }
+  /* 지금 재고, 글꼴이 아직 오는 중이면 다 온 뒤에 한 번 더 잽니다(글꼴마다 글자 폭이 다름). */
+  function scrollQuizNow() {
+    try { scrollQuiz(true); } catch (e) {}
+    if (doc.fonts && doc.fonts.ready && doc.fonts.ready.then) doc.fonts.ready.then(function () { try { scrollQuiz(true); } catch (e) {} });
+  }
+  function scrollQuizSoon() { clearTimeout(SQ.t); SQ.t = setTimeout(function () { scrollQuiz(false); }, 120); }
+  function watchSQ() {
+    window.addEventListener('resize', scrollQuizSoon);
+    if (doc.fonts && doc.fonts.addEventListener) doc.fonts.addEventListener('loadingdone', function () { clearTimeout(SQ.t); SQ.t = setTimeout(function () { scrollQuiz(true); }, 120); });
+    /* 글자 크기를 바꾸면 본문 높이가 달라지므로, 그때 다시 잽니다(같은 폭·글자 크기면 아무것도 하지 않음). */
+    if (window.ResizeObserver && S.main) { SQ.ro = new ResizeObserver(scrollQuizSoon); SQ.ro.observe(S.main); }
+  }
+
   function enterPage(how) {
     if (S.on || !S.main || S.failed) return;
     var main = S.main, i;
     try {
       var top = how === 'auto' && SP.el && doc.documentElement.contains(SP.el) ? SP.el : (how ? topElement() : null);
       SP.el = null;
+      clearSQ();
       root.classList.add('pg-on');
       S.orig = [];
       for (var c = main.firstChild; c; c = c.nextSibling) S.orig.push(c);
@@ -1694,6 +1746,7 @@
     }
     P = null;
     S.stage = null; S.orig = null; S.leaves = []; S.on = false; S.ready = false; S.done = false;
+    scrollQuizNow();
     root.classList.remove('pg-on');
     var pg = doc.getElementById('prog');
     if (pg) pg.style.width = '0%';
@@ -1751,7 +1804,8 @@
     var touchAt = 0;
     doc.addEventListener('touchend', function () { touchAt = now(); }, true);
     doc.addEventListener('mouseover', function (e) { if (now() - touchAt < 900) e.stopPropagation(); }, true);
-    if (!wantPage()) return;
+    watchSQ();
+    if (!wantPage()) { scrollQuizNow(); return; }
     /* 그림과 글꼴이 다 준비된 뒤에 나눠야 높이가 맞습니다. 너무 오래 걸리면 기다리지 않습니다. */
     var started = false;
     function start() { if (started) return; started = true; enterPage(); if (doc.fonts && doc.fonts.addEventListener) doc.fonts.addEventListener('loadingdone', function () { if (S.on) onResizeForce(); }); }

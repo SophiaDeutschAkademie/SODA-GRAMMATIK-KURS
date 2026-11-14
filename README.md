@@ -75,6 +75,6 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 
 새 Lektion을 추가하려면 `lektionen`, `hausaufgaben/lektionen`, `uebungen/lektionen`, `wiederholung/lektionen` 폴더에 파일을 넣고 `assets/lessons.js`의 목록에 항목(번호, 제목, 독일어 부제, 설명, 아이콘)을 추가하세요.
 
-교재 파일(`lektionen/lektion-NN.html`)에는 `<head>`의 `theme.js` 다음 줄에 `<script src="../assets/pager.js?v=4"></script>`를 넣으세요(다른 과와 같은 `?v=` 숫자로). 이 줄이 없으면 그 과는 예전처럼 스크롤로만 보입니다.
+교재 파일(`lektionen/lektion-NN.html`)에는 `<head>`의 `theme.js` 다음 줄에 `<script src="../assets/pager.js?v=6"></script>`를 넣으세요(다른 과와 같은 `?v=` 숫자로). 이 줄이 없으면 그 과는 예전처럼 스크롤로만 보입니다.
 
 `assets/pager.js`를 고쳐 올릴 때는 16개 교재 파일의 `?v=` 숫자와 파일 안의 `BUILD` 값을 함께 올리세요. 숫자를 올리면 기기가 바로 새 파일을 받고, 올리지 않으면 브라우저가 예전 파일을 10분쯤 더 쓸 수 있습니다.
