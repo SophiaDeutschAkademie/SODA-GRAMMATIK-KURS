@@ -125,7 +125,8 @@ td.gm{background:var(--kedf2f8,#EDF2F8)}td.gf{background:var(--kfaeef1,#FAEEF1)}
 
 @media(max-width:640px){main{padding:30px 16px 90px;font-size:16px;line-height:1.78}.brand-bar{padding:0 0 22px;gap:10px}.brand-logo{width:32px;height:37px}.lk-hd{padding:22px 0 34px}h1{font-size:1.7em}.lk-num{font-size:2.6em}h2{font-size:1.12em}h3{font-size:1.02em;margin:24px 0 12px}section{padding:38px 0 0}.sh{gap:10px;margin-bottom:18px}.sl{min-width:36px;height:36px;font-size:.9em}.sub-head{margin:30px 0 14px}.dgm{padding:16px 14px;border-radius:12px}.dgm-cap{font-size:.96em}.dgm-note{font-size:.82em}.callout{padding:13px 15px;gap:9px;font-size:.88em}.trap{padding:16px 15px}.bq{padding:14px 16px;font-size:.9em}td,th{padding:7px 8px}table{font-size:.8em}.qg{grid-template-columns:1fr}.wxmap{grid-template-columns:repeat(3,1fr)}.wpmap{grid-template-columns:repeat(2,1fr)}.wq{grid-template-columns:1fr 1fr}.fc{bottom:14px;right:14px}.fc-btn{width:32px;height:32px}.dgm svg{max-width:100%;height:auto}.refl-row{flex-wrap:wrap;padding:14px 15px 16px}.refl-gloss{margin-left:46px;flex:1 0 100%;margin-top:4px}.conj-row,.vow-row,.dgm-row,.push,.prepset{flex-wrap:wrap}.klam-cells,.slot-row,.compare2,.dgm-contrast,.clausevis,.clause-def,.refl-scene,.spatial,.poss{gap:8px}.chain{gap:8px}.dgm-contrast{flex-direction:column}.dgm-side{min-width:0;width:100%;padding:14px 16px}}
 </style>
-<style id="decl-responsive">@media(max-width:640px){table.decl-m thead{display:none}table.decl-m,table.decl-m tbody,table.decl-m tr,table.decl-m td{display:block;width:auto}table.decl-m tr{border:1.5px solid var(--bd);border-radius:11px;margin:0 0 12px;background:var(--bg-c);overflow:hidden}table.decl-m td.rh{background:var(--accent-l);font-weight:700;color:var(--text);border-bottom:1px solid var(--bd);font-size:1.02em;padding:8px 14px}table.decl-m td:not(.rh){position:relative;padding:7px 14px 7px 52px;border-bottom:1px dashed var(--bd);text-align:left}table.decl-m td:not(.rh):last-child{border-bottom:none}table.decl-m td:not(.rh)::before{content:attr(data-g);position:absolute;left:14px;top:7px;font-weight:600;color:var(--text-m);font-size:.82em}}</style>
+<style id="decl-responsive">/* 격변화표(decl-m): 좁은 화면에서도 격(세로)×성(가로) 표 한 장으로 한눈에 보이게, 글자와 여백을 화면 폭에 맞춰 줄입니다 */
+@media(max-width:840px){table.decl-m{min-width:0;font-size:clamp(11px,3.3vw,14px);line-height:1.35}table.decl-m th,table.decl-m td{padding:8px 3px;overflow-wrap:break-word}table.decl-m th:first-child,table.decl-m td.rh{padding-left:6px;padding-right:6px}table.decl-m td.rh{white-space:nowrap;font-weight:700}table.decl-m th:not(:first-child){width:21%}table.decl-m tr:has(>th:nth-child(4):last-child)>th:not(:first-child){width:29%}}</style>
 <style id="a11y-legibility">
 .lk-kicker{font-size:13px}
 .sub-badge{font-size:12.5px}
@@ -429,7 +430,7 @@ main>.sub-head+.quiz-block{background:var(--c-white);border-radius:0 0 16px 16px
 @media print{.aif{break-inside:avoid;page-break-inside:avoid}.aif-card{break-inside:avoid}}
 </style><link rel="stylesheet" href="../assets/theme-colors.css" media="screen">
 <script src="../assets/theme.js" data-mode="native"></script>
-<script src="../assets/pager.js?v=3"></script>
+<script src="../assets/pager.js?v=4"></script>
 </head>
 <body>
 <div class="prog-wrap" data-no-print=""><div id="prog" class="prog-bar"></div></div>

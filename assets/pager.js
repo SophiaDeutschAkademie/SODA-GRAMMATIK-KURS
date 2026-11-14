@@ -4,11 +4,13 @@
    - 손가락으로 옆으로 밀면 종이가 손가락을 따라 접히며 넘어갑니다. 화면 좌우 가장자리를 눌러도 넘어갑니다.
    - 페이지는 화면 크기와 글자 크기에 맞춰 그때그때 나눕니다. 문단은 줄 단위로, 표·그림·퀴즈는 덩어리 단위로 나눕니다.
      한 화면보다 큰 덩어리만 그 페이지 안에서 위아래로 밀어 봅니다.
+   - 문제(퀴즈)는 한 페이지에 여러 문제가 들어가도록 촘촘하게 놓습니다. 선지는 길이에 따라 한 줄에 4개·2개·1개.
+     풀이는 접은 높이로 재고, 학생이 어떤 페이지에서 답을 누르기 시작하면 그 페이지부터 풀이 자리를 잡아 다시 나눕니다.
    - 보던 자리는 기기에 기억해 두었다가 다시 열면 이어서 보여 줍니다(끝까지 본 과는 처음부터).
    - 교재의 내용(HTML)은 바꾸지 않습니다. 인쇄하거나 스크롤 보기로 돌아가면 원래 모양 그대로 되돌립니다.
    - 주소 끝에 ?view=page / ?view=scroll / ?view=auto 를 붙여 열면 그 기기의 보기 방식을 바꿉니다(auto: 화면 크기에 따라 저절로).
      ?view=info 를 붙여 열면 그 기기에서 페이지 보기가 어떤 상태인지, 안 열렸다면 왜 그런지 화면에 보여 줍니다.
-   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=3"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
+   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=4"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
      이 파일을 고쳐 올릴 때는 그 숫자와 아래 BUILD 값을 함께 올립니다(기기가 예전 파일을 붙들고 있지 않게).
    - 교재를 쓸 때 줄 수 있는 표시: data-pg-keep(절대 나누지 않음), data-pg-avoid(되도록 나누지 않음),
      data-pg-head(다음 덩어리와 같은 페이지에), data-pg-break(이 앞에서 새 페이지),
@@ -44,7 +46,7 @@
   if (TRIAL && !INFO && getView() === null) return;
 
   /* 확인 화면에 보여 줄 스크립트 번호(올릴 때마다 바꿉니다)와 실패 기록 */
-  var BUILD = '2026-11-14.3', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
+  var BUILD = '2026-11-14.4', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
   function note(where, err) {
     try {
       var m = err && (err.message || err.name) ? (err.name || 'Error') + ': ' + (err.message || '') : String(err);
@@ -106,7 +108,21 @@
     + '.pg-body .gt .gt-tip.pg-below{bottom:auto;top:calc(100% + 9px)}'
     + '.pg-body .gt .gt-tip.pg-below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--k2a3350,#2A3350)}'
     + '.pg-body>.sd-nav{margin-top:28px}'
-    + '.pg-leaf.pg-m .qe{display:block!important}'
+    + '.pg-leaf.pg-m .qe,.pg-body .qi.pg-x .qe{display:block!important}'
+    /* 문제(바로 확인·복습): 한 페이지에 여러 문제가 들어가도록 촘촘하게. 선지는 길이에 따라 한 줄에 4개·2개·1개로 놓습니다(quizFit이 정함). */
+    + '.pg-body .quiz-block{margin-bottom:16px}'
+    + '.pg-body .qi{padding:10px 0}'
+    + '.pg-body .qq{font-size:1em;line-height:1.5;margin-bottom:6px}'
+    + '.pg-body .qq .qh{margin-top:2px}'
+    + '.pg-body .qg{gap:6px;grid-template-columns:minmax(0,1fr)}'
+    + '.pg-body .qg[data-pg-q="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}'
+    + '.pg-body .qg[data-pg-q="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}'
+    + '.pg-body .qg[data-pg-q="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}'
+    /* 선지의 여백·글자 크기는 바로 바뀌어야 합니다(천천히 바뀌면 폭을 잴 때 예전 값이 잡힘). 색만 부드럽게 바꿉니다. */
+    + '.pg-body .qo{padding:6px 9px;font-size:.9em;line-height:1.4;border-radius:7px;transition:background-color .15s,border-color .15s,color .15s,opacity .15s}'
+    + '.pg-body .qg[data-pg-q="3"]>.qo,.pg-body .qg[data-pg-q="4"]>.qo{padding:6px 3px;text-align:center}'
+    + '.pg-body .qg[data-pg-qm]>.qo{white-space:nowrap}'
+    + '.pg-body .qe{margin-top:6px;padding:5px 10px;font-size:.84em;line-height:1.55}'
     + '.pg-more{position:absolute;left:0;right:0;bottom:0;height:46px;pointer-events:none;z-index:4;display:none;align-items:flex-end;justify-content:center;padding-bottom:5px;'
     + 'background:linear-gradient(to bottom,rgba(255,255,255,0),var(--pg-paper) 82%);color:var(--pg-ink)}'
     + '.pg-more svg{width:18px;height:18px;opacity:.8}'
@@ -297,12 +313,12 @@
   }
 
   /* 그림·표가 남은 자리보다 조금 클 때, 나누지 않고 살짝 줄여서 넣습니다. */
-  function shrink(el, avail) {
+  function shrink(el, avail, min) {
     var r = el.getBoundingClientRect(), h = r.bottom - r.top;
     if (h <= 0 || avail <= 0) return false;
     var k = avail / h;
     if (k >= 1) return true;
-    if (k < MIN_SCALE) return false;
+    if (k < (min || MIN_SCALE)) return false;
     k = Math.floor(k * 1000 - 2) / 1000;
     var st = el.style, old = el.getAttribute('style'), mb = px(cs(el).marginBottom);
     st.transformOrigin = '50% 0';
@@ -343,23 +359,26 @@
   /* ───────────── 자르기 ─────────────
      el은 이미 페이지 안에 놓여 있고, 아래쪽이 lim을 넘습니다.
      lim 위에 들어가는 만큼만 el에 남기고, 나머지를 담은 껍데기(복제)를 돌려줍니다. 나눌 수 없으면 null. */
-  function cut(el, lim, minFirst) {
+  function cut(el, lim, minFirst, cap) {
     if (isAtomic(el)) return null;
     var s = cs(el), d = s.display;
     if (d === 'none') return null;
-    var inner = lim - px(s.paddingBottom) - px(s.borderBottomWidth);
+    var inner = (cap != null && cap < lim ? cap : lim) - px(s.paddingBottom) - px(s.borderBottomWidth);
     var fg = isFlexGrid(d);
     if (fg && hasText(el)) return null;
     var inl = !fg && hasInline(el);
     var once = function (lm) { return inl ? cutInline(el, lm, minFirst, s) : cutRows(el, lm, minFirst); };
     var mark = S.undo.length, rem = once(inner), good = inner, first = inner, tries = 0, over;
     /* 잘라 낸 뒤에도 남은 조각이 넘칠 수 있습니다(상자 안에 갇힌 아래 여백 등). 넘친 만큼 한도를 낮춰 다시 자릅니다. */
-    while (rem && tries++ < 3) {
-      over = el.getBoundingClientRect().bottom - lim;
+    while (rem && tries++ < 4) {
+      var bc = el.getBoundingClientRect().bottom, nx;
+      over = bottomX(el) - lim;                       /* 문제가 하나만 남았으면 풀이를 펼친 높이로 봅니다 */
       if (over <= EPS) break;
       undoTo(mark);
-      rem = once(inner - over - 0.5);
-      if (rem) inner = inner - over - 0.5;
+      /* 접은 높이로는 들어가는데 하나 남은 문제의 풀이가 안 들어가는 것이면 그 문제를 다음 페이지로 넘기고, 그 밖에는 넘친 만큼 한도를 낮춥니다. */
+      nx = bc - lim <= EPS ? bc - 1 - px(s.paddingBottom) - px(s.borderBottomWidth) : inner - over - 0.5;
+      rem = once(nx);
+      if (rem) inner = nx;
       else {
         /* 더 줄여서는 못 나눕니다. 다음 페이지로 통째로 넘길 수 있으면 그렇게 하고(null), 그럴 수 없을 때만 조금 넘치는 대로 둡니다. */
         if (minFirst === 0) rem = once(good);
@@ -371,6 +390,23 @@
        그러면 다음 페이지에서도 똑같이 되어 끝없이 빈 페이지가 생기므로, 조금 넘치더라도 처음 자른 대로 둡니다. */
     if (rem && minFirst === 0 && inner !== first && onlyHeads(el)) { undoTo(mark); rem = once(first); }
     return rem;
+  }
+  /* 한 페이지에 아직 안 푼 문제가 하나뿐이면, 그 문제의 풀이가 펼쳐져도 페이지 안에 들어가야 합니다(답을 눌렀을 때 넘치지 않게).
+     그런 문제를 잠깐 펼쳐서 잰 아래쪽 끝을 돌려줍니다. 안 푼 문제가 여러 개인 페이지는 첫 답을 누를 때 풀이 자리를 잡아 다시 나누므로(reserveQuiz)
+     접은 높이로 꽉 채웁니다. */
+  function lastQ(el) {
+    if (!el.querySelectorAll) return null;
+    if (is(el, '.qi')) return el;
+    var q = el.querySelectorAll('.qi');
+    return q.length ? q[q.length - 1] : null;
+  }
+  function bottomX(el) {
+    var q = lastQ(el), b;
+    if (!q || !P || P.cur.body.querySelector('.qi:not(.done)') !== q) return el.getBoundingClientRect().bottom;
+    q.classList.add('pg-x');
+    b = el.getBoundingClientRect().bottom;
+    q.classList.remove('pg-x');
+    return b;
   }
   /* 제목·표 머리줄 말고는 아무 내용도 남지 않았는가 */
   function onlyHeads(el) {
@@ -609,12 +645,14 @@
     if (it.kind === 'sec' && it.sec && it.sec.__pgTitle) return (it.sec.__pgTitle.k ? it.sec.__pgTitle.k + ' · ' : '') + it.sec.__pgTitle.t;
     return it.kind === 'review' ? '복습' : it.kind === 'end' ? '' : S.lesson;
   }
-  /* 채우는 중인 페이지(pg-m)에서는 퀴즈 풀이를 펼친 높이로 잽니다. 그래야 답을 누른 뒤에도 그 페이지에 다 들어갑니다. */
+  /* 문제는 풀이를 접은 높이로 재서 한 페이지에 되도록 많이 넣습니다. 학생이 어떤 페이지에서 문제를 풀기 시작하면(S.rsv)
+     그 페이지만 풀이를 펼친 높이로 다시 나눕니다(reserveQuiz). 채우는 동안 pg-m이 붙은 페이지에서는 풀이가 펼쳐진 것으로 잽니다. */
   function newLeaf() {
     if (S.leaves.length >= 1500) throw new Error('too many pages: ' + S.leaves.length);
     var prev = S.leaves[S.leaves.length - 1];
     if (prev) prev.leaf.classList.remove('pg-m');
-    var leaf = mk('div', 'pg-leaf pg-m'), page = mk('div', 'pg-page'), body = mk('div', 'pg-body'), more = mk('div', 'pg-more');
+    var leaf = mk('div', S.rsv[S.leaves.length] ? 'pg-leaf pg-m' : 'pg-leaf'), page = mk('div', 'pg-page'), body = mk('div', 'pg-body'), more = mk('div', 'pg-more');
+
     more.innerHTML = IC_DOWN;
     page.appendChild(body); leaf.appendChild(page); leaf.appendChild(more);
     leaf.__pgn = S.leaves.length;
@@ -653,25 +691,75 @@
     for (i = 0; i < list.length; i++) list[i].classList.remove('fx-off');
     for (i = 0; i < list.length; i++) if (list[i].scrollWidth > list[i].clientWidth + 1) list[i].classList.add('fx-off');
   }
+  /* 문제의 선지를 한 줄에 몇 개 놓을지 정합니다. 네 개가 모두 한 줄에 들어가면 한 줄에 4개.
+     아니면 2개씩 놓았을 때(선지마다 두 줄까지)와 1개씩 놓았을 때 가운데 높이가 낮은 쪽을 고릅니다. 문장처럼 긴 선지는 1개씩 놓입니다.
+     글자 폭을 직접 재서 정하므로 화면 폭과 글자 크기가 달라지면 결과도 달라집니다(되돌릴 때 표시를 지움). */
+  function quizFit(el) {
+    if (!el.querySelectorAll) return;
+    var list = el.querySelectorAll('.qg:not([data-pg-q])'), i, j;
+    for (i = 0; i < list.length; i++) {
+      var g = list[i], bs = g.children, n = bs.length, cols = 1, b, st, r, ok, h2, lh;
+      if (n === 3 || n === 4) {                                   /* 모두 한 줄에 */
+        g.setAttribute('data-pg-qm', '');
+        g.setAttribute('data-pg-q', String(n));
+        ok = true;
+        for (j = 0; j < n && ok; j++) {
+          b = bs[j]; st = cs(b); r = rng();
+          r.selectNodeContents(b);
+          /* 칸의 폭은 반올림하지 않은 값으로 잽니다(같은 글자의 선지가 문제마다 다르게 놓이지 않게). */
+          if (r.getBoundingClientRect().width > b.getBoundingClientRect().width - px(st.paddingLeft) - px(st.paddingRight) - px(st.borderLeftWidth) - px(st.borderRightWidth) + 0.5) ok = false;
+        }
+        g.removeAttribute('data-pg-qm');
+        if (ok) cols = n;
+      }
+      if (cols === 1 && n >= 2 && n % 2 === 0) {                  /* 2개씩 */
+        g.setAttribute('data-pg-q', '2');
+        ok = true;
+        for (j = 0; j < n && ok; j++) {
+          b = bs[j]; st = cs(b); lh = lineH(st);
+          if (b.getBoundingClientRect().height > lh * 2 + px(st.paddingTop) + px(st.paddingBottom) + px(st.borderTopWidth) + px(st.borderBottomWidth) + 2) ok = false;
+        }
+        if (ok) {
+          h2 = g.getBoundingClientRect().height;
+          g.setAttribute('data-pg-q', '1');
+          if (h2 < g.getBoundingClientRect().height - 1) cols = 2;
+        }
+      }
+      g.setAttribute('data-pg-q', String(cols));
+      S.qfit.push(g);
+    }
+  }
   function place(el) {
     var guard = 0;
     while (el && guard++ < 600) {
+      if (!S.lsnap[P.cur.leaf.__pgn]) snapLeaf(el);
       P.top.appendChild(el);
       if (P.wide) fxFit(el);
-      var lim = P.LIMIT, r = el.getBoundingClientRect();
-      if (r.bottom <= lim + EPS) {
+      quizFit(el);
+      var lim = P.LIMIT, r = el.getBoundingClientRect(), rem = null;
+      /* 접은 채로는 들어가도, 이 페이지에 하나뿐인 문제의 풀이까지는 안 들어가면(needX) 다음 페이지로 넘깁니다. */
+      var needX = r.bottom <= lim + EPS && bottomX(el) > lim + EPS;
+      if (needX) {
+        rem = cut(el, lim, 0, r.bottom - 1);
+        if (rem) { P.placed.push({ el: el, head: false }); P.solid++; breakPage(); el = rem; continue; }
+      }
+      if (r.bottom <= lim + EPS && (!needX || P.solid === 0)) {
+        if (needX) {                                   /* 빈 페이지에 문제 하나: 풀이까지 들어가도록 9할까지 줄여 봅니다 */
+          var xq = lastQ(el);
+          xq.classList.add('pg-x'); shrink(el, lim - r.top, 0.9); xq.classList.remove('pg-x');
+        }
         var hd = isHead(el);
         P.placed.push({ el: el, head: hd });
         if (!hd) P.solid++;
         return;
       }
-      var h = r.bottom - r.top, rem = null, room = lim - r.top, fit = canFit(el, h);
+      var h = r.bottom - r.top, room = lim - r.top, fit = canFit(el, h);
       if (fit && room >= h * (P.solid > 0 ? 0.93 : MIN_SCALE) && shrink(el, room)) {
         P.placed.push({ el: el, head: false }); P.solid++;
         return;
       }
       if (P.solid > 0) {
-        var whole = isAtomic(el) || preferWhole(el, h, room) || (fit && room <= P.PH * 0.62);
+        var whole = needX || isAtomic(el) || preferWhole(el, h, room) || (fit && room <= P.PH * 0.62);
         if (!whole) rem = cut(el, lim, P.minTop);
         if (rem) { P.placed.push({ el: el, head: false }); P.solid++; breakPage(); el = rem; continue; }
         /* 통째로 다음 페이지로. 바로 위의 제목도 함께 데려갑니다. */
@@ -689,8 +777,21 @@
       }
       /* 빈 페이지(또는 제목만 있는 페이지)인데도 넘칩니다: 여기서 나누거나, 못 나누면 그대로 둡니다(그 페이지만 위아래로 밀어 봄). */
       rem = cut(el, lim, 0);
-      /* 나누고도 남은 조각이 넘치면(큰 그림 한 장 등) 살짝 줄여서 맞춥니다. */
-      if (is(el, SEL_FIT)) { var r2 = el.getBoundingClientRect(); if (r2.bottom > lim + EPS) shrink(el, lim - r2.top); }
+      /* 나누고도 남은 조각이 넘치면 살짝 줄여서 맞춥니다(그림·표는 8할까지). */
+      var r2 = el.getBoundingClientRect();
+      if (r2.bottom > lim + EPS) {
+        if (is(el, SEL_FIT)) shrink(el, lim - r2.top);
+        else {
+          /* 그 밖의 나눌 수 없는 덩어리(작은 화면의 퀴즈 한 문제 등)는 9할까지 줄여서 넣습니다.
+             풀이 자리를 잡는 페이지(pg-m)에서 풀이까지는 못 넣으면, 접은 모습에라도 맞춥니다(풀이는 답을 누른 뒤 그 페이지를 밀어서 봄). */
+          var lf = P.cur.leaf, room2 = lim - r2.top, rs = lf.classList.contains('pg-m');
+          if (!shrink(el, room2, 0.9) && rs) {
+            lf.classList.remove('pg-m');
+            if (el.getBoundingClientRect().bottom > lim + EPS) shrink(el, room2, 0.9);
+            lf.classList.add('pg-m');
+          }
+        }
+      }
       P.placed.push({ el: el, head: false }); P.solid++;
       if (rem) { breakPage(); el = rem; continue; }
       return;
@@ -708,7 +809,8 @@
      할 일 종류 k — 0: 글자 조각, 1: main 바로 아래 덩어리, 2: section 시작, 3: section 안의 덩어리, 4: section 끝 */
   function setupPagination() {
     var stage = S.stage, i, n, c, kids, bi = 0, tasks = [], nodes = S.orig;
-    S.leaves = []; S.undo = []; S.marks = [{ el: null, k: '', t: '표지' }]; S.secs = []; S.blocks = []; S.done = false;
+    S.leaves = []; S.undo = []; S.marks = [{ el: null, k: '', t: '표지' }]; S.secs = []; S.blocks = []; S.done = false; S.qfit = [];
+    S.rsv = {}; S.lsnap = [];
     P = { sec: null, kind: 'title', seenSec: false, afterSec: false, first: null, last: -1, ti: 0 };
     var cur = newLeaf();
     var pr = cur.page.getBoundingClientRect(), bs = cs(cur.body);
@@ -738,6 +840,7 @@
       tasks.push({ k: 4, n: n });
     }
     P.tasks = tasks;
+    S.pk = { tasks: tasks, PH: P.PH, LIMIT: P.LIMIT, small: P.small, blank: P.blank, minTop: P.minTop, minIn: P.minIn, wide: P.wide };
   }
 
   function runTask(t) {
@@ -779,6 +882,76 @@
     if (brk && P.placed.length) nextPage();
     else if (brk) { P.cur.kind = P.kind; P.cur.title = titleFor(P.cur); }
     place(n); P.last = n.__pgi;
+  }
+
+  /* ───────────── 어떤 페이지부터 다시 나누기 ─────────────
+     페이지마다, 그 페이지에 첫 덩어리를 놓으려던 때의 상태를 적어 둡니다(snapLeaf). 과의 내용이 바뀌어(문제의 풀이가 펼쳐짐)
+     p번째 페이지부터 다시 나눠야 하면 그때로 되돌린 뒤(rewindLeaf) 거기서부터 이어서 나눕니다. 앞쪽 페이지는 건드리지 않고,
+     p번째 페이지는 전과 같은 덩어리로 시작합니다. */
+  function snapLeaf(el) {
+    var c = P.cur, m = S.marks.length;
+    S.lsnap[c.leaf.__pgn] = { el: el, undo: S.undo.length, marks: m, mel: m ? S.marks[m - 1].el : null, secs: S.secs.length, ti: P.ti,
+      top: P.top, placed: P.placed.slice(0), solid: P.solid, sec: P.sec, kind: P.kind, seenSec: P.seenSec, afterSec: P.afterSec,
+      first: P.first, last: P.last, csec: c.sec, ckind: c.kind, ctitle: c.title };
+  }
+  function resetLeaf(it) {
+    it.ids = null;
+    if (it.tall) { it.tall = false; it.page.classList.remove('pg-tall'); it.page.scrollTop = 0; }
+    if (it.more) { it.more = false; it.leaf.classList.remove('pg-more-on'); }
+    if (S.rsv[it.leaf.__pgn]) it.leaf.classList.add('pg-m'); else it.leaf.classList.remove('pg-m');
+  }
+  function rewindLeaf(p) {
+    var sn = S.lsnap[p], k = S.pk, tasks = k.tasks, it = S.leaves[p], i, j, tk, n, kids, lf;
+    bgStop();
+    undoTo(sn.undo);
+    /* 그 뒤의 할 일들이 놓은 덩어리를 모두 떼어 둡니다. 뒤에서 시작하는 section은 원래대로 묶어서 떼어 둡니다(다시 나눌 때 처음부터 풀어 놓음). */
+    for (i = sn.ti; i < tasks.length; i++) {
+      tk = tasks[i]; n = tk.n;
+      if (tk.k === 2) {
+        kids = n.__pgKids;
+        for (j = 0; j < kids.length; j++) n.appendChild(kids[j]);
+        if (n.parentNode) n.parentNode.removeChild(n);
+        while (i + 1 < tasks.length && tasks[i + 1].k === 3) i++;
+        if (i + 1 < tasks.length && tasks[i + 1].k === 4) i++;
+      } else if (tk.k !== 4 && n.parentNode) n.parentNode.removeChild(n);
+    }
+    while (S.leaves.length > p + 1) { lf = S.leaves.pop(); if (lf.leaf.parentNode) lf.leaf.parentNode.removeChild(lf.leaf); }
+    S.lsnap.length = p + 1;
+    S.marks.length = sn.marks;
+    if (sn.marks) S.marks[sn.marks - 1].el = sn.mel;
+    S.secs.length = sn.secs;
+    P = { tasks: tasks, PH: k.PH, LIMIT: k.LIMIT, small: k.small, blank: k.blank, minTop: k.minTop, minIn: k.minIn, wide: k.wide,
+      cur: it, top: sn.top, placed: sn.placed.slice(0), solid: sn.solid, sec: sn.sec, kind: sn.kind, seenSec: sn.seenSec, afterSec: sn.afterSec,
+      first: sn.first, last: sn.last, ti: sn.ti };
+    it.sec = sn.csec; it.kind = sn.ckind; it.title = sn.ctitle;
+    resetLeaf(it);
+    S.done = false;
+    /* 그 페이지의 첫 덩어리부터 다시 놓고, 하던 할 일을 마무리합니다(runTask의 끝과 같음). */
+    place(sn.el);
+    n = tasks[sn.ti - 1] ? tasks[sn.ti - 1].n : null;
+    if (n && n.nodeType === 1 && n.__pgi != null) P.last = n.__pgi;
+  }
+  /* 학생이 p번째 페이지에서 문제(qi)를 풀었습니다. 이 페이지의 문제들이 모두 풀이를 펼쳐도 들어가도록 이 페이지부터 다시 나눕니다.
+     풀이 자리가 모자라는 만큼 뒤 문제가 다음 페이지로 넘어갑니다. 다시 나눴으면 true. */
+  function reserveQuiz(p, qi) {
+    var it = S.leaves[p];
+    if (!it || !S.lsnap || !S.lsnap[p] || S.rsv[p] || !it.body.contains(qi)) return false;
+    it.leaf.classList.add('pg-m');
+    var lim = it.page.clientHeight - px(cs(it.body).paddingBottom), pr = it.page.getBoundingClientRect();
+    var over = overOf(it) > EPS, stay = qi.getBoundingClientRect().bottom - pr.top + it.page.scrollTop <= lim + EPS;
+    it.leaf.classList.remove('pg-m');
+    if (!over) { S.rsv[p] = 1; return false; }           /* 풀이를 다 펼쳐도 이 페이지에 들어갑니다 */
+    if (!stay) return false;                              /* 방금 푼 문제까지 넘어가게 되면 그대로 두고, 이 페이지만 위아래로 밀어 봅니다 */
+    try {
+      finishTurn();
+      S.rsv[p] = 1;
+      rewindLeaf(p);
+      runUntil(function () { return avail() > p; });
+      var at = leafIndex(qi);
+      show(at >= 0 && at < avail() ? at : p, true);
+      bgStart();
+    } catch (err) { fail(err); }
+    return true;
   }
 
   /* stop()이 참이 될 때까지(없으면 끝까지) 나눕니다. 다 나눴으면 true. */
@@ -845,15 +1018,17 @@
   }
 
   /* 페이지 안에 다 안 들어가는 덩어리가 있으면 그 페이지만 위아래로 밀 수 있게 */
-  function tallState(it) {
-    /* 마지막 덩어리의 아래쪽 끝이 종이 아래 여백을 넘는지 봅니다(끝에 붙은 바깥 여백은 세지 않음). */
-    var last = it.body.lastElementChild, over = 0;
+  /* 마지막 덩어리의 아래쪽 끝이 종이 아래 여백을 얼마나 넘는지(끝에 붙은 바깥 여백은 세지 않음) */
+  function overOf(it) {
+    var last = it.body.lastElementChild;
     if (last && last.tagName === 'SECTION' && last.lastElementChild) last = last.lastElementChild;
-    if (last) {
-      var pr = it.page.getBoundingClientRect();
-      over = last.getBoundingClientRect().bottom - pr.top + it.page.scrollTop - (it.page.clientHeight - px(cs(it.body).paddingBottom));
-    }
-    var tall = over > 3;
+    if (!last) return 0;
+    var pr = it.page.getBoundingClientRect();
+    return last.getBoundingClientRect().bottom - pr.top + it.page.scrollTop - (it.page.clientHeight - px(cs(it.body).paddingBottom));
+  }
+  function tallState(it) {
+    var tall = overOf(it) > 3;
+
     if (tall !== !!it.tall) {
       it.tall = tall;
       if (tall) it.page.classList.add('pg-tall'); else { it.page.classList.remove('pg-tall'); it.page.scrollTop = 0; }
@@ -899,6 +1074,7 @@
   function gather(holder) {
     resetTips();
     undoAll();
+    if (S.qfit) { for (var q = 0; q < S.qfit.length; q++) { S.qfit[q].removeAttribute('data-pg-q'); S.qfit[q].removeAttribute('data-pg-qm'); } S.qfit = []; }
     for (var i = 0; i < S.orig.length; i++) holder.appendChild(S.orig[i]);
     for (i = 0; i < S.leaves.length; i++) if (S.leaves[i].leaf.parentNode) S.leaves[i].leaf.parentNode.removeChild(S.leaves[i].leaf);
     S.leaves = [];
@@ -968,6 +1144,7 @@
     if (n < 1) return;
     p = Math.max(0, Math.min(n - 1, p));
     var changed = p !== S.cur;
+    if (changed) { S.focus = null; S.focusT = ''; }
     for (i = 0; i < S.leaves.length; i++) {
       var lf = S.leaves[i].leaf, st = lf.style;
       lf.classList.remove('pg-u'); lf.classList.remove('pg-l');
@@ -1034,7 +1211,7 @@
     var n = S.leaves.length, it = S.leaves[S.cur];
     UI.now.textContent = S.cur + 1; UI.all.textContent = S.done ? n : '…';
     UI.prev.disabled = S.cur <= 0; UI.next.disabled = S.done && S.cur >= n - 1;
-    UI.runK.textContent = S.kick; UI.runT.textContent = it ? it.title : '';
+    UI.runK.textContent = S.kick; UI.runT.textContent = S.focus && S.focusT ? S.focusT : (it ? it.title : '');
     UI.ind.setAttribute('aria-label', (S.done ? n + '페이지 중 ' : '') + (S.cur + 1) + '페이지 · 이 과의 차례 열기');
     var pg = doc.getElementById('prog');
     if (pg) pg.style.width = (S.done ? (n > 1 ? S.cur / (n - 1) * 100 : 100) : 0) + '%';
@@ -1230,12 +1407,17 @@
     /* 퀴즈 풀이가 펼쳐져 페이지가 길어졌으면, 그 페이지를 위아래로 밀 수 있게 하고 풀이가 보이도록 내립니다. */
     var qi = e.target.closest ? e.target.closest('.qi') : null;
     setTimeout(function () {
-      var it = S.on ? S.leaves[S.cur] : null;
+      var it = S.on && S.ready ? S.leaves[S.cur] : null;
+      if (!it) return;
+      /* 답을 골랐으면, 이 페이지의 풀이 자리를 잡아 다시 나눕니다(뒤 문제는 다음 페이지로). */
+      if (qi && qi.classList.contains('done') && reserveQuiz(S.cur, qi)) it = S.on ? S.leaves[S.cur] : null;
       if (!it) return;
       tallState(it);
       if (it.tall && qi && it.body.contains(qi)) {
         var a = qi.getBoundingClientRect(), b = it.page.getBoundingClientRect();
         if (a.bottom > b.bottom - 12) it.page.scrollTop += a.bottom - b.bottom + 16;
+        /* 아래에 빈 여백만 남았으면 끝까지 내려서, 더 볼 것이 있다는 화살표가 남지 않게 합니다. */
+        if (it.page.scrollHeight - it.page.clientHeight - it.page.scrollTop < 48) it.page.scrollTop = it.page.scrollHeight;
         moreState(it);
       }
     }, 0);
@@ -1309,7 +1491,10 @@
     sheet.addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('button[data-p]') : null;
       if (!b) return;
+      var m = S.marks[parseInt(b.getAttribute('data-m'), 10)];
       closePanels(); go(parseInt(b.getAttribute('data-p'), 10) || 0);
+      /* 차례에서 고른 곳이 페이지 중간에서 시작할 수 있습니다. 다음에 페이지를 넘길 때까지는 그곳을 '보던 자리'로 삼습니다. */
+      if (m && m.el && S.on && leafIndex(m.el) === S.cur) { S.focus = m.el; S.focusT = (m.k ? m.k + ' · ' : '') + m.t; updateUI(); }
     });
     pop.addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('button[data-a]') : null;
@@ -1374,7 +1559,7 @@
     }
     for (i = 0; i < S.marks.length; i++) {
       m = S.marks[i];
-      html += '<button type="button" data-p="' + m.p + '"' + (i === curMark ? ' class="on" aria-current="true"' : '') + '>'
+      html += '<button type="button" data-p="' + m.p + '" data-m="' + i + '"' + (i === curMark ? ' class="on" aria-current="true"' : '') + '>'
         + (m.k ? '<b>' + esc(m.k) + '</b>' : '<b style="visibility:hidden"></b>')
         + '<span>' + esc(m.t) + '</span><i>' + (m.p + 1) + '</i></button>';
     }
@@ -1500,7 +1685,7 @@
     closePanels();
     if (UI.toast) UI.toast.classList.remove('pg-open');
     var place = null, topEl = null;
-    try { if (keep === true && S.on && S.ready && S.cur > 0) { place = anchorOf(S.cur); topEl = pageTop(S.leaves[S.cur]); } } catch (e) {}
+    try { if (keep === true && S.on && S.ready && S.cur > 0) { place = anchorOf(S.cur); topEl = S.focus && S.stage && S.stage.contains(S.focus) ? S.focus : pageTop(S.leaves[S.cur]); } } catch (e) {}
     if (S.orig) {
       var hold = doc.createDocumentFragment();
       try { gather(hold); } catch (e) { for (var i = 0; i < S.orig.length; i++) hold.appendChild(S.orig[i]); }
@@ -1527,9 +1712,13 @@
       finishTurn();
       bgStop();
       var a = S.ready ? anchorOf(S.cur) : loadPos();
+      /* 지금 페이지 맨 위에 놓인 요소(문제 하나, 문단 하나)를 기억해 두었다가, 다시 나눈 뒤 그 요소가 있는 페이지를 엽니다. */
+      var fo = S.focus, ft = S.focusT;
+      var top = S.ready && S.cur > 0 ? (fo && S.stage.contains(fo) ? fo : pageTop(S.leaves[S.cur])) : null;
       S.ready = false;
       gather(doc.createDocumentFragment());
-      paginateFrom(a);
+      paginateFrom(a, top);
+      if (fo && S.on && S.ready && leafIndex(fo) === S.cur) { S.focus = fo; S.focusT = ft; updateUI(); }
     } catch (err) { fail(err); }
   }
 

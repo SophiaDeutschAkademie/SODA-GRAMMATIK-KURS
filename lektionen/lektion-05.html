@@ -138,7 +138,8 @@ td.gm{background:var(--kedf2f8,#EDF2F8)}td.gf{background:var(--kfaeef1,#FAEEF1)}
 .trap-label{color:var(--kb0341f,#B0341F)}
 .role-ic .ic{width:42px;height:42px}
 </style>
-<style id="decl-responsive">@media(max-width:840px){table.decl-m thead{display:none}table.decl-m,table.decl-m tbody,table.decl-m tr,table.decl-m td{display:block;width:auto}table.decl-m tr{border:1.5px solid var(--bd);border-radius:11px;margin:0 0 12px;background:var(--bg-c);overflow:hidden}table.decl-m td.rh{background:var(--accent-l);font-weight:700;color:var(--text);border-bottom:1px solid var(--bd);font-size:1.02em;padding:8px 14px}table.decl-m td:not(.rh){position:relative;padding:7px 14px 7px 52px;border-bottom:1px dashed var(--bd);text-align:left}table.decl-m td:not(.rh):last-child{border-bottom:none}table.decl-m td:not(.rh)::before{content:attr(data-g);position:absolute;left:14px;top:7px;font-weight:600;color:var(--text-m);font-size:.82em}}</style>
+<style id="decl-responsive">/* 격변화표(decl-m): 좁은 화면에서도 격(세로)×성(가로) 표 한 장으로 한눈에 보이게, 글자와 여백을 화면 폭에 맞춰 줄입니다 */
+@media(max-width:840px){table.decl-m{min-width:0;font-size:clamp(11px,3.3vw,14px);line-height:1.35}table.decl-m th,table.decl-m td{padding:8px 3px;overflow-wrap:break-word}table.decl-m th:first-child,table.decl-m td.rh{padding-left:6px;padding-right:6px}table.decl-m td.rh{white-space:nowrap;font-weight:700}table.decl-m th:not(:first-child){width:21%}table.decl-m tr:has(>th:nth-child(4):last-child)>th:not(:first-child){width:29%}}</style>
 <style id="conj-responsive">@media(max-width:840px){table.conj-m thead{display:none}table.conj-m,table.conj-m tbody,table.conj-m tr,table.conj-m td{display:block;width:auto}table.conj-m tr{border:1.5px solid var(--bd);border-radius:11px;margin:0 0 12px;background:var(--bg-c);overflow:hidden}table.conj-m td.rh{background:var(--accent-l);font-weight:700;color:var(--text);border-bottom:1px solid var(--bd);font-size:1.02em;padding:8px 14px}table.conj-m td:not(.rh){padding:7px 14px;border-bottom:1px dashed var(--bd)}table.conj-m td:not(.rh):last-child{border-bottom:none}table.conj-m td:not(.rh)::before{content:attr(data-g);display:block;font-weight:600;color:var(--text-m);font-size:.78em;margin-bottom:2px}}</style>
 <style>
 /* v2 — 시각 체계 */
@@ -452,7 +453,7 @@ main>.sub-head+.quiz-block{background:var(--c-white);border-radius:0 0 16px 16px
 @media print{.aif{break-inside:avoid;page-break-inside:avoid}.aif-card{break-inside:avoid}}
 </style><link rel="stylesheet" href="../assets/theme-colors.css" media="screen">
 <script src="../assets/theme.js" data-mode="native"></script>
-<script src="../assets/pager.js?v=3"></script>
+<script src="../assets/pager.js?v=4"></script>
 </head>
 <body>
 <div class="prog-wrap" data-no-print="">
