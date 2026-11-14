@@ -2,7 +2,8 @@
    - 과제(Hausaufgabe) Schritt 6(Sprechen · 말하기) 맨 아래에 말하기 연습 카드를 넣습니다.
    - 처음 배우는 Lektion에서도 바로 말할 수 있도록 도움이 되는 표현을 함께 보여 줍니다.
    - 말하기 사이트(SODA SPRECHEN)는 연습 기록을 같은 주소(github.io)의 localStorage에 저장합니다. 이 카드는 그 저장 상태를 보여 주고,
-     과제 제출 때는 페이지의 buildText가 같은 기록을 답안에 함께 넣습니다. */
+     과제 제출 때는 페이지의 buildText가 같은 기록을 답안에 함께 넣습니다.
+   - 대화 녹음은 말하기 사이트가 맡습니다(SODA-Lehrwerk sprechen/의 「대화 녹음」). 이 카드는 녹음된다는 안내만 보여 줍니다. */
 (function () {
   'use strict';
   var m = location.pathname.match(/lektion-(\d\d)\.html/);
@@ -34,6 +35,7 @@
       '<p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:var(--muted)">학습 포탈에 로그인한 상태라면 말하기 연습이 로그인 없이 바로 열립니다. 그렇지 않으면 선생님께 받은 아이디와 비밀번호로 로그인합니다. 마이크가 있는 기기에서 하십시오. Lektion마다 최대 2회 연습할 수 있으며, 추가 연습이 필요하면 선생님께 말씀해 주십시오.</p>' +
       '<p style="margin:14px 0 0;font-size:16px;font-weight:700">도움이 되는 표현</p>' + help +
       '<p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:var(--muted)">연습이 끝나면 이 과제로 돌아오십시오. 연습 기록과 평가 결과는 「과제 제출하기」를 누를 때 답안과 함께 선생님께 제출됩니다. 말하기 사이트에서는 따로 보내지 않습니다.</p>' +
+      '<p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:var(--muted)">연습하는 동안 나와 파트너의 대화가 녹음됩니다. 연습이 끝난 화면에서 녹음을 다시 듣고 「녹음 파일 내려받기」로 파일(WAV)을 저장할 수 있습니다. 녹음은 연습한 기기에만 60일 동안 남고 선생님께 자동으로 제출되지 않습니다.</p>' +
       '<p id="sprechen-status" style="margin:0 0 14px;font-size:15px;font-weight:700"></p>' +
       '<a class="btn go" href="' + LINK + '" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">말하기 연습 열기</a>';
   }
