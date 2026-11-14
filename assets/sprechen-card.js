@@ -18,26 +18,54 @@
   function statusText(r) {
     return r ? '저장된 연습 기록: ' + r.attempts + '회' + (r.evaluated ? ' (평가 포함)' : '') + ' · 「과제 제출하기」를 누르면 함께 제출됩니다.' : '아직 저장된 연습 기록이 없습니다.';
   }
-  function list(arr) {
-    return '<ul style="list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">' + arr.map(function (x) {
-      return '<li style="padding:8px 12px;border:1px solid var(--line2);border-radius:10px"><span style="font-weight:700">' + esc(x[0]) + '</span><span style="display:block;font-size:14px;color:var(--muted)">' + esc(x[1]) + '</span></li>';
-    }).join('') + '</ul>';
+  /* 표현은 작은 칩(독일어 + 뜻 한 줄)으로 이어서 보여 주고, 묶음 이름은 컴퓨터에서는 왼쪽, 핸드폰에서는 위에 둡니다. */
+  var CSS = '#sprechen-card{margin:28px 0 0;padding:16px 18px;border:1px solid var(--line2);border-radius:14px;background:var(--bg);text-align:left}' +
+    '#sprechen-card .sc-top{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap}' +
+    '#sprechen-card .sc-eb{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted)}' +
+    '#sprechen-card h3{margin:2px 0 0;font-size:18px;letter-spacing:-.01em}' +
+    '#sprechen-card .sc-info{margin:10px 0 0;padding:0 0 0 16px;font-size:13.5px;line-height:1.6;color:var(--muted)}' +
+    '#sprechen-card .sc-info li+li{margin-top:2px}' +
+    '#sprechen-card .sc-help{margin:12px 0 0;border-top:1px solid var(--line2);padding-top:10px}' +
+    '#sprechen-card .sc-help>p{margin:0 0 6px;font-size:14px;font-weight:700}' +
+    '#sprechen-card .sc-g{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;align-items:start;padding:6px 0}' +
+    '#sprechen-card .sc-g+.sc-g{border-top:1px dashed var(--line2)}' +
+    '#sprechen-card .sc-gl{font-size:12.5px;font-weight:700;color:var(--muted);line-height:1.4;padding-top:4px;word-break:keep-all}' +
+    '#sprechen-card .sc-gl small{display:block;font-weight:400;font-size:11.5px}' +
+    '#sprechen-card .sc-chips{display:flex;flex-wrap:wrap;gap:5px}' +
+    '#sprechen-card .sc-chip{display:inline-block;max-width:100%;padding:3px 9px;border:1px solid var(--line2);border-radius:7px;font-size:14px;line-height:1.45}' +
+    '#sprechen-card .sc-chip b{font-weight:700}' +
+    '#sprechen-card .sc-chip span{margin-left:5px;font-size:12px;color:var(--muted);word-break:keep-all}' +
+    '#sprechen-card .sc-foot{display:flex;align-items:center;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--line2)}' +
+    '#sprechen-card #sprechen-status{margin:0;font-size:13.5px;font-weight:700}' +
+    '@media (max-width:640px){#sprechen-card{padding:14px 12px;margin-top:22px}#sprechen-card h3{font-size:16.5px}#sprechen-card .sc-info{font-size:13px;padding-left:14px}#sprechen-card .sc-g{grid-template-columns:1fr;gap:4px}#sprechen-card .sc-gl{padding-top:0}#sprechen-card .sc-gl small{display:inline;margin-left:4px}#sprechen-card .sc-chip{font-size:13.5px;padding:3px 8px}#sprechen-card .sc-foot .btn{width:100%;text-align:center}}';
+  function style() {
+    if (document.getElementById('sprechen-card-css')) return;
+    var st = document.createElement('style'); st.id = 'sprechen-card-css'; st.textContent = CSS;
+    (document.head || document.documentElement).appendChild(st);
   }
-  function h4(t) { return '<p style="margin:12px 0 8px;font-size:14px;font-weight:700;color:var(--muted)">' + t + '</p>'; }
+  function chips(arr) {
+    return '<div class="sc-chips">' + arr.map(function (x) {
+      return '<span class="sc-chip"><b>' + esc(x[0]) + '</b><span>' + esc(x[1]) + '</span></span>';
+    }).join('') + '</div>';
+  }
+  function group(label, sub, arr) {
+    return '<div class="sc-g"><div class="sc-gl">' + label + (sub ? '<small>' + sub + '</small>' : '') + '</div>' + chips(arr) + '</div>';
+  }
   function build() {
     var d = DATA[NO] || { phr: [], voc: [] };
-    var help = h4('이 Lektion에서 쓰기 좋은 문장') + list(d.phr) + h4('핵심 단어') + list(d.voc);
-    if (N <= 8) help += h4('문장이 바로 떠오르지 않을 때 · 이 틀에 단어만 넣으면 됩니다') + list(START);
-    help += h4('못 알아들었을 때') + list(HELP);
-    return '<div style="font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-bottom:6px">SPRECHEN · 말하기 연습</div>' +
-      '<h3 style="margin:0 0 8px;font-size:20px;letter-spacing:-.01em">Lektion ' + NO + ' 말하기 연습 · 약 2분</h3>' +
-      '<p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:var(--muted)">이 Lektion에서 배운 문법으로 말하기 에이전트와 2분 정도 대화합니다. 에이전트는 천천히, 쉬운 문장으로 말합니다. 완벽한 문장이 아니어도 괜찮으니 아래 표현을 보면서 단어를 바꿔 말해 보십시오.</p>' +
-      '<p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:var(--muted)">학습 포탈에 로그인한 상태라면 말하기 연습이 로그인 없이 바로 열립니다. 그렇지 않으면 선생님께 받은 아이디와 비밀번호로 로그인합니다. 마이크가 있는 기기에서 하십시오. Lektion마다 최대 2회 연습할 수 있으며, 추가 연습이 필요하면 선생님께 말씀해 주십시오.</p>' +
-      '<p style="margin:14px 0 0;font-size:16px;font-weight:700">도움이 되는 표현</p>' + help +
-      '<p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:var(--muted)">연습이 끝나면 이 과제로 돌아오십시오. 연습 기록과 평가 결과는 「과제 제출하기」를 누를 때 답안과 함께 선생님께 제출됩니다. 말하기 사이트에서는 따로 보내지 않습니다.</p>' +
-      '<p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:var(--muted)">연습하는 동안 나와 파트너의 대화가 녹음됩니다. 연습이 끝난 화면에서 녹음을 다시 듣고 「녹음 파일 내려받기」로 파일(WAV)을 저장할 수 있습니다. 녹음은 연습한 기기에만 60일 동안 남고 선생님께 자동으로 제출되지 않습니다.</p>' +
-      '<p id="sprechen-status" style="margin:0 0 14px;font-size:15px;font-weight:700"></p>' +
-      '<a class="btn go" href="' + LINK + '" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">말하기 연습 열기</a>';
+    var help = group('이 Lektion에서 쓰기 좋은 문장', '', d.phr) + group('핵심 단어', '', d.voc);
+    if (N <= 8) help += group('문장이 바로 떠오르지 않을 때', '이 틀에 단어만 넣으면 됩니다', START);
+    help += group('못 알아들었을 때', '', HELP);
+    var btn = '<a class="btn go" href="' + LINK + '" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">말하기 연습 열기</a>';
+    return '<div class="sc-top"><div><div class="sc-eb">SPRECHEN · 말하기 연습</div><h3>Lektion ' + NO + ' 말하기 연습 · 약 2분</h3></div></div>' +
+      '<ul class="sc-info">' +
+      '<li>배운 문법으로 말하기 에이전트와 약 2분 대화합니다. 에이전트는 천천히, 쉬운 문장으로 말합니다. 아래 표현에서 단어만 바꿔 말해도 됩니다.</li>' +
+      '<li>학습 포탈에 로그인했으면 바로 열립니다(아니면 받은 아이디·비밀번호로 로그인). 마이크가 있는 기기에서 하십시오. Lektion마다 2회까지 연습할 수 있고, 더 필요하면 선생님께 말씀해 주십시오.</li>' +
+      '<li>대화는 녹음됩니다. 연습이 끝난 화면에서 다시 듣고 WAV 파일로 내려받을 수 있습니다. 녹음은 이 기기에만 60일 동안 남고 자동으로 제출되지 않습니다.</li>' +
+      '<li>연습 기록과 평가 결과는 이 과제의 「과제 제출하기」를 누를 때 답안과 함께 제출됩니다.</li>' +
+      '</ul>' +
+      '<div class="sc-help"><p>도움이 되는 표현</p>' + help + '</div>' +
+      '<div class="sc-foot"><p id="sprechen-status"></p>' + btn + '</div>';
   }
   function ensure() {
     var s6 = document.getElementById('s6');
@@ -49,7 +77,7 @@
       card = document.createElement('section');
       card.id = 'sprechen-card';
       card.setAttribute('data-noser', '');
-      card.setAttribute('style', 'margin:32px 0 0;padding:20px 22px;border:1px solid var(--line2);border-radius:14px;background:var(--bg);text-align:left');
+      style();
       card.innerHTML = build();
       if (s6) s6.appendChild(card); else host.parentNode.insertBefore(card, host);
     }
