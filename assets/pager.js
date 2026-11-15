@@ -10,7 +10,7 @@
    - 교재의 내용(HTML)은 바꾸지 않습니다. 인쇄하거나 스크롤 보기로 돌아가면 원래 모양 그대로 되돌립니다.
    - 주소 끝에 ?view=page / ?view=scroll / ?view=auto 를 붙여 열면 그 기기의 보기 방식을 바꿉니다(auto: 화면 크기에 따라 저절로).
      ?view=info 를 붙여 열면 그 기기에서 페이지 보기가 어떤 상태인지, 안 열렸다면 왜 그런지 화면에 보여 줍니다.
-   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=6"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
+   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=7"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
      이 파일을 고쳐 올릴 때는 그 숫자와 아래 BUILD 값을 함께 올립니다(기기가 예전 파일을 붙들고 있지 않게).
    - 교재를 쓸 때 줄 수 있는 표시: data-pg-keep(절대 나누지 않음), data-pg-avoid(되도록 나누지 않음),
      data-pg-head(다음 덩어리와 같은 페이지에), data-pg-break(이 앞에서 새 페이지),
@@ -46,7 +46,7 @@
   if (TRIAL && !INFO && getView() === null) return;
 
   /* 확인 화면에 보여 줄 스크립트 번호(올릴 때마다 바꿉니다)와 실패 기록 */
-  var BUILD = '2026-11-15.6', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
+  var BUILD = '2026-11-15.7', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
   function note(where, err) {
     try {
       var m = err && (err.message || err.name) ? (err.name || 'Error') + ': ' + (err.message || '') : String(err);
@@ -109,6 +109,12 @@
     + '.pg-body .gt .gt-tip.pg-below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--k2a3350,#2A3350)}'
     + '.pg-body>.sd-nav{margin-top:28px}'
     + '.pg-leaf.pg-m .qe,.pg-body .qi.pg-x .qe{display:block!important}'
+    /* 표 맞추기(tableFit) */
+    + 'html table[data-tf]{min-width:0!important}'
+    + 'html table[data-tf] th,html table[data-tf] td{white-space:normal!important;padding:6px 4px!important;overflow-wrap:normal;word-break:keep-all}'
+    + 'html table[data-tf="2"]{font-size:.76em!important}html table[data-tf="3"]{font-size:.71em!important}html table[data-tf="4"]{font-size:.66em!important}'
+    + 'html table[data-tf="5"]{font-size:.62em!important}html table[data-tf="6"]{font-size:.58em!important}'
+    + 'html table[data-tf="5"] th,html table[data-tf="5"] td,html table[data-tf="6"] th,html table[data-tf="6"] td{padding:5px 2px!important}'
     + '@media(max-width:640px){html:not(.pg-on) .qg[data-sq="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}html:not(.pg-on) .qg[data-sq="1"]{grid-template-columns:minmax(0,1fr)}}'
     /* 문제(바로 확인·복습): 한 페이지에 여러 문제가 들어가도록 촘촘하게. 선지는 길이에 따라 한 줄에 4개·2개·1개로 놓습니다(quizFit이 정함). */
     + '.pg-body .quiz-block{margin-bottom:16px}'
@@ -735,6 +741,7 @@
     while (el && guard++ < 600) {
       if (!S.lsnap[P.cur.leaf.__pgn]) snapLeaf(el);
       P.top.appendChild(el);
+      tableFit(el, S.qfit);
       if (P.wide) fxFit(el);
       quizFit(el);
       var lim = P.LIMIT, r = el.getBoundingClientRect(), rem = null;
@@ -1075,7 +1082,7 @@
   function gather(holder) {
     resetTips();
     undoAll();
-    if (S.qfit) { for (var q = 0; q < S.qfit.length; q++) { S.qfit[q].removeAttribute('data-pg-q'); S.qfit[q].removeAttribute('data-pg-qm'); } S.qfit = []; }
+    if (S.qfit) { for (var q = 0; q < S.qfit.length; q++) { S.qfit[q].removeAttribute('data-pg-q'); S.qfit[q].removeAttribute('data-pg-qm'); S.qfit[q].removeAttribute('data-tf'); } S.qfit = []; }
     for (var i = 0; i < S.orig.length; i++) holder.appendChild(S.orig[i]);
     for (i = 0; i < S.leaves.length; i++) if (S.leaves[i].leaf.parentNode) S.leaves[i].leaf.parentNode.removeChild(S.leaves[i].leaf);
     S.leaves = [];
@@ -1635,6 +1642,34 @@
   }
   /* how — 없음: 처음 열 때(지난번 자리에서), 'user': 책 버튼을 눌렀을 때, 'auto': 화면을 돌리거나 창 크기가 바뀌었을 때.
      스크롤로 보던 중이었다면 화면에 보이던 자리에서 시작합니다. */
+  /* ───────────── 표를 화면 폭에 맞추기 ─────────────
+     옆으로 넘치는 표만 고칩니다(스크롤 보기·페이지 보기 모두). data-tf="1": 최소 폭과 줄바꿈 금지를 풀고 칸 여백을 줄임.
+     그래도 넘치면 2~6단계로 글자를 조금씩 줄입니다. 6단계에서도 넘치면 전처럼 표 안에서 옆으로 밉니다.
+     낱말 중간에서 줄을 바꾸지는 않습니다. */
+  var TF_MAX = 6;
+  function tblOver(t) {
+    var p = t.parentNode;
+    if (!p || p.nodeType !== 1) return false;
+    var st = cs(p), avail = p.clientWidth - px(st.paddingLeft) - px(st.paddingRight);
+    return avail > 0 && t.getBoundingClientRect().width > avail + 1;
+  }
+  function tableFit(scope, rec) {
+    if (!scope || !scope.querySelectorAll) return;
+    var ts = scope.tagName === 'TABLE' ? [scope] : scope.querySelectorAll('table'), i, k, t;
+    for (i = 0; i < ts.length; i++) {
+      t = ts[i];
+      if (t.hasAttribute('data-tf') || !tblOver(t)) continue;
+      k = 1; t.setAttribute('data-tf', '1');
+      while (k < TF_MAX && tblOver(t)) { k++; t.setAttribute('data-tf', String(k)); }
+      if (rec) rec.push(t);
+    }
+  }
+  function clearTF() {
+    if (!S.main) return;
+    var l = S.main.querySelectorAll('table[data-tf]');
+    for (var i = 0; i < l.length; i++) l[i].removeAttribute('data-tf');
+  }
+
   /* ───────────── 스크롤 보기의 문제 선지 ─────────────
      핸드폰 폭(640px 이하)의 스크롤 보기에서도 선지를 2×2로 놓습니다. 다만 선지 하나라도 반 폭에서 세 줄 이상이 되면
      (문장처럼 긴 선지) 그 문제는 전처럼 한 줄에 하나씩 놓습니다. 넓은 화면은 교재의 원래 배치 그대로입니다.
@@ -1644,16 +1679,17 @@
     if (!S.main) return;
     var l = S.main.querySelectorAll('.qg[data-sq]');
     for (var i = 0; i < l.length; i++) l[i].removeAttribute('data-sq');
+    clearTF();
     SQ.key = '';
   }
   function scrollQuiz(force) {
     if (S.on || !S.main) return;
-    var list = S.main.querySelectorAll('.qg'), i, j;
-    if (!list.length) { SQ.key = ''; return; }
-    var q0 = list[0].children[0], narrow = (window.innerWidth || root.clientWidth) <= 640;
-    var key = S.main.clientWidth + '|' + (q0 ? cs(q0).fontSize : '') + '|' + narrow + '|' + list.length;
+    var list = S.main.querySelectorAll('.qg'), i, j;          
+    var narrow = (window.innerWidth || root.clientWidth) <= 640, tn = S.main.getElementsByTagName('table').length;
+    var key = S.main.clientWidth + '|' + cs(S.main).fontSize + '|' + narrow + '|' + list.length + '|' + tn + '|' + location.hash;
     if (!force && key === SQ.key) return;
     SQ.key = key;
+    if (tn) { clearTF(); tableFit(S.main, null); }
     for (i = 0; i < list.length; i++) {
       var g = list[i], bs = g.children, n = bs.length, ok = narrow && n >= 2 && !g.classList.contains('qg1');
       if (!ok) { g.removeAttribute('data-sq'); continue; }
