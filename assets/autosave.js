@@ -209,34 +209,44 @@
     return hash(s);
   }
   /* 문항마다 내용으로 정한 이름(id). 문항을 빼거나 새로 넣어도 남은 문항의 답은 그 이름으로 되살린다.
+   * 이름에는 괄호 힌트(.hn)를 넣지 않는다: 힌트를 새로 달거나 고쳐도 답이 그대로 이어진다.
+   * 예전 이름(힌트까지 넣어 만든 것, 2026-11-15 저장분과 sd-prev)도 되살릴 때 함께 찾아본다.
    * v1(예전 방식)은 순서대로 저장했으므로, 페이지의 <script id="sd-prev">에 적어 둔 예전 문항 배치로 이름을 찾아 옮긴다. */
   function tnorm(s) { return String(s || '').replace(/★\s*(도전)?/g, ' ').replace(/\s+/g, ' ').trim(); }
-  function qtext(e) { var qc = e.closest('.qc'), qt = qc && qc.querySelector('.qt'); return qt ? tnorm(qt.textContent) : ''; }
+  function plain(el, keepHn) {
+    if (!el) return '';
+    if (keepHn || !el.querySelector('.hn')) return tnorm(el.textContent);
+    var c = el.cloneNode(true);
+    [].forEach.call(c.querySelectorAll('.hn'), function (h) { h.parentNode.removeChild(h); });
+    return tnorm(c.textContent);
+  }
+  function qtext(e, keepHn) { var qc = e.closest('.qc'); return plain(qc && qc.querySelector('.qt'), keepHn); }
   function chipText(c) { return tnorm(c.dataset.t != null ? c.dataset.t : c.textContent); }
-  function baseId(e) {
+  function baseId(e, keepHn) {
     var c = e.classList;
-    if (c.contains('opt')) return 'o' + hash(qtext(e) + '\u0001' + tnorm(e.textContent));
-    if (c.contains('wa')) return 'w' + hash(qtext(e));
+    if (c.contains('opt')) return 'o' + hash(qtext(e, keepHn) + '\u0001' + tnorm(e.textContent));
+    if (c.contains('wa')) return 'w' + hash(qtext(e, keepHn));
     if (c.contains('so')) {
       var cs = [].slice.call(e.querySelectorAll('.chip')).sort(function (a, b) { return a.dataset.i - b.dataset.i; });
-      return 's' + hash(qtext(e) + '\u0001' + cs.map(chipText).join('\u0002'));
+      return 's' + hash(qtext(e, keepHn) + '\u0001' + cs.map(chipText).join('\u0002'));
     }
-    var p = e.closest('p') || e.parentNode;
-    return 'f' + hash(tnorm(p ? p.textContent : ''));
+    return 'f' + hash(plain(e.closest('p') || e.parentNode, keepHn));
   }
-  function ids(list) {
+  function ids(list, keepHn) {
     var seen = {};
-    return list.map(function (e) { var b = baseId(e), n = seen[b] = (seen[b] || 0) + 1; return n > 1 ? b + '.' + n : b; });
+    return list.map(function (e) { var b = baseId(e, keepHn), n = seen[b] = (seen[b] || 0) + 1; return n > 1 ? b + '.' + n : b; });
   }
-  function layout() { return { sig: sig(), fin: ids(qa('.fin')), wa: ids(qa('.wa')), opt: ids(qa('.opt')), so: ids(qa('.so')) }; }
-  window.__sodaUebLayout = layout;
+  function layout(keepHn) {
+    return { sig: sig(), fin: ids(qa('.fin'), keepHn), wa: ids(qa('.wa'), keepHn), opt: ids(qa('.opt'), keepHn), so: ids(qa('.so'), keepHn) };
+  }
+  window.__sodaUebLayout = function (keepHn) { return layout(!!keepHn); };
   function soState(so) {
     var line = so.querySelector('.so-line'), mk = so.querySelector('.so-mk');
     var cs = line ? [].map.call(line.querySelectorAll('.chip'), function (c) { return +c.dataset.i; }) : [];
     return [cs, mk ? (mk.classList.contains('right') ? 1 : mk.classList.contains('wrong') ? 2 : 0) : 0];
   }
   function collect() {
-    var L = layout(), m = {};
+    var L = layout(false), m = {};
     qa('.fin').forEach(function (e, i) { if (e.value || cls(e)) m[L.fin[i]] = [e.value, cls(e)]; });
     qa('.wa').forEach(function (e, i) { if (e.value || cls(e)) m[L.wa[i]] = [e.value, cls(e)]; });
     qa('.opt').forEach(function (e, i) { var s = e.classList.contains('correct') ? 1 : e.classList.contains('wrong') ? 2 : 0; if (s) m[L.opt[i]] = s; });
@@ -244,16 +254,17 @@
     return { v: 2, t: Date.now(), m: m };
   }
   function apply(m) {
-    var L = layout();
-    qa('.fin').forEach(function (e, i) { var p = m[L.fin[i]]; if (!p) return; e.value = p[0]; if (p[1] && typeof window.checkFin === 'function') window.checkFin(e); });
-    qa('.wa').forEach(function (e, i) { var p = m[L.wa[i]]; if (!p) return; e.value = p[0]; if (p[1] && typeof window.checkWa === 'function') window.checkWa(e); });
+    var A = layout(false), B = layout(true);
+    function pick(k, i) { var v = m[A[k][i]]; return v != null ? v : m[B[k][i]]; }
+    qa('.fin').forEach(function (e, i) { var p = pick('fin', i); if (!p) return; e.value = p[0]; if (p[1] && typeof window.checkFin === 'function') window.checkFin(e); });
+    qa('.wa').forEach(function (e, i) { var p = pick('wa', i); if (!p) return; e.value = p[0]; if (p[1] && typeof window.checkWa === 'function') window.checkWa(e); });
     qa('.opt').forEach(function (o, i) {
-      var s = m[L.opt[i]]; if (s !== 1 && s !== 2) return;
+      var s = pick('opt', i); if (s !== 1 && s !== 2) return;
       o.classList.add(s === 1 ? 'correct' : 'wrong');
       if (s === 1) { var qc = o.closest('.qc'), h = qc && qc.querySelector('.opt-hint'); if (h) h.classList.add('s'); }
     });
     qa('.so').forEach(function (so, i) {
-      var p = m[L.so[i]]; if (!p) return;
+      var p = pick('so', i); if (!p) return;
       var line = so.querySelector('.so-line');
       (p[0] || []).forEach(function (id) {
         var c = so.querySelector('.chip[data-i="' + id + '"]');
@@ -281,7 +292,7 @@
     if (!st || typeof st !== 'object') return false;
     if (st.v === 2 && st.m && typeof st.m === 'object') { apply(st.m); return true; }
     if (st.v !== 1) return false;
-    var L = st.sig === sig() ? layout() : null;
+    var L = st.sig === sig() ? layout(false) : null;
     if (!L) prevLayouts().some(function (p) { if (p && p.sig === st.sig) { L = p; return true; } return false; });
     if (!L) return false;
     apply(fromV1(st, L));
