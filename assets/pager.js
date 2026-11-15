@@ -10,7 +10,7 @@
    - 교재의 내용(HTML)은 바꾸지 않습니다. 인쇄하거나 스크롤 보기로 돌아가면 원래 모양 그대로 되돌립니다.
    - 주소 끝에 ?view=page / ?view=scroll / ?view=auto 를 붙여 열면 그 기기의 보기 방식을 바꿉니다(auto: 화면 크기에 따라 저절로).
      ?view=info 를 붙여 열면 그 기기에서 페이지 보기가 어떤 상태인지, 안 열렸다면 왜 그런지 화면에 보여 줍니다.
-   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=7"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
+   - 새 Lektion을 추가할 때는 <head>의 theme.js 다음 줄에 <script src="../assets/pager.js?v=8"></script>를 넣습니다(다른 과와 같은 ?v= 숫자로).
      이 파일을 고쳐 올릴 때는 그 숫자와 아래 BUILD 값을 함께 올립니다(기기가 예전 파일을 붙들고 있지 않게).
    - 교재를 쓸 때 줄 수 있는 표시: data-pg-keep(절대 나누지 않음), data-pg-avoid(되도록 나누지 않음),
      data-pg-head(다음 덩어리와 같은 페이지에), data-pg-break(이 앞에서 새 페이지),
@@ -46,7 +46,7 @@
   if (TRIAL && !INFO && getView() === null) return;
 
   /* 확인 화면에 보여 줄 스크립트 번호(올릴 때마다 바꿉니다)와 실패 기록 */
-  var BUILD = '2026-11-15.7', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
+  var BUILD = '2026-11-15.8', KEY_ERR = 'soda-gk-pg-err', lastErr = null;
   function note(where, err) {
     try {
       var m = err && (err.message || err.name) ? (err.name || 'Error') + ': ' + (err.message || '') : String(err);
@@ -110,6 +110,7 @@
     + '.pg-body>.sd-nav{margin-top:28px}'
     + '.pg-leaf.pg-m .qe,.pg-body .qi.pg-x .qe{display:block!important}'
     /* 표 맞추기(tableFit) */
+    + '@media(max-width:640px){html table:not([data-tf]) th{font-size:max(11.5px,.82em)!important}}'
     + 'html table[data-tf]{min-width:0!important}'
     + 'html table[data-tf] th,html table[data-tf] td{white-space:normal!important;padding:6px 4px!important;overflow-wrap:normal;word-break:keep-all}'
     + 'html table[data-tf="2"]{font-size:.76em!important}html table[data-tf="3"]{font-size:.71em!important}html table[data-tf="4"]{font-size:.66em!important}'
@@ -719,18 +720,17 @@
         g.removeAttribute('data-pg-qm');
         if (ok) cols = n;
       }
-      if (cols === 1 && n >= 2 && n % 2 === 0) {                  /* 2개씩 */
+      if (cols === 1 && n >= 2 && n % 2 === 0) {                  /* 2개씩: 모든 선지가 반 폭에서 한 줄에 들어갈 때만. 긴 문장 선지는 한 줄에 하나씩 */
+        g.setAttribute('data-pg-qm', '');
         g.setAttribute('data-pg-q', '2');
         ok = true;
         for (j = 0; j < n && ok; j++) {
-          b = bs[j]; st = cs(b); lh = lineH(st);
-          if (b.getBoundingClientRect().height > lh * 2 + px(st.paddingTop) + px(st.paddingBottom) + px(st.borderTopWidth) + px(st.borderBottomWidth) + 2) ok = false;
+          b = bs[j]; st = cs(b); r = rng();
+          r.selectNodeContents(b);
+          if (r.getBoundingClientRect().width > b.getBoundingClientRect().width - px(st.paddingLeft) - px(st.paddingRight) - px(st.borderLeftWidth) - px(st.borderRightWidth) + 0.5) ok = false;
         }
-        if (ok) {
-          h2 = g.getBoundingClientRect().height;
-          g.setAttribute('data-pg-q', '1');
-          if (h2 < g.getBoundingClientRect().height - 1) cols = 2;
-        }
+        g.removeAttribute('data-pg-qm');
+        if (ok) cols = 2;
       }
       g.setAttribute('data-pg-q', String(cols));
       S.qfit.push(g);
@@ -742,6 +742,7 @@
       if (!S.lsnap[P.cur.leaf.__pgn]) snapLeaf(el);
       P.top.appendChild(el);
       tableFit(el, S.qfit);
+      phoneFit(el, S.pf);
       if (P.wide) fxFit(el);
       quizFit(el);
       var lim = P.LIMIT, r = el.getBoundingClientRect(), rem = null;
@@ -818,7 +819,7 @@
   function setupPagination() {
     var stage = S.stage, i, n, c, kids, bi = 0, tasks = [], nodes = S.orig;
     S.leaves = []; S.undo = []; S.marks = [{ el: null, k: '', t: '표지' }]; S.secs = []; S.blocks = []; S.done = false; S.qfit = [];
-    S.rsv = {}; S.lsnap = [];
+    S.rsv = {}; S.lsnap = []; S.pf = [];
     P = { sec: null, kind: 'title', seenSec: false, afterSec: false, first: null, last: -1, ti: 0 };
     var cur = newLeaf();
     var pr = cur.page.getBoundingClientRect(), bs = cs(cur.body);
@@ -1083,6 +1084,7 @@
     resetTips();
     undoAll();
     if (S.qfit) { for (var q = 0; q < S.qfit.length; q++) { S.qfit[q].removeAttribute('data-pg-q'); S.qfit[q].removeAttribute('data-pg-qm'); S.qfit[q].removeAttribute('data-tf'); } S.qfit = []; }
+    undoPF(S.pf);
     for (var i = 0; i < S.orig.length; i++) holder.appendChild(S.orig[i]);
     for (i = 0; i < S.leaves.length; i++) if (S.leaves[i].leaf.parentNode) S.leaves[i].leaf.parentNode.removeChild(S.leaves[i].leaf);
     S.leaves = [];
@@ -1670,16 +1672,152 @@
     for (var i = 0; i < l.length; i++) l[i].removeAttribute('data-tf');
   }
 
+  /* ───────────── 핸드폰에서 도식 맞추기(폭 640px 이하에서만, 컴퓨터 화면은 그대로) ─────────────
+     wordFit: 좁은 칸에서 낱말이 중간에 잘려 두 줄이 되면, 같은 줄에 있는 같은 종류의 칸 글자를 함께 조금씩 줄입니다.
+     svgFit : 그림(SVG)이 화면 폭에 맞춰 줄면서 그림 속 글자가 11px보다 작아지면 글자만 키웁니다.
+              키운 글자가 다른 글자와 겹치거나, 원래 들어 있던 상자·그림 밖으로 나가면 덜 키우고, 그래도 안 되면 그대로 둡니다.
+     바꾼 것은 rec에 적어 두었다가 undoPF로 글자 하나 다르지 않게 되돌립니다. */
+  function narrowNow() { return (window.innerWidth || root.clientWidth) <= 640; }
+  /* style 속성을 한 번 써 준 뒤 지워야 브라우저가 빈 style=""을 남기지 않습니다(unshrink와 같은 까닭). */
+  function dropStyle(el) { el.setAttribute('style', ''); el.removeAttribute('style'); }
+  function keepStyle(el, rec) { if (!el.__pfS) { el.__pfS = 1; rec.push({ el: el, st: el.getAttribute('style') }); } }
+  function undoPF(rec) {
+    if (!rec) return;
+    for (var i = rec.length - 1; i >= 0; i--) {
+      var r = rec[i];
+      if (r.flag) { r.el.__pfV = 0; continue; }
+      if (r.st == null) dropStyle(r.el); else r.el.setAttribute('style', r.st);
+      r.el.__pfS = 0;
+    }
+    rec.length = 0;
+  }
+  var WRE = /[가-힣]{2,}|[A-Za-zÄÖÜäöüß]{3,}/g;
+  function brokenIn(el) {
+    var tw = doc.createTreeWalker(el, 4, null, false), n, m, r, rs, i, top;
+    while ((n = tw.nextNode())) {
+      WRE.lastIndex = 0;
+      while ((m = WRE.exec(n.data))) {
+        r = rng(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length);
+        rs = r.getClientRects(); top = null;
+        for (i = 0; i < rs.length; i++) { if (rs[i].width <= 0) continue; if (top == null) top = rs[i].top; else if (Math.abs(rs[i].top - top) > 2) return true; }
+      }
+    }
+    return false;
+  }
+  function wordFit(scope, rec) {
+    if (!scope.querySelectorAll) return;
+    var list = scope.querySelectorAll('div,span,b,strong,em,i'), i, j, k, el, done = [];
+    for (i = 0; i < list.length; i++) {
+      el = list[i];
+      /* 이미 맞춘 칸, 페이지 경계에서 이어지는 조각, 문단 속 글자(inline)는 건드리지 않습니다. 좁은 칸(폭 200px 이하)만. */
+      if (el.__pfW || el.__pfS || el.closest('table,.gt-tip,.pg-bar,.qg,svg,[data-pg-cont],[data-pg-cut]')) continue;
+      var own = false;
+      for (var c = el.firstChild; c; c = c.nextSibling) if (c.nodeType === 3 && /\S/.test(c.data)) { own = true; break; }
+      if (!own) continue;
+      /* 글자를 담은 칸: 글자 요소가 inline이면 그것을 감싼 가장 가까운 블록. 그 칸이 좁을 때(200px 이하)만 */
+      var cell = el;
+      while (cell && cell !== scope && cs(cell).display === 'inline') cell = cell.parentNode;
+      if (!cell || cell.nodeType !== 1 || cell.getBoundingClientRect().width > 200 || !brokenIn(el)) continue;
+      /* 같은 줄의 같은 종류 칸(부모의 부모 안에서 클래스가 같은 것)을 함께 줄여 크기를 맞춥니다. */
+      var box = el.parentNode && el.parentNode.parentNode || el.parentNode, grp = [el];
+      if (el.className && box && box.querySelectorAll) {
+        var sib = box.querySelectorAll(el.tagName.toLowerCase() + '.' + String(el.className).trim().split(/\s+/).join('.'));
+        if (sib.length > 1 && sib.length < 40) grp = Array.prototype.slice.call(sib);
+      }
+      var base = [];
+      for (j = 0; j < grp.length; j++) { grp[j].__pfW = 1; base.push(px(cs(grp[j]).fontSize)); keepStyle(grp[j], rec); }
+      for (k = 0.92; k > 0.48; k -= 0.07) {
+        for (j = 0; j < grp.length; j++) grp[j].style.fontSize = (base[j] * k).toFixed(2) + 'px';
+        var bad = false;
+        for (j = 0; j < grp.length && !bad; j++) if (brokenIn(grp[j])) bad = true;
+        if (!bad) break;
+      }
+      done.push(grp);
+    }
+    for (i = 0; i < done.length; i++) for (j = 0; j < done[i].length; j++) done[i][j].__pfW = 0;
+  }
+  function inside(a, b, t) { return a.left >= b.left - t && a.right <= b.right + t && a.top >= b.top - t && a.bottom <= b.bottom + t; }
+  function hits(a, b) { return a.left < b.right - 0.5 && b.left < a.right - 0.5 && a.top < b.bottom - 0.5 && b.top < a.bottom - 0.5; }
+  function svgFit(scope, rec) {
+    if (!scope.querySelectorAll) return;
+    var svgs = String(scope.tagName).toLowerCase() === 'svg' ? [scope] : scope.querySelectorAll('svg'), s, i, j, x;
+    for (s = 0; s < svgs.length; s++) {
+      var svg = svgs[s], ts = svg.querySelectorAll('text');
+      if (!ts.length || svg.__pfV) continue;              /* 이미 살펴본 그림(같은 덩어리를 다시 놓을 때) */
+      svg.__pfV = 1; rec.push({ el: svg, flag: true });
+      var vb = svg.viewBox && svg.viewBox.baseVal, sr = svg.getBoundingClientRect();
+      if (!vb || !vb.width || sr.width <= 0) continue;
+      var k = sr.width / vb.width;
+      if (k >= 0.98) continue;
+      /* 그림 안의 좌표로 잽니다(그림이 페이지 어디에 있든 같은 값). 변형(transform)이 걸린 그림은 그림 왼쪽 위를 기준으로 화면 좌표를 씁니다. */
+      var useB = !svg.querySelector('[transform]');
+      var box = function (el) {
+        var b;
+        if (useB) { b = el.getBBox(); return { left: (b.x - vb.x) * k, top: (b.y - vb.y) * k, right: (b.x - vb.x + b.width) * k, bottom: (b.y - vb.y + b.height) * k, width: b.width * k, height: b.height * k }; }
+        b = el.getBoundingClientRect(); var o = svg.getBoundingClientRect();
+        return { left: b.left - o.left, top: b.top - o.top, right: b.right - o.left, bottom: b.bottom - o.top, width: b.width, height: b.height };
+      };
+      var sb = { left: 0, top: 0, right: vb.width * k, bottom: vb.height * k };
+      var base = [], tb = [], st = [], need = false;
+      for (i = 0; i < ts.length; i++) {
+        base.push(px(cs(ts[i]).fontSize)); tb.push(box(ts[i])); st.push(ts[i].getAttribute('style'));
+        if (base[i] * k < 10.5) need = true;
+      }
+      if (!need) continue;
+      /* 글자마다 원래 들어 있던 가장 작은 상자(rect) */
+      var rs = svg.querySelectorAll('rect'), rb = [], cont = [], gap = [];
+      for (j = 0; j < rs.length; j++) rb.push(box(rs[j]));
+      for (i = 0; i < ts.length; i++) {
+        var best = -1, area = 1e12;
+        for (j = 0; j < rb.length; j++) { var a = rb[j].width * rb[j].height; if (a < area && inside(tb[i], rb[j], 1)) { best = j; area = a; } }
+        cont.push(best);
+        /* 상자 테두리와의 원래 여백(4px까지)은 남깁니다. */
+        var g0 = best < 0 ? 0 : Math.min(tb[i].left - rb[best].left, rb[best].right - tb[i].right, tb[i].top - rb[best].top, rb[best].bottom - tb[i].bottom);
+        gap.push(Math.max(0, Math.min(4, g0)));
+      }
+      /* 작은 글자부터 하나씩: 1.5배 → 1.35배 → 1.2배 → 1.1배 가운데 겹치지 않는 가장 큰 배율을 고릅니다. */
+      var caps = [1.5, 1.35, 1.2, 1.1], cur = tb.slice(0), ord = [];
+      for (i = 0; i < ts.length; i++) if (base[i] * k < 10.5) ord.push(i);
+      ord.sort(function (a, b) { return base[a] - base[b]; });
+      for (var o = 0; o < ord.length; o++) {
+        i = ord[o];
+        for (x = 0; x < caps.length; x++) {
+          var f = Math.min(caps[x], 11 / (base[i] * k));
+          if (f <= 1.01) break;
+          ts[i].style.fontSize = (base[i] * f).toFixed(2) + 'px';
+          var nb = box(ts[i]), ok = inside(nb, sb, 1) && (cont[i] < 0 || inside(nb, rb[cont[i]], 0.5 - gap[i]));
+          for (j = 0; j < ts.length && ok; j++) if (j !== i && hits(nb, cur[j]) && !hits(tb[i], tb[j])) ok = false;
+          for (j = 0; j < rb.length && ok; j++) if (hits(nb, rb[j]) && !hits(tb[i], rb[j])) ok = false;   /* 원래 닿지 않던 상자에 닿으면 안 됨 */
+          if (ok) { cur[i] = nb; break; }
+          if (st[i] == null) dropStyle(ts[i]); else ts[i].setAttribute('style', st[i]);
+        }
+      }
+      /* 바꾼 글자는 기록과 함께 다시 매깁니다(되돌릴 수 있게). */
+      for (i = 0; i < ts.length; i++) {
+        var fz = ts[i].style.fontSize;
+        if (!fz || ts[i].getAttribute('style') === st[i]) continue;
+        if (st[i] == null) dropStyle(ts[i]); else ts[i].setAttribute('style', st[i]);
+        keepStyle(ts[i], rec); ts[i].style.fontSize = fz;
+      }
+    }
+  }
+  function phoneFit(scope, rec) {
+    if (!narrowNow() || !scope) return;
+    try { wordFit(scope, rec); } catch (e) { note('wordFit', e); }
+    try { svgFit(scope, rec); } catch (e) { note('svgFit', e); }
+  }
+
   /* ───────────── 스크롤 보기의 문제 선지 ─────────────
-     핸드폰 폭(640px 이하)의 스크롤 보기에서도 선지를 2×2로 놓습니다. 다만 선지 하나라도 반 폭에서 세 줄 이상이 되면
-     (문장처럼 긴 선지) 그 문제는 전처럼 한 줄에 하나씩 놓습니다. 넓은 화면은 교재의 원래 배치 그대로입니다.
+     핸드폰 폭(640px 이하)의 스크롤 보기에서도 선지를 2×2로 놓습니다. 다만 선지 하나라도 반 폭에서 한 줄에 다 들어가지 않으면
+     (문장처럼 긴 선지) 그 문제는 한 줄에 하나씩(1×4) 놓습니다. 넓은 화면은 교재의 원래 배치 그대로입니다.
      페이지 보기에 들어갈 때는 표시(data-sq)를 지우고, 나올 때 다시 정합니다. */
-  var SQ = { key: '', t: 0, ro: null };
+  var SQ = { key: '', t: 0, ro: null, pf: [] };
   function clearSQ() {
     if (!S.main) return;
     var l = S.main.querySelectorAll('.qg[data-sq]');
     for (var i = 0; i < l.length; i++) l[i].removeAttribute('data-sq');
     clearTF();
+    undoPF(SQ.pf);
     SQ.key = '';
   }
   function scrollQuiz(force) {
@@ -1689,19 +1827,24 @@
     var key = S.main.clientWidth + '|' + cs(S.main).fontSize + '|' + narrow + '|' + list.length + '|' + tn + '|' + location.hash;
     if (!force && key === SQ.key) return;
     SQ.key = key;
+    undoPF(SQ.pf);
     if (tn) { clearTF(); tableFit(S.main, null); }
+    phoneFit(S.main, SQ.pf);
     for (i = 0; i < list.length; i++) {
       var g = list[i], bs = g.children, n = bs.length, ok = narrow && n >= 2 && !g.classList.contains('qg1');
       if (!ok) { g.removeAttribute('data-sq'); continue; }
-      /* 답을 고른 뒤의 모양(굵은 글자·테두리)과 상관없이 같은 배치가 나오도록, 답하기 전 모양으로 잽니다. */
+      /* 답을 고른 뒤의 모양(굵은 글자·테두리)과 상관없이 같은 배치가 나오도록, 답하기 전 모양으로 잽니다.
+         선지마다 글을 한 줄로 늘어놓았을 때 반 폭 칸에 들어가야 2×2, 하나라도 넘치면(긴 문장) 1×4입니다. */
       var qi = g.parentNode, qc = qi.className, bc = [];
       qi.className = qc.replace(/\bdone\b/g, '');
       for (j = 0; j < n; j++) { bc.push(bs[j].className); bs[j].className = 'qo'; }
       g.setAttribute('data-sq', '2');
       for (j = 0; j < n && ok; j++) {
-        var b = bs[j], st = cs(b);
-        var lim = lineH(st) * 2 + px(st.paddingTop) + px(st.paddingBottom) + px(st.borderTopWidth) + px(st.borderBottomWidth) + 2;
-        if (b.getBoundingClientRect().height > lim || b.scrollWidth > b.clientWidth + 1) ok = false;
+        var b = bs[j], st = cs(b), rr = rng();
+        rr.selectNodeContents(b);
+        var tw = 0, rs = rr.getClientRects();
+        for (var z = 0; z < rs.length; z++) tw += rs[z].width;
+        if (tw > b.getBoundingClientRect().width - px(st.paddingLeft) - px(st.paddingRight) - px(st.borderLeftWidth) - px(st.borderRightWidth) + 0.5) ok = false;
       }
       if (!ok) g.setAttribute('data-sq', '1');
       qi.className = qc;
@@ -1716,6 +1859,11 @@
   function scrollQuizSoon() { clearTimeout(SQ.t); SQ.t = setTimeout(function () { scrollQuiz(false); }, 120); }
   function watchSQ() {
     window.addEventListener('resize', scrollQuizSoon);
+    /* 스크롤 보기에서 답을 고르면 풀이(그 안의 그림·칸)가 나타나므로 다시 맞춥니다. */
+    doc.addEventListener('click', function (e) {
+      if (S.on || !e.target || !e.target.closest || !e.target.closest('.qo')) return;
+      clearTimeout(SQ.t); SQ.t = setTimeout(function () { try { scrollQuiz(true); } catch (er) {} }, 60);
+    }, true);
     if (doc.fonts && doc.fonts.addEventListener) doc.fonts.addEventListener('loadingdone', function () { clearTimeout(SQ.t); SQ.t = setTimeout(function () { scrollQuiz(true); }, 120); });
     /* 글자 크기를 바꾸면 본문 높이가 달라지므로, 그때 다시 잽니다(같은 폭·글자 크기면 아무것도 하지 않음). */
     if (window.ResizeObserver && S.main) { SQ.ro = new ResizeObserver(scrollQuizSoon); SQ.ro.observe(S.main); }
@@ -1782,8 +1930,8 @@
     }
     P = null;
     S.stage = null; S.orig = null; S.leaves = []; S.on = false; S.ready = false; S.done = false;
-    scrollQuizNow();
     root.classList.remove('pg-on');
+    scrollQuizNow();                                 /* 스크롤 모양으로 돌아온 뒤에 잽니다 */
     var pg = doc.getElementById('prog');
     if (pg) pg.style.width = '0%';
     try {                                            /* 보던 자리를 화면 위쪽에 맞춥니다 */
