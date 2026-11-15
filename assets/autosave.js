@@ -1,6 +1,8 @@
 /* SODA 답안 자동 저장 — 과제(hausaufgaben)·연습문제(uebungen) 공용
  *
  * 1. 연습문제: 입력·선택·카드 배열을 바꿀 때마다 자동 저장하고, 다시 열면 복원한다.
+ *    답은 문항마다 내용으로 정한 이름으로 저장하므로(v2), 문항을 빼거나 새로 넣어도 남은 문항의 답은 그대로 되살아난다.
+ *    예전 방식(v1, 순서대로 저장)의 답은 페이지의 <script id="sd-prev">에 적어 둔 예전 문항 배치로 옮겨 온다.
  * 2. 과제: 기존 저장(localStorage)을 그대로 두고, 같은 내용을 다른 저장소에도 복제해 둔다.
  *    localStorage가 비어 있으면 복제본에서 되살린다.
  * 3. 저장소 이중화: localStorage + sessionStorage + window.name + IndexedDB.
@@ -206,30 +208,52 @@
     qa('.opt').forEach(function (e) { s += e.dataset.c === '1' ? '1' : '0'; });
     return hash(s);
   }
-  function collect() {
-    var st = { v: 1, sig: sig(), t: Date.now(), fin: [], wa: [], opt: [], so: [] };
-    qa('.fin').forEach(function (e) { st.fin.push([e.value, cls(e)]); });
-    qa('.wa').forEach(function (e) { st.wa.push([e.value, cls(e)]); });
-    qa('.opt').forEach(function (e) { st.opt.push(e.classList.contains('correct') ? 1 : e.classList.contains('wrong') ? 2 : 0); });
-    qa('.so').forEach(function (so) {
-      var line = so.querySelector('.so-line'), mk = so.querySelector('.so-mk');
-      var ids = line ? [].map.call(line.querySelectorAll('.chip'), function (c) { return +c.dataset.i; }) : [];
-      st.so.push([ids, mk ? (mk.classList.contains('right') ? 1 : mk.classList.contains('wrong') ? 2 : 0) : 0]);
-    });
-    return st;
+  /* 문항마다 내용으로 정한 이름(id). 문항을 빼거나 새로 넣어도 남은 문항의 답은 그 이름으로 되살린다.
+   * v1(예전 방식)은 순서대로 저장했으므로, 페이지의 <script id="sd-prev">에 적어 둔 예전 문항 배치로 이름을 찾아 옮긴다. */
+  function tnorm(s) { return String(s || '').replace(/★\s*(도전)?/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function qtext(e) { var qc = e.closest('.qc'), qt = qc && qc.querySelector('.qt'); return qt ? tnorm(qt.textContent) : ''; }
+  function chipText(c) { return tnorm(c.dataset.t != null ? c.dataset.t : c.textContent); }
+  function baseId(e) {
+    var c = e.classList;
+    if (c.contains('opt')) return 'o' + hash(qtext(e) + '\u0001' + tnorm(e.textContent));
+    if (c.contains('wa')) return 'w' + hash(qtext(e));
+    if (c.contains('so')) {
+      var cs = [].slice.call(e.querySelectorAll('.chip')).sort(function (a, b) { return a.dataset.i - b.dataset.i; });
+      return 's' + hash(qtext(e) + '\u0001' + cs.map(chipText).join('\u0002'));
+    }
+    var p = e.closest('p') || e.parentNode;
+    return 'f' + hash(tnorm(p ? p.textContent : ''));
   }
-  function restore(st) {
-    if (!st || st.v !== 1 || st.sig !== sig()) return false;
-    var fins = qa('.fin'), was = qa('.wa'), opts = qa('.opt'), sos = qa('.so');
-    st.fin.forEach(function (p, i) { var e = fins[i]; if (!e) return; e.value = p[0]; if (p[1] && typeof window.checkFin === 'function') window.checkFin(e); });
-    st.wa.forEach(function (p, i) { var e = was[i]; if (!e) return; e.value = p[0]; if (p[1] && typeof window.checkWa === 'function') window.checkWa(e); });
-    st.opt.forEach(function (s, i) {
-      var o = opts[i]; if (!o || !s) return;
+  function ids(list) {
+    var seen = {};
+    return list.map(function (e) { var b = baseId(e), n = seen[b] = (seen[b] || 0) + 1; return n > 1 ? b + '.' + n : b; });
+  }
+  function layout() { return { sig: sig(), fin: ids(qa('.fin')), wa: ids(qa('.wa')), opt: ids(qa('.opt')), so: ids(qa('.so')) }; }
+  window.__sodaUebLayout = layout;
+  function soState(so) {
+    var line = so.querySelector('.so-line'), mk = so.querySelector('.so-mk');
+    var cs = line ? [].map.call(line.querySelectorAll('.chip'), function (c) { return +c.dataset.i; }) : [];
+    return [cs, mk ? (mk.classList.contains('right') ? 1 : mk.classList.contains('wrong') ? 2 : 0) : 0];
+  }
+  function collect() {
+    var L = layout(), m = {};
+    qa('.fin').forEach(function (e, i) { if (e.value || cls(e)) m[L.fin[i]] = [e.value, cls(e)]; });
+    qa('.wa').forEach(function (e, i) { if (e.value || cls(e)) m[L.wa[i]] = [e.value, cls(e)]; });
+    qa('.opt').forEach(function (e, i) { var s = e.classList.contains('correct') ? 1 : e.classList.contains('wrong') ? 2 : 0; if (s) m[L.opt[i]] = s; });
+    qa('.so').forEach(function (so, i) { var p = soState(so); if (p[0].length || p[1]) m[L.so[i]] = p; });
+    return { v: 2, t: Date.now(), m: m };
+  }
+  function apply(m) {
+    var L = layout();
+    qa('.fin').forEach(function (e, i) { var p = m[L.fin[i]]; if (!p) return; e.value = p[0]; if (p[1] && typeof window.checkFin === 'function') window.checkFin(e); });
+    qa('.wa').forEach(function (e, i) { var p = m[L.wa[i]]; if (!p) return; e.value = p[0]; if (p[1] && typeof window.checkWa === 'function') window.checkWa(e); });
+    qa('.opt').forEach(function (o, i) {
+      var s = m[L.opt[i]]; if (s !== 1 && s !== 2) return;
       o.classList.add(s === 1 ? 'correct' : 'wrong');
       if (s === 1) { var qc = o.closest('.qc'), h = qc && qc.querySelector('.opt-hint'); if (h) h.classList.add('s'); }
     });
-    st.so.forEach(function (p, i) {
-      var so = sos[i]; if (!so || !p) return;
+    qa('.so').forEach(function (so, i) {
+      var p = m[L.so[i]]; if (!p) return;
       var line = so.querySelector('.so-line');
       (p[0] || []).forEach(function (id) {
         var c = so.querySelector('.chip[data-i="' + id + '"]');
@@ -237,6 +261,30 @@
       });
       if (p[1]) { var b = so.querySelector('.so-chk'); if (b) b.click(); }
     });
+  }
+  function fromV1(st, L) {
+    var m = {};
+    ['fin', 'wa', 'opt', 'so'].forEach(function (k) {
+      (st[k] || []).forEach(function (p, i) {
+        var id = L[k] && L[k][i]; if (id == null || !p) return;
+        if (k === 'so' ? (p[0] && p[0].length) || p[1] : k === 'opt' ? true : p[0] || p[1]) m[id] = p;
+      });
+    });
+    return m;
+  }
+  function prevLayouts() {
+    var el = document.getElementById('sd-prev'), out = [];
+    if (el) { try { out = JSON.parse(el.textContent); } catch (e) { out = []; } }
+    return Array.isArray(out) ? out : [out];
+  }
+  function restore(st) {
+    if (!st || typeof st !== 'object') return false;
+    if (st.v === 2 && st.m && typeof st.m === 'object') { apply(st.m); return true; }
+    if (st.v !== 1) return false;
+    var L = st.sig === sig() ? layout() : null;
+    if (!L) prevLayouts().some(function (p) { if (p && p.sig === st.sig) { L = p; return true; } return false; });
+    if (!L) return false;
+    apply(fromV1(st, L));
     return true;
   }
 

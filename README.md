@@ -27,7 +27,7 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 - `lektion.html` : Lektion 선택 페이지 (교재 / 연습문제 / 복습 / 과제). 주소 끝에 `?n=01`처럼 번호를 붙여요.
 - `lektionen/lektion-01.html … lektion-16.html` : 교재
 - `hausaufgaben/lektionen/lektion-01.html … lektion-16.html` : 과제
-- `uebungen/lektionen/lektion-01.html … lektion-16.html` : 연습문제 (이전 SODA-GRAMMATIK-UEBUNGEN 저장소에서 옮겨 온 것, 로고와 글꼴은 `assets/`를 함께 써요)
+- `uebungen/lektionen/lektion-01.html … lektion-16.html` : 연습문제 (이전 SODA-GRAMMATIK-UEBUNGEN 저장소에서 옮겨 온 것, 로고와 글꼴은 `assets/`를 함께 써요). 영역마다 끝에 앞 과 문법이 섞인 도전 문제가 있어요(아래 「연습문제 도전 문제와 답안 저장」).
 - `wiederholung/lektionen/lektion-01.html … lektion-16.html` : 복습(나레이션 애니메이션)
 - `wiederholung/assets/` : 복습 페이지용 글꼴, 이미지, 나레이션 음원 (이전 SODA-GRAMMATIK-WIEDERHOLUNG 저장소에서 옮겨 온 것)
 - `hausaufgaben/assets/` : 과제 페이지용 글꼴, 오디오, 스크립트 (이전 SODA-GRAMMATIK-HAUSAUFGABEN 저장소에서 옮겨 온 것)
@@ -73,6 +73,22 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 - `data-pg-break` : 이 앞에서 새 페이지를 시작(`section`이나 그 바로 아래 덩어리에 붙입니다)
 - `data-pg-fit` : 자리가 조금 모자라면 나누지 않고 살짝 줄여서 넣음(그림·표는 표시 없이도 그렇게 합니다)
 - `data-pg-tap` : 이 요소를 누르는 것은 페이지 넘김으로 쓰지 않음(직접 만든 누르는 요소에)
+
+## 연습문제 도전 문제와 답안 저장
+
+연습문제는 A(고르기)·B(맞는 문장)·D(단어 배열)·E(바꿔 쓰기) 영역마다 끝에 도전 문제를 두 개씩 둡니다(2과·11과는 원래 있던 ★ 문제까지 세 개).
+
+- 도전 문제는 그 과의 문법에 앞 과에서 배운 문법을 함께 넣습니다. 1과는 앞 과가 없어서 1과의 규칙 여러 개를 한 문제에 모읍니다.
+- 표시: 문제 카드에 `ch` 클래스(`<div class="qc a ch">`)를 붙이고, 문제 문장(`.qt`) 바로 위에 머리줄을 둡니다. `<div class="chh"><span class="chb">도전</span><span class="chm">＋ 2과 3격 동사 · 1과 남성 4격</span></div>` 처럼 함께 나오는 앞 과 문법을 적습니다.
+- 페이지 맨 위(제목 아래)의 `.chn` 상자가 도전 표시를 설명하고, 스타일은 각 페이지의 `<style id="sd-ch">`에 있습니다.
+- 문제 번호는 페이지 안에서 처음부터 끝까지 이어집니다. 문항을 빼거나 넣으면 번호를 다시 매깁니다.
+
+답안 자동 저장(`assets/autosave.js`)은 문항마다 내용(문제 문장, 선지 글자, 단어 카드, 빈칸이 있는 줄)으로 이름을 붙여 저장합니다(v2).
+
+- 그래서 문항을 빼거나 새로 넣어도 남은 문항의 답은 그대로 되살아납니다. 문제 문장이나 선지 글자를 고친 문항은 새 문항으로 보고 답을 잇지 않습니다.
+- 예전 방식(v1, 순서대로 저장)으로 저장된 답은 각 페이지 맨 끝의 `<script type="application/json" id="sd-prev">`에 적어 둔 예전 문항 배치로 옮겨 옵니다. 2026-11-15 개편 전 배치가 들어 있습니다.
+- 연습문제 페이지는 `autosave.js?v=2`를 불러옵니다. `autosave.js`를 고쳐 올릴 때는 16개 연습문제 파일의 `?v=` 숫자를 함께 올리세요.
+- 페이지를 열고 브라우저 콘솔에서 `__sodaUebLayout()`을 실행하면 그 페이지의 문항 배치(문항 이름 목록)를 볼 수 있습니다.
 
 ## Lektion 추가·수정
 
