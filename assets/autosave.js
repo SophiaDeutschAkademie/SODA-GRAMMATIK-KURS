@@ -28,6 +28,12 @@
   var nGet = SP.getItem, nSet = SP.setItem, nRem = SP.removeItem, nClr = SP.clear;
   var LS = null;
   try { LS = window.localStorage; } catch (e) { LS = null; }
+  /* 학습 포탈의 학습 저장(SODA-LERNPORTAL/sync.js)이 먼저 불러와져 있으면, 이 스크립트 안에서만 하는 점검 읽기는
+     그 스크립트가 지켜보지 않는 읽기로 합니다(이 페이지가 읽은 값으로 잘못 세지 않게). 앱의 실제 읽기는 그대로 지켜봅니다 */
+  function rawGet(k) {
+    try { if (window.SodaSync && window.SodaSync._get) return window.SodaSync._get(k); } catch (e) {}
+    return nGet.call(LS, k);
+  }
 
   var M = {};            // 복제본(메모리)
   var dirty = {};        // 아직 IndexedDB에 쓰지 않은 키
@@ -114,7 +120,7 @@
     try {
       for (var i = 0; i < LS.length; i++) {
         var k = LS.key(i);
-        if (track(k)) { var v = nGet.call(LS, k); if (v != null && M[k] !== v) { M[k] = v; dirty[k] = 1; } }
+        if (track(k)) { var v = rawGet(k); if (v != null && M[k] !== v) { M[k] = v; dirty[k] = 1; } }
       }
       if (Object.keys(dirty).length) ptimer = setTimeout(flush, 200);
     } catch (e) {}
@@ -194,7 +200,7 @@
       location.reload();
     }
   });
-  function lsRaw(k) { try { return nGet.call(LS, k); } catch (e) { return null; } }
+  function lsRaw(k) { try { return rawGet(k); } catch (e) { return null; } }
 
   if (!AREA) return; // 과제·연습문제의 각 과 페이지가 아니면 저장소 보호만 한다
 
