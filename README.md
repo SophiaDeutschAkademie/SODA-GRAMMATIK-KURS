@@ -26,7 +26,7 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 
 - `index.html` : 표지와 목차 (한 페이지 안에서 전환, 주소 끝에 `#toc`)
 - `lektion.html` : Lektion 선택 페이지 (교재 / 연습문제 / 추가 연습 / 복습 / 과제). 주소 끝에 `?n=01`처럼 번호를 붙여요. 넓은 화면에서는 카드 다섯 장이 한 줄로, 핸드폰에서는 두 장씩 놓이고 마지막 과제 카드는 한 줄 전체를 씁니다.
-- `lektionen/lektion-01.html … lektion-16.html` : 교재
+- `lektionen/lektion-01.html … lektion-16.html` : 교재. 1과의 정관사·부정관사 변화표는 1과에서 다루지 않는 2격·3격 줄을 흐리게 둡니다(`<tr class="rd">`, 스타일은 1과 파일의 `<style id="l01-rev">`). 6과 본문의 "1과 표에서 흐리게 뒀던 둘째 줄"이 이 표시를 가리킵니다.
 - `hausaufgaben/lektionen/lektion-01.html … lektion-16.html` : 과제
 - `uebungen/lektionen/lektion-01.html … lektion-16.html` : 연습문제 (이전 SODA-GRAMMATIK-UEBUNGEN 저장소에서 옮겨 온 것, 로고와 글꼴은 `assets/`를 함께 써요). 영역마다 끝에 앞 과 문법이 섞인 도전 문제가 있어요(아래 「연습문제 도전 문제와 답안 저장」).
 - `zusatz/lektionen/lektion-01.html … lektion-16.html` : 추가 연습. 연습문제와 다른 형식(짝 맞추기·분류하기·틀린 곳 찾아 고치기·글에서 찾아 표시하기·60초 스피드 퀴즈)으로 같은 과의 문법을 다시 연습해요(아래 「추가 연습」).
