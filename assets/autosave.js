@@ -1,4 +1,4 @@
-/* SODA 답안 자동 저장 — 과제(hausaufgaben)·연습문제(uebungen) 공용
+/* SODA 답안 자동 저장 — 과제(hausaufgaben)·연습문제(uebungen)·추가 연습(zusatz) 공용
  *
  * 1. 연습문제: 입력·선택·카드 배열을 바꿀 때마다 자동 저장하고, 다시 열면 복원한다.
  *    답은 문항마다 내용으로 정한 이름으로 저장하므로(v2), 문항을 빼거나 새로 넣어도 남은 문항의 답은 그대로 되살아난다.
@@ -8,18 +8,20 @@
  * 3. 저장소 이중화: localStorage + sessionStorage + window.name + IndexedDB.
  * 4. 저장 코드: 화면 오른쪽 아래 「답안 백업」에서 복사하고, 붙여넣어 복원한다.
  * 5. Teams·카카오톡 같은 앱 안의 화면에서는 저장이 지워질 수 있다는 안내를 위에 띄운다.
+ * 6. 추가 연습: 페이지(assets/zusatz.js)가 'soda-zus-NN'에 직접 저장하고, 여기서는 복제·답안 백업만 한다.
  */
 (function () {
   'use strict';
   if (window.__sodaAutosave) return;
   window.__sodaAutosave = 1;
 
-  var m = location.pathname.match(/\/(hausaufgaben|uebungen)\/lektionen\/lektion-(\d\d)\.html/);
+  var m = location.pathname.match(/\/(hausaufgaben|uebungen|zusatz)\/lektionen\/lektion-(\d\d)\.html/);
   var AREA = m ? m[1] : '';
   var LES = m ? m[2] : '';
-  var TRACK = /^(uebung-lektion-\d\d-v\d+|soda-ueb-\d\d)$/;
+  var TRACK = /^(uebung-lektion-\d\d-v\d+|soda-ueb-\d\d|soda-zus-\d\d)$/;
   var PFX = 'SODABK:';
-  var UKEY = LES ? 'soda-ueb-' + LES : '';
+  var UKEY = LES ? (AREA === 'zusatz' ? 'soda-zus-' : 'soda-ueb-') + LES : '';
+  var KIND = AREA === 'uebungen' ? '연습문제' : AREA === 'zusatz' ? '추가 연습' : '과제';
   var HRE = LES ? new RegExp('^uebung-lektion-' + LES + '-v(\\d+)$') : null;
 
   /* ───────── 저장소 ───────── */
@@ -192,7 +194,7 @@
     onIdb.forEach(function (f) { try { f(); } catch (e) {} });
     var need = false;
     Object.keys(missed).forEach(function (k) {
-      if (/^uebung-lektion-/.test(k) && M[k] != null && lsRaw(k) === null) { try { nSet.call(LS, k, M[k]); need = true; } catch (e) {} }
+      if (/^(uebung-lektion-|soda-zus-)/.test(k) && M[k] != null && lsRaw(k) === null) { try { nSet.call(LS, k, M[k]); need = true; } catch (e) {} }
     });
     if (need) {
       var flag = 'sodabk-r:' + location.pathname;
@@ -339,7 +341,7 @@
 
   /* ───────── 저장 코드와 안내 화면 ───────── */
   function activeKey() {
-    if (AREA === 'uebungen') return UKEY;
+    if (AREA === 'uebungen' || AREA === 'zusatz') return UKEY;
     if (lastHKey) return lastHKey;
     var best = '', bv = -1;
     Object.keys(M).forEach(function (k) { var r = HRE && HRE.exec(k); if (r && +r[1] > bv) { bv = +r[1]; best = k; } });
@@ -358,7 +360,7 @@
     txt = String(txt || '').replace(/\s+/g, '');
     if (txt.indexOf('SODA1:') !== 0) return '저장 코드가 아닙니다. SODA1: 로 시작하는 코드를 붙여넣어 주세요.';
     var o; try { o = JSON.parse(b64dec(txt.slice(6))); } catch (e) { return '코드를 읽을 수 없습니다. 복사할 때 일부가 빠지지 않았는지 확인해 주세요.'; }
-    if (!o || o.a !== AREA || o.l !== LES || !o.d) return '이 과의 ' + (AREA === 'uebungen' ? '연습문제' : '과제') + ' 코드가 아닙니다.';
+    if (!o || o.a !== AREA || o.l !== LES || !o.d) return '이 과의 ' + KIND + ' 코드가 아닙니다.';
     var keys = Object.keys(o.d).filter(function (k) { return track(k) && typeof o.d[k] === 'string'; });
     if (!keys.length) return '복원할 답안이 없습니다.';
     var cur = activeKey();
@@ -400,7 +402,7 @@
   }
   function ui() {
     css();
-    var kind = AREA === 'uebungen' ? '연습문제' : '과제';
+    var kind = KIND;
     var btn = el('button', { type: 'button', 'class': 'sdbk-btn', 'data-no-print': '', text: '답안 백업' });
     var out = el('textarea', { readonly: '', 'aria-label': '저장 코드', spellcheck: 'false' });
     var inp = el('textarea', { 'aria-label': '저장 코드 붙여넣기', spellcheck: 'false', placeholder: 'SODA1: 로 시작하는 코드를 붙여넣으세요' });

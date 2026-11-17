@@ -1,8 +1,8 @@
 # SODA GRAMMATIK KURS
 
-Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목차, Lektion 01–16의 교재, 연습문제(Übung), 복습(Wiederholung), 과제(Hausaufgabe)로 구성돼요.
+Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목차, Lektion 01–16의 교재, 연습문제(Übung), 추가 연습(Zusatzübung), 복습(Wiederholung), 과제(Hausaufgabe)로 구성돼요.
 
-목차에서 Lektion을 누르면 교재, 연습문제, 복습, 과제 중 하나를 고르는 페이지(`lektion.html?n=01`)가 열려요.
+목차에서 Lektion을 누르면 교재, 연습문제, 추가 연습, 복습, 과제 중 하나를 고르는 페이지(`lektion.html?n=01`)가 열려요.
 
 ## 학습 포탈 로그인
 
@@ -12,7 +12,7 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 - 한 번의 로그인에서 처음 한 번만 포탈의 학생 파일로 로그인을 확인하고, 그다음 페이지부터는 바로 열립니다.
 - 학생이 저장한 답안(localStorage)은 건드리지 않습니다.
 - 새 페이지를 추가할 때는 `<head>` 바로 뒤에 `<script src="(상대 경로)assets/portal-gate.js"></script>`를 넣어야 합니다.
-- **학습 저장.** 답을 저장하는 페이지(목차, 선택 페이지, 교재, 연습문제, 과제, 문법 암기장)는 `portal-gate.js` 바로 뒤에서 `<script id="soda-sync" src="/SODA-LERNPORTAL/sync.js"></script>`를 불러옵니다. 학생이 푼 답이 서버에 저장되어 다른 기기에서 포탈에 로그인하면 그대로 이어집니다(SODA-LERNPORTAL README 「학습 기록 자동 저장」). 새 페이지에도 같은 줄을 넣습니다. `autosave.js`보다 먼저 불러와야 합니다.
+- **학습 저장.** 답을 저장하는 페이지(목차, 선택 페이지, 교재, 연습문제, 추가 연습, 과제, 문법 암기장)는 `portal-gate.js` 바로 뒤에서 `<script id="soda-sync" src="/SODA-LERNPORTAL/sync.js"></script>`를 불러옵니다. 학생이 푼 답이 서버에 저장되어 다른 기기에서 포탈에 로그인하면 그대로 이어집니다(SODA-LERNPORTAL README 「학습 기록 자동 저장」). 새 페이지에도 같은 줄을 넣습니다. `autosave.js`보다 먼저 불러와야 합니다.
 - 저장소가 공개라서 파일 자체는 주소를 알면 받을 수 있습니다. 이 확인은 화면에서 막는 장치입니다.
 
 ## GitHub Pages로 배포하기
@@ -25,10 +25,13 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 ## 구조
 
 - `index.html` : 표지와 목차 (한 페이지 안에서 전환, 주소 끝에 `#toc`)
-- `lektion.html` : Lektion 선택 페이지 (교재 / 연습문제 / 복습 / 과제). 주소 끝에 `?n=01`처럼 번호를 붙여요.
+- `lektion.html` : Lektion 선택 페이지 (교재 / 연습문제 / 추가 연습 / 복습 / 과제). 주소 끝에 `?n=01`처럼 번호를 붙여요. 넓은 화면에서는 카드 다섯 장이 한 줄로, 핸드폰에서는 두 장씩 놓이고 마지막 과제 카드는 한 줄 전체를 씁니다.
 - `lektionen/lektion-01.html … lektion-16.html` : 교재
 - `hausaufgaben/lektionen/lektion-01.html … lektion-16.html` : 과제
 - `uebungen/lektionen/lektion-01.html … lektion-16.html` : 연습문제 (이전 SODA-GRAMMATIK-UEBUNGEN 저장소에서 옮겨 온 것, 로고와 글꼴은 `assets/`를 함께 써요). 영역마다 끝에 앞 과 문법이 섞인 도전 문제가 있어요(아래 「연습문제 도전 문제와 답안 저장」).
+- `zusatz/lektionen/lektion-01.html … lektion-16.html` : 추가 연습. 연습문제와 다른 형식(짝 맞추기·분류하기·틀린 곳 찾아 고치기·글에서 찾아 표시하기·60초 스피드 퀴즈)으로 같은 과의 문법을 다시 연습해요(아래 「추가 연습」).
+- `assets/zusatz.js`, `assets/zusatz.css` : 추가 연습 페이지 공용 스크립트와 스타일(다크 모드·핸드폰 배치·인쇄 포함)
+- `assets/zusatz-blitz.js` : 추가 연습 60초 스피드 퀴즈의 과별 문제 묶음(`window.SODA_BLITZ`)
 - `wiederholung/lektionen/lektion-01.html … lektion-16.html` : 복습(나레이션 애니메이션)
 - `wiederholung/assets/` : 복습 페이지용 글꼴, 이미지, 나레이션 음원 (이전 SODA-GRAMMATIK-WIEDERHOLUNG 저장소에서 옮겨 온 것)
 - `hausaufgaben/assets/` : 과제 페이지용 글꼴, 오디오, 스크립트 (이전 SODA-GRAMMATIK-HAUSAUFGABEN 저장소에서 옮겨 온 것)
@@ -37,7 +40,7 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 - `hausaufgaben/index.html` : 이전 과제 웹앱의 표지·목차(진행률 포함). 목차에서는 연결하지 않고 따로 보관해요.
 - `anhang/grammatik-merkheft.html` : 부록 「독일어 문법 암기장」(Lektion 1–16 핵심 35항목, 가리기 모드·인쇄 지원). 목차 맨 끝 '부록' 카드로 연결돼요.
 - `assets/theme.js` : 다크 모드 스위치(모든 화면 오른쪽 위). 선택은 기기에 저장되고 기본값은 다크 모드예요. 인쇄는 언제나 밝은 화면으로 나와요.
-- `assets/theme-colors.css` : 교재·연습문제·복습·과제의 다크 모드 색상표(자동 생성). 각 페이지의 색은 `var(--k색상코드, 원래색)` 모양이라 라이트 모드는 원래와 똑같고, 사진·그림·로고는 원래 색 그대로예요.
+- `assets/theme-colors.css` : 교재·연습문제·추가 연습·복습·과제의 다크 모드 색상표(자동 생성). 각 페이지의 색은 `var(--k색상코드, 원래색)` 모양이라 라이트 모드는 원래와 똑같고, 사진·그림·로고는 원래 색 그대로예요.
 - `assets/pager.js` : 교재를 핸드폰에서 책처럼 한 페이지씩 넘겨 보게 하는 스크립트. 아래 「교재 페이지 넘겨 보기」에 자세히 적었어요.
 - `assets/sprechen-card.js` : 과제 Schritt 6(Sprechen · 말하기) 맨 아래의 말하기 연습 카드. 말하기 사이트(SODA-Lehrwerk `sprechen/`)로 연결하고, 저장된 연습 기록 상태를 보여 줘요. 안내는 짧은 목록 네 줄, 도움이 되는 표현(쓰기 좋은 문장·핵심 단어·문장 틀·못 알아들었을 때)은 독일어와 뜻을 한 줄에 쓴 작은 칩으로 이어서 보여 주고, 묶음 이름은 컴퓨터에서는 왼쪽, 핸드폰에서는 위에 둬요. 말하기 연습 중 대화는 녹음되고, 연습이 끝난 화면에서 다시 듣고 WAV 파일로 내려받을 수 있어요(내려받지 않으면 연습이 끝난 화면을 나가거나 창을 닫을 때 녹음이 자동으로 지워지고, 서버에 저장되거나 제출되지 않아요).
 - `assets/lessons.js` : Lektion 목록(번호, 제목, 독일어 부제, 설명, 아이콘). 목차와 선택 페이지가 함께 써요.
@@ -88,15 +91,35 @@ Sophia Deutsch Akademie의 독일어 문법 학습 웹앱입니다. 표지, 목�
 
 - 그래서 문항을 빼거나 새로 넣어도 남은 문항의 답은 그대로 되살아납니다. 문제 문장이나 선지 글자를 고친 문항은 새 문항으로 보고 답을 잇지 않습니다.
 - 예전 방식(v1, 순서대로 저장)으로 저장된 답은 각 페이지 맨 끝의 `<script type="application/json" id="sd-prev">`에 적어 둔 예전 문항 배치로 옮겨 옵니다. 2026-11-15 개편 전 배치가 들어 있습니다.
-- 연습문제 페이지는 `autosave.js?v=4`, 과제 페이지는 `autosave.js?v=2`를 불러옵니다. `autosave.js`를 고쳐 올릴 때는 16개 연습문제 파일의 `?v=` 숫자를 함께 올리세요.
+- 연습문제·추가 연습 페이지는 `autosave.js?v=5`, 과제 페이지는 `autosave.js?v=2`를 불러옵니다. `autosave.js`를 고쳐 올릴 때는 16개 연습문제 파일과 16개 추가 연습 파일의 `?v=` 숫자를 함께 올리세요.
 - 페이지를 열고 브라우저 콘솔에서 `__sodaUebLayout()`을 실행하면 그 페이지의 문항 배치(문항 이름 목록)를 볼 수 있습니다.
 - `autosave.js`가 처음에 답안 복제본을 맞추려고 하는 읽기는 학습 저장(`sync.js`)이 지켜보지 않는 읽기(`SodaSync._get`)로 합니다. 다른 과의 답이 다른 기기에서 바뀌어도 지금 페이지를 새로 불러오지 않게 하려는 것입니다.
 
 교재(`lektionen/lektion-NN.html`)의 확인 문제(`.qi`)는 `assets/quiz-save.js`가 고른 선지를 저장합니다(localStorage `soda-gk-quiz:NN`). 문제 글(`.qq`)로 정한 이름 아래에 저장하므로 문제를 빼거나 순서를 바꿔도 남은 문제의 답은 이어집니다. 각 교재 페이지의 `</body>` 바로 앞, 교재의 문제 스크립트 뒤에서 불러옵니다. 그래야 페이지 보기(`pager.js`)가 페이지를 나누기 전에 답이 되살아납니다.
 
+## 추가 연습
+
+추가 연습(`zusatz/lektionen/lektion-NN.html`)은 연습문제(고르기·맞는 문장·단어 배열·바꿔 쓰기)와 과제에 없는 형식으로 같은 과의 문법을 다시 연습하는 페이지입니다. 모든 문제는 그 과와 앞 과의 문법만 쓰고, 교재·연습문제·과제에 나온 문장은 쓰지 않았습니다.
+
+| 영역 | 형식 | 푸는 방법 |
+|---|---|---|
+| A 짝 맞추기 | 왼쪽 카드와 오른쪽 카드를 짝지음 | 왼쪽과 오른쪽에서 하나씩 누릅니다(어느 쪽을 먼저 눌러도 됩니다). 일부 세트에는 짝이 없는 틀린 카드가 섞여 있습니다. |
+| B 분류하기 | 카드를 기준에 맞는 칸에 넣음 | 카드를 누른 뒤 칸을 누릅니다. 「확인」을 누르면 맞은 카드는 고정되고 틀린 카드는 빨갛게 표시됩니다. |
+| C 틀린 곳 찾아 고치기 | 문장에서 틀린 곳을 찾아 고침 | 틀린 낱말을 누르면 고칠 말 세 개가 나옵니다. 어순이 틀린 문장은 자리가 잘못된 낱말 가운데 하나를 누릅니다. |
+| D 글에서 찾아 표시하기 | 짧은 글에서 문법 요소를 찾음 | 낱말을 누릅니다. 갈래가 하나면 누를 때마다 표시와 취소가 바뀌고, 둘이면 한 번은 첫째 갈래, 두 번은 둘째 갈래, 세 번은 취소입니다. |
+| E 60초 스피드 퀴즈 | 60초 동안 빈칸 고르기 | 「기본」과 「도전」 중 하나를 고릅니다. 키보드 1·2·3으로도 고를 수 있고, 최고 기록이 남습니다. |
+
+- **도전 문제.** A·B·D의 마지막 세트, C의 마지막 두세 문항, E의 「도전」은 그 과의 문법에 앞 과 문법을 함께 넣은 문제입니다. 머리줄의 `도전` 표시 옆에 `＋ 2과 3격 동사`처럼 함께 나오는 앞 과 문법을 적습니다. 1과는 앞 과가 없어서 1과의 규칙 여러 개를 섞습니다.
+- **문제 데이터.** 각 페이지 맨 끝의 `<script type="application/json" id="zx-data">`에 A–D 문제가 한 줄에 한 문항씩 들어 있고, E의 문제 묶음은 `assets/zusatz-blitz.js`에 과별로 있습니다. 화면은 `assets/zusatz.js`가 이 데이터로 그리므로 문제를 고칠 때는 HTML 틀은 그대로 두고 데이터만 고칩니다.
+  - C: `*낱말*`이 틀린 곳입니다. `o`의 첫째가 정답이고 화면에서는 섞어 보여 줍니다. 낱말 두 개 이상을 한꺼번에 고치면 `c`에 고친 문장 전체를 적습니다.
+  - D: `[낱말]`은 첫째 갈래, `{낱말}`은 둘째 갈래의 정답입니다.
+  - E: `[문장, [정답, 오답…], 해설]`이고, 넷째 값 `1`이 붙으면 도전 문제입니다. 빈칸은 `___`, 빈칸이 둘이면 정답을 `…`로 나눠 적습니다.
+- **답안 저장.** 페이지가 localStorage `soda-zus-NN`(`{v:1, t, m:{…}}`)에 바로 저장합니다. 문항 이름은 문항 내용으로 만든 값이라, 문항을 빼거나 새로 넣어도 남은 문항의 답은 이어지고, 내용을 고친 문항만 새 문항으로 시작합니다. 「전체 답 초기화」는 답만 지우고 스피드 퀴즈 최고 기록은 남깁니다. 학습 저장(`sync.js`)이 서버로 올리고, `autosave.js`가 기기 안에 복제본을 두고 「답안 백업」 단추를 붙입니다. 연습문제(`soda-ueb-NN`)와 과제의 저장 이름은 바뀌지 않았습니다.
+- 페이지를 열고 브라우저 콘솔에서 `__sodaZusatz()`를 실행하면 그 페이지의 저장 이름과 저장 상태를 볼 수 있습니다.
+
 ## Lektion 추가·수정
 
-새 Lektion을 추가하려면 `lektionen`, `hausaufgaben/lektionen`, `uebungen/lektionen`, `wiederholung/lektionen` 폴더에 파일을 넣고 `assets/lessons.js`의 목록에 항목(번호, 제목, 독일어 부제, 설명, 아이콘)을 추가하세요.
+새 Lektion을 추가하려면 `lektionen`, `hausaufgaben/lektionen`, `uebungen/lektionen`, `zusatz/lektionen`, `wiederholung/lektionen` 폴더에 파일을 넣고 `assets/lessons.js`의 목록에 항목(번호, 제목, 독일어 부제, 설명, 아이콘)을 추가하세요. 추가 연습은 다른 과의 파일을 복사해 제목, 앞뒤 과 연결, `zx-data`의 `n`(과 번호)과 문제를 바꾸고, `assets/zusatz-blitz.js`에 그 과의 스피드 퀴즈 묶음을 넣습니다.
 
 교재 파일(`lektionen/lektion-NN.html`)에는 `<head>`의 `theme.js` 다음 줄에 `<script src="../assets/pager.js?v=8"></script>`를 넣으세요(다른 과와 같은 `?v=` 숫자로). 이 줄이 없으면 그 과는 예전처럼 스크롤로만 보입니다.
 
