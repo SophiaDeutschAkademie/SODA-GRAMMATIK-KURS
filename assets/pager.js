@@ -1479,6 +1479,7 @@
     pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', '보기 설정');
     pop.innerHTML = '<div class="pg-row"><span>글자 크기</span><div><button type="button" data-a="minus" aria-label="글자 작게">A−</button><button type="button" data-a="plus" aria-label="글자 크게">A+</button></div></div>'
       + '<div class="pg-row"><span>보기 방식</span><div><button type="button" data-a="page" class="on">페이지</button><button type="button" data-a="scroll">스크롤</button></div></div>'
+      + '<div class="pg-row"><span>고른 답</span><div><button type="button" data-a="qreset">답 초기화</button></div></div>'
       + '<div class="pg-row"><span>인쇄</span><div><button type="button" data-a="print">인쇄하기</button></div></div>';
     var toast = mk('div', 'pg-toast');
     toast.setAttribute('role', 'status');
@@ -1513,6 +1514,7 @@
       if (a === 'minus' || a === 'plus') fontStep(a === 'plus' ? 1 : -1);
       else if (a === 'scroll') { closePanels(); setView('scroll'); exitPage(true); }
       else if (a === 'page') closePanels();
+      else if (a === 'qreset') { closePanels(); var rn = window.SODA_QUIZ_RESET ? window.SODA_QUIZ_RESET() : 0; if (rn > 0 && S.on) repaginate(); }
       else if (a === 'print') { closePanels(); var fp = doc.getElementById('fp'); if (fp) fp.click(); else window.print(); }
     });
 
